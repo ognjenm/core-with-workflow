@@ -1,0 +1,10 @@
+<?php {{namespace}}
+
+class {{class}} extends \Telenok\Core\Interfaces\Eloquent\Object\Model  {
+
+    protected $class_controller = '{{class_controller}}'; 
+    protected $table = '{{table}}';
+
+}
+
+?>

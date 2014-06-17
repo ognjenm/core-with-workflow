@@ -1,0 +1,90 @@
+<?php
+
+namespace Telenok\Core\Field\ComplexArray;
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;  
+
+class Controller extends \Telenok\Core\Interfaces\Field\Controller {
+
+    protected $key = 'complex-array';
+    protected $allowMultilanguage = false;
+
+    public function getListFieldContent($field, $item, $type = null)
+    { 
+		if ($item instanceof \Illuminate\Support\Collection)
+		{
+			return 'Complex array';
+		}
+		else
+		{
+			return \Str::limit($item->{$field->code}, 20);
+		}
+    }
+
+    public function getModelAttribute($model, $key, $value, $field)
+    {
+		$value = $value === null ? '[]' : $value;
+		
+		$v = json_decode($value, true);
+		
+		if (is_array($v))
+		{
+			return \Illuminate\Support\Collection::make($v);
+		}
+		else
+		{
+			return $v;
+		}
+    }
+
+    public function setModelAttribute($model, $key, $value, $field)
+    {
+		if ($value instanceof \Illuminate\Support\Collection) 
+		{
+			$value_ = $value->toArray();
+		}
+		else
+		{
+			$value_ = $value;
+		}
+		/*
+		if ($model->{$key} instanceof \Illuminate\Support\Collection && is_array($value_))
+		{
+			$value_ = array_replace_recursive($model->{$key}->toArray(), $value_);
+		}
+		*/
+        $model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+    }
+	
+    public function preProcess($model, $type, $input)
+    {
+		$input->put('multilanguage', 0);
+		$input->put('allow_sort', 0);
+
+        return parent::preProcess($model, $type, $input);
+    }  
+
+    public function postProcess($model, $type, $input)
+    {
+        $table = $model->fieldObjectType()->first()->getAttribute('code');
+        $fieldName = $model->getAttribute('code');
+
+		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))
+		{
+			\Schema::table($table, function(Blueprint $table) use ($fieldName)
+			{
+				$table->longText($fieldName);
+			});
+		}
+
+        return parent::postProcess($model, $type, $input);
+    }
+
+}
+
+?>

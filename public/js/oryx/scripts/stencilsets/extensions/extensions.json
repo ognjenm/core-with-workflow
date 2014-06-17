@@ -1,0 +1,31 @@
+{
+    "extensions": [
+        {
+            "title": "Extended Petrinet Extension",
+            "namespace": "http://oryx-editor.org/stencilsets/extensions/extendedpetrinets#",
+            "description": "Extended Petrinets contain Reset and Inhibitor Arcs",
+            "definition": "extendedpetrinets/extendedpetrinets.json",
+            "extends": "http://b3mn.org/stencilset/petrinet#"
+        }
+    ],
+    "perspectives": [
+        {
+            "title": "Academic BPMN",
+            "namespace": "http://oryx-editor.org/stencilsets/perspectives/academicbpmn#",
+            "description": "Academic perspective on BPMN. Features the complete standard.",
+            "stencilset": "http://b3mn.org/stencilset/bpmn1.1#",
+            "removeExtensions": [
+                "http://oryx-editor.org/stencilsets/extensions/bpmn1.1basicsubset#"
+            ]
+        },
+        {
+            "title": "Beginner BPMN",
+            "namespace": "http://oryx-editor.org/stencilsets/perspectives/beginnerbpmn#",
+            "description": "BPMN for beginners. Features a basic subset of the standard.",
+            "stencilset": "http://b3mn.org/stencilset/bpmn1.1#",
+            "addExtensions": [
+                "http://oryx-editor.org/stencilsets/extensions/bpmn1.1basicsubset#"
+            ]
+        }
+    ]
+}
