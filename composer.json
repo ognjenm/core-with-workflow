@@ -1,25 +1,25 @@
 {
-    "name": "telenok/core",
-    "description": "Telenok CMS Core engine",
-    "version": "0.0.1",
-    "authors": [
-        {
-            "name": "Telenok Company",
-            "email": "support@telenok.com"
-        }
-    ],
-    "require": {
-        "php": ">=5.4.0",
-        "laravel/framework": "4.2.*"
-    },
-    "autoload": {
-        "classmap": [
-            "src/migrations"
-        ],
-        "psr-0": {
-            "Telenok\\Core": "src/"
-        }
-    },
-    "minimum-stability": "stable",
-    "license": "Free for personal non-commercial, non-company using, commercial in other cases. Please, visit site telenok.com and page License"
+	"name": "telenok/core",
+	"description": "Telenok CMS Core engine",
+	"version": "0.0.1",
+	"authors": [
+		{
+			"name": "Telenok Company",
+			"email": "support@telenok.com"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"laravel/framework": "4.2.*"
+	},
+	"autoload": {
+		"classmap": [
+			"src/migrations"
+		],
+		"psr-0": {
+			"Telenok\\Core": "src/"
+		}
+	},
+	"minimum-stability": "stable",
+	"license": "Free for personal (non-commercial non-company) and commercial in other cases. Visit site telenok.com and page License"
 }
