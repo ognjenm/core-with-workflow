@@ -4,7 +4,7 @@
 	"version": "0.0.2",
 	"keywords": ["cms", "telenok", "core"],
 	"homepage": "http://telenok.com",
-	"minimum-stability": "stable",
+	"minimum-stability": "dev",
 	"license": [
 		"Freeware for personal (non-commercial non-company) using",
 		"Commercialware for any type of companies and commercial using"
