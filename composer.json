@@ -1,16 +1,15 @@
 {
     "name": "telenok/core",
-    "description": "Some Test Package",
+    "description": "Telenok CMS Core engine",
     "authors": [
         {
-            "name": "telenok",
-            "email": "info@telenok.com"
+            "name": "Telenok Company",
+            "email": "support@telenok.com"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.*",
-        "mockery/mockery": "0.7.2"
+        "laravel/framework": "4.2.*"
     },
     "autoload": {
         "classmap": [
@@ -20,6 +19,6 @@
             "Telenok\\Core": "src/"
         }
     },
-    "minimum-stability": "dev",
-    "license": "Private License"
+    "minimum-stability": "stable",
+    "license": "Free for personal non-commercial, non-company using, commercial in other cases. Please, visit site http://telenok.com/license"
 }
