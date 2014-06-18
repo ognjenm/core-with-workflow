@@ -1,6 +1,7 @@
 {
     "name": "telenok/core",
     "description": "Telenok CMS Core engine",
+    "version": "0.0.1",
     "authors": [
         {
             "name": "Telenok Company",
