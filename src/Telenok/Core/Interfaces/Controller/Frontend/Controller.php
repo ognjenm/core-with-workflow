@@ -101,7 +101,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		foreach ($this->cssFilePath as $file)
 		{
-			$header .= \Html::style($file);
+			$header .= \HTML::style($file);
 		}
 
 		foreach ($this->cssCode as $code)
@@ -111,7 +111,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		foreach ($this->jsFilePath as $file)
 		{
-			$header .= \Html::script($file);
+			$header .= \HTML::script($file);
 		}
 
 		foreach ($this->jsCode as $code)

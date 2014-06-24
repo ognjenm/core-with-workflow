@@ -17,55 +17,55 @@
         <link rel="schema.raziel" href="http://raziel.org/" />
 
 
-        {{ Html::style('packages/telenok/core/js/oryx/lib/ext-2.0.2/resources/css/ext-all.css') }}
-        {{ Html::style('packages/telenok/core/js/oryx/lib/ext-2.0.2/resources/css/xtheme-gray.css') }}
-        {{ Html::style('packages/telenok/core/js/oryx/css/theme_norm.css') }}
+        {{ HTML::style('packages/telenok/core/js/oryx/lib/ext-2.0.2/resources/css/ext-all.css') }}
+        {{ HTML::style('packages/telenok/core/js/oryx/lib/ext-2.0.2/resources/css/xtheme-gray.css') }}
+        {{ HTML::style('packages/telenok/core/js/oryx/css/theme_norm.css') }}
 
 
-        {{ Html::script('packages/telenok/core/js/oryx/lib/prototype.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/path_parser.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/ext-2.0.2/adapter/ext/ext-base.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/ext-2.0.2/ext-all.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/ext-2.0.2/color-field.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/i18n/translation_en.js')}}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/prototype.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/path_parser.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/ext-2.0.2/adapter/ext/ext-base.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/ext-2.0.2/ext-all.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/ext-2.0.2/color-field.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/i18n/translation_en.js')}}
         
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/utils.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/kickstart.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/erdfparser.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/datamanager.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/clazz.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/config.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/oryx.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/editpathhandler.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/minmaxpathhandler.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/pointspathhandler.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/svgmarker.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/svgshape.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/label.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/Math/math.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/stencil.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/property.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/propertyitem.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/complexpropertyitem.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/rules.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/stencilset.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/stencilsets.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/command.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/bounds.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/uiobject.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/abstractshape.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/canvas.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/main.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/svgDrag.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/shape.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/Controls/control.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/Controls/docker.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/Controls/magnet.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/node.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/edge.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/abstractPlugin.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/Core/abstractLayouter.js') }}
-        {{ Html::script('packages/telenok/core/js/oryx/lib/oryx/utils.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/utils.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/kickstart.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/erdfparser.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/datamanager.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/clazz.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/config.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/oryx.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/editpathhandler.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/minmaxpathhandler.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/pointspathhandler.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/svgmarker.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/svgshape.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/SVG/label.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/Math/math.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/stencil.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/property.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/propertyitem.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/complexpropertyitem.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/rules.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/stencilset.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/StencilSet/stencilsets.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/command.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/bounds.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/uiobject.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/abstractshape.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/canvas.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/main.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/svgDrag.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/shape.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/Controls/control.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/Controls/docker.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/Controls/magnet.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/node.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/edge.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/abstractPlugin.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/Core/abstractLayouter.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/lib/oryx/utils.js') }}
 
         
         <script type="text/javascript">

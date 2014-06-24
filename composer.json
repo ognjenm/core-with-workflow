@@ -9,7 +9,7 @@
 		"Freeware for personal (non-commercial non-company) using",
 		"Commercialware for any type of companies and commercial using"
 	],
-	"support" : {
+	"support": {
 		"email": "support@telenok.com",
 		"issues": "https://github.com/telenok/telenok/issues"
 	},
@@ -30,5 +30,5 @@
 		"psr-0": {
 			"Telenok\\Core": "src/"
 		}
-	} 
+	}
 }
