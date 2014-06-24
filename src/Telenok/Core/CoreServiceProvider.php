@@ -25,7 +25,7 @@ class CoreServiceProvider extends ServiceProvider {
         include __DIR__.'/../../config/route.php';
         
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
 
         include __DIR__.'/../../config/event.php'; 
@@ -59,7 +59,7 @@ class CoreServiceProvider extends ServiceProvider {
     public function register()
     {
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
         
         $this->app->singleton('telenok.config', '\Telenok\Core\Config'); 
