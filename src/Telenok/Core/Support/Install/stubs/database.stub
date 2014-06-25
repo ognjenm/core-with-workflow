@@ -26,7 +26,7 @@ return array(
 	|
 	*/
 
-	'default' => '{{db_driver}}',
+	'default' => '{{dbDriver}}',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -54,33 +54,33 @@ return array(
 
 		'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => '{{db_host}}',
-			'database'  => '{{db_database}}',
-			'username'  => '{{db_username}}',
-			'password'  => '{{db_password}}',
+			'host'      => '{{dbHost}}',
+			'database'  => '{{dbDatabase}}',
+			'username'  => '{{dbUsername}}',
+			'password'  => '{{dbPassword}}',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
-			'prefix'    => '{{db_prefix}}',
+			'prefix'    => '{{dbPrefix}}',
 		),
 
 		'pgsql' => array(
 			'driver'    => 'pgsql',
-			'host'      => '{{db_host}}',
-			'database'  => '{{db_database}}',
-			'username'  => '{{db_username}}',
-			'password'  => '{{db_password}}',
+			'host'      => '{{dbHost}}',
+			'database'  => '{{dbDatabase}}',
+			'username'  => '{{dbUsername}}',
+			'password'  => '{{dbPassword}}',
 			'charset'   => 'utf8',
-			'prefix'    => '{{db_prefix}}',
+			'prefix'    => '{{dbPrefix}}',
 			'schema'    => 'public',
 		),
 
 		'sqlsrv' => array(
 			'driver'    => 'sqlsrv',
-			'host'      => '{{db_host}}',
-			'database'  => '{{db_database}}',
-			'username'  => '{{db_username}}',
-			'password'  => '{{db_password}}',
-			'prefix'    => '{{db_prefix}}',
+			'host'      => '{{dbHost}}',
+			'database'  => '{{dbDatabase}}',
+			'username'  => '{{dbUsername}}',
+			'password'  => '{{dbPassword}}',
+			'prefix'    => '{{dbPrefix}}',
 		),
 
 	),

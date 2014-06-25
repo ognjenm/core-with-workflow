@@ -24,6 +24,8 @@ class CoreServiceProvider extends ServiceProvider {
   
         include __DIR__.'/../../config/route.php';
         
+		$this->commands('command.telenok.install');
+		
         //DONOTDELETETHISCOMMENT
         return;
         //~DONOTDELETETHISCOMMENT
@@ -58,6 +60,11 @@ class CoreServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+		$this->app['command.telenok.install'] = $this->app->share(function($app)
+		{
+			return new \Telenok\Core\Command\Install\Controller();
+		});
+		
         //DONOTDELETETHISCOMMENT
         return;
         //~DONOTDELETETHISCOMMENT

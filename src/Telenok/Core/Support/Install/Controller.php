@@ -18,14 +18,16 @@ class Controller {
 
 	public function setDomain($param = '')
 	{
-		if (gethostbyname(idn_to_ascii($param)))
+		if ($this->validateDomainOrIp($param))
 		{
 			$this->domain = $param;
 		}
 		else
 		{
-			throw new \Exception('Wrong domain name');	
+			throw new \Exception('Wrong domain or domain doesnt link to IP or wrong IP, may be server not running ?');	
 		}
+
+		return $this;
 	}
 	
 	public function setSuperuserLogin($param = '')
@@ -36,8 +38,10 @@ class Controller {
 		}
 		else
 		{
-			throw new \Exception('Wrong superuser login');	
+			throw new \Exception('Wrong superuser login.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setSuperuserPassword($param = '')
@@ -48,8 +52,10 @@ class Controller {
 		}
 		else
 		{
-			throw new \Exception('Wrong superuser password, should at least 8 symbols');	
+			throw new \Exception('Wrong superuser password, it should be at least 8 symbols.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setLocale($param = '')
@@ -60,8 +66,10 @@ class Controller {
 		}
 		else
 		{
-			throw new \Exception('Wrong locale');	
+			throw new \Exception('Wrong locale. It should contain two symbols like "en" or "ru"');	
 		}		
+		
+		return $this;
 	} 
 	
 	public function setDbDatabase($param = '')
@@ -72,8 +80,10 @@ class Controller {
 		}
 		else
 		{
-			throw new \Exception('Wrong database name');	
+			throw new \Exception('Wrong database name.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setDbDriver($param = '')
@@ -84,20 +94,24 @@ class Controller {
 		}
 		else
 		{
-			throw new \Exception('Wrong database driver');	
+			throw new \Exception('Wrong database driver. Choose one of sqlite, mysql, pgsql, sqlsrv.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setDbHost($param = '')
 	{
-		if (filter_var($param, FILTER_VALIDATE_IP) && $this->validateDomain($param))
+		if ($this->validateDomainOrIp($param))
 		{
 			$this->dbHost = $param;
 		}
 		else if ($this->dbDriver != 'sqlite') 
 		{
-			throw new \Exception('Wrong database host');	
+			throw new \Exception('Wrong domain or domain doesnt link to IP or wrong IP, may be server not running ?');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setDbUsername($param = '')
@@ -108,8 +122,10 @@ class Controller {
 		}
 		else if ($this->dbDriver != 'sqlite') 
 		{
-			throw new \Exception('Wrong database username');	
+			throw new \Exception('Wrong database username.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setDbPassword($param = '')
@@ -120,8 +136,10 @@ class Controller {
 		}
 		else if ($this->dbDriver != 'sqlite') 
 		{
-			throw new \Exception('Wrong database password');	
+			throw new \Exception('Wrong database password.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setDbPrefix($param = '')
@@ -132,115 +150,96 @@ class Controller {
 		}
 		else if (mb_strlen($param)) 
 		{
-			throw new \Exception('Wrong database prefix');	
+			throw new \Exception('Wrong database prefix.');	
 		}		
+		
+		return $this;
 	}
 	
 	public function setDomainSecure($param = '')
 	{
 		$this->domainSecure = $param === true || $param == 'yes' || $param == 'y' ? true : false;
+		
+		return $this;
 	}
 
-	public function validateDomain($param)
+	public function validateDomainOrIp($param)
 	{
-		return gethostbyname(idn_to_ascii($param));
+		return (filter_var($param, FILTER_VALIDATE_IP) || gethostbyname(idn_to_ascii($param)));
 	}
 
-
-	public function process($param = [])
+	public function processConfigFile()
     {
-        $error = []; 
+		$reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
+		$file = $reflector->getFileName();
 
-        $domain = trim(\Input::get('domain'));
-        $superuser_login = trim(\Input::get('superuser_login'));
-        $superuser_password = trim(\Input::get('superuser_password'));
-        $locale = trim(\Input::get('locale'));
-        $db_driver = trim(\Input::get('db_driver'));
-        $db_host = trim(\Input::get('db_host'));
-        $db_username = trim(\Input::get('db_username'));
-        $db_database = trim(\Input::get('db_database'));
-        $db_password = trim(\Input::get('db_password'));
-        $db_prefix = trim(\Input::get('db_prefix'));
+		$content = \File::get($file);
 
-        try
-        { 
-            $reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
-            $file = $reflector->getFileName();
-            
-            $content = \File::get($file);
+		$pattern = '/(DONOTDELETETHISCOMMENT\s*)(return;)/i';
+		$replacement = '${1}return;';
 
-            $pattern = '/(DONOTDELETETHISCOMMENT\s*)(return;)/i';
-            $replacement = '${1}return;';
-            
-            $res = preg_replace($pattern, $replacement, $content);
-            
-            \File::put($file, $res);
-            
-            $param = array(
-                'domain' => $this->domain,
-                'domainSecure' => $this->domainSecure ? 's' : '',
-                'locale' => $this->locale,
-                'random' => str_random(),
-                'dbDriver' => $this->dbDriver,
-                'dbDatabase' => $this->dbDatabase,
-                'dbHost' => $this->dbHost,
-                'dbUsername' => $this->dbUsername,
-                'dbPassword' => $this->dbPassword,
-                'dbPrefix' => $this->dbPrefix,
-            );
+		$res = preg_replace($pattern, $replacement, $content);
 
-            $stub = \File::get(__DIR__.'/stubs/database.stub');
+		\File::put($file, $res);
 
-            foreach($param as $k => $v)
-            {
-                $stub = str_replace('{{'.$k.'}}', $v, $stub);
-            }
-            
-            \File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
+		$param = array(
+			'domain' => $this->domain,
+			'domainSecure' => $this->domainSecure ? 's' : '',
+			'locale' => $this->locale,
+			'random' => str_random(),
+			'dbDriver' => $this->dbDriver,
+			'dbDatabase' => $this->dbDatabase,
+			'dbHost' => $this->dbHost,
+			'dbUsername' => $this->dbUsername,
+			'dbPassword' => $this->dbPassword,
+			'dbPrefix' => $this->dbPrefix,
+		);
 
-            try
-            {
-                if (\Schema::hasTable('deletemeplease'))
-                {
-                    \Schema::drop('deletemeplease');
-                }
-                
-                \Schema::create('deletemeplease', function($table)
-                {
-                    $table->increments('id');
-                });
-                
-                \Schema::drop('deletemeplease');
-            }
-            catch (\Exception $e)
-            {
-                $error['db_username'] = 1;
-                
-                throw new \Exception();
-            }
-            
-            \File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
-            
-            $stub = \File::get(__DIR__.'/stubs/app.stub');
+		$stub = \File::get(__DIR__.'/stubs/database.stub');
 
-            foreach($param as $k => $v)
-            {
-                $stub = str_replace('{{'.$k.'}}', $v, $stub);
-            }
+		foreach($param as $k => $v)
+		{
+			$stub = str_replace('{{'.$k.'}}', $v, $stub);
+		}
 
-            \File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php', $stub);
-            
-            $contentNew = \File::get($file);
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
 
-            $resNew = preg_replace($pattern, $replacement, $contentNew);
-            
-            \File::put($file, $resNew);
-        }
-        catch (\Exception $e)
-        {
-            return ['error' => $error];
-        }
-            
-        return ['success' => 1];
+		try
+		{
+			if (\Schema::hasTable('deletemeplease'))
+			{
+				\Schema::drop('deletemeplease');
+			}
+
+			\Schema::create('deletemeplease', function($table)
+			{
+				$table->increments('id');
+			});
+
+			\Schema::drop('deletemeplease');
+		}
+		catch (\Exception $e)
+		{
+			$error['db_username'] = 1;
+
+			throw new \Exception();
+		}
+
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
+
+		$stub = \File::get(__DIR__.'/stubs/app.stub');
+
+		foreach($param as $k => $v)
+		{
+			$stub = str_replace('{{'.$k.'}}', $v, $stub);
+		}
+
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php', $stub);
+
+		$contentNew = \File::get($file);
+
+		$resNew = preg_replace($pattern, $replacement, $contentNew);
+
+		\File::put($file, $resNew);
     } 
 }
