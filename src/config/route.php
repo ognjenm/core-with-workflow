@@ -31,8 +31,8 @@
     \Event::fire('telenok.compile.route');
 }));
 
-\Route::any('cmf/install', array('as' => 'cmf.install', 'uses' => "Telenok\Core\Support\Install\Controller@getContent"));
-\Route::any('cmf/install/verify', array('as' => 'cmf.install.process', 'uses' => "Telenok\Core\Support\Install\Controller@process"));
+\Route::any('cmf/install', array('as' => 'cmf.install', 'uses' => "Telenok\Core\Controller\Install\Controller@getInstallContent"));
+\Route::any('cmf/install/verify', array('as' => 'cmf.install.process', 'uses' => "Telenok\Core\Controller\Install\Controller@getInstall@process"));
 
 
 // Fields

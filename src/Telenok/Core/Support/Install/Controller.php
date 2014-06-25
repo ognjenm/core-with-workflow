@@ -2,14 +2,152 @@
 
 namespace Telenok\Core\Support\Install;
 
-class Controller extends \Illuminate\Routing\Controller {
+class Controller {
     
-    public function getContent()
-    {
-        return \View::make('core::install.installer', array('name' => 'Taylor'));
-    }
-    
-    public function process()
+	protected $domain = '';
+	protected $domainSecure = false;
+	protected $superuserLogin = '';
+	protected $superuserPassword = '';
+	protected $locale = '';
+	protected $dbDriver = '';
+	protected $dbHost = '';
+	protected $dbUsername = '';
+	protected $dbPassword = '';
+	protected $dbDatabase = '';
+	protected $dbPrefix = '';
+
+	public function setDomain($param = '')
+	{
+		if (gethostbyname(idn_to_ascii($param)))
+		{
+			$this->domain = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong domain name');	
+		}
+	}
+	
+	public function setSuperuserLogin($param = '')
+	{
+		if (preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $param))
+		{
+			$this->superuserLogin = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong superuser login');	
+		}		
+	}
+	
+	public function setSuperuserPassword($param = '')
+	{
+		if (mb_strlen($param) > 7)
+		{
+			$this->superuserPassword = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong superuser password, should at least 8 symbols');	
+		}		
+	}
+	
+	public function setLocale($param = '')
+	{
+		if (preg_match('/^[a-z]{2}$/', $param))
+		{
+			$this->locale = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong locale');	
+		}		
+	} 
+	
+	public function setDbDatabase($param = '')
+	{
+		if (preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $param))
+		{
+			$this->dbDatabase = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong database name');	
+		}		
+	}
+	
+	public function setDbDriver($param = '')
+	{
+		if (in_array($param, ['sqlite', 'mysql', 'pgsql', 'sqlsrv']))
+		{
+			$this->dbDriver = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong database driver');	
+		}		
+	}
+	
+	public function setDbHost($param = '')
+	{
+		if (filter_var($param, FILTER_VALIDATE_IP) && $this->validateDomain($param))
+		{
+			$this->dbHost = $param;
+		}
+		else if ($this->dbDriver != 'sqlite') 
+		{
+			throw new \Exception('Wrong database host');	
+		}		
+	}
+	
+	public function setDbUsername($param = '')
+	{
+		if (mb_strlen($param))
+		{
+			$this->dbUsername = $param;
+		}
+		else if ($this->dbDriver != 'sqlite') 
+		{
+			throw new \Exception('Wrong database username');	
+		}		
+	}
+	
+	public function setDbPassword($param = '')
+	{
+		if (mb_strlen($param))
+		{
+			$this->dbPassword = $param;
+		}
+		else if ($this->dbDriver != 'sqlite') 
+		{
+			throw new \Exception('Wrong database password');	
+		}		
+	}
+	
+	public function setDbPrefix($param = '')
+	{
+		if (mb_strlen($param) && preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $param))
+		{
+			$this->dbPrefix = $param;
+		}
+		else if (mb_strlen($param)) 
+		{
+			throw new \Exception('Wrong database prefix');	
+		}		
+	}
+	
+	public function setDomainSecure($param = '')
+	{
+		$this->domainSecure = $param === true || $param == 'yes' || $param == 'y' ? true : false;
+	}
+
+	public function validateDomain($param)
+	{
+		return gethostbyname(idn_to_ascii($param));
+	}
+
+
+	public function process($param = [])
     {
         $error = []; 
 
@@ -26,41 +164,6 @@ class Controller extends \Illuminate\Routing\Controller {
 
         try
         { 
-            if (!$domain || !$this->validateDomain($domain))
-            {
-               $error['domain'] = 1;
-            }
-
-            if (!$superuser_login || !preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $superuser_login))
-            {
-               $error['superuser_login'] = 1;
-            }
-
-            if (!$superuser_password || strlen($superuser_password) < 8)
-            {
-               $error['superuser_password'] = 1;
-            }
-
-            if (!$db_database || !preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $db_database))
-            {
-               $error['db_database'] = 1;
-            }
-
-            if ($db_driver!='sqlite' && (!$db_host || (!filter_var($db_host, FILTER_VALIDATE_IP) && !$this->validateDomain($db_host))))
-            {
-               $error['db_host'] = 1;
-            }
-
-            if ($db_prefix && !preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $db_prefix))
-            {
-               $error['db_prefix'] = 1;
-            }
-
-            if (!empty($error))
-            {
-                throw new \Exception();
-            } 
-            
             $reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
             $file = $reflector->getFileName();
             
@@ -74,15 +177,16 @@ class Controller extends \Illuminate\Routing\Controller {
             \File::put($file, $res);
             
             $param = array(
-                'domain' => $domain,
-                'locale' => $locale,
+                'domain' => $this->domain,
+                'domainSecure' => $this->domainSecure ? 's' : '',
+                'locale' => $this->locale,
                 'random' => str_random(),
-                'db_driver' => $db_driver,
-                'db_database' => $db_database,
-                'db_host' => $db_host,
-                'db_username' => $db_username,
-                'db_password' => $db_password,
-                'db_prefix' => $db_prefix,
+                'dbDriver' => $this->dbDriver,
+                'dbDatabase' => $this->dbDatabase,
+                'dbHost' => $this->dbHost,
+                'dbUsername' => $this->dbUsername,
+                'dbPassword' => $this->dbPassword,
+                'dbPrefix' => $this->dbPrefix,
             );
 
             $stub = \File::get(__DIR__.'/stubs/database.stub');
@@ -131,10 +235,6 @@ class Controller extends \Illuminate\Routing\Controller {
             $resNew = preg_replace($pattern, $replacement, $contentNew);
             
             \File::put($file, $resNew);
-            
-            \Artisan::call('asset:publish');
-            \Artisan::call('optimize');
-            \Artisan::call('migrate');
         }
         catch (\Exception $e)
         {
@@ -142,10 +242,5 @@ class Controller extends \Illuminate\Routing\Controller {
         }
             
         return ['success' => 1];
-    }
-
-    protected function validateDomain($domain)
-    { 
-        return gethostbyname(idn_to_ascii($domain));
-    }
+    } 
 }
