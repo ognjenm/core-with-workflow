@@ -53,8 +53,7 @@ class Controller extends Command {
 				catch (\Exception $ex)
 				{
 					$this->error('Sorry, error occured');
-					
-					throw $ex;
+					$this->error($ex->getMessage());
 				}
 			}
 		}
@@ -62,7 +61,7 @@ class Controller extends Command {
  
 	public function inputDomain()
 	{
-		while($name = $this->ask('What domain or IP uses for site, eg, mysite.com or 192.168.0.1: '))
+		while($name = $this->ask('What are site\'s domain or IP, eg, mysite.com or 192.168.0.1: '))
 		{
 			$this->info('Wait, please...');
 
@@ -86,7 +85,7 @@ class Controller extends Command {
 
 	public function inputSuperuserLogin()
 	{
-		while($name = $this->ask('What is login for superuser: '))
+		while($name = $this->ask('What is login for superuser in backend: '))
 		{
 
 			try
@@ -104,7 +103,7 @@ class Controller extends Command {
  
 	public function inputSuperuserPassword()
 	{
-		while($name = $this->ask('What is password for superuser: '))
+		while($name = $this->secret('What is password for superuser in backend: '))
 		{ 
 			try
 			{
@@ -116,7 +115,7 @@ class Controller extends Command {
 				continue;
 			}
 			
-			$confirmPassword = $this->ask('Please, type password again to confirm it: ');
+			$confirmPassword = $this->secret('Please, type password again to confirm it: ');
 			
 			if ($name === $confirmPassword)
 			{
@@ -131,7 +130,7 @@ class Controller extends Command {
  
 	public function inputLocale()
 	{
-		while($name = $this->ask('What locale to use, eg, en: '))
+		while($name = $this->ask('What is locale, eg, en: '))
 		{
 			try
 			{
@@ -148,7 +147,7 @@ class Controller extends Command {
  
 	public function inputDbDriver()
 	{
-		while($name = $this->ask('What database driver to use, eg, mysql: '))
+		while($name = $this->ask('What is database driver, eg, mysql: '))
 		{
 			try
 			{
@@ -165,7 +164,7 @@ class Controller extends Command {
  
 	public function inputDbHost()
 	{
-		while($name = $this->ask('What database host to use, eg, 127.0.0.1 or mysql.mysite.com: '))
+		while($name = $this->ask('What is database host, eg, 127.0.0.1 or mysql.mysite.com: '))
 		{
 			$this->info('Wait, please...');
 
@@ -184,7 +183,7 @@ class Controller extends Command {
  
 	public function inputDbUsername()
 	{
-		while($name = $this->ask('What is username for database user: '))
+		while($name = $this->ask('What is database username: '))
 		{
 			try
 			{
@@ -201,7 +200,7 @@ class Controller extends Command {
  
 	public function inputDbPassword()
 	{
-		while($name = $this->ask('What is password for database user: '))
+		while($name = $this->ask('What is database user\'s password: '))
 		{
 			try
 			{
@@ -235,7 +234,7 @@ class Controller extends Command {
 	
 	public function inputDbPrefix()
 	{
-		while($name = $this->ask('What is database prefix ? It can be empty: '))
+		while($name = $this->ask('What is database prefix [empty default]: '))
 		{
 			try
 			{
