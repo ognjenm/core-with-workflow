@@ -52,7 +52,7 @@ class Controller extends Command {
 				}
 				catch (\Exception $ex)
 				{
-					$this->error('Sorry, error occured');
+					$this->error('Sorry, an error occured.');
 					$this->error($ex->getMessage());
 				}
 			}

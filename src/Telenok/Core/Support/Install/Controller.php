@@ -203,26 +203,38 @@ class Controller {
 		}
 
 		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
+		
+		// validate database connection
+		$conn = array(
+			'driver'    => $this->dbDriver,
+			'host'      => $this->dbHost,
+			'database'  => $this->dbDatabase,
+			'username'  => $this->dbUsername,
+			'password'  => $this->dbPassword,
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => $this->dbPrefix,
+		);
 
+		\Config::set('database.connections.install', $conn);
+		
 		try
 		{
-			if (\Schema::hasTable('deletemeplease'))
+			if (\Schema::connection('install')->hasTable('deletemeplease'))
 			{
-				\Schema::drop('deletemeplease');
+				\Schema::connection('install')->drop('deletemeplease');
 			}
 
-			\Schema::create('deletemeplease', function($table)
+			\Schema::connection('install')->create('deletemeplease', function($table)
 			{
 				$table->increments('id');
 			});
 
-			\Schema::drop('deletemeplease');
+			\Schema::connection('install')->drop('deletemeplease');
 		}
 		catch (\Exception $e)
 		{
-			$error['db_username'] = 1;
-
-			throw new \Exception();
+			throw new \Exception('Cant create table in database. Please, validate setting in app/config/database.php or set its again with current console command.');
 		}
 
 		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
