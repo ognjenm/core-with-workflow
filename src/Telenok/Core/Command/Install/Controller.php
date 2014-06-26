@@ -31,9 +31,7 @@ class Controller extends Command {
 		if ($this->confirm('Do you want to configure app.php [yes/no]: ', false))
 		{
 			$this->inputDomain();
-			$this->inputDomainSecure();
-			$this->inputSuperuserLogin();
-			$this->inputSuperuserPassword();
+			$this->inputDomainSecure(); 
 			$this->inputLocale();
 
 			if ($this->confirm('Do you want to replace app.php [yes/no]: ', false))
@@ -41,7 +39,7 @@ class Controller extends Command {
 				try
 				{
 					$this->processingController->processConfigAppFile();
-					
+
 					$this->info('Done. Thank you.');
 				}
 				catch (\Exception $ex)
@@ -66,7 +64,7 @@ class Controller extends Command {
 				try
 				{
 					$this->processingController->processConfigDatabaseFile();
-					
+
 					$this->info('Done. Thank you.');
 				}
 				catch (\Exception $ex)
@@ -77,12 +75,29 @@ class Controller extends Command {
 			}
 		}
 
-		if ($this->confirm('Do you want to run migrations [yes/no]: ', false))
+		if (!\Schema::hasTable('setting'))
 		{
-			$this->call('migrate', array('--package' => 'telenok/core'));
+			\Schema::create('setting', function(\Illuminate\Database\Schema\Blueprint $table)
+			{
+				$table->increments('id');
+				$table->timestamps();
+				$table->softDeletes();
 
-			$this->processingController->postMigrateProcess();
+				$table->text('title')->nullable();
+				$table->string('code')->nullable()->default(null)->unique('code');
+				$table->mediumText('value');
+				$table->integer('active')->unsigned()->nullable()->default(null);
+				$table->timestamp('start_at');
+				$table->timestamp('end_at');
+				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
+				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
+				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
+			});
 		}
+		
+		$this->processingController->postMigrateProcess();
+
+		$this->info('Please, run command "php artisan telenok:migrate" to finish installation. Thank you.');
 	}
  
 	public function inputDomain()
