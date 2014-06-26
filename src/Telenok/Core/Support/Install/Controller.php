@@ -213,20 +213,21 @@ class Controller {
 		);
 
 		\Config::set('database.connections.install', $conn);
-		
+		\Config::set('database.default', 'install');
+
 		try
 		{
-			if (\Schema::connection('install')->hasTable('deletemeplease'))
+			if (\Schema::hasTable('deletemeplease'))
 			{
-				\Schema::connection('install')->drop('deletemeplease');
+				\Schema::drop('deletemeplease');
 			}
 
-			\Schema::connection('install')->create('deletemeplease', function($table)
+			\Schema::create('deletemeplease', function($table)
 			{
 				$table->increments('id');
 			});
 
-			\Schema::connection('install')->drop('deletemeplease');
+			\Schema::drop('deletemeplease');
 		}
 		catch (\Exception $e)
 		{
