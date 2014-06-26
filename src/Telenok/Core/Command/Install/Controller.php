@@ -28,25 +28,19 @@ class Controller extends Command {
 
 		$this->info('Configure Telenok CMS');
 
-		if ($this->confirm('Do you want to configure app.php and database.php [yes/no]: ', false))
+		if ($this->confirm('Do you want to configure app.php [yes/no]: ', false))
 		{
 			$this->inputDomain();
 			$this->inputDomainSecure();
 			$this->inputSuperuserLogin();
 			$this->inputSuperuserPassword();
 			$this->inputLocale();
-			$this->inputDbDriver();
-			$this->inputDbHost();
-			$this->inputDbUsername();
-			$this->inputDbPassword();
-			$this->inputDbDatabase();
-			$this->inputDbPrefix();
 			
-			if ($this->confirm('Do you want to replace app.php and database.php files [yes/no]: ', false))
+			if ($this->confirm('Do you want to replace app.php [yes/no]: ', false))
 			{
 				try
 				{
-					$this->processingController->processConfigFile();
+					$this->processingController->processConfigAppFile();
 					
 					$this->info('Done. Thank you.');
 				}
@@ -57,12 +51,44 @@ class Controller extends Command {
 				}
 			}
 		}
+
+		if ($this->confirm('Do you want to configure database.php [yes/no]: ', false))
+		{
+			$this->inputDbDriver();
+			$this->inputDbHost();
+			$this->inputDbUsername();
+			$this->inputDbPassword();
+			$this->inputDbDatabase();
+			$this->inputDbPrefix();
+
+			if ($this->confirm('Do you want to replace database.php files [yes/no]: ', false))
+			{
+				try
+				{
+					$this->processingController->processConfigDatabaseFile();
+					
+					$this->info('Done. Thank you.');
+				}
+				catch (\Exception $ex)
+				{
+					$this->error('Sorry, an error occured.');
+					$this->error($ex->getMessage());
+				}
+			}
+		}
+
+		if ($this->confirm('Do you want to run migrations [yes/no]: ', false))
+		{
+			\Artisan::call('command:migrate', array('--package' => 'telenok/core'));
+		}
 	}
  
 	public function inputDomain()
 	{
-		while($name = $this->ask('What are site\'s domain or IP, eg, mysite.com or 192.168.0.1: '))
+		while(true)
 		{
+			$name = $this->ask('What is site domain or IP, eg, mysite.com or 192.168.0.1: ');
+
 			$this->info('Wait, please...');
 
 			try
@@ -73,7 +99,6 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
@@ -85,8 +110,9 @@ class Controller extends Command {
 
 	public function inputSuperuserLogin()
 	{
-		while($name = $this->ask('What is login for superuser in backend: '))
+		while(true)
 		{
+			$name = $this->ask('What is login for superuser in backend: ');
 
 			try
 			{
@@ -96,15 +122,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
- 
+
 	public function inputSuperuserPassword()
 	{
-		while($name = $this->secret('What is password for superuser in backend: '))
+		while(true)
 		{ 
+			$name = $this->secret('What is password for superuser in backend: ');
+			
 			try
 			{
 				$this->processingController->setSuperuserPassword($name); 
@@ -130,8 +157,10 @@ class Controller extends Command {
  
 	public function inputLocale()
 	{
-		while($name = $this->ask('What is locale, eg, en: '))
+		while(true)
 		{
+			$name = $this->ask('What is locale, eg, en: ');
+			
 			try
 			{
 				$this->processingController->setLocale($name);
@@ -140,15 +169,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
  
 	public function inputDbDriver()
 	{
-		while($name = $this->ask('What is database driver, eg, mysql: '))
+		while(true)
 		{
+			$name = $this->ask('What is database driver, eg, mysql: ');
+			
 			try
 			{
 				$this->processingController->setDbDriver($name);
@@ -157,15 +187,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
  
 	public function inputDbHost()
 	{
-		while($name = $this->ask('What is database host, eg, 127.0.0.1 or mysql.mysite.com: '))
+		while(true)
 		{
+			$name = $this->ask('What is database host, eg, 127.0.0.1 or mysql.mysite.com: ');
+			
 			$this->info('Wait, please...');
 
 			try
@@ -176,15 +207,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
  
 	public function inputDbUsername()
 	{
-		while($name = $this->ask('What is database username: '))
+		while(true)
 		{
+			$name = $this->ask('What is database username: ');
+					
 			try
 			{
 				$this->processingController->setDbUsername($name);
@@ -193,15 +225,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
  
 	public function inputDbPassword()
 	{
-		while($name = $this->ask('What is database user\'s password: '))
+		while(true)
 		{
+			$name = $this->ask('What is database user\'s password: ');
+			
 			try
 			{
 				$this->processingController->setDbPassword($name);
@@ -210,15 +243,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
  
 	public function inputDbDatabase()
 	{
-		while($name = $this->ask('What is database name: '))
+		while(true)
 		{
+			$name = $this->ask('What is database name: ');
+			
 			try
 			{
 				$this->processingController->setDbDatabase($name);
@@ -227,15 +261,16 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}
 	
 	public function inputDbPrefix()
 	{
-		while($name = $this->ask('What is database prefix [empty default]: '))
+		while(true)
 		{
+			$name = $this->ask('What is database prefix [empty default]: ');
+			
 			try
 			{
 				$this->processingController->setDbPrefix($name);
@@ -244,7 +279,6 @@ class Controller extends Command {
 			catch (\Exception $e)
 			{
 				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
 			}
 		}
 	}

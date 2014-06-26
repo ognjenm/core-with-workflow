@@ -17,7 +17,7 @@ class Controller {
 	protected $dbPrefix = '';
 
 	public function setDomain($param = '')
-	{
+	{ 
 		if ($this->validateDomainOrIp($param))
 		{
 			$this->domain = $param;
@@ -32,7 +32,7 @@ class Controller {
 	
 	public function setSuperuserLogin($param = '')
 	{
-		if (preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $param))
+		if (preg_match('/^[A-Za-z][A-Za-z0-9_]+$/', $param))
 		{
 			$this->superuserLogin = $param;
 		}
@@ -74,7 +74,7 @@ class Controller {
 	
 	public function setDbDatabase($param = '')
 	{
-		if (preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $param))
+		if (preg_match('/^[A-Za-z][A-Za-z0-9_]+$/', $param))
 		{
 			$this->dbDatabase = $param;
 		}
@@ -108,7 +108,7 @@ class Controller {
 		}
 		else if ($this->dbDriver != 'sqlite') 
 		{
-			throw new \Exception('Wrong domain or domain doesnt link to IP or wrong IP, may be server not running ?');	
+			throw new \Exception('Wrong domain or domain hasnt link to IP or wrong IP, may be LAMP server (like Denwer, XAMPP) not running ?');	
 		}		
 		
 		return $this;
@@ -130,21 +130,14 @@ class Controller {
 	
 	public function setDbPassword($param = '')
 	{
-		if (mb_strlen($param))
-		{
-			$this->dbPassword = $param;
-		}
-		else if ($this->dbDriver != 'sqlite') 
-		{
-			throw new \Exception('Wrong database password.');	
-		}		
+		$this->dbPassword = $param;
 		
 		return $this;
 	}
 	
 	public function setDbPrefix($param = '')
 	{
-		if (mb_strlen($param) && preg_match('/^[A-Za-z][A-Za-z0-9_]*$/', $param))
+		if (mb_strlen($param) && preg_match('/^[A-Za-z][A-Za-z0-9_]+$/', $param))
 		{
 			$this->dbPrefix = $param;
 		}
@@ -165,28 +158,31 @@ class Controller {
 
 	public function validateDomainOrIp($param)
 	{
-		return (filter_var($param, FILTER_VALIDATE_IP) || gethostbyname(idn_to_ascii($param)));
+		return (mb_strlen($param) && (filter_var($param, FILTER_VALIDATE_IP) || gethostbyname(idn_to_ascii($param))));
 	}
 
-	public function processConfigFile()
+	public function processConfigAppFile()
     {
-		$reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
-		$file = $reflector->getFileName();
-
-		$content = \File::get($file);
-
-		$pattern = '/(DONOTDELETETHISCOMMENT\s*)(return;)/i';
-		$replacement = '${1}return;';
-
-		$res = preg_replace($pattern, $replacement, $content);
-
-		\File::put($file, $res);
-
 		$param = array(
 			'domain' => $this->domain,
 			'domainSecure' => $this->domainSecure ? 's' : '',
 			'locale' => $this->locale,
 			'random' => str_random(),
+		);
+
+		$stub = \File::get(__DIR__.'/stubs/app.stub');
+
+		foreach($param as $k => $v)
+		{
+			$stub = str_replace('{{'.$k.'}}', $v, $stub);
+		}
+
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php', $stub);
+    } 
+
+	public function processConfigDatabaseFile()
+    { 
+		$param = array(
 			'dbDriver' => $this->dbDriver,
 			'dbDatabase' => $this->dbDatabase,
 			'dbHost' => $this->dbHost,
@@ -237,21 +233,21 @@ class Controller {
 			throw new \Exception('Cant create table in database. Please, validate setting in app/config/database.php or set its again with current console command.');
 		}
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub); 
+		
+		
+		
+		$reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
+		$file = $reflector->getFileName();
 
-		$stub = \File::get(__DIR__.'/stubs/app.stub');
+		$content = \File::get($file);
 
-		foreach($param as $k => $v)
-		{
-			$stub = str_replace('{{'.$k.'}}', $v, $stub);
-		}
+		$pattern = '/(DONOTDELETETHISCOMMENT\s*)(return;)/i';
+		$replacement = '${1}return;';
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php', $stub);
+		$res = preg_replace($pattern, $replacement, $content);
 
-		$contentNew = \File::get($file);
-
-		$resNew = preg_replace($pattern, $replacement, $contentNew);
-
-		\File::put($file, $resNew);
+		\File::put($file, $res);
+		
     } 
 }
