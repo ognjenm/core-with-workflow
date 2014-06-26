@@ -233,21 +233,22 @@ class Controller {
 			throw new \Exception('Cant create table in database. Please, validate setting in app/config/database.php or set its again with current console command.');
 		}
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub); 
-		
-		
-		
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);  
+    }
+	
+	public function postMigrateProcess()
+	{
 		$reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
 		$file = $reflector->getFileName();
 
 		$content = \File::get($file);
 
 		$pattern = '/(DONOTDELETETHISCOMMENT\s*)(return;)/i';
-		$replacement = '${1}return;';
+		$replacement = '${1}//return;';
 
 		$res = preg_replace($pattern, $replacement, $content);
 
 		\File::put($file, $res);
-		
-    } 
+	}
+	
 }

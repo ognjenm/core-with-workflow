@@ -35,7 +35,7 @@ class Controller extends Command {
 			$this->inputSuperuserLogin();
 			$this->inputSuperuserPassword();
 			$this->inputLocale();
-			
+
 			if ($this->confirm('Do you want to replace app.php [yes/no]: ', false))
 			{
 				try
@@ -79,7 +79,9 @@ class Controller extends Command {
 
 		if ($this->confirm('Do you want to run migrations [yes/no]: ', false))
 		{
-			\Artisan::call('command:migrate', array('--package' => 'telenok/core'));
+			$this->call('migrate', array('--package' => 'telenok/core'));
+
+			$this->processingController->postMigrateProcess();
 		}
 	}
  
