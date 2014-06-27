@@ -28,7 +28,7 @@ class CoreServiceProvider extends ServiceProvider {
 		$this->commands('command.telenok.migration');
 		
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
 
         include __DIR__.'/../../config/event.php'; 
@@ -65,7 +65,7 @@ class CoreServiceProvider extends ServiceProvider {
 		$this->app['command.telenok.migration'] = $this->app->share(function($app) { return new \Telenok\Core\Command\Migration\Controller(); });
 		
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
         
         $this->app->singleton('telenok.config', '\Telenok\Core\Config'); 
