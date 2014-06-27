@@ -34,18 +34,18 @@ class Process extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 */
 	public function eventResource()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Workflow\EventResource', 'event_resource_workflow_process');
+		return $this->hasMany('\Telenok\Workflow\EventResource', 'event_resource_workflow_process');
 	}
 
 	public function thread()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Workflow\Thread', 'thread_workflow_process');
+		return $this->hasMany('\Telenok\Workflow\Thread', 'thread_workflow_process');
 	}
 
 
     public function threadWorkflowProcess()
     {
-        return $this->belongsTo('\Telenok\Core\Model\Workflow\Process', 'thread_workflow_process');
+        return $this->belongsTo('\Telenok\Workflow\Process', 'thread_workflow_process');
     }
 
 

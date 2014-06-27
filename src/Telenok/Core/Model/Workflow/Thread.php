@@ -34,7 +34,7 @@ class Thread extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	*/
 	public function threadWorkflowProcess()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\Workflow\Process', 'thread_workflow_process');
+		return $this->belongsTo('\Telenok\Workflow\Process', 'thread_workflow_process');
 	}
 
 }

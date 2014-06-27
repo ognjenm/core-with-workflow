@@ -16,12 +16,12 @@ class Page extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public function pagePageController()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\Web\PageController', 'page_page_controller');
+		return $this->belongsTo('\Telenok\Web\PageController', 'page_page_controller');
 	}
 
 	public function widget()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Web\WidgetOnPage', 'widget_page');
+		return $this->hasMany('\Telenok\Web\WidgetOnPage', 'widget_page');
 	}
 
 }

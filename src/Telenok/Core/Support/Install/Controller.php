@@ -7,6 +7,7 @@ class Controller {
 	protected $domain = '';
 	protected $domainSecure = false;
 	protected $superuserLogin = '';
+	protected $superuserEmail = '';
 	protected $superuserPassword = '';
 	protected $locale = '';
 	protected $dbDriver = '';
@@ -30,6 +31,11 @@ class Controller {
 		return $this;
 	}
 	
+	public function getDomain()
+	{
+		return $this->domain;
+	}
+	
 	public function setSuperuserLogin($param = '')
 	{
 		if (preg_match('/^[A-Za-z][A-Za-z0-9_]+$/', $param))
@@ -42,6 +48,31 @@ class Controller {
 		}		
 		
 		return $this;
+	}
+	
+	public function getSuperuserLogin()
+	{
+		return $this->superuserLogin;
+	}
+	
+	
+	public function setSuperuserEmail($param = '')
+	{
+		if (mb_strlen($param))
+		{
+			$this->superuserEmail = $param;
+		}
+		else
+		{
+			throw new \Exception('Wrong superuser email.');	
+		}		
+		
+		return $this;
+	}
+	
+	public function getSuperuserEmail()
+	{
+		return $this->superuserEmail;
 	}
 	
 	public function setSuperuserPassword($param = '')
@@ -58,6 +89,11 @@ class Controller {
 		return $this;
 	}
 	
+	public function getSuperuserPassword()
+	{
+		return $this->superuserPassword;
+	}
+	
 	public function setLocale($param = '')
 	{
 		if (preg_match('/^[a-z]{2}$/', $param))
@@ -72,6 +108,11 @@ class Controller {
 		return $this;
 	} 
 	
+	public function getLocale()
+	{
+		return $this->locale;
+	}
+	
 	public function setDbDatabase($param = '')
 	{
 		if (preg_match('/^[A-Za-z][A-Za-z0-9_]+$/', $param))
@@ -84,6 +125,11 @@ class Controller {
 		}		
 		
 		return $this;
+	}
+	
+	public function getDbDatabase()
+	{
+		return $this->dbDatabase;
 	}
 	
 	public function setDbDriver($param = '')
@@ -100,6 +146,11 @@ class Controller {
 		return $this;
 	}
 	
+	public function getDbDriver()
+	{
+		return $this->dbDriver;
+	}
+	
 	public function setDbHost($param = '')
 	{
 		if ($this->validateDomainOrIp($param))
@@ -112,6 +163,11 @@ class Controller {
 		}		
 		
 		return $this;
+	}
+	
+	public function getDbHost()
+	{
+		return $this->dbHost;
 	}
 	
 	public function setDbUsername($param = '')
@@ -128,11 +184,21 @@ class Controller {
 		return $this;
 	}
 	
+	public function getDbUsername()
+	{
+		return $this->dbUsername;
+	}
+	
 	public function setDbPassword($param = '')
 	{
 		$this->dbPassword = $param;
 		
 		return $this;
+	}
+	
+	public function getDbPassword()
+	{
+		return $this->dbPassword;
 	}
 	
 	public function setDbPrefix($param = '')
@@ -149,13 +215,23 @@ class Controller {
 		return $this;
 	}
 	
+	public function getDbPrefix()
+	{
+		return $this->dbPrefix;
+	}
+	
 	public function setDomainSecure($param = '')
 	{
 		$this->domainSecure = $param === true || $param == 'yes' || $param == 'y' ? true : false;
 		
 		return $this;
 	}
-
+	
+	public function getDomainSecure()
+	{
+		return $this->domainSecure;
+	}
+	
 	public function validateDomainOrIp($param)
 	{
 		return (mb_strlen($param) && (filter_var($param, FILTER_VALIDATE_IP) || gethostbyname(idn_to_ascii($param))));

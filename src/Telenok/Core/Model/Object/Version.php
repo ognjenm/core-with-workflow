@@ -14,7 +14,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		$data = static::findOrFail($versionId);
 
-		$class = \Telenok\Core\Model\Object\Type::findOrFail($data->object_type_id)->class_model;
+		$class = \Telenok\Object\Type::findOrFail($data->object_type_id)->class_model;
 
 		$model = $class::findOrFail($data->object_id);
 		$model->setRawAttributes(json_decode($data->object_data, true));
@@ -28,14 +28,14 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		{
 			$versionData = static::findOrFail($version);
 		}
-		else if ($version instanceof \Telenok\Core\Model\Object\Version)
+		else if ($version instanceof \Telenok\Object\Version)
 		{
 			$versionData = $version;
 		}
 
 		try
 		{
-			$class = \Telenok\Core\Model\Object\Type::findOrFail($versionData->object_type_id)->class_model;
+			$class = \Telenok\Object\Type::findOrFail($versionData->object_type_id)->class_model;
 		} 
 		catch (\Exception $ex) 
 		{
@@ -59,7 +59,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public static function add(\Illuminate\Database\Eloquent\Model $model = null)
 	{
-		if (!($model instanceof \Telenok\Core\Model\Object\Sequence) && $model->exists && \Config::get('app.version.enabled'))
+		if (!($model instanceof \Telenok\Object\Sequence) && $model->exists && \Config::get('app.version.enabled'))
 		{
 			$this_ = new static;
 
@@ -97,7 +97,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		if (!$this->insideProcess)
 		{
-			throw new \Exception('Please, use \Telenok\Core\Model\Object\Version::add($model) method');
+			throw new \Exception('Please, use \Telenok\Object\Version::add($model) method');
 		}
 
 		return parent::save($options);

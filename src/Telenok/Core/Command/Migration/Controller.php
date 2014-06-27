@@ -31,12 +31,23 @@ class Controller extends Command {
 		if ($this->confirm('Do you want to create and update tables in database [yes/no]: ', false))
 		{
 			$this->inputSuperuserLogin();
+			$this->inputSuperuserEmail();
 			$this->inputSuperuserPassword(); 
 			
-			$this->call('migrate', array('--package' => 'telenok/core')); 
+			$this->info('Start create tables and seed datbase. Please, wait. It cat take some minuts.'); 
+			
+			$this->call('migrate', array('--package' => 'telenok/core'));
+
+			$user = \Telenok\Core\Model\User\User::where('username', 'admin')->first();
+			
+			$user->storeOrUpdate([
+				'username' => $this->processingController->getSuperuserLogin(),
+				'email' => $this->processingController->getSuperuserEmail(),
+				'password' => $this->processingController->getSuperuserPassword(),
+			]);
 		}
 	}
- 
+
 	public function inputSuperuserLogin()
 	{
 		while(true)
@@ -46,6 +57,24 @@ class Controller extends Command {
 			try
 			{
 				$this->processingController->setSuperuserLogin($name);
+				break;
+			}
+			catch (\Exception $e)
+			{
+				$this->error($e->getMessage() . ' Please, retry.');
+			}
+		}
+	}
+
+	public function inputSuperuserEmail()
+	{
+		while(true)
+		{
+			$name = $this->ask('What is superuser\'s email: ');
+
+			try
+			{
+				$this->processingController->setSuperuserEmail($name);
 				break;
 			}
 			catch (\Exception $e)

@@ -50,12 +50,12 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
  
 	public function fieldObjectType()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\Object\Type', 'field_object_type');
+		return $this->belongsTo('\Telenok\Object\Type', 'field_object_type');
 	}
  
 	public function fieldObjectTab()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\Object\Tab', 'field_object_tab');
+		return $this->belongsTo('\Telenok\Object\Tab', 'field_object_tab');
 	}
 }
 

@@ -14,7 +14,7 @@ class Event extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public function event()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Workflow\EventResource', 'event_workflow_event');
+		return $this->hasMany('\Telenok\Workflow\EventResource', 'event_workflow_event');
 	}
 
 }

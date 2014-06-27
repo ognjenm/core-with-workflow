@@ -13,7 +13,7 @@ class FileCategory extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
     public function categoryFile()
     {
-        return $this->belongsToMany('\Telenok\Core\Model\File\File', 'pivot_relation_m2m_category_file', 'category', 'category_file')->withTimestamps();
+        return $this->belongsToMany('\Telenok\File\File', 'pivot_relation_m2m_category_file', 'category', 'category_file')->withTimestamps();
     }
 
 }

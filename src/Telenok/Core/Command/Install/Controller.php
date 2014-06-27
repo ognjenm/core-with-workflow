@@ -94,12 +94,12 @@ class Controller extends Command {
 				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
 			});
 		}
-		
+
 		$this->processingController->postMigrateProcess();
 
 		$this->info('Please, run command "php artisan telenok:migrate" to finish installation. Thank you.');
 	}
- 
+
 	public function inputDomain()
 	{
 		while(true)
@@ -119,7 +119,7 @@ class Controller extends Command {
 			}
 		}
 	}
- 
+
 	public function inputDomainSecure()
 	{
 		$this->processingController->setDomainSecure($this->confirm('Is domain secure (aka site uses https) [yes/no]: '));

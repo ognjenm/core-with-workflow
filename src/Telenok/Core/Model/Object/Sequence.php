@@ -16,32 +16,32 @@ class Sequence extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public static function getModel($id)
 	{
-		return \App::build(\Telenok\Core\Model\Object\Sequence::findOrFail($id)->sequencesObjectType->class_model)->findOrFail($id);
+		return \App::build(\Telenok\Object\Sequence::findOrFail($id)->sequencesObjectType->class_model)->findOrFail($id);
 	}
 
 	public function sequencesObjectType()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\Object\Type', 'sequences_object_type');
+		return $this->belongsTo('\Telenok\Object\Type', 'sequences_object_type');
 	}
 
 	public function createdByUser()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\User\User', 'created_by_user');
+		return $this->belongsTo('\Telenok\User\User', 'created_by_user');
 	}
 
 	public function updatedByUser()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\User\User', 'updated_by_user');
+		return $this->belongsTo('\Telenok\User\User', 'updated_by_user');
 	}
 
 	public function aclResource()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Security\SubjectPermissionResource', 'acl_resource_object_sequence');
+		return $this->hasMany('\Telenok\Security\SubjectPermissionResource', 'acl_resource_object_sequence');
 	}
 
 	public function aclSubject()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
+		return $this->hasMany('\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
 	}
 }
 ?>

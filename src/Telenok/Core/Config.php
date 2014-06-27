@@ -310,7 +310,7 @@ class Config {
 	{
 		if (\DB::table('setting')->where('active', 1)->count())
 		{
-			foreach (\Telenok\Core\Model\System\Setting::all() as $setting)
+			foreach (\Telenok\Core\Model\System\Setting::remember(10)->get() as $setting)
 			{
 				\Config::set($setting->code, $setting->value instanceof \Illuminate\Support\Collection ? $setting->value->toArray() : $setting->value);
 			}

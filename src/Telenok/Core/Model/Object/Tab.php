@@ -14,12 +14,12 @@ class Tab extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
  
 	public function tabObjectType()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\Object\Type', 'tab_object_type');
+		return $this->belongsTo('\Telenok\Object\Type', 'tab_object_type');
 	}
 	
 	public function field()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Object\Field', 'field_object_tab');
+		return $this->hasMany('\Telenok\Object\Field', 'field_object_tab');
 	}
 
 	
