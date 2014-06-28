@@ -3,7 +3,7 @@
 	"description": "Telenok CMS Core engine",
 	"keywords": ["cms", "telenok", "core"],
 	"homepage": "http://telenok.com",
-	"prefer-stable": true,
+	"minimum-stability": "dev",
 	"license": [
 		"Freeware for personal (non-commercial non-company) using",
 		"Commercialware for any type of companies and commercial using"
@@ -28,6 +28,11 @@
 		],
 		"psr-0": {
 			"Telenok\\Core": "src/"
+		}
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-master": "1.1-dev"
 		}
 	}
 }
