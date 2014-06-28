@@ -13,7 +13,5 @@ return array(
     'list.create' => 'Field creating',
     'list.edit' => 'Field editing',
     'list.btn.edit' => 'Edit field',
-    'list.btn.delete' => 'Delete field',
-
-    'error.class.define' => 'Class not defined or directory not choosed where place file of class',
+    'list.btn.delete' => 'Delete field', 
 );

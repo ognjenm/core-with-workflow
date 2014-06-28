@@ -239,11 +239,13 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		$tabVisible = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
 		$tabAdditionally = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
 		
+		$translationSeed = $this->translationSeed();
+		
 		if (!$tabMain)
 		{
 			$tabMain = (new \Telenok\Core\Model\Object\Tab())->storeOrUpdate(
 					[
-						'title' => ['en' => 'Main', 'ru' => 'Основное'],
+						'title' => array_get($translationSeed, 'tab.main'),
 						'code' => 'main',
 						'active' => 1,
 						'tab_object_type' => $model->getKey(),
@@ -519,7 +521,31 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         }
 
         return $ns;
-    }  
+    }
+
+	public function translationSeed()
+	{
+		return [
+			'field' => [
+				'id' => [
+					'ru' => "№",
+					'en' => "№",
+				],
+				'title' => [
+					'ru' => "Заголовок",
+					'en' => "Title",
+				],
+				'title_list' => [
+					'ru' => "Заголовок списка",
+					'en' => "Title of list",
+				],
+			],
+			'tab' => [
+				'main' => ['en' => 'Main', 'ru' => 'Основное'],
+			]
+		];
+	}
+
 }
 
 ?>

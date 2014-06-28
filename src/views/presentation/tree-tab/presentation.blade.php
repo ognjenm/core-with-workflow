@@ -107,10 +107,10 @@
                 jQuery('div.telenok-presentation-tabs', '#'+_this.getPresentationDomId()).removeClass('col-xs-12').addClass('col-xs-9');
                 jQuery('div.telenok-presentation-tree', '#'+_this.getPresentationDomId()).show();
 
-				jQuery('table.dataTable').each(function(i, v)
-				{
-					jQuery(v).css({ width: jQuery(v).parent().parent().parent().parent().width() });
-				});
+				//jQuery('table.dataTable').each(function(i, v)
+				//{
+				//	jQuery(v).css({ width: jQuery(v).parent().parent().parent().parent().width() });
+				//});
 
                 if (jQuery('#' + key).size()) 
                 {
@@ -136,7 +136,7 @@
                 param = jQuery.extend({}, {
                     "multipleSelection": true,
                     "aoColumns": [],
-                    "autoWidth": true,
+					"autoWidth": false,
                     "bProcessing": true,
                     "bServerSide": param.sAjaxSource ? true : false,
                     "bDeferRender": '',
@@ -234,11 +234,6 @@
                 }, param);
 
                 jQuery('#' + param.domId).dataTable(param);
-
-				jQuery(window).resize(function()
-				{
-					jQuery('#' + param.domId).css({ width: jQuery('#' + param.domId).parent().parent().parent().parent().width() });
-				});
 
                 return _this;
             }

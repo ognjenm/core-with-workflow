@@ -33,7 +33,7 @@ if (!telenok.hasPresentation('{{$presentation}}'))
                 param = jQuery.extend({}, {
                     "multipleSelection": true,
                     "aoColumns": [],
-                    "autoWidth": true,
+					"autoWidth": false,
                     "bProcessing": true,
                     "bServerSide": param.sAjaxSource ? true : false,
                     "bDeferRender": '',
@@ -55,11 +55,6 @@ if (!telenok.hasPresentation('{{$presentation}}'))
                 }, param);
 
                 jQuery('#' + param.domId).dataTable(param);
-
-				jQuery(window).resize(function()
-				{
-					jQuery('#' + param.domId).css({ width: jQuery('#' + param.domId).parent().parent().parent().parent().width() });
-				});
 
                 return _this;
             }
@@ -86,8 +81,8 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 	@section('ajaxDone')
  
 		jQuery.gritter.add({
-			title: '{{{$controller->LL('notice.saved')}}} {{{$controller->LL('notice.saved.description')}}}',
-			text: '{{{$controller->LL('notice.saved.thank.you')}}}',
+			title: '{{{$controller->LL('notice.saved')}}}! {{{$controller->LL('notice.saved.description')}}}',
+			text: '{{{$controller->LL('notice.saved.thank.you')}}}!',
 			class_name: 'gritter-success gritter-light',
 			time: 2000,
 		});

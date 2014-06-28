@@ -59,8 +59,8 @@
 			else if (button_type=='save')
 			{
 				jQuery.gritter.add({
-					title: '{{{$controller->LL('notice.saved')}}} {{{$controller->LL('notice.saved.description')}}}',
-					text: '{{{$controller->LL('notice.saved.thank.you')}}}',
+					title: '{{{$controller->LL('notice.saved')}}}! {{{$controller->LL('notice.saved.description')}}}',
+					text: '{{{$controller->LL('notice.saved.thank.you')}}}!',
 					class_name: 'gritter-success gritter-light',
 					time: 2000,
 				});
@@ -106,7 +106,7 @@
 			}
 
 			jQuery.gritter.add({
-				title: '{{{$controller->LL('notice.error')}}} {{{$controller->LL('notice.error.undefined')}}}',
+				title: '{{{$controller->LL('notice.error')}}}! {{{$controller->LL('notice.error.undefined')}}}',
 				text: errorGritterText.join("<br>"),
 				class_name: 'gritter-error gritter-light',
 				time: 5000,
@@ -130,7 +130,7 @@
         <p>
             <strong>
                 <i class="fa fa-check"></i>
-                {{{ $controller->LL('notice.saved') }}}
+                {{{ $controller->LL('notice.saved') }}}!
             </strong>
             {{{ $controller->LL('notice.saved.description') }}}
         </p>

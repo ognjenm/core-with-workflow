@@ -18,7 +18,7 @@ return [
     'btn.edit' => 'Edit',
     'btn.search' => 'Search',
     'btn.clear' => 'Clear',
-    'btn.repair' => 'Restore',
+    'btn.restore' => 'Restore',
     'btn.choose' => 'Choose',
     'btn.prev' => 'Back',
     'btn.next' => 'Next',
@@ -26,16 +26,18 @@ return [
     'btn.create.folder' => 'Create folder',
 
     'notice.title' => 'Notice',
-    'notice.saved' => 'Saved!',
+    'notice.saved' => 'Saved',
     'notice.saved.description' => 'Data saved successfully',
-    'notice.saved.thank.you' => 'Thank you!',
+    'notice.saved.thank.you' => 'Thank you',
     'notice.error' => 'Error!',
     'notice.error.undefined' => 'Sorry, an error occurred',
     'notice.sure' => 'Are you sure ?',
     'notice.warning' => 'Warning!',
     'notice.choose' => "Select an Option",
     'notice.not-found' => "Oops, nothing found!",
-
+    'notice.typing' => 'Keep typing...',
+    'notice.looking-for' => 'Looking for', 
+	
     'tree.root' => 'Tree',
 
     'home' => 'Main',
@@ -47,7 +49,6 @@ return [
     'entity.title' => 'Title',
     'current' => 'Current',
     'addition' => 'Addition',
-
 	
     'table.empty' => 'Отсутствуют доступные данные для таблицы',
     'table.empty.showed' => 'Отсутствуют данные для показа',
@@ -58,16 +59,14 @@ return [
     'table.filter.btn' => 'Search',
 
     'tooltip.description' => "Field description",
-    
 
     'property.default' => "Default value",
     'property.required' => "Required",
 
     'property.title.title' => 'Title',
     'property.bgcolor.title' => 'Background color',
-
     
-    'error.table.nonexists' => 'Table ":table" doesnt extst in database',
+    'error.table.nonexists' => 'Table ":table" doesnt exist in database',
     'error.field.create' => 'Cant create field ":key" in table ":table"',
     'error.file.update' => 'Error update file :file',
     'error.widget.link.nonexistent' => 'Original linked widget nonexistent or deleted',
@@ -84,24 +83,8 @@ return [
         'alpha_num' => 'Field ":attribute" should contain integer and latin symbols',
         'unique' => 'Record with value of field ":attribute" already exists in table ":table". Field ":attribute" should be unique in table ":table"',
         'min' => 'Too low value in field ":attribute". String should contain not less than :min symbol(s) or be digits from :min',
-        'max' => 'Слишком большое значение в поле ":attribute". Строка должна содержать не более :max символа(ов) или быть числом не более :max',
-        'regex' => 'Значение в поле ":attribute" не соответствует регулярному выражению',
-    ],
-
-    'migration' => [
-        'id' => [
-            'ru' => "№",
-            'en' => "№",
-        ],
-        'title' => [
-            'ru' => "Заголовок",
-            'en' => "Title",
-        ],
-        'title_list' => [
-            'ru' => "Заголовок списка",
-            'en' => "Title of list",
-        ],
-    ]
-
-
+        'max' => 'Too big value in field ":attribute". String should contain not more than :max symbol(s) or be digits less than :max',
+        'regex' => 'Value in field ":attribute" does not match the regular expression',
+        'size' => 'Value in field ":attribute" does not correspond to the length of the value :size',
+    ], 
 ];

@@ -6,6 +6,8 @@ return [
     'list.btn.refresh' => 'Обновить',
     'list.btn.select' => 'Выделенные',
     'list.save.success' => 'Виджет обновлен',
+    'list.btn.choose' => 'Выбрать',
+    'list.btn.delete.all' => 'Удалить всё',
 
     'btn.save' => 'Сохранить',
     'btn.save.close' => 'Сохранить и закрыть',
@@ -16,18 +18,25 @@ return [
     'btn.edit' => 'Редактировать',
     'btn.search' => 'Найти',
     'btn.clear' => 'Очистить',
-    'btn.repair' => 'Восстановить',
+    'btn.restore' => 'Восстановить',
     'btn.choose' => 'Выбрать',
     'btn.prev' => 'Назад',
     'btn.next' => 'Вперед',
     'btn.filter' => 'Фильтр',
-    'btn.create.folder' => 'Создать папку',
+    'btn.create.folder' => 'Создать директорию',
 
-    'notice.saved' => 'Сохранено!',
+    'notice.title' => 'Уведомление',
+    'notice.saved' => 'Сохранено',
     'notice.saved.description' => 'Данные успешно сохранены',
+    'notice.saved.thank.you' => 'Спасибо',
     'notice.error' => 'Ошибка!',
+    'notice.error.undefined' => 'Извините, произошла ошибка',
     'notice.sure' => 'Вы уверены ?',
     'notice.warning' => 'Предупреждение!',
+    'notice.choose' => "Выберите Опцию",
+    'notice.not-found' => "Ничего не найдено!",
+    'notice.typing' => 'Печатайте...',
+    'notice.looking-for' => 'Ищется', 
 
     'tree.root' => 'Дерево',
 
@@ -36,6 +45,10 @@ return [
 
     'field' => ':attribute [:locale]',
     'field.rule' => 'Правила для поля',
+
+    'entity.title' => 'Заголовок',
+    'current' => 'Текущее',
+    'addition' => 'Дополнительно',
 
     'table.empty' => 'Отсутствуют доступные данные для таблицы',
     'table.empty.showed' => 'Отсутствуют данные для показа',
@@ -50,9 +63,15 @@ return [
     'property.default' => "Значение по умолчанию",
     'property.required' => "Обязательное",
 
+    'property.title.title' => 'Заголовое',
+    'property.bgcolor.title' => 'Цвет фона',
+
     'error.table.nonexists' => 'Таблица ":table" в базе данных не создана',
     'error.field.create' => 'Поле ":key" в таблице ":table" не создано',
     'error.file.update' => 'Ошибка обновления файла :file',
+    'error.widget.link.nonexistent' => 'Оригинальный связанный виджет не создан или удален',
+	'error.tab.field.key' => 'Пожалуйста, укажите "Id" или "Code" для расположения во вкладке в поле "field_object_tab"',
+	'error.file.upload.require' => 'Пожалуйста, загрузите обязательный файл в поле ":attribute"',
 
     'error' => array(
         'undefined' => 'Извините, произошла ошибка',

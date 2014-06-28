@@ -56,7 +56,7 @@
 				.bind("create.jstree", function(e, data) {
 					if (data.rslt.parent == -1) 
 					{
-						alert("{{{ $controller->LL('notice.error') }}}");
+						alert("{{{ $controller->LL('notice.error') }}}!");
 						jQuery.jstree.rollback(data.rlbk);
 						return;
 					} 
@@ -70,7 +70,7 @@
 				.bind("rename.jstree", function(e, data) {
 					if (data.rslt.parent == -1) 
 					{
-						alert("{{{ $controller->LL('notice.error') }}}");
+						alert("{{{ $controller->LL('notice.error') }}}!");
 						jQuery.jstree.rollback(data.rlbk);
 						return;
 					} 

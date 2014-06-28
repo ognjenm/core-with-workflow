@@ -62,14 +62,6 @@ div.menu { top:100px; right: 100px; position: absolute; width: 400px; height: 40
 div.hover { border: 2px solid blue; }
 
 
-.form-horizontal .control-label {
-    width: 300px;
-}
-
-.form-horizontal .controls {
-    margin-left: 310px;
-}
-
 .form-horizontal .controls span.lbl {
      margin-top: 5px;
 }
@@ -177,7 +169,6 @@ div.hover { border: 2px solid blue; }
 .telenok-tree .jstree.jstree-proton a {
     font-size: 13px;
     border-radius: 0px;
-    fon
 }
 
 .jstree.jstree-proton {
@@ -239,4 +230,8 @@ body.telenok-backend .chosen-container-single .chosen-search:after {
 
 body.telenok-backend .chosen-container-single .chosen-single abbr:after {
     content: "";
+}
+
+body.telenok-backend table.dataTable {
+    width: 100%;
 }

@@ -1,7 +1,7 @@
 <?php
 
-return [
+return array(
     'name' => 'Html',
-    'content' => 'HTML содержание',
-	'title.html_code' => 'HTML code'
-];
+    'header' => 'Html',
+	'title.html_code' => 'HTML код'
+);

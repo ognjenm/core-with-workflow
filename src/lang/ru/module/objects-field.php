@@ -16,6 +16,7 @@ return array(
     'list.btn.delete' => 'Удаление поля',
 
     'error.class.define' => 'Класс не определен или не выбрана папка размещения файла класса',
-
-
+	'error.change.field.linked.type' => 'Невозможно изменить тип существующего поля',
+	'error.add.field.type' => 'Пожалуйста, укажите значение "Id" или "Code" для свойства "field_object_type"',
+	
 );

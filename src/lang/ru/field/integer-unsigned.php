@@ -5,5 +5,4 @@ return array(
     
     'property.integer_unsigned_min' => 'Минимум',
     'property.integer_unsigned_max' => 'Максимум',
-
 );
