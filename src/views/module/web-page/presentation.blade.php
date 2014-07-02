@@ -332,7 +332,7 @@
 							});">
             <option value=""></option>
 			<?php
-			$pages = \Telenok\Core\Model\Web\Page::all();
+			$pages = \Telenok\Web\Page::all();
 
 			foreach ($pages as $page)
 			{
@@ -414,7 +414,7 @@
 				<ul class="dropdown-menu" style="position: inherit; display: block;" id="widget-menu-buffer">	
 				<?php
 				
-					$widgetBufferedList = \Telenok\Core\Model\System\Buffer::with("sequence")->where(function($query) 
+					$widgetBufferedList = \Telenok\System\Buffer::with("sequence")->where(function($query) 
 						{
 							$query->where('user_id', \Auth::user()->getKey());
 							$query->where('place', 'web-page');
@@ -450,7 +450,7 @@
 					$localeDefault = \Config::get('app.localeDefault');
 					$localeDefaultId = 0;
 
-					$languages = \Telenok\Core\Model\System\Language::whereIn('locale', (array) \Config::get('app.locales'))
+					$languages = \Telenok\System\Language::whereIn('locale', (array) \Config::get('app.locales'))
 									->get()->sortBy(function($item) use ($localeDefault, &$localeDefaultId)
 					{
 						if ($item->locale == $localeDefault)
@@ -734,7 +734,7 @@
 		{
 			var results = [];
 				jQuery.each(data, function (i, val) {
-				results.push({ value: val.id, text: val.title });
+					results.push({ value: val.id, text: val.title });
 				});
 			return results;
 		},

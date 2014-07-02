@@ -63,5 +63,11 @@ class File extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 
 
+
+    public function newsFileNews()
+    {
+        return $this->belongsToMany('\News', 'pivot_relation_m2m_news_file_news', 'news_file', 'news_file_news')->withTimestamps();
+    }
+
 }
 ?>

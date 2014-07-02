@@ -96,7 +96,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
     public function preProcess($model, $type, $input)
     {
-		$input->put('relation_many_to_many_has', \Telenok\Core\Model\Object\Type::whereCode('file')->pluck('id'));
+		$input->put('relation_many_to_many_has', \Telenok\Object\Type::whereCode('file')->pluck('id'));
 
         return parent::preProcess($model, $type, $input);
     } 

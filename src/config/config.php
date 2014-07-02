@@ -1,6 +1,6 @@
 <?php
 
 return array(
-    'auth.model' => 'Telenok\Core\Model\User\User',
+    'auth.model' => 'Telenok\User\User',
 );
 

@@ -14,23 +14,43 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$term = trim(\Input::get('term'));
 		$return = [];
 
-		$sequenceTable = (new \Telenok\Core\Model\Object\Sequence())->getTable();
-		$typeTable = (new \Telenok\Core\Model\Object\Type())->getTable();
+		$sequence = new \Telenok\Object\Sequence();
 
-		\Telenok\Core\Model\Object\Sequence::addMultilanguage('title_type');
+		$sequenceTable = $sequence->getTable();
+		$typeTable = (new \Telenok\Object\Type())->getTable();
+
+		$sequence->addMultilanguage('title_type');
 
 		try
 		{
-			\Telenok\Core\Model\Object\Sequence::select($sequenceTable . '.id', $sequenceTable . '.title', $typeTable . '.title AS title_type')
+			\Telenok\Object\Sequence::select($sequenceTable . '.id', $sequenceTable . '.title', $typeTable . '.title AS title_type')
 					->join($typeTable, function($join) use ($sequenceTable, $typeTable)
 					{
 						$join->on($sequenceTable . '.sequences_object_type', '=', $typeTable . '.id');
 					})
 					->where(function ($query) use ($sequenceTable, $typeTable, $term)
 					{
-						$query->where($sequenceTable . '.title', 'like', "%{$term}%")
-						->orWhere($sequenceTable . '.id', $term)
-						->orWhere($typeTable . '.title', 'like', "%{$term}%");
+						$query->where($sequenceTable . '.id', $term);
+
+						$query->orWhere(function ($query) use ($sequenceTable, $term)
+						{
+							\Illuminate\Support\Collection::make(explode(' ', $term))
+									->reject(function($i) { return !trim($i); })
+									->each(function($i) use ($query, $sequenceTable)
+							{
+								$query->where($sequenceTable . '.title', 'like', "%{$i}%");
+							});
+						});
+
+						$query->orWhere(function ($query) use ($typeTable, $term)
+						{
+							\Illuminate\Support\Collection::make(explode(' ', $term))
+									->reject(function($i) { return !trim($i); })
+									->each(function($i) use ($query, $typeTable)
+							{
+								$query->where($typeTable . '.title', 'like', "%{$i}%");
+							});
+						});
 					})
 					->take(20)->get()->each(function($item) use (&$return)
 			{
@@ -47,7 +67,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	public function preProcess($model, $type, $input)
 	{ 
-		$input->put('id', $modelField ? $modelField->getKey() : null);
+		if (!$input->has('field_object_tab'))
+		{
+			$input->put('field_object_tab', 'additionally');
+		}
+
 		$input->put('title', ['en' => 'Permission']);
 		$input->put('title_list', ['en' => 'Permission']);
 		$input->put('code', 'permission');
@@ -65,7 +89,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
 	{
-		$permissions = \Telenok\Core\Model\Security\Permission::all();
+		$permissions = \Telenok\Security\Permission::all();
 
 		return \View::make("core::field.{$this->getKey()}.model", array(
 					'parentController' => $controller,
@@ -78,9 +102,14 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	}
 
 	public function saveModelField($field, $model, $input)
-	{ /*
-	  $permissionList = array_get($input, 'permission', []);
-
+	{ 
+		return $model;
+		
+	  $permissionList = (array)$input->get('permission', []);
+	  
+	  dd($permissionList);
+	  
+/*
 	  \Telenok\Core\Security\Acl::resource($model)->unsetPermission();
 
 	  foreach($permissionList as $permissionCode => $persmissionIds)
@@ -100,7 +129,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	public function getListFieldContent($field, $item, $type = null)
 	{
 		$items = [];
-		$rows = \Illuminate\Support\Collection::make(\Telenok\Core\Model\Security\Permission::take(8)->get());
+		$rows = \Illuminate\Support\Collection::make(\Telenok\Security\Permission::take(8)->get());
 
 		if ($rows->count())
 		{

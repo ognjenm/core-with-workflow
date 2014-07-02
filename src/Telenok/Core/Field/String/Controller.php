@@ -106,7 +106,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	
     public function getListFieldContent($field, $item, $type = null)
     {  
-        return \Str::limit($item->translate((string)$field->code), 20);
+        return \Str::limit($item->translate((string)$field->code), 30);
     } 
 	
     public function postProcess($model, $type, $input)

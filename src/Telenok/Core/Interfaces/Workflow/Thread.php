@@ -11,11 +11,11 @@ class Thread {
     protected $result = [];
     protected $event = null;
 
-    public function __construct(\Telenok\Core\Model\Workflow\Process $process = null, \Telenok\Core\Workflow\Event $event = null)
+    public function __construct(\Telenok\Workflow\Process $process = null, \Telenok\Core\Workflow\Event $event = null)
     {
         $this->modelProcess = $process;
         
-        $this->modelThread = \Telenok\Core\Model\Workflow\Thread::create([
+        $this->modelThread = \Telenok\Workflow\Thread::create([
             'title' => $process->title,
             'original_process' => $process->process,
             'thread_workflow_process' => $this->modelProcess->getKey(),

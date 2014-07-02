@@ -146,15 +146,23 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
         try 
         {
-            $model = \Telenok\Core\Model\Object\Sequence::getModel($id);
-            $type = \Telenok\Core\Model\Object\Sequence::find($id)->sequencesObjectType;
-            $field = \Telenok\Core\Model\Object\Sequence::getModel($fieldId);
+            $model = \Telenok\Object\Sequence::getModel($id);
+            $type = \Telenok\Object\Sequence::find($id)->sequencesObjectType;
+            $field = \Telenok\Object\Sequence::getModel($fieldId);
 
 			$query = $model->{camel_case($field->code)}();
 
             if ($term)
             {
-                $query->where('title', 'like', "%{$term}%");
+                $query->where(function($query) use ($term)
+				{
+					\Illuminate\Support\Collection::make(explode(' ', $term))
+							->reject(function($i) { return !trim($i); })
+							->each(function($i) use ($query)
+					{
+						$query->where('title', 'like', "%{$i}%");
+					});
+				});
             }
 
             $query->skip($iDisplayStart)->take($this->displayLength + 1);
@@ -240,7 +248,15 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     {
 		if ($value !== null && trim($value))
 		{
-			$query->where($model->getTable().'.'.$name, 'like', '%'.trim($value).'%');
+			$query->where(function($query) use ($value, $name, $model)
+			{
+				\Illuminate\Support\Collection::make(explode(' ', $value))
+						->reject(function($i) { return !trim($i); })
+						->each(function($i) use ($query, $name, $model)
+				{
+					$query->where($model->getTable().'.'.$name, 'like', '%'.trim($i).'%');
+				});
+			});
 		}
     }
 

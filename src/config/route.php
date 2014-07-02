@@ -155,9 +155,9 @@
 
 
 // Module Files\Browser
-\Route::any('cmf/module/file-browser/wizard/list', array('as' => 'cmf.module.file-browser.wizard.list', 'uses' => "Telenok\Core\Module\Files\Browser\ControllerWizardDirectory@getListContent"));
-\Route::any('cmf/module/file-browser/wizard/tree', array('as' => 'cmf.module.file-browser.wizard.tree', 'uses' => "Telenok\Core\Module\Files\Browser\ControllerWizardDirectory@getTreeList"));
-\Route::any('cmf/module/file-browser/wizard/process', array('as' => 'cmf.module.file-browser.wizard.process', 'uses' => "Telenok\Core\Module\Files\Browser\ControllerWizardDirectory@processTree"));
+\Route::any('cmf/module/file-browser/wizard/list', array('as' => 'cmf.module.file-browser.wizard.list', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getListContent"));
+\Route::any('cmf/module/file-browser/wizard/tree', array('as' => 'cmf.module.file-browser.wizard.tree', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getTreeList"));
+\Route::any('cmf/module/file-browser/wizard/process', array('as' => 'cmf.module.file-browser.wizard.process', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@processTree"));
 
 
 

@@ -13,4 +13,10 @@
         </button>
     </div>
 	@stop
+	
+	<script>
+	
+	jQuery("#model-ajax-{{{$uniqueId}}} :input").not('button').not(':hidden').attr("disabled", "disabled");
+	
+	</script>
  

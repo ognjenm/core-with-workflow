@@ -6,7 +6,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     protected $key = 'objects-lists';
     protected $parent = 'objects';
-    protected $modelTree = '\Telenok\Core\Model\Object\Type';
+    protected $modelTree = '\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationContentView = 'core::module.objects-lists.content';
@@ -36,7 +36,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     public function getTreeListItemProcessed($item)
     {
-        $typeObjectId = \Telenok\Core\Model\Object\Type::where('code', 'object_type')->first()->getKey();
+        $typeObjectId = \Telenok\Object\Type::where('code', 'object_type')->first()->getKey();
         
         $code = '';
 
@@ -124,7 +124,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 	public function getFilterSubQuery($input, $model, $query)
 	{
-		$type = \Telenok\Core\Model\Object\Type::where('code', $model->getTable())->firstOrFail();
+		$type = \Telenok\Object\Type::where('code', $model->getTable())->firstOrFail();
 
 		$fieldConfig = \App::make('telenok.config')->getObjectFieldController();
 
@@ -156,7 +156,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         $this->getFilterQuery($model, $query); 
 
-        $result = $query->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1)->get();
+        $result = $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1)->get();
 
         return $result;
     }
@@ -575,7 +575,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             {
                 try
                 {
-                    $type = \Telenok\Core\Model\Object\Sequence::findOrFail($input->get('id'))->sequencesObjectType()->firstOrFail();
+                    $type = \Telenok\Object\Sequence::findOrFail($input->get('id'))->sequencesObjectType()->firstOrFail();
                 }
                 catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e)
                 {

@@ -106,12 +106,7 @@
 
                 jQuery('div.telenok-presentation-tabs', '#'+_this.getPresentationDomId()).removeClass('col-xs-12').addClass('col-xs-9');
                 jQuery('div.telenok-presentation-tree', '#'+_this.getPresentationDomId()).show();
-
-				//jQuery('table.dataTable').each(function(i, v)
-				//{
-				//	jQuery(v).css({ width: jQuery(v).parent().parent().parent().parent().width() });
-				//});
-
+ 
                 if (jQuery('#' + key).size()) 
                 {
                     jQuery('div.telenok-tree', '#'+_this.presentationDomId).hide();
@@ -145,7 +140,7 @@
                     "sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'T><'col-md-6'p>>",
                     "oTableTools": {
                         "aButtons": [
-                            
+                            @section('tableListBtn')
                             {
                                 "sExtends": "text",
                                 "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
@@ -217,6 +212,7 @@
                                     jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
                                 }
                             }
+							@show
                         ]
                     },
                     "oLanguage": {

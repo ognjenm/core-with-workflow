@@ -79,10 +79,10 @@ class Event {
     {
         if (\Config::get('app.workflow.enabled'))
         {
-            $modelProcess = new \Telenok\Core\Model\Workflow\Process();
-            $modelEvent = new \Telenok\Core\Model\Workflow\Event();
-            $modelResource = new \Telenok\Core\Model\Security\Resource();
-            $modelEventResource = new \Telenok\Core\Model\Workflow\EventResource();
+            $modelProcess = new \Telenok\Workflow\Process();
+            $modelEvent = new \Telenok\Workflow\Event();
+            $modelResource = new \Telenok\Security\Resource();
+            $modelEventResource = new \Telenok\Workflow\EventResource();
             
             $query = $modelProcess->select($modelProcess->getTable().'.*');
 

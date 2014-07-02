@@ -24,7 +24,7 @@
         @if ($disabled)
         {{ Form::hidden("workflow_status", $value) }}
         @endif
-        {{ Form::select("workflow_status", \Telenok\Core\Model\Workflow\Status::lists('title', 'id'), $value, $domAttr) }}
+        {{ Form::select("workflow_status", \Telenok\Workflow\Status::lists('title', 'id'), $value, $domAttr) }}
     </div>
 </div>
 

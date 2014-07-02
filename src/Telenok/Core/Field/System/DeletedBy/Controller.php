@@ -27,10 +27,10 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 
 	public function preProcess($model, $type, $input)
 	{
-		$modelField = \Telenok\Core\Model\Object\Field::where(function($query)
+		$modelField = \Telenok\Object\Field::where(function($query)
 				{
 					$query->where('code', 'deleted_by');
-					$query->where('field_object_type', \Telenok\Core\Model\Object\Type::where('code', 'user')->first()->getKey());
+					$query->where('field_object_type', \Telenok\Object\Type::where('code', 'user')->first()->getKey());
 				})->first();
 
 		$field_object_type = $input->get('field_object_type');
@@ -47,8 +47,8 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		$input->put('allow_delete', 0);
 		$input->put('allow_create', 0);
 		$input->put('allow_update', 1);
-		$input->put('field_object_type', \Telenok\Core\Model\Object\Type::where('code', 'user')->first()->getKey());
-		$input->put('relation_one_to_many_has', \Telenok\Core\Model\Object\Type::where('code', 'object_sequence')->first()->getKey());
+		$input->put('field_object_type', \Telenok\Object\Type::where('code', 'user')->first()->getKey());
+		$input->put('relation_one_to_many_has', \Telenok\Object\Type::where('code', 'object_sequence')->first()->getKey());
 
 		$toSave = [
 			'title' => $input->get('title'),
@@ -57,7 +57,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 			'code' => 'deleted_by_user',
 			'active' => 1,
 			'field_object_type' => $field_object_type,
-			'relation_one_to_many_belong_to' => \Telenok\Core\Model\Object\Type::where('code', 'user')->first()->getKey(),
+			'relation_one_to_many_belong_to' => \Telenok\Object\Type::where('code', 'user')->first()->getKey(),
 			'show_in_list' => $input->get('show_in_list'),
 			'show_in_form' => $input->get('show_in_form'),
 			'allow_search' => $input->get('allow_search'),
@@ -67,14 +67,14 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 			'allow_update' => $input->get('allow_update'),
 		];
 
-		$validator = $this->validator(new \Telenok\Core\Model\Object\Field(), $toSave, []);
+		$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
 
 		if ($input->get('create_belong') !== false && $validator->passes())
 		{
-			\Telenok\Core\Model\Object\Field::create($toSave);
+			\Telenok\Object\Field::create($toSave);
 		}
 
-		$table = \Telenok\Core\Model\Object\Type::find($input->get('field_object_type'))->code;
+		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
 		$fieldName = 'deleted_by_user';
 		
 		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))

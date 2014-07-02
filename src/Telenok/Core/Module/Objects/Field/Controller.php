@@ -32,7 +32,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
         $this->getFilterQuery($model, $query); 
 
-        $query->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
 
         return $query->get();
     }
@@ -68,7 +68,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 		else
 		{
-			$modelType = \Telenok\Core\Model\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
+			$modelType = \Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
 			
 			$input->put('field_object_type', $modelType->getKey());
 		}
@@ -84,11 +84,11 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			{
 				if ($model->exists)
 				{
-					$modelTypeId = \Telenok\Core\Model\Object\Type::find($model->getOriginal('field_object_type'))->getKey();
+					$modelTypeId = \Telenok\Object\Type::find($model->getOriginal('field_object_type'))->getKey();
 				}
 				else
 				{
-					$modelTypeId = \Telenok\Core\Model\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail()->getKey();
+					$modelTypeId = \Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail()->getKey();
 				}
 			} 
 			catch (\Exception $e) 
@@ -98,7 +98,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			
 			try
 			{
-				$input->put('field_object_tab', \Telenok\Core\Model\Object\Tab::where('tab_object_type', $modelTypeId)
+				$input->put('field_object_tab', \Telenok\Object\Tab::where('tab_object_type', $modelTypeId)
 						->where(function($query) use ($input)
 						{
 							$query->where('code', $input->get('field_object_tab'));

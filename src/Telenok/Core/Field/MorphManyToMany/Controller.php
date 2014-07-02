@@ -13,7 +13,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Core\Model\Object\Type::whereIn('id', [$field->morph_many_to_many_has, $field->morph_many_to_many_belong_to])->first();
+		return \Telenok\Object\Type::whereIn('id', [$field->morph_many_to_many_has, $field->morph_many_to_many_belong_to])->first();
 	}
 
     public function getTitleList($id = null) 
@@ -23,9 +23,18 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         
         try 
         {
-            $class = \Telenok\Core\Model\Object\Sequence::getModel($id)->class_model;
+            $class = \Telenok\Object\Sequence::getModel($id)->class_model;
             
-            $class::where('title', 'like', "%{$term}%")->take(20)->get()->each(function($item) use (&$return)
+            $class::where(function($query) use ($term)
+			{
+				\Illuminate\Support\Collection::make(explode(' ', $term))
+						->reject(function($i) { return !trim($i); })
+						->each(function($i) use ($query)
+				{
+					$query->where('title', 'like', "%{$i}%");
+				});
+			})
+			->take(20)->get()->each(function($item) use (&$return)
             {
                 $return[] = ['value' => $item->id, 'text' => $item->translate('title')];
             });
@@ -62,7 +71,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			if ($field->morph_many_to_many_has)
 			{
-				$typeHasMany = \Telenok\Core\Model\Object\Type::findOrFail($field->morph_many_to_many_has);
+				$typeHasMany = \Telenok\Object\Type::findOrFail($field->morph_many_to_many_has);
 				$pivotTable = 'pivot_morph_m2m_' . $field->code . '_' . $typeHasMany->code;
 
 				$query->join($pivotTable, function($join) use ($pivotTable, $field, $model)
@@ -80,7 +89,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			}
 			else
 			{
-				$typeHasMany = \Telenok\Core\Model\Object\Type::findOrFail($field->morph_many_to_many_belong_to);
+				$typeHasMany = \Telenok\Object\Type::findOrFail($field->morph_many_to_many_belong_to);
 				$typeRelated = $field->fieldObjectType()->first();
 
 				$morphToField = preg_replace('/_'.$typeHasMany->code.'$/', '_' . $typeRelated->code, $field->code);
@@ -111,7 +120,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         
         $id = $field->morph_many_to_many_has ?: $field->morph_many_to_many_belong_to;
         
-        $class = \Telenok\Core\Model\Object\Sequence::getModel($id)->class_model;
+        $class = \Telenok\Object\Sequence::getModel($id)->class_model;
         
         $class::take(200)->get()->each(function($item) use (&$option)
         {
@@ -203,7 +212,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function preProcess($model, $type, $input)
     {
-		$input->put('morph_many_to_many_has', intval(\Telenok\Core\Model\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
+		$input->put('morph_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);
 
@@ -220,7 +229,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			} 
 
             $typeMorphMany = $model->fieldObjectType()->first();
-            $typeBelongTo = \Telenok\Core\Model\Object\Type::findOrFail($model->morph_many_to_many_has); 
+            $typeBelongTo = \Telenok\Object\Type::findOrFail($model->morph_many_to_many_has); 
 
             $morphManyCode = $model->code;
             $morphToCode = $morphManyCode . '_' . $typeMorphMany->code;
@@ -282,9 +291,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
 				}
 
-				if (!($tabTo = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', \Telenok\Core\Model\Object\Tab::find($input->get('field_object_tab'))->code)->first()))
+				if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', \Telenok\Object\Tab::find($input->get('field_object_tab'))->code)->first()))
 				{
-					if (!($tabTo = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', 'main')->first()))
+					if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', 'main')->first()))
 					{
 						throw new \Exception($this->LL('error.tab.field.key'));
 					}
@@ -310,11 +319,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'field_order' => $input->get('field_order_belong', $model->field_order),
 				];
 
-				$validator = $this->validator(new \Telenok\Core\Model\Object\Field(), $toSave, []);
+				$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
 
 				if ($validator->passes()) 
 				{
-					\Telenok\Core\Model\Object\Field::create($toSave);
+					\Telenok\Object\Field::create($toSave);
 				}
 
 				if (!$this->validateMethodExists($morphToObject, $morphTo['method']))

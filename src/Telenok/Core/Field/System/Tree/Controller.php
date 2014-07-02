@@ -14,7 +14,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Core\Model\Object\Type::whereIn('code', 'object_sequence')->first();
+		return \Telenok\Object\Type::whereIn('code', 'object_sequence')->first();
 	}
 	
     public function saveModelField($field, $model, $input)
@@ -72,7 +72,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
             {
                 try
                 {
-					$child = \Telenok\Core\Model\Object\Sequence::findOrFail($id);
+					$child = \Telenok\Object\Sequence::findOrFail($id);
 
                     $child->makeLastChildOf($model);
                 }
@@ -114,7 +114,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
     {
 		$fields = [];
 		
-		$objectField = \Telenok\Core\Model\Object\Type::where('code', 'object_sequence')->first()->field()->where('show_in_list', 1)->get();
+		$objectField = \Telenok\Object\Type::where('code', 'object_sequence')->first()->field()->where('show_in_list', 1)->get();
 		
 		foreach($objectField as $key => $field)
 		{
@@ -149,9 +149,9 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
         try 
         {
-            $model = \Telenok\Core\Model\Object\Sequence::find($id);
+            $model = \Telenok\Object\Sequence::find($id);
             $type = $model->sequencesObjectType;
-            $field = \Telenok\Core\Model\Object\Sequence::getModel($fieldId);
+            $field = \Telenok\Object\Sequence::getModel($fieldId);
 
             if ($field->relation_many_to_many_has)
             {
@@ -165,8 +165,16 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			$query = $model->{camel_case($fieldRelated)}();
 
             if ($term)
-            {
-                $query->where('title', 'like', "%{$term}%");
+            { 
+				$query->where(function ($query) use ($term)
+				{
+					\Illuminate\Support\Collection::make(explode(' ', $term))
+							->reject(function($i) { return !trim($i); })
+							->each(function($i) use ($query)
+					{
+						$query->where('title', 'like', "%{$i}%");
+					});
+				}); 
             }
 
             $query->skip($iDisplayStart)->take($this->displayLength + 1);
@@ -213,9 +221,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
     public function preProcess($model, $type, $input)
     {
 		$sequenceTypeId = \DB::table('object_type')->where('code', 'object_sequence')->pluck('id');
+		
+		$translationSeed = $this->translationSeed();
 
-		$input->put('title', ['en' => 'Parent']);
-		$input->put('title_list', ['en' => 'Parent']);
+		$input->put('title', array_get($translationSeed, 'model.parent'));
+		$input->put('title_list', array_get($translationSeed, 'model.parent')); 
 		$input->put('key', 'tree');
 		$input->put('code', 'tree_parent');
 		$input->put('relation_many_to_many_has', $sequenceTypeId);
@@ -231,8 +241,8 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		$input->put('field_order', 5);
 
 		$toSave = [
-			'title' => ['en' => 'Children'],
-			'title_list' => ['en' => 'Children'],
+			'title' => array_get($translationSeed, 'model.children'),
+			'title_list' => array_get($translationSeed, 'model.children'),
 			'key' => 'tree',
 			'code' => 'tree_child',
 			'field_object_type' => $input->get('field_object_type'),
@@ -250,11 +260,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			'field_order' => $input->get('field_order'),
 		];
 
-		$validator = $this->validator(new \Telenok\Core\Model\Object\Field(), $toSave, []);
+		$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
 
 		if ($input->get('create_belong') !== false && $validator->passes()) 
 		{
-			\Telenok\Core\Model\Object\Field::create($toSave);
+			\Telenok\Object\Field::create($toSave);
 		}
 		
         return $this;
@@ -264,6 +274,16 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 	{ 
 		
 		return $this;
+	}
+
+	public function translationSeed()
+	{
+		return [
+			'model' => [
+				'parent' => ['en' => 'Parent', 'ru' => 'Родитель'],
+				'children' => ['en' => 'Children', 'ru' => 'Потомок'],
+			],
+		];
 	}
 }
 

@@ -98,7 +98,7 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 
 		<div class="modal-header table-header">
 			<a class="close" data-dismiss="modal">×</a>
-			<h3>{{{ \Telenok\Core\Model\Object\Type::where('code', $model->getTable())->first()->translate('title') }}}</h3>
+			<h3>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title') }}}</h3>
 		</div>
 
 

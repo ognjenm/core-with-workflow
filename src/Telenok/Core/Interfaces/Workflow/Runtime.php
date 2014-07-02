@@ -14,7 +14,7 @@ class Runtime {
         return $event->setRuntime($this);
     }    
 
-    public function runProcess(\Telenok\Core\Model\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
+    public function runProcess(\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
     { 
         (new \Telenok\Core\Workflow\Thread($process, $event))->run($this); 
         

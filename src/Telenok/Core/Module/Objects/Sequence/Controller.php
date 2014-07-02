@@ -20,7 +20,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     
     public function getListItem($model)
     {
-        $sequence = (new \Telenok\Core\Model\Object\Sequence());
+        $sequence = (new \Telenok\Object\Sequence());
         
         $query = $model::select($model->getTable().'.*')
             ->where(function($query) use ($sequence, $model)
@@ -35,7 +35,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
         $this->getFilterQuery($model, $query); 
         
-        $query->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
 
         return $query->get();
     }

@@ -87,5 +87,23 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Use
         return $this->belongsToMany('\Telenok\User\Group', 'pivot_relation_m2m_group_group', 'group', 'group_group')->withTimestamps();
     }
 
+
+    public function companyEmployeeCompany()
+    {
+        return $this->belongsTo('\Company', 'company_employee_company');
+    }
+
+
+    public function companyManager()
+    {
+        return $this->hasMany('\Company', 'company_manager_user');
+    }
+
+
+    public function companyManagerAssistant()
+    {
+        return $this->hasMany('\Company', 'company_manager_assistant_user');
+    }
+
 }
 ?>

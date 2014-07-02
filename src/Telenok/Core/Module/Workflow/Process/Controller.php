@@ -26,7 +26,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller
 
     public function diagramShow($id = 0)
     { 
-        $model = \Telenok\Core\Model\Workflow\Process::find($id);
+        $model = \Telenok\Workflow\Process::find($id);
                 
         return \View::make($this->diagramBody, [
                 'controller' => $this,

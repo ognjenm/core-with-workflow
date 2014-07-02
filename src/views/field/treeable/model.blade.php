@@ -5,11 +5,11 @@
 
     $title = '';
     $tree_pid = 0;
-    $folderType = \Telenok\Core\Model\Object\Type::where('code', 'folder')->first();
+    $folderType = \Telenok\Object\Type::where('code', 'folder')->first();
 
     if ($model->exists && $tree_pid = $model->sequence->tree_pid)
     {
-        $title = \Telenok\Core\Model\System\Folder::find($tree_pid)->translate('title');
+        $title = \Telenok\System\Folder::find($tree_pid)->translate('title');
     }
 ?>
 

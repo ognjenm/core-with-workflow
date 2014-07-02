@@ -11,7 +11,7 @@ class Controller extends \Telenok\Core\Field\MorphManyToMany\Controller {
 
 	public function postProcess($model, $type, $input)
 	{
-		$model->morph_many_to_many_has = \Telenok\Core\Model\Object\Type::where('code', 'workflow_status')->first()->getKey();
+		$model->morph_many_to_many_has = \Telenok\Object\Type::where('code', 'workflow_status')->first()->getKey();
 		$model->save();
 
 		try

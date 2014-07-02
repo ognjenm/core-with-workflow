@@ -9,7 +9,7 @@ class Process {
     protected $modelProcess;
     protected $event = null;
 
-    public function __construct(\Telenok\Core\Model\Workflow\Process $model = null, \Telenok\Core\Workflow\Event $event = null)
+    public function __construct(\Telenok\Workflow\Process $model = null, \Telenok\Core\Workflow\Event $event = null)
     {
         if ($model)
         {

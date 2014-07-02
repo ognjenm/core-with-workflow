@@ -1,8 +1,8 @@
 <?php
 
-namespace Telenok\Core\Module\Files\Browser;
+namespace Telenok\Core\Module\Files\Browser\Wizard\Directory;
 
-class ControllerWizardDirectory extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controller {
                 
     protected $key = 'file-browser';
     protected $parent = 'files';
@@ -74,7 +74,7 @@ class ControllerWizardDirectory extends \Telenok\Core\Interfaces\Presentation\Tr
     public function getListContent()
     {
         return array(
-            'content' => \View::make("core::module/file-browser.wizard", array(
+            'content' => \View::make("core::module/files-browser.wizard-directory", array(
                     'controller' => $this,
                     'uniqueId' => uniqid(),
                 ))->render() 

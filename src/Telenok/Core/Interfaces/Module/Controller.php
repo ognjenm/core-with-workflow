@@ -5,6 +5,7 @@ namespace Telenok\Core\Interfaces\Module;
 abstract class Controller extends \Illuminate\Routing\Controller {
 
     protected $key = '';
+    protected $permissionKey = '';
     protected $parent = '';
     protected $group = '';
     protected $package = '';
@@ -18,14 +19,14 @@ abstract class Controller extends \Illuminate\Routing\Controller {
             $this->beforeFilter('auth');
             $this->beforeFilter(function()
             {
-                if (!\Auth::can('read', 'module.' . $this->getKey()))
+                if (!\Auth::can('read', $this->getPermissionKey()))
                 {
                     return \Redirect::route('error.access-denied');
                 }
             });
         }
     }
-
+	
     public function getName()
     {
         return $this->LL('name');
@@ -41,17 +42,29 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this->LL('header.description');
     }    
 
-    public function getKey()
-    {
-        return $this->key;
-    }
-
     public function setKey($key)
     {
         $this->key = $key;
         
         return $this;
     }
+
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function setPermissionKey($param = '')
+    {
+        $this->permissionKey = $param;
+
+        return $this;
+    }	
+
+    public function getPermissionKey()
+    {
+        return $this->permissionKey ?: 'module.' . $this->getKey();
+    }	
 
     public function getParent()
     {

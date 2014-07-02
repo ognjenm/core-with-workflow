@@ -11,7 +11,7 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 
 	public function preProcess1111111($model, $type, $input)
 	{
-		$modelField = \Telenok\Core\Model\Object\Field::where(function($query) use ($input)
+		$modelField = \Telenok\Object\Field::where(function($query) use ($input)
 				{
 					$query->where('code', 'locked_by');
 					$query->where('field_object_type', $input->get('field_object_type'));

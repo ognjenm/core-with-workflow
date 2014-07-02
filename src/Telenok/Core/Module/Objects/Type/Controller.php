@@ -29,10 +29,10 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         $nsPathClassModel = trim($input->get('namespace_path_class_model'), '.');
         $nsPathClassForm = trim($input->get('namespace_path_class_form'), '.'); 
         $multilanguage = intval($input->get('multilanguage', 1));
-/*
+
 		$resCode = 'object_type.'.$model->code;
 
-		$resource = \Telenok\Core\Model\Security\Resource::where('code', $resCode)->first();
+		$resource = \Telenok\Security\Resource::where('code', $resCode)->first();
 
 		if (!$resource)
 		{
@@ -44,7 +44,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				$title[$language] = array_get($toAdd, $language, 'Type of object') . ': ' . $value;
 			}
 
-			\Telenok\Core\Model\Security\Resource::create([
+			\Telenok\Security\Resource::create([
 				'title' => $title,
 				'code' => $resCode,
 				'active' => 1
@@ -52,7 +52,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 
 		$resCodeAll = 'object_type.'.$model->code.'.all';
-		$resource = \Telenok\Core\Model\Security\Resource::where('code', $resCodeAll)->first();
+		$resource = \Telenok\Security\Resource::where('code', $resCodeAll)->first();
 
 		if (!$resource)
 		{
@@ -65,7 +65,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				$title[$language] = array_get($toAdd, $language, 'Type of object') . ': ' . $value . '. ' . array_get($toAddAfter, $language, 'All records');
 			}
 
-			\Telenok\Core\Model\Security\Resource::create([
+			\Telenok\Security\Resource::create([
 				'title' => $title,
 				'code' => $resCodeAll,
 				'active' => 1
@@ -73,7 +73,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 
 		$resCodeOwn = 'object_type.'.$model->code.'.own';
-		$resource = \Telenok\Core\Model\Security\Resource::where('code', $resCodeOwn)->first();
+		$resource = \Telenok\Security\Resource::where('code', $resCodeOwn)->first();
 
 		if (!$resource)
 		{
@@ -86,13 +86,13 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				$title[$language] = array_get($toAdd, $language, 'Type of object') . ': ' . $value . '. ' . array_get($toAddAfter, $language, 'Own records');
 			}
 
-			(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
+			(new \Telenok\Security\Resource())->storeOrUpdate([
 				'title' => $title,
 				'code' => $resCodeOwn,
 				'active' => 1
 			]);
 		}
-*/
+
         try
         {
             if (!class_exists($model->class_model))
@@ -235,15 +235,15 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function createObjectField($model, $multilanguage = 1)
     {
-		$tabMain = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
-		$tabVisible = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
-		$tabAdditionally = \Telenok\Core\Model\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
+		$tabMain = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
+		$tabVisible = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
+		$tabAdditionally = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
 		
 		$translationSeed = $this->translationSeed();
 		
 		if (!$tabMain)
 		{
-			$tabMain = (new \Telenok\Core\Model\Object\Tab())->storeOrUpdate(
+			$tabMain = (new \Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.main'),
 						'code' => 'main',
@@ -256,9 +256,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (!$tabVisible)
 		{
-			$tabVisible = (new \Telenok\Core\Model\Object\Tab())->storeOrUpdate(
+			$tabVisible = (new \Telenok\Object\Tab())->storeOrUpdate(
 					[
-						'title' => ['en' => 'Visibility', 'ru' => 'Видимость'],
+						'title' => array_get($translationSeed, 'tab.visibility'),
 						'code' => 'visibility',
 						'active' => 1,
 						'tab_object_type' => $model->getKey(),
@@ -269,9 +269,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (!$tabAdditionally)
 		{
-			$tabAdditionally = (new \Telenok\Core\Model\Object\Tab())->storeOrUpdate(
+			$tabAdditionally = (new \Telenok\Object\Tab())->storeOrUpdate(
 					[
-						'title' => ['en' => 'Additionally', 'ru' => 'Дополнительно'],
+						'title' => array_get($translationSeed, 'tab.additionally'),
 						'code' => 'additionally',
 						'active' => 1,
 						'tab_object_type' => $model->getKey(),
@@ -280,11 +280,11 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			);
 		}
 
-		if (!\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('code', 'id')->count())
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'id')->count())
 		{
-			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
-				'title' => ['en' => '№'],
-				'title_list' => ['en' => '№'],
+			(new \Telenok\Object\Field())->storeOrUpdate([
+				'title' => array_get($translationSeed, 'model.№'),
+				'title_list' => array_get($translationSeed, 'model.№'),
 				'key' => 'integer-unsigned',
 				'code' => 'id',
 				'active' => 1,
@@ -301,11 +301,11 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		if (!\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('code', 'title')->count())
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'title')->count())
 		{
-			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
-				'title' => ['en' => 'Title'],
-				'title_list' => ['en' => 'Title'],
+			(new \Telenok\Object\Field())->storeOrUpdate([
+				'title' => array_get($translationSeed, 'model.title'),
+				'title_list' => array_get($translationSeed, 'model.title'),
 				'key' => 'string',
 				'code' => 'title',
 				'active' => 1,
@@ -322,9 +322,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		if (!\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('key', 'created-by')->count())
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'created-by')->count())
 		{
-			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
+			(new \Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'created-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -332,9 +332,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 		
-		if (!\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('key', 'updated-by')->count())
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'updated-by')->count())
 		{
-			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
+			(new \Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'updated-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -344,9 +344,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		
 		if ($model->treeable)
 		{
-			if (!\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())
+			if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())
 			{
-				(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
+				(new \Telenok\Object\Field())->storeOrUpdate([
 					'key' => 'tree',
 					'field_object_type' => $model->getKey(),
 					'field_object_tab' => $tabMain->getKey(),
@@ -356,34 +356,24 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 		else
 		{
-			\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
+			\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
 		}
 		
-/*
-		if ($model->treeable && !\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('key', 'treeable')->count())
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
 		{
-			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
-				'key' => 'treeable',
-				'field_object_type' => $model->getKey(),
-				'field_order' => 1,
-			]);
-		}
-*/		
-		if (!\Telenok\Core\Model\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
-		{
-			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
+			(new \Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'active',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabVisible->getKey(),
 				'field_order' => 3,
 			]); 
 		}
-/*
-        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate([
+
+        (new \Telenok\Object\Field())->storeOrUpdate([
             'key' => 'permission',
             'field_object_type' => $model->getKey(),
         ]); 
-*/
+
     }    
 
     public function namespaceExist($ns)
@@ -542,7 +532,19 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			],
 			'tab' => [
 				'main' => ['en' => 'Main', 'ru' => 'Основное'],
-			]
+				'visibility' => ['en' => 'Visibility', 'ru' => 'Видимость'],
+				'additionally' => ['en' => 'Additionally', 'ru' => 'Дополнительно'],
+			],
+			'model' => [
+				'№' => ['en' => '№', 'ru' => '№'],
+				'title' => ['en' => 'Title', 'ru' => 'Заголовок'],
+				'№' => ['en' => '№', 'ru' => '№'],
+				'№' => ['en' => '№', 'ru' => '№'],
+				'№' => ['en' => '№', 'ru' => '№'],
+				'№' => ['en' => '№', 'ru' => '№'],
+				'№' => ['en' => '№', 'ru' => '№'],
+				'№' => ['en' => '№', 'ru' => '№'],
+			],
 		];
 	}
 

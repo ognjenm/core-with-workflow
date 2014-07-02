@@ -32,17 +32,17 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getModelList()
     {
-        return \App::build(\Telenok\Core\Model\Object\Type::where('code', $this->typeList)->firstOrFail()->class_model);
+        return \App::build(\Telenok\Object\Type::where('code', $this->typeList)->firstOrFail()->class_model);
     }
 
     public function getModelTree()
     {
-        return \App::build(\Telenok\Core\Model\Object\Type::where('code', $this->typeTree)->firstOrFail()->class_model);
+        return \App::build(\Telenok\Object\Type::where('code', $this->typeTree)->firstOrFail()->class_model);
     }
 
     public function getTypeList()
     {
-        return \Telenok\Core\Model\Object\Type::where('code', $this->typeList)->firstOrFail();
+        return \Telenok\Object\Type::where('code', $this->typeList)->firstOrFail();
     } 
 
     public function getActionParam()
@@ -136,7 +136,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getFilterSubQuery($input, $model, $query)
     {
-        $type = \Telenok\Core\Model\Object\Type::where('code', $model->getTable())->firstOrFail();
+        $type = \Telenok\Object\Type::where('code', $model->getTable())->firstOrFail();
 
         $fieldConfig = \App::make('telenok.config')->getObjectFieldController();
 
@@ -219,7 +219,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
         $this->getFilterQuery($model, $query); 
 
-        $result = $query->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1)->get();
+        $result = $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1)->get();
 			
         return $result;
     }

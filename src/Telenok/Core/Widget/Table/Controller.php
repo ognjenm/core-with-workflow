@@ -12,7 +12,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function getInsertContent($id = '')
 	{
-		$widgetOnPage = \Telenok\Core\Model\Web\WidgetOnPage::findOrFail($id);
+		$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
 
 		if ($widgetOnPage->isWidgetLink())
 		{
@@ -78,7 +78,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	{
 		$content = [];
 
-		$wOP = \Telenok\Core\Model\Web\WidgetOnPage::where('container', $container_id)->orderBy('order')->get();
+		$wOP = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('order')->get();
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 
@@ -97,8 +97,8 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		
 		\DB::transaction(function() use ($languageId, $pageId, $key, $id, $container, $order, &$widgetOnPage, $bufferId)
 		{
-			$widgetOnPage = \Telenok\Core\Model\Web\WidgetOnPage::findOrFail($id);
-			$buffer = \Telenok\Core\Model\System\Buffer::findOrFail($bufferId);
+			$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
+			$buffer = \Telenok\System\Buffer::findOrFail($bufferId);
 
 			if ($buffer->key == 'cut')
 			{
@@ -108,7 +108,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 					"key" => $key,
 				]);
 
-				$bufferWidget = \Telenok\Core\Model\System\Buffer::find($bufferId);
+				$bufferWidget = \Telenok\System\Buffer::find($bufferId);
 
 				if ($bufferWidget)
 				{
@@ -117,7 +117,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			}
 			else if ($buffer->key == 'copy')
 			{
-				$widgetOnPage = \Telenok\Core\Model\Web\WidgetOnPage::findOrFail($id)->replicate();
+				$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id)->replicate();
 				$widgetOnPage->push();
 				$widgetOnPage->storeOrUpdate([
 						"container" => $container,
@@ -150,14 +150,14 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 				$originalWidget->widgetLink()->save($widgetOnPage);
 			}
 
-			\Telenok\Core\Model\Web\WidgetOnPage::where("order", ">=", $order)
+			\Telenok\Web\WidgetOnPage::where("order", ">=", $order)
 					->where("container", $container)->get()->each(function($item)
 			{
 				$item->storeOrUpdate(["order" => $item->order + 1]);
 			});
 
-			$widgetOnPage->widgetPage()->associate(\Telenok\Core\Model\Web\Page::findOrFail($pageId))->save(); 
-			$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\Core\Model\System\Language::findOrFail($languageId))->save(); 
+			$widgetOnPage->widgetPage()->associate(\Telenok\Web\Page::findOrFail($pageId))->save(); 
+			$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId))->save(); 
 			$widgetOnPage->save();
 
 			if ($buffer->key == 'cut' || $buffer->key == 'copy')
@@ -179,9 +179,9 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		{ 
 			$newContainres[$key] = md5(uniqid("", true));
 
-			\Telenok\Core\Model\Web\WidgetOnPage::where("container", $container)->get()->each(function($item) use ($widgetOnPage, $buffer, $newContainres, $key)
+			\Telenok\Web\WidgetOnPage::where("container", $container)->get()->each(function($item) use ($widgetOnPage, $buffer, $newContainres, $key)
 			{
-				$buffer = \Telenok\Core\Model\System\Buffer::addBuffer(\Auth::user()->getKey(), $item->getKey(), 'web-page', $buffer->key);
+				$buffer = \Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $item->getKey(), 'web-page', $buffer->key);
 				
 				$widget = \App::make('telenok.config')->getWidget()->get($item->key);
 				
@@ -239,9 +239,9 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function removeFromPage($id = 0)
 	{
-		$w = \Telenok\Core\Model\Web\WidgetOnPage::findOrFail($id);
+		$w = \Telenok\Web\WidgetOnPage::findOrFail($id);
 
-		if (\Telenok\Core\Model\Web\WidgetOnPage::whereIn('container', $w->structure->get('containerIds', []))->count())
+		if (\Telenok\Web\WidgetOnPage::whereIn('container', $w->structure->get('containerIds', []))->count())
 		{
 			throw new \Exception($this->LL('widget.has.child'));
 		}

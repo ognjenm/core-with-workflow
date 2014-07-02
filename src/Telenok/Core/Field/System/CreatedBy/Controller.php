@@ -27,8 +27,10 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 
 	public function preProcess($model, $type, $input)
 	{
- 		$input->put('title', ['en' => 'Created by']);
-		$input->put('title_list', ['en' => 'Created by']);
+		$translationSeed = $this->translationSeed();
+		
+ 		$input->put('title', array_get($translationSeed, 'model.created_by'));
+		$input->put('title_list', array_get($translationSeed, 'model.created_by'));
 		$input->put('code', 'created_by_user');
 		$input->put('active', 1);
 		$input->put('multilanguage', 0);
@@ -41,7 +43,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		$input->put('relation_one_to_many_belong_to', \DB::table('object_type')->where('code', 'user')->pluck('id'));
 		$input->put('field_order', 1);
 
-		$table = \Telenok\Core\Model\Object\Type::find($input->get('field_object_type'))->code;
+		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
 		$fieldName = 'created_by_user';
 		
 		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))
@@ -59,6 +61,16 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 	{
 		return $this;
 	}
+
+	public function translationSeed()
+	{
+		return [
+			'model' => [
+				'created_by' => ['en' => 'Created by', 'ru' => 'Создано'],
+			],
+		];
+	}
+
 }
 
 ?>

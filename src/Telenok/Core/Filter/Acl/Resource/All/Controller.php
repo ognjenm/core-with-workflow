@@ -8,8 +8,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 
     public function filter($queryCommon, $queryWhere, $resource, $permission, $subject)
     {
-        $spr = new \Telenok\Core\Model\Security\SubjectPermissionResource();
-        $aclResource = new \Telenok\Core\Model\Security\Resource();
+        $spr = new \Telenok\Security\SubjectPermissionResource();
+        $aclResource = new \Telenok\Security\Resource();
         
         $queryCommon->leftJoin($aclResource->getTable() . ' as acl_resource_filter_all_direct', function($join) use ($aclResource)
         {
@@ -18,12 +18,12 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
             $join->on('acl_resource_filter_all_direct.active', '=', \DB::raw('1'));
         });
         
-        //for direct right on \Telenok\Core\Model\Security\Resource
+        //for direct right on \Telenok\Security\Resource
         $queryCommon->leftJoin($spr->getTable() . ' as spr_resource_filter_all_direct', function($join) use ($spr, $subject, $permission)
         {
             $join->on('acl_resource_filter_all_direct.id', '=', 'spr_resource_filter_all_direct.acl_resource_object_sequence'); 
             $join->on('spr_resource_filter_all_direct.acl_subject_object_sequence', '=', \DB::raw($subject->getKey()));
-            $join->on('spr_resource_filter_all_direct.acl_permission_permission', '=', \DB::raw($permission->getKey()));
+            $join->on('spr_resource_filter_all_direct.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
             $join->on('spr_resource_filter_all_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
             $join->on('spr_resource_filter_all_direct.active', '=', \DB::raw('1'));
         });
@@ -33,7 +33,7 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
         // for logined user's right on resource
         if ($subject instanceof \Telenok\Core\Model\User\User)
         {
-            $userGroupRole = \Telenok\Core\Model\User\User::with([
+            $userGroupRole = \Telenok\User\User::with([
                 'group' => function($query) { $query->whereActive(1); }, 
                 'group.role' => function($query) { $query->whereActive(1); }])
             ->whereId($subject->getKey())
@@ -54,7 +54,7 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
             {
                 $join->on('acl_resource_filter_all_direct.id', '=', 'spr_resource_filter_all_user.acl_resource_object_sequence'); 
                 $join->on('spr_resource_filter_all_user.acl_subject_object_sequence', ' in ', \DB::raw('(' . implode(',', $roles) . ')')); 
-                $join->on('spr_resource_filter_all_user.acl_permission_permission', '=', \DB::raw($permission->getKey()));
+                $join->on('spr_resource_filter_all_user.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
                 $join->on('spr_resource_filter_all_user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
                 $join->on('spr_resource_filter_all_user.active', '=', \DB::raw('1'));
             });

@@ -92,8 +92,10 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 			$input->put('field_object_tab', 'visibility');
 		}
 		
-		$input->put('title', ['en' => 'Active']);
-		$input->put('title_list', ['en' => 'Active']);
+		$translationSeed = $this->translationSeed();
+
+		$input->put('title', array_get($translationSeed, 'model.active'));
+		$input->put('title_list', array_get($translationSeed, 'model.active')); 
 		$input->put('code', 'active');
 		$input->put('active', 1);
 		$input->put('multilanguage', 0);
@@ -105,7 +107,7 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		$input->put('allow_update', 1);
 		$input->put('field_order', 1);
 
-		$table = \Telenok\Core\Model\Object\Type::find($input->get('field_object_type'))->code;
+		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
 		$fieldName = 'start_at';
 		
 		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))
@@ -128,6 +130,16 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		
 		return parent::preProcess($model, $type, $input);
 	}
+
+	public function translationSeed()
+	{
+		return [
+			'model' => [
+				'active' => ['en' => 'Active', 'ru' => 'Активно'],
+			],
+		];
+	}
+
 }
 
 ?>

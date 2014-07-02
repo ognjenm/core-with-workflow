@@ -10,8 +10,8 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $typeList = 'object_version';
 
     protected $presentation = 'tree-tab-object';
-    protected $presentationFormFieldListView = 'core::module.objects-version.form-field-list';
     protected $presentationModelView = 'core::module.objects-version.model';
+    protected $presentationView = 'core::module.objects-version.presentation';
 
 	public function save($input = [], $type = null)
 	{
@@ -22,11 +22,11 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
   
-		$model = \Telenok\Core\Model\Object\Version::findOrFail($input->get('id'));
+		$model = \Telenok\Object\Version::findOrFail($input->get('id'));
 		
 		try
 		{
-			return \Telenok\Core\Model\Object\Version::toRestore($model);
+			return \Telenok\Object\Version::toRestore($model);
 		} 
 		catch (\Telenok\Core\Interfaces\Exception\ObjectTypeNotFound $ex) 
 		{

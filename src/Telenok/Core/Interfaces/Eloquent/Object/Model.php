@@ -6,7 +6,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	use \Illuminate\Database\Eloquent\SoftDeletingTrait;
 	
-	
 	public $incrementing = false;
 	public $timestamps = true;
 	public $softDelete = true;
@@ -46,14 +45,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			if ($this->getKey())
 			{
-				$sequence = new \Telenok\Core\Model\Object\Sequence();
+				$sequence = new \Telenok\Object\Sequence();
 				$sequence->{$sequence->getKeyName()} = $this->getKey();
 				$sequence->class_model = get_class($this);
 				$sequence->save();
 			}
 			else
 			{
-				$sequence = \Telenok\Core\Model\Object\Sequence::create(['class_model' => get_class($this)]);
+				$sequence = \Telenok\Object\Sequence::create(['class_model' => get_class($this)]);
 			}
 
 			$this->{$this->getKeyName()} = $sequence->getKey();
@@ -64,7 +63,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
 		{
-			$sequence = \Telenok\Core\Model\Object\Sequence::find($this->getKey());
+			$sequence = \Telenok\Object\Sequence::find($this->getKey());
 
 			if ($this->softDelete)
 			{
@@ -81,7 +80,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
 		{
-			\Telenok\Core\Model\Object\Translation::where('translation_object_model_id', $this->getKey())->forceDelete();
+			\Telenok\Object\Translation::where('translation_object_model_id', $this->getKey())->forceDelete();
 
 			foreach ($this->getMultilanguage() as $fieldCode)
 			{
@@ -89,7 +88,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 				foreach ($value as $language => $string)
 				{
-					\Telenok\Core\Model\Object\Translation::create([
+					\Telenok\Object\Translation::create([
 						'translation_object_model_id' => $this->getKey(),
 						'translation_object_field_code' => $fieldCode,
 						'translation_object_language' => $language,
@@ -118,12 +117,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function sequence()
 	{
-		return $this->hasOne('\Telenok\Core\Model\Object\Sequence', 'id');
+		return $this->hasOne('\Telenok\Object\Sequence', 'id');
 	}
 	
 	public function type()
 	{
-		return \Telenok\Core\Model\Object\Type::whereCode($this->getTable())->first();
+		return \Telenok\Object\Type::whereCode($this->getTable())->first();
 	} 
 
 	public function hasVersioning()
@@ -352,7 +351,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		if ($this->hasVersioning())
 		{
-			\Telenok\Core\Model\Object\Version::add($this);
+			\Telenok\Object\Version::add($this);
 		}
 
 		return $this;
@@ -489,6 +488,20 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		
 		return static::$staticListMultilanguage[$class];
 	}
+	
+	public function addMultilanguage($fieldCode)
+	{ 
+		$multilanguage = $this->getMultilanguage();
+
+		$class = get_class($this);
+	
+		static::$staticListMultilanguage[$class][] = $fieldCode;
+		
+		static::$staticListMultilanguage[$class] = array_unique(static::$staticListMultilanguage[$class]);
+		
+		return $this; 
+	}
+	
 
 	public function isFillable($key)
 	{
@@ -606,6 +619,21 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			return $translated ? : $this->$field->get(\Config::get('app.localeDefault'));
 		}
+		else if ( ($this->$field instanceof \ArrayAccess && ($v = $this->$field)) || (($v = json_decode($this->$field, true)) && json_last_error()===JSON_ERROR_NONE))
+		{
+			if ( isset($v[$locale]) )
+			{
+				return $v[$locale];
+			}
+			else if (isset($v[\Config::get('app.localeDefault')]))
+			{
+				return $v[\Config::get('app.localeDefault')];
+			}
+			else
+			{
+				return $this->$field;
+			}
+		}
 		else
 		{
 			return $this->$field;
@@ -636,7 +664,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			if (\Auth::guest())
 			{
-				$subject = \Telenok\Core\Model\Security\Resource::where('code', 'user_unauthorized')->active()->first();
+				$subject = \Telenok\Security\Resource::where('code', 'user_unauthorized')->active()->first();
 			}
 			else if (\Auth::check())
 			{
@@ -652,21 +680,21 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 		else
 		{
-			$subject = \Telenok\Core\Model\Object\Sequence::where('id', $subjectCode)->active()->first();
+			$subject = \Telenok\Object\Sequence::where('id', $subjectCode)->active()->first();
 		}
 
-		$permission = \Telenok\Core\Model\Security\Permission::where('id', $permissionCode)->orWhere('code', $permissionCode)->active()->first();
+		$permission = \Telenok\Security\Permission::where('id', $permissionCode)->orWhere('code', $permissionCode)->active()->first();
 
 		if (!$subject instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model || !$permission instanceof \Telenok\Core\Model\Security\Permission)
 		{
 			return $query->where($this->getTable() . '.id', 'nonexistsvalue');
 		}
 
-		$spr = new \Telenok\Core\Model\Security\SubjectPermissionResource();
+		$spr = new \Telenok\Security\SubjectPermissionResource();
 
-		$sequence = new \Telenok\Core\Model\Object\Sequence();
+		$sequence = new \Telenok\Object\Sequence();
 
-		$type = new \Telenok\Core\Model\Object\Type();
+		$type = new \Telenok\Object\Type();
 
 		$query->join($sequence->getTable() . ' as osequence', function($join) use ($spr, $subject, $permission)
 		{
@@ -685,7 +713,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			$join->on($this->getTable() . '.id', '=', 'spr_permission_direct.acl_resource_object_sequence');
 			$join->on('spr_permission_direct.acl_subject_object_sequence', '=', \DB::raw($subject->getKey()));
-			$join->on('spr_permission_direct.acl_permission_permission', '=', \DB::raw($permission->getKey()));
+			$join->on('spr_permission_direct.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
 			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
 			$join->on('spr_permission_direct.active', '=', \DB::raw('1'));
 		});
@@ -693,7 +721,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		// for logined user's right on resource
 		if ($subject instanceof \Telenok\Core\Model\User\User)
 		{
-			$userGroupRole = \Telenok\Core\Model\User\User::with([
+			$userGroupRole = \Telenok\User\User::with([
 						'group' => function($query)
 				{
 					$query->whereActive(1);
@@ -723,7 +751,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			{
 				$join->on($this->getTable() . '.id', '=', 'spr_permission_user.acl_resource_object_sequence');
 				$join->on('spr_permission_user.acl_subject_object_sequence', ' in ', \DB::raw('(' . implode(',', $roles) . ')'));
-				$join->on('spr_permission_user.acl_permission_permission', '=', \DB::raw($permission->getKey()));
+				$join->on('spr_permission_user.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
 				$join->on('spr_permission_user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
 				$join->on('spr_permission_user.active', '=', \DB::raw('1'));
 			});
@@ -787,7 +815,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 			else
 			{
-				$sequence = \Telenok\Core\Model\Object\Sequence::findOrFail($modelOrId);
+				$sequence = \Telenok\Object\Sequence::findOrFail($modelOrId);
 			}
 		} 
 
@@ -819,12 +847,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function treeParent()
 	{
-        return $this->belongsToMany('Telenok\Core\Model\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
+        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
 	}
 
 	public function treeChild()
 	{
-        return $this->belongsToMany('Telenok\Core\Model\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_id', 'tree_pid');
+        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_id', 'tree_pid');
 	}
 
 	public function scopePivotTreeLinkedExtraAttr($query)
@@ -1110,17 +1138,17 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function createdByUser()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\User\User', 'created_by_user');
+		return $this->belongsTo('\Telenok\User\User', 'created_by_user');
 	}
 
 	public function updatedByUser()
 	{
-		return $this->belongsTo('\Telenok\Core\Model\User\User', 'updated_by_user');
+		return $this->belongsTo('\Telenok\User\User', 'updated_by_user');
 	}
 
 	public function aclSubject()
 	{
-		return $this->hasMany('\Telenok\Core\Model\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
+		return $this->hasMany('\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
 	}
 }
 

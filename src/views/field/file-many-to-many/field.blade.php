@@ -25,7 +25,7 @@
 							$allowedExt = $model->file_many_to_many_allow_ext->all();
 						?>
 						
-						@foreach(\Telenok\Core\Model\File\FileExtension::all()->sort(function($a, $b) { return strcmp($a->extension, $b->extension); }) as $extension)
+						@foreach(\Telenok\File\FileExtension::all()->sort(function($a, $b) { return strcmp($a->extension, $b->extension); }) as $extension)
  
 						<option value="{{{$extension->extension}}}" @if (in_array($extension->extension, $allowedExt)) selected="selected" @endif >[{{{$extension->extension}}}] {{{$extension->translate('title')}}}</option>
 
@@ -42,7 +42,7 @@
 							$allowedMime = $model->file_many_to_many_allow_mime->all();
 						?>
 						
-						@foreach(\Telenok\Core\Model\File\FileMimeType::all()->sort(function($a, $b) { return strcmp($a->mime_type, $b->mime_type); }) as $mimeType)
+						@foreach(\Telenok\File\FileMimeType::all()->sort(function($a, $b) { return strcmp($a->mime_type, $b->mime_type); }) as $mimeType)
  
 						<option value="{{{$mimeType->mime_type}}}" @if (in_array($mimeType->mime_type, $allowedMime)) selected="selected" @endif >[{{{$mimeType->mime_type}}}] {{{$mimeType->translate('title')}}}</option>
 

@@ -155,7 +155,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Core\Model\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
+				\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setModuleGroupModel($item);
@@ -181,7 +181,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Core\Model\Web\Module::active()->get()->each(function($item) use ($list)
+				\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setModuleModel($item);
@@ -207,7 +207,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Core\Model\Web\PageController::active()->get()->each(function($item) use ($list)
+				\Telenok\Web\PageController::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setControllerModel($item);
@@ -233,7 +233,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Core\Model\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
+				\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setWidgetGroupModel($item);
@@ -259,7 +259,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Core\Model\Web\Widget::active()->get()->each(function($item) use ($list)
+				\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setWidgetModel($item);
@@ -290,7 +290,7 @@ class Config {
 
 		$controller = \App::make('telenok.config')->getController();
 
-		foreach (\Telenok\Core\Model\Web\Page::with('pagePageController')->active()->get() as $key => $page)
+		foreach (\Telenok\Web\Page::with('pagePageController')->active()->get() as $key => $page)
 		{
 			if (!method_exists($page->pagePageController->controller_class, $page->pagePageController->controller_method))
 			{
@@ -310,7 +310,7 @@ class Config {
 	{
 		if (\DB::table('setting')->where('active', 1)->count())
 		{
-			foreach (\Telenok\Core\Model\System\Setting::remember(10)->get() as $setting)
+			foreach (\Telenok\System\Setting::all() as $setting)
 			{
 				\Config::set($setting->code, $setting->value instanceof \Illuminate\Support\Collection ? $setting->value->toArray() : $setting->value);
 			}

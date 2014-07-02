@@ -13,7 +13,7 @@ class SeedLast extends Migration {
 		{
 			$item->model()->get()->each(function($i) use ($now)
 			{
-				$i->storeOrUpdate(['update_at' => $now]);
+				$i->storeOrUpdate(['updated_at' => $now]);
 			});
 		});
 
@@ -268,7 +268,7 @@ class SeedLast extends Migration {
 			'code' => 'user_unauthorized',
 			'active' => 1
 		]);
-
+/*
 		(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
 			'title' => ['en' => 'Type of object (existing): Object Type', 'ru' => 'Тип объекта (существующий): Тип объекта'],
 			'code' => 'object_type.object_type',
@@ -280,7 +280,7 @@ class SeedLast extends Migration {
 			'code' => 'object_type.object_field',
 			'active' => 1
 		]);
-
+*/
 		(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
 			'title' => ['en' => 'Module: Field', 'ru' => 'Модуль: Поле'],
 			'code' => 'module.objects-field',
@@ -298,10 +298,28 @@ class SeedLast extends Migration {
 			'code' => 'module.objects-lists',
 			'active' => 1
 		]);
+		
+		(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
+			'title' => ['en' => 'Module: File browser', 'ru' => 'Модуль: Обзор Файлов'],
+			'code' => 'module.file-browser',
+			'active' => 1
+		]);		
 
 		(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
 			'title' => ['en' => 'Module: Setting', 'ru' => 'Модуль: Настройки'],
 			'code' => 'module.system-setting',
+			'active' => 1
+		]);
+
+		(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
+			'title' => ['en' => 'Module: Object Version', 'ru' => 'Модуль: Версии объектов'],
+			'code' => 'module.objects-version',
+			'active' => 1
+		]);
+
+		(new \Telenok\Core\Model\Security\Resource())->storeOrUpdate([
+			'title' => ['en' => 'Module: Web Page', 'ru' => 'Модуль: Веб Страница'],
+			'code' => 'module.web-page',
 			'active' => 1
 		]);
 
@@ -384,13 +402,13 @@ class SeedLast extends Migration {
 			'title' => 'Super Administrator',
 			'username' => 'admin',
 			'usernick' => 'Super administrator',
-			'email' => 'pilot911@yandex.ru',
+			'email' => 'support@telenok.com',
 			'password' => '11111',
 			'active' => 1,
 		]);
 
 		//Login User
-		\Auth::attempt(['email' => 'pilot911@yandex.ru', 'password' => '11111']);
+		\Auth::attempt(['email' => 'support@telenok.com', 'password' => '11111']);
 
 		//Group
 		(new \Telenok\Core\Model\User\Group())->storeOrUpdate([

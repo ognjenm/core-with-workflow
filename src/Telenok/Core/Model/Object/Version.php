@@ -28,11 +28,11 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		{
 			$versionData = static::findOrFail($version);
 		}
-		else if ($version instanceof \Telenok\Object\Version)
+		else if ($version instanceof \Telenok\Core\Model\Object\Version)
 		{
 			$versionData = $version;
 		}
-
+		
 		try
 		{
 			$class = \Telenok\Object\Type::findOrFail($versionData->object_type_id)->class_model;
@@ -59,7 +59,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public static function add(\Illuminate\Database\Eloquent\Model $model = null)
 	{
-		if (!($model instanceof \Telenok\Object\Sequence) && $model->exists && \Config::get('app.version.enabled'))
+		if (!($model instanceof \Telenok\Core\Model\Object\Sequence) && $model->exists && \Config::get('app.version.enabled'))
 		{
 			$this_ = new static;
 
@@ -86,6 +86,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			$this_->updated_at = $model->updated_at;
 			$this_->start_at = $model->start_at;
 			$this_->end_at = $model->end_at;
+			$this_->active = $model->active;
 
 			$this_->save();
 

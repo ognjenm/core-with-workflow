@@ -51,7 +51,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
 
     public function setPresentationView($key)
     {
-        return $this->presentationView;
+        $this->presentationView = $key;
         
         return $this;
     }
@@ -63,7 +63,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
 
     public function setPresentationTreeView($key)
     {
-        return $this->presentationTreeView = $key;
+        $this->presentationTreeView = $key;
         
         return $this;
     }    
@@ -255,17 +255,17 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
     
     public function getModel($id)
     {
-        return \Telenok\Core\Model\Object\Sequence::getModel($id);
+        return \Telenok\Object\Sequence::getModel($id);
     }
  
     public function getType($id)
     {
-        return \Telenok\Core\Model\Object\Type::where('id', $id)->orWhere('code', $id)->firstOrFail();
+        return \Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->firstOrFail();
     } 
 
     public function getTypeByModel($id)
     {
-        return \Telenok\Core\Model\Object\Sequence::findOrFail($id)->sequencesObjectType;
+        return \Telenok\Object\Sequence::findOrFail($id)->sequencesObjectType;
     }
     
     public function modelByType($id)
@@ -345,11 +345,20 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
     
     public function getFilterQuery($model, $query)
     {
-        $translate = new \Telenok\Core\Model\Object\Translation();
+        $translate = new \Telenok\Object\Translation();
         
         if ($title = trim(\Input::get('sSearch')))
         {
-            $query->where($model->getTable().'.title', 'like', '%'.$title.'%')->orWhere('id', intval($title));
+			$query->where(function($query) use ($title, $model)
+			{
+				\Illuminate\Support\Collection::make(explode(' ', $title))
+						->reject(function($i) { return !trim($i); })
+						->each(function($i) use ($query, $model)
+				{
+					$query->where($model->getTable().'.title', 'like', '%'.trim($i).'%');
+				});
+			});
+			
             $query->leftJoin($translate->getTable(), function($join) use ($model, $translate)
             {
                 $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
@@ -389,13 +398,22 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
     {
         foreach ($input as $name => $value)
         {
-			$query->where($model->getTable() . '.' . $name, 'like', '%' . $value . '%');
+			$query->where(function($query) use ($value, $name, $model)
+			{
+				\Illuminate\Support\Collection::make(explode(' ', $value))
+						->reject(function($i) { return !trim($i); })
+						->each(function($i) use ($query, $name, $model)
+				{
+					$query->where($model->getTable().'.'.$name, 'like', '%'.trim($i).'%');
+				});
+			});
+
         } 
     }
 
     public function getListItem($model)
     {
-        $sequence = (new \Telenok\Core\Model\Object\Sequence());
+        $sequence = (new \Telenok\Object\Sequence());
         
         $query = $model::select($model->getTable().'.*')
             ->join($sequence->getTable(), function($join) use ($sequence, $model)
@@ -414,7 +432,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
 
         $this->getFilterQuery($model, $query); 
         
-        $query->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
 
         return $query->get();
     }
@@ -447,7 +465,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
 
                 $parents = $list->lists('id', 'tree_pid');
 
-                $folderId = \Telenok\Core\Model\Object\Type::where('code', 'folder')->first()->getKey();
+                $folderId = \Telenok\Object\Type::where('code', 'folder')->first()->getKey();
 
                 foreach ($list as $key => $item)
                 {
@@ -472,13 +490,13 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
     {
         $model = $this->getModelTree();
         
-        $query = \Telenok\Core\Model\Object\Sequence::pivotTreeLinkedExtraAttr();
+        $query = \Telenok\Object\Sequence::pivotTreeLinkedExtraAttr();
 
-        $sequences_object_type = [\Telenok\Core\Model\Object\Type::where('code', 'folder')->firstOrFail()->getKey()];
+        $sequences_object_type = [\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey()];
 
         if ($model !== null)
         {
-            $sequences_object_type[] = \Telenok\Core\Model\Object\Type::where('code', $model->getTable())->first()->getKey();
+            $sequences_object_type[] = \Telenok\Object\Type::where('code', $model->getTable())->first()->getKey();
         }
         
         if ($treePid==0)
@@ -801,7 +819,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
         {
             try
             {
-                $model->sequence->makeLastChildOf(\Telenok\Core\Model\System\Folder::findOrFail($input->get('tree_pid'))->sequence);
+                $model->sequence->makeLastChildOf(\Telenok\System\Folder::findOrFail($input->get('tree_pid'))->sequence);
             }
             catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) 
             { 

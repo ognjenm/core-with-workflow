@@ -3,7 +3,7 @@
 
 		<div class="modal-header table-header">
 			<a class="close" data-dismiss="modal">×</a>
-			<h3>{{{ \Telenok\Core\Model\Object\Type::where('code', $model->getTable())->first()->translate('title_list') }}}</h3>
+			<h3>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title_list') }}}</h3>
 		</div>
 		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
 			<div class="widget-main">
@@ -32,7 +32,19 @@
 				"bJQueryUI": false,
 				"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
 				aoColumns : aoColumns,
-				"oTableTools": {"aButtons": []}
+				"oTableTools": {"aButtons": []},
+				"oLanguage": {
+					"oPaginate": {
+						"sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
+						"sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}", 
+					},
+					"sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
+					"sSearch": "{{{ \Lang::get('core::default.table.search') }}} ",
+					"sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
+					"sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
+					"sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
+					"sInfoFiltered": "",
+				}
 			});
 		</script>
 	</div>

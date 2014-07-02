@@ -204,6 +204,27 @@ class SeedSubjectPermissionResourceTable extends Migration {
 					'field_order' => 9,
 				]
 		);
+		
+		(new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+				[
+					'title' => SeedObjectPermissionResourceTableTranslation::get('acl.field.permission'),
+					'title_list' => SeedObjectPermissionResourceTableTranslation::get('acl.field.permission'),
+					'key' => 'relation-one-to-many',
+					'code' => 'acl_permission',
+					'active' => 1,
+					'field_object_type' => 'object_sequence',
+					'relation_one_to_many_has' => $subjectPermissionResourceId,
+					'field_object_tab' => 'main',
+					'multilanguage' => 0,
+					'show_in_list' => 0,
+					'allow_search' => 1,
+					'allow_delete' => 0,
+					'allow_create' => 1,
+					'allow_choose' => 1,
+					'allow_update' => 1,
+					'field_order' => 9,
+				]
+		);
 	}
 
 }
@@ -216,8 +237,8 @@ class SeedObjectPermissionResourceTableTranslation extends \Telenok\Core\Interfa
 			'field' => [
 				'code' => ['ru' => 'Код', 'en' => 'Code'],
 				'permission' => ['ru' => 'Разрешение', 'en' => 'Permission'],
-				'resource' => ['ru' => 'Разрешение', 'en' => 'Resource'],
-				'subject' => ['ru' => 'Принадлежит', 'en' => 'Belongs'],
+				'resource' => ['ru' => 'Ресурс', 'en' => 'Resource'],
+				'subject' => ['ru' => 'Владелец', 'en' => 'Owner'],
 			],
 		]
 	];

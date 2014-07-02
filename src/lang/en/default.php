@@ -29,7 +29,7 @@ return [
     'notice.saved' => 'Saved',
     'notice.saved.description' => 'Data saved successfully',
     'notice.saved.thank.you' => 'Thank you',
-    'notice.error' => 'Error!',
+    'notice.error' => 'Error',
     'notice.error.undefined' => 'Sorry, an error occurred',
     'notice.sure' => 'Are you sure ?',
     'notice.warning' => 'Warning!',
