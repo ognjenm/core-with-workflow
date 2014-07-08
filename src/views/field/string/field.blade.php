@@ -5,6 +5,13 @@
     </div>
 </div>
 
+<div class="form-group">
+    {{ Form::label("string_list_size", \Lang::get("core::field/string.property.string_list_size"), array('class'=>'control-label')) }}
+    <div class="controls">
+        {{ Form::text("string_list_size", $model->translate("string_list_size") ) }}
+    </div>
+</div> 
+
 @if ($model->multilanguage)
 	@foreach((array)Config::get('app.locales') as $locale)
 		<div class="form-group">

@@ -77,7 +77,7 @@
                     btnListEditUrl : '{{ $controller->getRouterListEdit(['id' => $type->getKey()]) }}',
                     btnListDeleteUrl : '{{ $controller->getRouterListDelete(['id' => $type->getKey()]) }}',
                     btnCreateDisabled : '{{ !\Auth::can('create', "object_type.{$type->code}") }}',
-                    btnListDeleteDisabled : '{{ !\Auth::can('delete', "object_type.{$type->code}.%") }}'
+                    btnListDeleteDisabled : '{{ !\Auth::can('delete', "object_type.{$type->code}") }}'
                 });
                 
         function presentationTableFilter{{$uniqueId}}(dom_obj, erase)

@@ -81,6 +81,7 @@ class SeedFileTable extends Migration {
 						'allow_search' => 1,
 						'allow_delete' => 0,
 						'field_order' => 2,
+						'string_list_size' => 50,
 					]
 			); 
  

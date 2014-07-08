@@ -442,15 +442,8 @@ class Acl
             $query->where('acl_subject_object_sequence', $subject->getKey());
         }
 
-        $ids =  $query->lists('id');
-        
-        $controller = new \Telenok\Core\Module\Objects\Lists\Controller();
-
-        foreach($ids as $id)
-        {
-            $controller->delete($id, true);
-        }
-        
+		$query->forcedelete();
+		
         return $this;
     }
     

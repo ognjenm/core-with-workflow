@@ -37,7 +37,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	public function setModelAttribute($model, $key, $value, $field)
 	{
-		$default = $field->integer_unsigned_default;
+		$default = $field->integer_unsigned_default?:null;
 
 		if ($value === null)
 		{
@@ -65,6 +65,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$field = [];
 		$field['multilanguage'] = 0;
 		$field['rule'][] = 'integer';
+		
+		$field['integer_unsigned_default'] = $input->get('integer_unsigned_min');
 
 		if ($input->get('required'))
 		{

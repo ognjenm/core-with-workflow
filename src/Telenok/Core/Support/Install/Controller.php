@@ -313,7 +313,7 @@ class Controller {
 		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);  
     }
 	
-	public function postMigrateProcess()
+	public function postInstallProcess()
 	{
 		$reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
 		$file = $reflector->getFileName();

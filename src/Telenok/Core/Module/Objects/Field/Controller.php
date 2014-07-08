@@ -71,8 +71,19 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			$modelType = \Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
 			
 			$input->put('field_object_type', $modelType->getKey());
+		} 
+
+		// preprocessing at field controller
+		if (!\App::make('telenok.config')->getObjectFieldController()->has($input->get('key')))
+		{
+			throw new \Exception('There are not field with key "' . $input->get('key') . '"');
+		}
+		else
+		{
+			\App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
 		}
 
+		// tab validate and set default
 		if (!$model->exists && !$input->get('field_object_tab'))
 		{
 			$input->put('field_object_tab', 'main');
@@ -110,16 +121,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				throw new \Exception($this->LL('error.tab.field.key'));
 			}
 		}
-
-		if (!\App::make('telenok.config')->getObjectFieldController()->has($input->get('key')))
-		{
-			throw new \Exception('There are not field with key "' . $input->get('key') . '"');
-		}
-		else
-		{
-			\App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
-		}
-
+		
         return parent::preProcess($model, $type, $input);
     }
 

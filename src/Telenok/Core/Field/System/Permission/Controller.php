@@ -8,7 +8,9 @@ use Illuminate\Database\Migrations\Migration;
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	protected $key = 'permission';
-
+    protected $specialField = array('relation_many_to_many_has', 'relation_many_to_many_belong_to');
+    protected $allowMultilanguage = false;
+	
 	public function getTitleList($id = null)
 	{
 		$term = trim(\Input::get('term'));
@@ -83,6 +85,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$input->put('allow_delete', 0);
 		$input->put('allow_create', 1);
 		$input->put('allow_update', 1); 
+		$input->put('field_order', $input->get('field_order', 3)); 
 
 		return parent::preProcess($model, $type, $input);
 	}
@@ -101,28 +104,26 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				))->render();
 	}
 
+    public function setModelAttribute($model, $key, $value, $field) {}
+	public function getModelAttribute($model, $key, $value, $field) {}
+	
 	public function saveModelField($field, $model, $input)
 	{ 
-		return $model;
-		
-	  $permissionList = (array)$input->get('permission', []);
-	  
-	  dd($permissionList);
-	  
-/*
-	  \Telenok\Core\Security\Acl::resource($model)->unsetPermission();
+		$permissionList = (array)$input->get('permission', []);
 
-	  foreach($permissionList as $permissionCode => $persmissionIds)
-	  {
-	  if (!empty($persmissionIds))
-	  {
-	  foreach($persmissionIds as $id)
-	  {
-	  \Telenok\Core\Security\Acl::subject($id)->setPermission($permissionCode, $model);
-	  }
-	  }
-	  }
-	 */
+		\Telenok\Core\Security\Acl::resource($model)->unsetPermission();
+
+		foreach($permissionList as $permissionCode => $persmissionIds)
+		{
+			if (!empty($persmissionIds))
+			{
+				foreach($persmissionIds as $id)
+				{
+					\Telenok\Core\Security\Acl::subject($id)->setPermission($permissionCode, $model);
+				}
+			}
+		}
+		
 		return $model;
 	}
 

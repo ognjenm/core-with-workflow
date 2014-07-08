@@ -508,8 +508,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
             $query->where('pivot_relation_m2m_tree.tree_pid', $treePid);
         } 
         
-        $query->where('treeable', 1);
-        $query->whereIn('sequences_object_type', $sequences_object_type);
+        $query->where('object_sequence.treeable', 1);
+        $query->whereIn('object_sequence.sequences_object_type', $sequences_object_type);
         $query->withPermission();
         
         return $query->get();

@@ -33,7 +33,10 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Use
 
 	public function setPasswordAttribute($value)
 	{
-		$this->attributes['password'] = \Hash::make($value);
+		if ($value = trim($value))
+		{
+			$this->attributes['password'] = \Hash::make($value);
+		}
 	}
 
 	public function setUsernickAttribute($value)

@@ -33,7 +33,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 \Event::listen('telenok.acl.filter.resource.add', function($list)
 {
-    $list->push('Telenok\Core\Filter\Acl\Resource\All\Controller');
+    $list->push('Telenok\Core\Filter\Acl\Resource\ObjectType\Controller');
     $list->push('Telenok\Core\Filter\Acl\Resource\Own\Controller');
 });
 

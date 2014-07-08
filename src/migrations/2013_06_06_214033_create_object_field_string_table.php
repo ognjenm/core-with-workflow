@@ -35,6 +35,11 @@ class CreateObjectFieldStringTable extends Migration {
 				{
 					$table->integer('string_password')->unsigned();
 				}
+
+				if (!\Schema::hasColumn('object_field', 'string_list_size'))
+				{
+					$table->integer('string_list_size')->unsigned();
+				}
 			});
 		}
 	}

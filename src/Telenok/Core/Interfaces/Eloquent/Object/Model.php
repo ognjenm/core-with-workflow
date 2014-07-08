@@ -8,7 +8,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	
 	public $incrementing = false;
 	public $timestamps = true;
-	public $softDelete = true;
 
 	protected $hasVersioning = true;
 	protected $ruleList = [];
@@ -64,14 +63,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
 		{
 			$sequence = \Telenok\Object\Sequence::find($this->getKey());
-
-			if ($this->softDelete)
+			
+			if ($this->forceDeleting)
 			{
-				$sequence->delete();
+				$sequence->forceDelete();
 			}
 			else
 			{
-				$sequence->forceDelete();
+				$sequence->delete();
 			}
 		}
 	}
@@ -155,14 +154,27 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	
 	public function fill(array $attributes)
 	{
+		$fieldArray = $this->getObjectField()->toArray();
+		$filledArray = [];
+		
 		foreach ($this->fillableFromArray($attributes) as $key => $value)
 		{
-			$key = $this->removeTableFromKey($key); 
-			
+			$filledArray[$this->removeTableFromKey($key)] = $value;
+		}
+		
+		foreach($fieldArray as $key => $value)
+		{
 			if ($this->isFillable($key))
 			{
-				$this->__set($key, $value);
-			}
+				if (isset($filledArray[$key]))
+				{
+					$this->__set($key, $filledArray[$key]);
+				}
+				else if (!$this->exists)
+				{
+					$this->__set($key, null);
+				}
+			} 
 		}
 
 		$this->addDateField();
@@ -653,7 +665,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	// ->permission() - can current user read
 	// ->permission('write', null) - can current user read
 	// ->permission(null, 'user_authorized') - can current user read (read - default)
-	// ->permission('read', 'user_authorized', ['all', 'own'])
+	// ->permission('read', 'user_authorized', ['object-type', 'own'])
 	public function scopeWithPermission($query, $permissionCode = 'read', $subjectCode = null, $filterCode = null)
 	{
 		$subject = null;
@@ -722,7 +734,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		if ($subject instanceof \Telenok\Core\Model\User\User)
 		{
 			$userGroupRole = \Telenok\User\User::with([
-						'group' => function($query)
+				'group' => function($query)
 				{
 					$query->whereActive(1);
 				},

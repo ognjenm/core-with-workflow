@@ -80,6 +80,7 @@ class SeedSettingTable extends Migration {
 					'allow_delete' => 0,
 					'required' => 1,
 					'field_order' => 3,
+					'string_list_size' => 50,
 				]
 		);
 

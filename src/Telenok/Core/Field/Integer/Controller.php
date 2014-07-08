@@ -39,7 +39,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	{
 		if ($field->key == $key)
 		{
-			$default = $field->integer_default;
+			$default = $field->integer_default?:null;
 
 			if ($value === null)
 			{
@@ -68,6 +68,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$field = [];
 		$field['multilanguage'] = 0;
 		$field['rule'][] = 'integer';
+
+		$field['integer_default'] = $input->get('integer_default', null);
 
 		if ($input->get('required'))
 		{

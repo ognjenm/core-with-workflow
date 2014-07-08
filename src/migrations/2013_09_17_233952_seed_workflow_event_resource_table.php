@@ -81,6 +81,7 @@ class SeedWorkflowEventResourceTable extends Migration {
 						'allow_delete' => 0,
 						'required' => 1,
 						'field_order' => 2,
+						'string_list_size' => 50,
 					]
 			);
 
@@ -153,7 +154,7 @@ class SeedWorkflowEventResourceTable extends Migration {
 						'field_object_type' => $modelWERId,
 						'field_object_tab' => $tabMainId,
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'allow_delete' => 0,
 						'multilanguage' => 0,
@@ -175,7 +176,7 @@ class SeedWorkflowEventResourceTable extends Migration {
 						'field_object_type' => 'workflow_process',
 						'field_object_tab' => 'main',
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'allow_delete' => 0,
 						'multilanguage' => 0,
@@ -197,7 +198,7 @@ class SeedWorkflowEventResourceTable extends Migration {
 						'field_object_type' => 'workflow_event',
 						'field_object_tab' => 'main',
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'allow_delete' => 0,
 						'multilanguage' => 0,

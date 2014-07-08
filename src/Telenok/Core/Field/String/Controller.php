@@ -9,7 +9,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     protected $key = 'string';
 
-    protected $specialField = ['string_default', 'string_regex', 'string_password', 'string_max', 'string_min'];
+    protected $specialField = ['string_default', 'string_regex', 'string_password', 'string_max', 'string_min', 'string_list_size'];
     protected $ruleList = ['string_regex' => ['valid_regex']];
 
     public function getModelAttribute($model, $key, $value, $field)
@@ -26,6 +26,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     { 
         if ($field->multilanguage)
         { 
+			if ($value === null)
+			{
+				$value = [];
+			}
+
 			$defaultLanguage = \Config::get('app.localeDefault', "en");
 
 			if (is_string($value) )
@@ -42,12 +47,15 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                     $value[$language] = $v;
                 }
             }
-            
+
             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
-        else if (!strlen($value))
+        else
         {
-            $value = $field->string_default ?: "";
+			if ($value === null || !strlen($value))
+			{
+				$value = $field->string_default ?: null;
+			}
         }
 
         $model->setAttribute($key, $value);
@@ -106,7 +114,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	
     public function getListFieldContent($field, $item, $type = null)
     {  
-        return \Str::limit($item->translate((string)$field->code), 30);
+        return \Str::limit($item->translate((string)$field->code), $field->string_list_size ?: 30);
     } 
 	
     public function postProcess($model, $type, $input)
@@ -129,21 +137,30 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $fields['rule'][] = 'required';
         }
         
-        if (trim($input->get('string_regex')))
+        if ($string_regex = trim($input->get('string_regex')))
         {
-            $fields['rule'][] = "regex:".trim($input->get('string_regex'));
+			$fields['rule'][] = "regex:{$string_regex}";
         }
 
-        if (intval($input->get('string_max')))
+        if ($string_max = intval($input->get('string_max')))
         {
-            $fields['rule'][] = "max:{$input->get('string_max')}";
+            $fields['rule'][] = "max:{$string_max}";
         }
 
-        if (intval($input->get('string_min')))
+        if ($string_min = intval($input->get('string_min')))
         {
-            $fields['rule'][] = "min:{$input->get('string_min')}";
+            $fields['rule'][] = "min:{$string_min}";
         }
         
+        if ($string_list_size = intval($input->get('string_list_size')))
+        {
+            $fields['string_list_size'] = $string_list_size;
+        }
+		else
+		{
+            $fields['string_list_size'] = 20;
+		}
+		
         $model->fill($fields)->save();
 
         return parent::postProcess($model, $type, $input);

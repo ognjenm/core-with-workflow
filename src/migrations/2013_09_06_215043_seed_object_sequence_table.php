@@ -82,6 +82,7 @@ class SeedObjectSequenceTable extends Migration {
 						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 2,
+						'string_list_size' => 50,
 					]
 			);
 

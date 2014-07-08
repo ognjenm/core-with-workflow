@@ -15,8 +15,8 @@ class CreateObjectSequenceTable extends Migration {
 				$table->timestamps();
 				$table->softDeletes();
 				$table->text('title')->nullable();
-				$table->integer('sequences_object_type')->unsigned()->default(0);
-				$table->integer('treeable')->unsigned()->default(0);
+				$table->integer('sequences_object_type')->unsigned()->nullable()->default(0);
+				$table->integer('treeable')->unsigned()->nullable()->default(0);
 				$table->integer('active')->unsigned()->nullable()->default(null);
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');

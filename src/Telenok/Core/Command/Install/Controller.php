@@ -95,7 +95,7 @@ class Controller extends Command {
 			});
 		}
 
-		$this->processingController->postMigrateProcess();
+		$this->processingController->postInstallProcess();
 
 		$this->info('Please, run command "php artisan telenok:migrate" to finish installation. Thank you.');
 	}

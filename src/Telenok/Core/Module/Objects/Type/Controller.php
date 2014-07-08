@@ -51,6 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
+		/*
 		$resCodeAll = 'object_type.'.$model->code.'.all';
 		$resource = \Telenok\Security\Resource::where('code', $resCodeAll)->first();
 
@@ -71,6 +72,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				'active' => 1
 			]);
 		}
+		*/
 
 		$resCodeOwn = 'object_type.'.$model->code.'.own';
 		$resource = \Telenok\Security\Resource::where('code', $resCodeOwn)->first();
@@ -319,6 +321,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				'allow_create' => 1,
 				'allow_update' => 1,
 				'field_order' => 2,
+				'string_list_size' => 50,
 			]);
 		}
 
@@ -358,7 +361,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		{
 			\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
 		}
-		
+
 		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
 		{
 			(new \Telenok\Object\Field())->storeOrUpdate([
@@ -369,11 +372,13 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]); 
 		}
 
-        (new \Telenok\Object\Field())->storeOrUpdate([
-            'key' => 'permission',
-            'field_object_type' => $model->getKey(),
-        ]); 
-
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'permission')->count())
+		{
+			(new \Telenok\Object\Field())->storeOrUpdate([
+				'key' => 'permission',
+				'field_object_type' => $model->getKey(),
+			]); 
+		}
     }    
 
     public function namespaceExist($ns)

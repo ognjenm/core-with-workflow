@@ -63,18 +63,22 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         {
             $model = $this->modelByType(\Input::get('treePid', 0));
             $type = $this->getType(\Input::get('treePid', 0)); 
- 
-            if (!\Auth::can('read', "object_type.{$type->code}.%"))
+
+            if (!\Auth::can('read', "object_type.{$type->code}"))
             {
                 throw new \LogicException('Access denied.');
             } 
-	    
+
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getContent();
 			}
-			
+
 			$fields = $model->getFieldList(); 
+        }
+        catch (\LogicException $e) 
+        {
+            return ['message' => $e->getMessage()];
         }
         catch (\Exception $e) 
         {
@@ -173,7 +177,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             $type = $this->getType(\Input::get('treePid', 0));
             $model = $this->modelByType(\Input::get('treePid', 0)); 
 
-            if (!\Auth::can('read', "object_type.{$type->code}.%"))
+            if (!\Auth::can('read', "object_type.{$type->code}"))
             {
                 throw new \LogicException('Access denied.');
             } 
@@ -282,7 +286,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $type = $this->getTypeByModel($id);
         $fields = $type->field()->get();
 
-        if (!\Auth::can('read', "object_type.{$type->code}.%"))
+        if (!\Auth::can('read', "object_type.{$type->code}"))
         {
             throw new \LogicException('Access denied.');
         }
@@ -315,7 +319,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
 
-        if (!\Auth::can('delete', "object_type.{$type->code}.%"))
+        if (!\Auth::can('delete', "object_type.{$type->code}"))
         {
             throw new \LogicException('Access denied.');
         }
@@ -358,7 +362,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $type = $this->getType($id);
         $fields = $type->field()->get();
 
-        if (!\Auth::can('read', "object_type.{$type->code}.%"))
+        if (!\Auth::can('read', "object_type.{$type->code}"))
         {
             throw new \LogicException('Access denied.');
         }
@@ -404,7 +408,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         $type = $this->getTypeByModel($id);
 
-        if (!\Auth::can('delete', "object_type.{$type->code}.%"))
+        if (!\Auth::can('delete', "object_type.{$type->code}"))
         {
             throw new \LogicException('Access denied.');
         }

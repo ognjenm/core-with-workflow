@@ -82,6 +82,7 @@ class SeedObjectTabTable extends Migration {
 						'allow_delete' => 0,
 						'required' => 1,
 						'field_order' => 2,
+						'string_list_size' => 50,
 					]
 			);
 
@@ -128,8 +129,8 @@ class SeedObjectTabTable extends Migration {
 			DB::table('object_field')->insert(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
-						'title' => json_encode(['en' => 'Order in tab list'], JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(['en' => 'Order in tab list'], JSON_UNESCAPED_UNICODE),
+						'title' => json_encode(['en' => 'Order in tab'], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['en' => 'Order in tab'], JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
 						'code' => 'tab_order',
 						'active' => 1,

@@ -408,7 +408,7 @@ class SeedLast extends Migration {
 		]);
 
 		//Login User
-		\Auth::attempt(['email' => 'support@telenok.com', 'password' => '11111']);
+		Auth::login($user);
 
 		//Group
 		(new \Telenok\Core\Model\User\Group())->storeOrUpdate([
@@ -712,13 +712,24 @@ class SeedLast extends Migration {
 					'field_object_type' => $item->getKey(),
 					'field_object_tab' => 'main',
 					'field_order' => 10,
-				]);
+				]); 
 				
+				$modelField = null;
+				
+				$modelField = new \Telenok\Core\Model\Object\Field();
+
+				try
+				{
+					$modelField->storeOrUpdate([
+						'key' => 'permission',
+						'field_object_type' => $item->getKey(),
+					]); 
+				} catch (\Exception $ex) {}
+
 				$modelField = null;
 			}
 		});
-		
-
+		 
 
 
 		/*

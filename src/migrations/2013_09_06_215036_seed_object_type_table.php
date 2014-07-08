@@ -83,6 +83,7 @@ class SeedObjectTypeTable extends Migration {
 						'allow_delete' => 0,
 						'required' => 1,
 						'field_order' => 2,
+						'string_list_size' => 50,
 					]
 			);
 
