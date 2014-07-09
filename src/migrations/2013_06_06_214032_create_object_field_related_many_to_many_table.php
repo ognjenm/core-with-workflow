@@ -11,8 +11,8 @@ class CreateObjectFieldRelatedManytoManyTable extends Migration {
 		{
 			Schema::table('object_field', function($table)
 			{
-				$table->integer('relation_many_to_many_has')->unsigned()->default('0');
-				$table->integer('relation_many_to_many_belong_to')->unsigned()->default('0');
+				$table->integer('relation_many_to_many_has')->unsigned()->default('0')->nullable();
+				$table->integer('relation_many_to_many_belong_to')->unsigned()->default('0')->nullable();
 			});
 		}
 	}

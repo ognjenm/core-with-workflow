@@ -142,7 +142,7 @@ class SeedSubjectPermissionResourceTable extends Migration {
 					'field_order' => 5,
 				]
 		);
-		
+
 		(new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('acl.field.code'),

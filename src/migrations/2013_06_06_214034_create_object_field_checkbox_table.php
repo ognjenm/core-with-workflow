@@ -13,7 +13,7 @@ class CreateObjectFieldCheckboxTable extends Migration {
 			{
 				if (!\Schema::hasColumn('object_field', 'checkbox_default'))
 				{
-					$table->integer('checkbox_default')->unsigned()->nullable()->default(null);
+					$table->integer('checkbox_default')->unsigned()->nullable();
 				}
 			});
 		}

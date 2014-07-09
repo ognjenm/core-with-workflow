@@ -10,11 +10,6 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 	protected $key = 'deleted-by';
     protected $routeListTitle = "cmf.field.relation-one-to-many.list.title";
 
-	public function getModelField($model, $field)
-	{
-		return ['deleted_by', 'deleted_by_user', 'deleted_at'];
-	}
-
 	public function fill($field, $model, $input)
 	{
 		if ($model->exists)

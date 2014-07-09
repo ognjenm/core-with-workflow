@@ -19,7 +19,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 });
 
 \Event::listen('telenok.workflow.event.add', function($list) 
-{
+{/*
     $list->push('auth.attempt');
     $list->push('auth.login');
     $list->push('auth.logout');
@@ -29,7 +29,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('workflow.update.after');
     $list->push('workflow.save.before');
     $list->push('workflow.save.after');
-});
+*/});
 
 \Event::listen('telenok.acl.filter.resource.add', function($list)
 {

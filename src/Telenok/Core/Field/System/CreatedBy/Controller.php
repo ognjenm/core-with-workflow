@@ -10,11 +10,6 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 	protected $key = 'created-by';
     protected $routeListTitle = "cmf.field.relation-one-to-many.list.title";
 
-    public function getModelField($model, $field)
-    {
-		return ['created_by', 'created_by_user'];
-    } 
-
 	public function fill($field, $model, $input)
 	{
 		if (!$model->exists)

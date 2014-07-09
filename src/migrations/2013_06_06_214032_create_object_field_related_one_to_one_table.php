@@ -11,8 +11,8 @@ class CreateObjectFieldRelatedOnetoOneTable extends Migration {
 		{
 			Schema::table('object_field', function($table)
 			{
-				$table->integer('relation_one_to_one_has')->unsigned()->default('0');
-				$table->integer('relation_one_to_one_belong_to')->unsigned()->default('0');
+				$table->integer('relation_one_to_one_has')->unsigned()->default('0')->nullable();
+				$table->integer('relation_one_to_one_belong_to')->unsigned()->default('0')->nullable();
 			});
 		}
 	}

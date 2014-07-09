@@ -17,18 +17,18 @@ class CreateObjectFieldTable extends Migration {
 
 				$table->text('title')->nullable();
 				$table->text('title_list')->nullable();
-				$table->string('code')->nullable()->default(null);
-				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('active')->unsigned()->nullable()->default(null);
+				$table->string('code')->nullable();
+				$table->integer('created_by_user')->unsigned()->nullable();
+				$table->integer('updated_by_user')->unsigned()->nullable();
+				$table->integer('deleted_by_user')->unsigned()->nullable();
+				$table->integer('active')->unsigned()->nullable();
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');
-				$table->string('key')->nullable()->default(null);
-				$table->string('rule')->nullable()->default(null);
-				$table->integer('field_object_type')->unsigned()->default(null);
-				$table->integer('field_object_tab')->unsigned()->nullable()->default(null);
-				$table->integer('required')->unsigned()->nullable()->default(null);
+				$table->string('key')->nullable();
+				$table->string('rule')->nullable();
+				$table->integer('field_object_type')->unsigned()->nullable();
+				$table->integer('field_object_tab')->unsigned()->nullable();
+				$table->integer('required')->unsigned()->nullable();
 				$table->integer('show_in_list')->unsigned()->nullable()->default(0);
 				$table->integer('show_in_form')->unsigned()->nullable()->default(0);
 				$table->integer('allow_search')->unsigned()->nullable()->default(0);
@@ -39,8 +39,8 @@ class CreateObjectFieldTable extends Migration {
 				$table->integer('allow_sort')->unsigned()->nullable()->default(0);
 				$table->integer('multilanguage')->unsigned()->nullable()->default(0);
 				$table->integer('field_order')->unsigned()->nullable()->default(0);
-				$table->string('css_class')->nullable()->default(null);
-				$table->string('icon_class')->nullable()->default(null);
+				$table->string('css_class')->nullable();
+				$table->string('icon_class')->nullable();
 				$table->text('description')->nullable();
 
 				$table->index('field_object_type');

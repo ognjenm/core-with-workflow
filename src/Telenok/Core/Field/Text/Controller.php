@@ -105,7 +105,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->text($fieldName);
+				$table->text($fieldName)->nullable();
 			});
 		}
 

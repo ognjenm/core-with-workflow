@@ -17,17 +17,17 @@ class CreateObjectTypeTable extends Migration {
 
 				$table->text('title')->nullable();
 				$table->text('title_list')->nullable();
-				$table->string('code')->unique()->nullable()->default(null);
-				$table->integer('active')->unsigned()->nullable()->default(null);
+				$table->string('code')->unique()->nullable();
+				$table->integer('active')->unsigned()->nullable();
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');
-				$table->string('class_model')->nullable()->default(null);
-				$table->string('class_controller')->nullable()->default(null);
-				$table->integer('treeable')->unsigned()->default(0);
-				$table->integer('multilanguage')->unsigned()->default(0);
-				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
+				$table->string('class_model')->nullable();
+				$table->string('class_controller')->nullable();
+				$table->integer('treeable')->unsigned()->nullable()->default(0);
+				$table->integer('multilanguage')->unsigned()->nullable()->default(0);
+				$table->integer('created_by_user')->unsigned()->nullable();
+				$table->integer('updated_by_user')->unsigned()->nullable();
+				$table->integer('deleted_by_user')->unsigned()->nullable();
 			});
 		}
 	}

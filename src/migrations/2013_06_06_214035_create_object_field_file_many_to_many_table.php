@@ -13,12 +13,12 @@ class CreateObjectFieldFileManyToManyTable extends Migration {
 			{
 				if (!\Schema::hasColumn('object_field', 'file_many_to_many_allow_ext'))
 				{
-					$table->text('file_many_to_many_allow_ext')->nullable()->default(null);
+					$table->text('file_many_to_many_allow_ext')->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'file_many_to_many_allow_mime'))
 				{
-					$table->text('file_many_to_many_allow_mime')->nullable()->default(null);
+					$table->text('file_many_to_many_allow_mime')->nullable();
 				}
 			});
 		}

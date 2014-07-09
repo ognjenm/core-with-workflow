@@ -176,7 +176,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     { 
         try 
         {
-			if (!$model->relation_one_to_one_has)
+			$model->fill(['relation_one_to_one_has' => $input->get('relation_one_to_one_has')])->save();
+			
+			if (!$input->get('relation_one_to_one_has'))
 			{
 				return parent::postProcess($model, $type, $input);
 			} 
@@ -187,7 +189,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $codeFieldHasOne = $model->code; 
             $codeTypeHasOne = $relatedTypeOfModelField->code; 
 
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($model->relation_one_to_one_has); 
+            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('relation_one_to_one_has')); 
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 

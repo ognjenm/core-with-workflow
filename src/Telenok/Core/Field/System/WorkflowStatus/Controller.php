@@ -23,7 +23,7 @@ class Controller extends \Telenok\Core\Field\MorphManyToMany\Controller {
 			{
 				\Schema::table($table, function(Blueprint $table)
 				{
-					$table->string('workflow_status_restrict');
+					$table->string('workflow_status_restrict')->nullable();
 				});
 			}
 
@@ -31,7 +31,7 @@ class Controller extends \Telenok\Core\Field\MorphManyToMany\Controller {
 			{
 				\Schema::table($table, function(Blueprint $table)
 				{
-					$table->text('workflow_status_comment');
+					$table->text('workflow_status_comment')->nullable();
 				});
 			}
 		}

@@ -208,7 +208,7 @@ class SeedUserTable extends Migration {
 					'field_order' => 8,
 				]
 		);
-
+/*
 		DB::table('object_field')->insertGetId(
 				[
 					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
@@ -254,7 +254,7 @@ class SeedUserTable extends Migration {
 					'field_order' => 9,
 				]
 		);
-
+*/
 		DB::table('object_field')->insertGetId(
 				[
 					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),

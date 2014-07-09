@@ -154,27 +154,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	
 	public function fill(array $attributes)
 	{
-		$fieldArray = $this->getObjectField()->toArray();
-		$filledArray = [];
-		
 		foreach ($this->fillableFromArray($attributes) as $key => $value)
 		{
-			$filledArray[$this->removeTableFromKey($key)] = $value;
-		}
-		
-		foreach($fieldArray as $key => $value)
-		{
+			$key = $this->removeTableFromKey($key); 
+			
 			if ($this->isFillable($key))
 			{
-				if (isset($filledArray[$key]))
-				{
-					$this->__set($key, $filledArray[$key]);
-				}
-				else if (!$this->exists)
-				{
-					$this->__set($key, null);
-				}
-			} 
+				$this->__set($key, $value);
+			}
 		}
 
 		$this->addDateField();
@@ -187,11 +174,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		$this->fillable = array_unique(array_merge($this->fillable, (array) $attributes));
 
 		return $this;
-	}
+	} 
 
 	protected function fillableFromArray(array $attributes)
 	{
-		$this->fillable = array_merge($this->fillable, $this->getFillable());
+		$this->fillable = array_unique(array_merge($this->fillable, $this->getFillable()));
 
 		return parent::fillableFromArray($attributes);
 	}
@@ -201,6 +188,18 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		if ($this instanceof \Telenok\Core\Model\Object\Sequence)
 		{
 			throw new \Exception('Cant storeOrUpdate sequence model directly');
+		} 
+
+		foreach($this->fillable as $fillable)
+		{
+			if (isset($input[$fillable]))
+			{
+				$this->__set($fillable, $input[$fillable]);
+			}
+			else if (!$this->exists)
+			{
+				$this->__set($fillable, null);
+			}
 		}
 		
 		foreach($this->getAttributes() as $key => $attribute)
@@ -273,8 +272,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				if ($type->classController())
 				{
 					$classControllerObject->validate($model, $input);
-				}
-
+				} 
+				
 				$model->fill($input->all())->push();
 
 				if (!$exists && $type->treeable)
@@ -424,18 +423,23 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$f_->get($f->key)->setModelAttribute($this, $key, $value, $f);
 		}
 		else if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField()))
-		{
+		{ 
 			$fieldController->setModelSpecialAttribute($this, $key, $value);
 		}
 		else
 		{  
 			foreach ($this->getObjectField()->toArray() as $key_ => $field_)
 			{
-				$fieldController = $f_->get($field_->key); 
-
-				if ($fieldController && in_array($key, $fieldController->getModelField($this, $field_)))
+				if ($fieldController = $f_->get($field_->key))
 				{
-					$fieldController->setModelAttribute($this, $key, $value, $field_);
+					if ($this instanceof \Telenok\Core\Model\Object\Field && in_array($key, $fieldController->getSpecialField()))
+					{
+						$fieldController->setModelSpecialAttribute($this, $key, $value);
+					}
+					else if (in_array($key, $fieldController->getModelField($this, $field_)))
+					{
+						$fieldController->setModelAttribute($this, $key, $value, $field_);
+					}
 
 					return;
 				}

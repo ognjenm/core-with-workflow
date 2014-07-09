@@ -216,7 +216,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try 
         {
-			if (!$model->relation_one_to_many_has)
+			$model->fill(['relation_one_to_many_has' => $input->get('relation_one_to_many_has')])->save();
+			 
+			if (!$input->get('relation_one_to_many_has'))
 			{
 				return parent::postProcess($model, $type, $input);
 			} 
@@ -227,7 +229,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $codeFieldHasMany = $model->code; 
             $codeTypeHasMany = $relatedTypeOfModelField->code; 
 
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($model->relation_one_to_many_has); 
+            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('relation_one_to_many_has')); 
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 
@@ -297,7 +299,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					\Telenok\Object\Field::create($toSave);
 				}
-				
+
 				if (!\Schema::hasColumn($tableBelongTo, $relatedSQLField) && !\Schema::hasColumn($tableBelongTo, "`{$relatedSQLField}`"))
 				{
 					\Schema::table($tableBelongTo, function(Blueprint $table) use ($relatedSQLField)

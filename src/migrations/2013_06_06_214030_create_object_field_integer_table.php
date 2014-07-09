@@ -13,11 +13,11 @@ class CreateObjectFieldIntegerTable extends Migration {
 			{
 				if (!\Schema::hasColumn('object_field', 'integer_min'))
 				{
-					$table->integer('integer_min')->default(-2147483648);
+					$table->integer('integer_min')->default(-2147483648)->nullable();
 				}
 				if (!\Schema::hasColumn('object_field', 'integer_max'))
 				{
-					$table->integer('integer_max')->default(2147483647);
+					$table->integer('integer_max')->default(2147483647)->nullable();
 				}
 				if (!\Schema::hasColumn('object_field', 'integer_default'))
 				{

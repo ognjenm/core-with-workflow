@@ -227,7 +227,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try 
         {
-			if (!$model->morph_one_to_one_has)
+			$model->fill(['morph_one_to_one_has' => $input->get('morph_one_to_one_has')])->save();
+			
+			if (!$input->get('morph_one_to_one_has'))
 			{
 				return parent::postProcess($model, $type, $input);
 			} 
@@ -238,7 +240,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $codeFieldHasMany = $model->code; 
             $codeTypeHasMany = $relatedTypeOfModelField->code; 
 
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($model->morph_one_to_one_has); 
+            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('morph_one_to_one_has')); 
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 
@@ -317,7 +319,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					\Schema::table($tableBelongTo, function(Blueprint $table) use ($relatedSQLField)
 					{
-						$table->string($relatedSQLField . '_type');
+						$table->string($relatedSQLField . '_type')->nullable();
 					});
 				}
 
@@ -325,7 +327,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					\Schema::table($tableBelongTo, function(Blueprint $table) use ($relatedSQLField)
 					{
-						$table->unsignedInteger($relatedSQLField . '_id');
+						$table->unsignedInteger($relatedSQLField . '_id')->nullable();
 					});
 				}
 

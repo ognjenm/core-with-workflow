@@ -13,12 +13,12 @@ class CreateObjectFieldUploadTable extends Migration {
 			{
 				if (!\Schema::hasColumn('object_field', 'upload_allow_ext'))
 				{
-					$table->text('upload_allow_ext')->nullable()->default(null);
+					$table->text('upload_allow_ext')->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'upload_allow_mime'))
 				{
-					$table->text('upload_allow_mime')->nullable()->default(null);
+					$table->text('upload_allow_mime')->nullable();
 				}
 			});
 		}

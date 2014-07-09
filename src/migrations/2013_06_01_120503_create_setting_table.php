@@ -16,14 +16,14 @@ class CreateSettingTable extends Migration {
 				$table->softDeletes();
 
 				$table->text('title')->nullable();
-				$table->string('code')->nullable()->default(null)->unique('code');
-				$table->mediumText('value');
-				$table->integer('active')->unsigned()->nullable()->default(null);
+				$table->string('code')->nullable()->unique('code');
+				$table->mediumText('value')->nullable();
+				$table->integer('active')->unsigned()->nullable();
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');
-				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
+				$table->integer('created_by_user')->unsigned()->nullable();
+				$table->integer('updated_by_user')->unsigned()->nullable();
+				$table->integer('deleted_by_user')->unsigned()->nullable();
 			});
 		}
 	}

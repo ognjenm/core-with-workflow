@@ -10,11 +10,6 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 	protected $key = 'updated-by';
     protected $routeListTitle = "cmf.field.relation-one-to-many.list.title";
 
-    public function getModelField($model, $field)
-    {
-		return ['updated_by', 'updated_by_user'];
-    } 
-
 	public function fill($field, $model, $input)
 	{
 		$model->setAttribute('updated_by_user', \Auth::check() ? \Auth::user()->id : 0);

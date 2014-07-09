@@ -18,27 +18,27 @@ class CreateObjectFieldStringTable extends Migration {
 
 				if (!\Schema::hasColumn('object_field', 'string_regex'))
 				{
-					$table->string('string_regex')->nullable()->default(null);
+					$table->string('string_regex')->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'string_max'))
 				{
-					$table->integer('string_max')->unsigned()->default(255);
+					$table->integer('string_max')->unsigned()->default(255)->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'string_min'))
 				{
-					$table->integer('string_min')->unsigned();
+					$table->integer('string_min')->unsigned()->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'string_password'))
 				{
-					$table->integer('string_password')->unsigned();
+					$table->integer('string_password')->unsigned()->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'string_list_size'))
 				{
-					$table->integer('string_list_size')->unsigned();
+					$table->integer('string_list_size')->unsigned()->nullable();
 				}
 			});
 		}

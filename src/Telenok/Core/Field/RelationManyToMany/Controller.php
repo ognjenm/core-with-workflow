@@ -11,6 +11,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     protected $specialField = array('relation_many_to_many_has', 'relation_many_to_many_belong_to');
     protected $allowMultilanguage = false;
 
+    public function getModelField($model, $field)
+    {
+		return [];
+    } 
+
 	public function getLinkedModelType($field)
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->relation_many_to_many_has, $field->relation_many_to_many_belong_to])->first();
@@ -202,7 +207,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try 
         {
-			if (!$model->relation_many_to_many_has)
+			$model->fill(['relation_many_to_many_has' => $input->get('relation_many_to_many_has')])->save();
+			
+			if (!$input->get('relation_many_to_many_has'))
 			{
 				return parent::postProcess($model, $type, $input);
 			}
@@ -214,7 +221,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $codeFieldHasMany = $model->code; 
             $codeTypeHasMany = $relatedTypeOfModelField->code; 
 
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($model->relation_many_to_many_has); 
+            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('relation_many_to_many_has')); 
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 

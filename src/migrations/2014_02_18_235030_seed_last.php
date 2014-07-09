@@ -432,6 +432,7 @@ class SeedLast extends Migration {
 
 
 		//Workflow status
+		/*
 		(new \Telenok\Core\Model\Workflow\Status())->storeOrUpdate([
 			'title' => ['en' => 'Draft', 'ru' => 'Черновик'],
 			'code' => 'draft',
@@ -461,7 +462,7 @@ class SeedLast extends Migration {
 			'code' => 'active',
 			'active' => 1,
 		]);
-
+		*/
 
 
 		//Permission
@@ -583,13 +584,13 @@ class SeedLast extends Migration {
 		\Telenok\Core\Model\Object\Type::where('code', 'page')->first()->makeLastChildOf($folderWeb);
 		\Telenok\Core\Model\Object\Type::where('code', 'page_controller')->first()->makeLastChildOf($folderWeb);
 		\Telenok\Core\Model\Object\Type::where('code', 'widget_on_page')->first()->makeLastChildOf($folderWeb);
-
+/*
 		\Telenok\Core\Model\Object\Type::where('code', 'workflow_status')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Core\Model\Object\Type::where('code', 'workflow_process')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Core\Model\Object\Type::where('code', 'workflow_event')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Core\Model\Object\Type::where('code', 'workflow_event_resource')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Core\Model\Object\Type::where('code', 'workflow_thread')->first()->makeLastChildOf($folderBusinessProcess);
-
+*/
 		//Module group
 		(new \Telenok\Core\Model\Web\ModuleGroup())->storeOrUpdate([
 			'title' => ['en' => 'Content', 'ru' => 'Содержание'],

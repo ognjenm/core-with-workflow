@@ -13,7 +13,7 @@ class CreateObjectFieldActiveTable extends Migration {
 			{
 				if (!\Schema::hasColumn('object_field', 'active_default'))
 				{
-					$table->integer('active_default')->unsigned()->nullable()->default(null);
+					$table->integer('active_default')->unsigned()->nullable();
 				}
 			});
 		}

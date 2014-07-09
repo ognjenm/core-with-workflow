@@ -14,16 +14,16 @@ class CreateWorkflowProcessTable extends Migration {
 				$table->increments('id');
 				$table->timestamps();
 				$table->softDeletes();
-				$table->text('title')->nullable()->default(null);
-				$table->mediumText('process')->nullable()->default(null);
-				$table->integer('active')->unsigned()->nullable()->default(null);
+				$table->text('title')->nullable();
+				$table->mediumText('process')->nullable();
+				$table->integer('active')->unsigned()->nullable();
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');
-				$table->integer('thread')->unsigned()->nullable()->default(null);
-				$table->integer('event_resource')->unsigned()->nullable()->default(null);
-				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
-				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
+				$table->integer('thread')->unsigned()->nullable();
+				$table->integer('event_resource')->unsigned()->nullable();
+				$table->integer('created_by_user')->unsigned()->nullable();
+				$table->integer('updated_by_user')->unsigned()->nullable();
+				$table->integer('deleted_by_user')->unsigned()->nullable();
 			});
 		}
 	}

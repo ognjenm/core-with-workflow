@@ -12,8 +12,8 @@ class CreateObjectTranslationTable extends Migration {
 			Schema::create('object_translation', function(Blueprint $table)
 			{
 				$table->integer('translation_object_model_id')->unsigned()->default(0);
-				$table->string('translation_object_field_code')->nullable()->default(null);
-				$table->string('translation_object_language', 4)->nullable()->default(null);
+				$table->string('translation_object_field_code')->nullable();
+				$table->string('translation_object_language', 4)->nullable();
 				$table->text('translation_object_string')->nullable();
 			});
 		}

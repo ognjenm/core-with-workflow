@@ -9,8 +9,8 @@ class CreateSessionTable extends Migration {
 		Schema::create('session', function($t)
 		{
 			$t->string('id')->unique();
-			$t->text('payload');
-			$t->integer('last_activity')->unsigned()->default(0);
+			$t->text('payload')->nullable();
+			$t->integer('last_activity')->unsigned()->nullable()->default(0);
 		});
 	}
 

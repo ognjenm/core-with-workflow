@@ -11,6 +11,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     protected $specialField = ['morph_many_to_many_has', 'morph_many_to_many_belong_to'];
     protected $allowMultilanguage = false;
 
+    public function getModelField($model, $field)
+    {
+		return [];
+    } 
+
 	public function getLinkedModelType($field)
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->morph_many_to_many_has, $field->morph_many_to_many_belong_to])->first();
@@ -223,13 +228,15 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     { 
         try
         {
-			if (!$model->morph_many_to_many_has)
+			$model->fill(['morph_many_to_many_has' => $input->get('morph_many_to_many_has')])->save();
+			
+			if (!$input->get('morph_many_to_many_has'))
 			{
 				return parent::postProcess($model, $type, $input);
 			} 
 
             $typeMorphMany = $model->fieldObjectType()->first();
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($model->morph_many_to_many_has); 
+            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('morph_many_to_many_has')); 
 
             $morphManyCode = $model->code;
             $morphToCode = $morphManyCode . '_' . $typeMorphMany->code;
@@ -270,7 +277,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                     $table->timestamps();
                     $table->integer('morph_id')->unsigned()->default(0);
                     $table->integer($morphManyCode . '_linked_id')->unsigned()->default(0);
-                    $table->string($morphManyCode . '_type')->nullable()->default(null);
+                    $table->string($morphManyCode . '_type')->nullable();
 
                     $table->unique(['morph_id', $morphManyCode . '_linked_id', $morphManyCode . '_type'], 'uniq_key');
                 });

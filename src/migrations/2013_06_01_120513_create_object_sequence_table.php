@@ -17,11 +17,11 @@ class CreateObjectSequenceTable extends Migration {
 				$table->text('title')->nullable();
 				$table->integer('sequences_object_type')->unsigned()->nullable()->default(0);
 				$table->integer('treeable')->unsigned()->nullable()->default(0);
-				$table->integer('active')->unsigned()->nullable()->default(null);
+				$table->integer('active')->unsigned()->nullable();
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');
 
-				$table->string('class_model')->nullable()->default(null);
+				$table->string('class_model')->nullable();
 				
 				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
 				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);

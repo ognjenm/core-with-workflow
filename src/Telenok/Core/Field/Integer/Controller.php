@@ -61,7 +61,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->integer($fieldName)->default(null);
+				$table->integer($fieldName)->nullable();
 			});
 		}
 

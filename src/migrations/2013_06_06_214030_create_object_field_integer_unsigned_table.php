@@ -13,12 +13,12 @@ class CreateObjectFieldIntegerUnsignedTable extends Migration {
 			{
 				if (!\Schema::hasColumn('object_field', 'integer_unsigned_min'))
 				{
-					$table->integer('integer_unsigned_min')->unsigned()->default(0);
+					$table->integer('integer_unsigned_min')->unsigned()->default(0)->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'integer_unsigned_max'))
 				{
-					$table->integer('integer_unsigned_max')->unsigned()->default(2147483647);
+					$table->integer('integer_unsigned_max')->unsigned()->default(2147483647)->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'integer_unsigned_default'))
