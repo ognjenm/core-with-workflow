@@ -191,7 +191,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		} 
 
 		foreach($this->fillable as $fillable)
-		{
+		{ 
 			if (isset($input[$fillable]))
 			{
 				$this->__set($fillable, $input[$fillable]);
@@ -199,14 +199,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			else if (!$this->exists)
 			{
 				$this->__set($fillable, null);
+				$input[$fillable] = null;
 			}
-		}
-		
-		foreach($this->getAttributes() as $key => $attribute)
-		{
-			$input[$key] = isset($input[$key]) ? $input[$key] : $this->$key;
+			else
+			{
+				$input[$fillable] = $this->$fillable;
+			} 
 		} 
-
+		
 		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
  
 		try
@@ -341,13 +341,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function preProcess($type, $input)
 	{
-		$config = \App::make('telenok.config')->getObjectFieldController();
-
-		foreach ($type->field()->get() as $field)
-		{
-			$config->get($field->key)->fill($field, $this, $input);
-		}
-
 		return $this;
 	}
 
@@ -435,13 +428,15 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 					if ($this instanceof \Telenok\Core\Model\Object\Field && in_array($key, $fieldController->getSpecialField()))
 					{
 						$fieldController->setModelSpecialAttribute($this, $key, $value);
+						
+						return;
 					}
 					else if (in_array($key, $fieldController->getModelField($this, $field_)))
 					{
 						$fieldController->setModelAttribute($this, $key, $value, $field_);
+						
+						return;
 					}
-
-					return;
 				}
 			}
 
@@ -549,16 +544,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$fields = \App::make('telenok.config')->getObjectFieldController();
 
 			foreach ($this->getObjectField()->toArray() as $key => $field)
-			{
-				$fieldController = $fields->get($field->key);
-
-				if ($fieldController)
+			{ 
+				if ($fieldController = $fields->get($field->key))
 				{
 					static::$staticListFieldDate[$class] = array_merge(static::$staticListFieldDate[$class], (array) $fieldController->getDateField($this, $field)); 
 				}
 			} 
 		} 
-
+ 
 		$this->dates = array_merge($this->getDates(), (array)static::$staticListFieldDate[$class], (array)$dateField);
 
 		return $this;

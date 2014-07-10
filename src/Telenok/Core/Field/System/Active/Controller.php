@@ -20,19 +20,6 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		return ['active', 'start_at', 'end_at'];
     } 
 
-	public function fill($field, $model, $input)
-    {
-		if (!$model->exists)
-		{
-			if ($input->get('active', null) === null)
-			{
-				$input->put('active', $field->active_default);
-			}
-		}
-
-        return parent::fill($field, $model, $input);
-    }
-
 	public function getModelAttribute($model, $key, $value, $field)
 	{ 
 		if ($key == 'active' && $value === null)
@@ -80,8 +67,8 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 			{
 				$value = \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $value);
 			}
-		}
-
+		} 
+		
 		$model->setAttribute($key, $value);
     }
 

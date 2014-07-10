@@ -318,11 +318,16 @@ class Acl
         }
         else if (is_scalar($resourceCode))
         {
-            $resource = \Telenok\Security\Resource::where('code', $resourceCode)->orWhere('id', (int)$resourceCode)->first();
+			$resource = \Telenok\Core\Model\Object\Sequence::find((int)$resourceCode);
+			
+			if (!$resource)
+			{
+				$resource = \Telenok\Security\Resource::where('code', $resourceCode)->first();
+			}
         }
         
         if (!$permission) 
-        {
+        { 
             throw new \Exception('Can\'t find permission');
         }
         
@@ -343,27 +348,27 @@ class Acl
             }
             catch (\Exception $e)
             {
-                if ($this->subject instanceof \Telenok\Core\Module\Objects\Sequence)
+                if ($this->subject instanceof \Telenok\Core\Model\Object\Sequence)
                 {
-                    $titleTypeSubject = $this->subject->sequencesObjectType()->translate('title');
+                    $typeSubject = $this->subject->sequencesObjectType()->first();
                 }
                 else
                 {
-                    $titleTypeSubject = $this->subject->type()->translate('title');
+                    $typeSubject = $this->subject->type();
                 }
                 
-                if ($resource instanceof \Telenok\Core\Module\Objects\Sequence)
+                if ($resource instanceof \Telenok\Core\Model\Object\Sequence)
                 {
-                    $titleTypeResource = $this->subject->sequencesObjectType()->translate('title');
+                    $typeResource = $resource->sequencesObjectType()->first();
                 }
                 else
                 {
-                    $titleTypeResource = $this->subject->type()->translate('title');
+                    $typeResource = $resource->type();
                 }
 
                 $opr = (new \Telenok\Core\Module\Objects\Lists\Controller())->save([
-                    'title' => '[' . $titleTypeSubject . '] ' . $this->subject->translate('title') . ' - ' . $permission->translate('title') . ' - ' . '[' . $titleTypeResource . '] ' . $resource->translate('title'),
-                    'code' => $permission->code . '_' . $resource->code . '_' . $resource->getKey() . '_subject_' . $this->subject->getKey(),
+                    'title' => '[' . $permission->translate('title') . '] [' . $typeResource->translate('title') . ': ' . $resource->translate('title') . '] by [' . $typeSubject->translate('title') . ': '. $this->subject->translate('title') . '] ',
+                    'code' => $permission->code . '__' . $typeResource->code . '_' . $resource->getKey() . '__by_' . $typeSubject->code . '_' . $this->subject->getKey(),
                     'active' => 1,
                 ], 'subject_permission_resource');
 

@@ -304,7 +304,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					\Schema::table($tableBelongTo, function(Blueprint $table) use ($relatedSQLField)
 					{
-						$table->integer($relatedSQLField)->unsigned()->default(0);
+						$table->integer($relatedSQLField)->unsigned()->nullable();
 					});
 				}
 

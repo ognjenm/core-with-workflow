@@ -10,15 +10,15 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 	protected $key = 'deleted-by';
     protected $routeListTitle = "cmf.field.relation-one-to-many.list.title";
 
-	public function fill($field, $model, $input)
-	{
-		if ($model->exists)
+    public function setModelAttribute($model, $key, $value, $field)
+    { 
+		if ($key == 'deleted_by_user' && $value === null)
 		{
-			$model->deleted_by_user = \Auth::check() ? \Auth::user()->id : 0;
-		}
-
-		return parent::fill($field, $model, $input);
-	}
+			$value = \Auth::check() ? \Auth::user()->id : 0; 
+		} 
+		
+		$model->setAttribute($key, $value);
+    }
 
 	public function preProcess($model, $type, $input)
 	{
@@ -76,7 +76,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->integer($fieldName)->unsigned()->default(0);
+				$table->integer($fieldName)->unsigned()->nullable();
 			});
 		}
 

@@ -314,8 +314,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 {
                     $table->increments('id');
                     $table->timestamps();
-                    $table->integer($codeFieldHasMany)->unsigned()->default(0);
-                    $table->integer($pivotField)->unsigned()->default(0);
+                    $table->integer($codeFieldHasMany)->unsigned()->nullable();
+                    $table->integer($pivotField)->unsigned()->nullable();
 
                     $table->unique([$pivotField, $codeFieldHasMany], 'uniq_key');
                 });

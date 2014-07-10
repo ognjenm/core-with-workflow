@@ -250,7 +250,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {   
         $model = $this->modelByType($id);
         $type = $this->getType($id);
-        $fields = $type->field()->get();
+        $fields = $type->field()->withPermission('read')->get();
 
         if (!\Auth::can('create', "object_type.{$type->code}"))
         {

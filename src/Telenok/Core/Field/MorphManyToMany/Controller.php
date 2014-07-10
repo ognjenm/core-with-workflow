@@ -275,8 +275,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 {
                     $table->increments('id');
                     $table->timestamps();
-                    $table->integer('morph_id')->unsigned()->default(0);
-                    $table->integer($morphManyCode . '_linked_id')->unsigned()->default(0);
+                    $table->integer('morph_id')->unsigned()->nullable();
+                    $table->integer($morphManyCode . '_linked_id')->unsigned()->nullable();
                     $table->string($morphManyCode . '_type')->nullable();
 
                     $table->unique(['morph_id', $morphManyCode . '_linked_id', $morphManyCode . '_type'], 'uniq_key');

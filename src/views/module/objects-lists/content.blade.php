@@ -63,7 +63,7 @@
 							"sDefaultContent": '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]"><span class="lbl"></span></label>', 
 							"bSortable": false});
                 @foreach($fields as $key => $field)
-                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $field->translate('title_list') }}}", "mDataProp": null, "bSortable": ( {{$field->allow_sort}} ? true : false ) });
+                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $field->translate('title_list') }}}", "mDataProp": null, "bSortable": @if ($field->allow_sort) true @else false @endif });
                     @if ($key==1)
                         aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{{ $controller->LL('action') }}}", "bSortable": false });
                     @endif

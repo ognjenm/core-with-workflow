@@ -10,13 +10,16 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 	protected $key = 'updated-by';
     protected $routeListTitle = "cmf.field.relation-one-to-many.list.title";
 
-	public function fill($field, $model, $input)
-	{
-		$model->setAttribute('updated_by_user', \Auth::check() ? \Auth::user()->id : 0);
-
-		return parent::fill($field, $model, $input);
-	}
-
+    public function setModelAttribute($model, $key, $value, $field)
+    { 
+		if ($key == 'updated_by_user' && $value === null)
+		{
+			$value = \Auth::check() ? \Auth::user()->id : 0; 
+		} 
+		
+		$model->setAttribute($key, $value);
+    }
+	
 	public function preProcess($model, $type, $input)
 	{  
 		$translationSeed = $this->translationSeed();
@@ -42,7 +45,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->integer($fieldName)->unsigned()->default(0);
+				$table->integer($fieldName)->unsigned()->nullable();
 			});
 		}
 

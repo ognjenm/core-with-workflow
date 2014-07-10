@@ -30,8 +30,8 @@
 					@foreach($type->tab()->get()->sortBy('tab_order') as $tab) 
 
 					<div id="{{{$uniqueId}}}_{{{$tab->code}}}" class="tab-pane in">
-
-						@foreach($tab->field()->get()->filter(function($item) { return $item->show_in_form == 1; })->sortBy('field_order') as $field) 
+						
+						@foreach($tab->field()->get()->filter(function($item) use ($fields) { return $item->show_in_form == 1 && in_array($item->getKey(), $fields->lists('id')); })->sortBy('field_order') as $field) 
 
 							@include($controller->getPresentationFormFieldListView())
 							
