@@ -28,7 +28,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 			}
 			else
 			{
-				return \Redirect::route('cmf.content');
+				return \Redirect::route('error.access-denied');
 			}
 		}
 
@@ -118,6 +118,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$ListModuleMenuTop = \Illuminate\Support\Collection::make([]);
 
 		$ListModuleMenuTopCollection = \Illuminate\Support\Collection::make([]);
+		
 		\Event::fire('telenok.module.menu.top', $ListModuleMenuTopCollection);
 
 		$ListModuleMenuTopCollection->each(function($item) use ($ListModuleMenuTop, $config)

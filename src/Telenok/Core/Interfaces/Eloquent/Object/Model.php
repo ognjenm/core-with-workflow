@@ -12,6 +12,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	protected $hasVersioning = true;
 	protected $ruleList = [];
 	protected $multilanguageList = []; 
+	protected $dates = ['deleted_at'];
 
 	protected static $staticListField = [];
 	protected static $staticListFillable = [];
@@ -528,9 +529,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	
 	public function getDates()
 	{
-		$defaults = ['deleted_at'];
-
-		return array_merge(parent::getDates(), $defaults);
+		return array_merge(parent::getDates(), $this->dates);
 	}
 
 	public function addDateField($dateField = [])
@@ -649,14 +648,30 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 	}
 
-	public function scopeActive($query)
+	public function scopeActive($query, $table = null)
 	{
-		return $query->where($this->getTable() . '.active', 1);
+		$table = $table ?: $this->getTable();
+		$now = \Carbon\Carbon::now();
+
+		return $query->where(function($query) use ($table, $now)
+		{
+			$query->where($table . '.active', 1)
+				->where($table . '.start_at', '<=', $now)
+				->where($table . '.end_at', '>=', $now);
+		}); 
 	}
 
-	public function scopeNotActive($query)
+	public function scopeNotActive($query, $table = null)
 	{
-		return $query->where($this->getTable() . '.active', 0);
+		$table = $table ?: $this->getTable();
+		$now = \Carbon\Carbon::now();
+
+		return $query->where(function($query) use ($table, $now)
+		{
+			$query->where($table . '.active', 0)
+				->orWhere($table . '.start_at', '>=', $now)
+				->orWhere($table . '.end_at', '<=', $now);
+		}); 
 	}
 
 	// ->permission() - can current user read
@@ -665,10 +680,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	// ->permission('read', 'user_authorized', ['object-type', 'own'])
 	public function scopeWithPermission($query, $permissionCode = 'read', $subjectCode = null, $filterCode = null)
 	{
-		$subject = null;
-		$permission = null;
-		$resource = null;
-
+        if (!\Config::get('app.acl.enabled')) 
+        {
+            return $query;
+        }
+		
 		if (empty($subjectCode))
 		{
 			if (\Auth::guest())
@@ -694,38 +710,47 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		$permission = \Telenok\Security\Permission::where('id', $permissionCode)->orWhere('code', $permissionCode)->active()->first();
 
-		if (!$subject instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model || !$permission instanceof \Telenok\Core\Model\Security\Permission)
-		{
-			return $query->where($this->getTable() . '.id', 'nonexistsvalue');
+		if (!$subject || !$permission)
+		{ 
+			return $query->where($this->getTable() . '.id', 'Error: permission code');
 		}
 
+		$now = \Carbon\Carbon::now();
+		
 		$spr = new \Telenok\Security\SubjectPermissionResource();
 
 		$sequence = new \Telenok\Object\Sequence();
 
 		$type = new \Telenok\Object\Type();
-
+		
+		$query->addSelect($this->getTable() . '.*');
+		
 		$query->join($sequence->getTable() . ' as osequence', function($join) use ($spr, $subject, $permission)
 		{
 			$join->on($this->getTable() . '.id', '=', 'osequence.id');
 		});
 
-		$query->join($type->getTable() . ' as otype', function($join) use ($type)
+		$query->join($type->getTable() . ' as otype', function($join) use ($type, $now)
 		{
 			$join->on('osequence.sequences_object_type', '=', 'otype.id');
-			$join->on('otype.' . $type->getDeletedAtColumn(), ' is ', \DB::raw('null'));
-			$join->on('otype.active', '=', \DB::raw('1'));
+			$join->on('otype.' . $type->getDeletedAtColumn(), ' is ', \DB::raw("null"));
+			$join->where('otype.active', '=', \DB::raw(1));
+			$join->where('otype.start_at', '<=', $now);
+			$join->where('otype.end_at', '>=', $now);
 		});
 
 		//for direct right on resource
-		$query->leftJoin($spr->getTable() . ' as spr_permission_direct', function($join) use ($spr, $subject, $permission)
+		$query->leftJoin($spr->getTable() . ' as spr_permission_direct', function($join) use ($spr, $subject, $permission, $now)
 		{
 			$join->on($this->getTable() . '.id', '=', 'spr_permission_direct.acl_resource_object_sequence');
-			$join->on('spr_permission_direct.acl_subject_object_sequence', '=', \DB::raw($subject->getKey()));
-			$join->on('spr_permission_direct.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
-			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
-			$join->on('spr_permission_direct.active', '=', \DB::raw('1'));
+			$join->where('spr_permission_direct.acl_subject_object_sequence', '=', \DB::raw($subject->getKey()));
+			$join->where('spr_permission_direct.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
+			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
+			$join->where('spr_permission_direct.active', '=', \DB::raw(1));
+			$join->where('spr_permission_direct.start_at', '<=', $now);
+			$join->where('spr_permission_direct.end_at', '>=', $now);
 		});
+			
 
 		// for logined user's right on resource
 		if ($subject instanceof \Telenok\Core\Model\User\User)
@@ -756,14 +781,16 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				});
 			});
 
-			$query->leftJoin($spr->getTable() . ' as spr_permission_user', function($join) use ($spr, $roles, $permission)
+			$query->leftJoin($spr->getTable() . ' as spr_permission_user', function($join) use ($spr, $roles, $permission, $now)
 			{
 				$join->on($this->getTable() . '.id', '=', 'spr_permission_user.acl_resource_object_sequence');
 				$join->on('spr_permission_user.acl_subject_object_sequence', ' in ', \DB::raw('(' . implode(',', $roles) . ')'));
-				$join->on('spr_permission_user.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
-				$join->on('spr_permission_user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
-				$join->on('spr_permission_user.active', '=', \DB::raw('1'));
-			});
+				$join->where('spr_permission_user.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
+				$join->on('spr_permission_user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
+				$join->where('spr_permission_user.active', '=', \DB::raw(1));
+				$join->where('spr_permission_user.start_at', '<=', $now);
+				$join->where('spr_permission_user.end_at', '>=', $now);
+			}); 
 		}
 
 		$query->where(function($query_) use ($query, $filterCode, $permission, $subject)
@@ -866,14 +893,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function scopePivotTreeLinkedExtraAttr($query)
 	{
-        return $query->newQuery()->join('pivot_relation_m2m_tree', $this->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_id')
-					->select([$this->getTable() . '.*', 'pivot_relation_m2m_tree.*', $this->getTable() . '.id']);
+        return $query->leftJoin('pivot_relation_m2m_tree', $this->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_id')
+					->addSelect(['pivot_relation_m2m_tree.*', $this->getTable() . '.*']);
 	} 
 
 	public function scopePivotTreeSequenceExtraAttr($query)
 	{
         return $query->join('pivot_relation_m2m_tree', $this->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_id')
-					->select([$this->getTable() . '.*', 'pivot_relation_m2m_tree.*', $this->getTable() . '.id'])->where($this->getTable() . '.id', $this->getKey());
+					->addSelect(['pivot_relation_m2m_tree.*', $this->getTable() . '.*'])->where($this->getTable() . '.id', $this->getKey());
 	} 
 
 	public function makeRoot()

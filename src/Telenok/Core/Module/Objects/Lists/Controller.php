@@ -102,20 +102,20 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     public function getFormContent($model, $type, $fields, $uniqueId)
     {
-        return \View::make($this->getPresentationFormModelView(), array_merge(array( 
-                'controller' => $this,
-                'model' => $model, 
-                'type' => $type,
+        return \View::make($this->getPresentationFormModelView(), array_merge([
+					'controller' => $this,
+					'model' => $model, 
+					'type' => $type,
 					'fields' => $fields,
 					'uniqueId' => $uniqueId,
-								), $this->getAdditionalViewParam()))->render();
+				], $this->getAdditionalViewParam()))->render();
 	}
 
 	public function getModelFieldFilterExtended($model, $type)
 	{
 		$fields = [];
 
-		$type->field()->get()->each(function($item) use (&$fields)
+		$type->field()->withPermission()->get()->each(function($item) use (&$fields)
 		{
 			if ($item->allow_search)
 			{
@@ -137,7 +137,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			$input = \Illuminate\Support\Collection::make($input);
 		}
 
-		$type->field()->get()->each(function($field) use ($input, $query, $fieldConfig, $model)
+		$type->field()->withPermission()->get()->each(function($field) use ($input, $query, $fieldConfig, $model)
 		{
 			if ($field->allow_search)
 			{
@@ -155,8 +155,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     public function getListItem($model)
     {  
-        $query = $model::select($model->getTable().'.*');
-        $query->withPermission();
+        $query = $model::withPermission();
 
         $this->getFilterQuery($model, $query); 
 
@@ -237,12 +236,12 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     <button class="btn btn-minier btn-light disabled" title="'.$this->LL('list.btn.edit').'">
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
-                    
+                    ' . ( \Auth::can('delete', $item) ? '
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
                         onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');return false;">
                         <i class="fa fa-trash-o"></i>
-                    </button>
+                    </button>' : '') . '
                 </div>';
     } 
 
@@ -250,7 +249,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {   
         $model = $this->modelByType($id);
         $type = $this->getType($id);
-        $fields = $type->field()->withPermission('read')->get();
+        $fields = $type->field()->withPermission()->get();
 
         if (!\Auth::can('create', "object_type.{$type->code}"))
         {
@@ -284,7 +283,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     { 
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
-        $fields = $type->field()->get();
+        $fields = $type->field()->withPermission('read')->get();
 
         if (!\Auth::can('read', "object_type.{$type->code}"))
         {

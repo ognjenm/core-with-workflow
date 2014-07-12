@@ -490,7 +490,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
     {
         $model = $this->getModelTree();
         
-        $query = \Telenok\Object\Sequence::pivotTreeLinkedExtraAttr();
+        $query = \Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->active();
 
         $sequences_object_type = [\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey()];
 
@@ -510,8 +510,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
         
         $query->where('object_sequence.treeable', 1);
         $query->whereIn('object_sequence.sequences_object_type', $sequences_object_type);
-        $query->withPermission();
-        
+		$query->withPermission();
+		
         return $query->get();
     } 
 

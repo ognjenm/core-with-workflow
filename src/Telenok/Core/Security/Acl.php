@@ -613,9 +613,6 @@ class Acl
             return true;
         }
 
-        $permission = [];
-        $resource = [];
-
         if (!$this->subject || !$this->subject->active) 
         {
             return false;
@@ -670,19 +667,22 @@ class Acl
         {
             $group = new \Telenok\User\Group();
             $role = new \Telenok\Security\Role();
-            $user = new \Telenok\User\User();
+			$now = \Carbon\Carbon::now();
 
             $query = $this->subject->select('role.id')->join('pivot_relation_m2m_group_user', function($join)
             {
                 $join->on($this->subject->getTable() . '.id', '=', 'pivot_relation_m2m_group_user.group_user');
-                $join->on($this->subject->getTable() . '.id', '=', \DB::raw($this->subject->getKey()));
+                $join->where($this->subject->getTable() . '.id', '=', \DB::raw($this->subject->getKey()));
             });
 
-            $query->join($group->getTable() . ' as group', function($join) use ($group)
+            $query->join($group->getTable() . ' as group', function($join) use ($group, $now)
             {
                 $join->on('pivot_relation_m2m_group_user.group', '=', 'group.id');
                 $join->on('group.active', '=', \DB::raw('1'));
-                $join->on('group.' . $group->getDeletedAtColumn(), ' is ', \DB::raw('null'));
+				$join->on('group.' . $group->getDeletedAtColumn(), ' is ', \DB::raw('null'));
+				$join->where('group.active', '=', \DB::raw('1'));
+				$join->where('group.start_at', '<=', $now);
+				$join->where('group.end_at', '>=', $now);
             });
 
             $query->join('pivot_relation_m2m_role_group', function($join) 
@@ -690,11 +690,14 @@ class Acl
                 $join->on('group.id', '=', 'pivot_relation_m2m_role_group.role_group');
             });
 
-            $query->join($role->getTable() . ' as role', function($join) use ($role)
+            $query->join($role->getTable() . ' as role', function($join) use ($role, $now)
             {
                 $join->on('pivot_relation_m2m_role_group.role', '=', 'role.id');
                 $join->on('role.active', '=', \DB::raw('1'));
-                $join->on('role.' . $role->getDeletedAtColumn(), ' is ', \DB::raw('null'));
+				$join->on('role.' . $role->getDeletedAtColumn(), ' is ', \DB::raw('null'));
+				$join->on('role.active', '=', \DB::raw('1'));
+				$join->where('role.start_at', '<=', $now);
+				$join->where('role.end_at', '>=', $now);
             });
 
             $roles = $query->get();
@@ -770,9 +773,23 @@ class Acl
             return false;
         }
 
-        $opr = $this->subject->with([
-            'group' => function($query) { $query->where('active', 1); },
-            'group.role' => function($query) use ($role) { $query->where('role.id', $role->getKey())->where('role.active', 1); }
+		$now = \Carbon\Carbon::now();
+		
+        $opr = $this->subject->with(
+		[
+            'group' => function($query) use ($now) 
+			{ 
+				$query->where('group.active', 1)
+						->where('group.start_at', '<=', $now)
+						->where('group.end_at', '>=', $now);
+			},
+            'group.role' => function($query) use ($role, $now) 
+			{ 
+				$query->where('role.id', $role->getKey())
+					->where('role.active', 1)
+					->where('role.start_at', '<=', $now)
+					->where('role.end_at', '>=', $now);
+			}
         ])
         ->whereId($this->subject->getKey())->active()->get();
         
