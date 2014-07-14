@@ -530,7 +530,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
                         <i class="fa fa-pencil"></i>
                     </button>
 					
-                    <button class="btn btn-minier btn-light disabled" title="'.$this->LL('list.btn.edit').'">
+                    <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->active ? 'active' : 'inactive')) . '">
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
 

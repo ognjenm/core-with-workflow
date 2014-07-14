@@ -11,6 +11,10 @@ class Controller {
         return $this->key;
     } 
 
+    public function filterCan($queryCommon, $queryWhere, $resource, $permission, $subject)
+    {
+    }
+	
     public function filter($queryCommon, $queryWhere, $resource, $permission, $subject)
     {
     }
@@ -52,7 +56,7 @@ class Controller {
             $query->join($role->getTable() . ' as role', function($join) use ($spr, $group, $role)
             {
                 $join->on('spr.acl_subject_object_sequence', '=', 'role.id');
-                $join->on('role.active', '=', \DB::raw('1'));
+                $join->on('role.active', '=', 1);
                 $join->on('role.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
             });
 
@@ -64,7 +68,7 @@ class Controller {
             $query->join($group->getTable() . ' as group', function($join) use ($spr, $group, $role)
             {
                 $join->on('pivot_relation_m2m_role_group.role_group', '=', 'group.id');
-                $join->on('group.active', '=', \DB::raw('1'));
+                $join->on('group.active', '=', 1);
                 $join->on('group.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
             });
 
@@ -76,7 +80,7 @@ class Controller {
             $query->join($user->getTable() . ' as user', function($join) use ($spr, $group, $role)
             {
                 $join->on('pivot_relation_m2m_group_user.group_user', '=', 'user.id');
-                $join->on('user.active', '=', \DB::raw('1'));
+                $join->on('user.active', '=', 1);
                 $join->on('user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw('null'));
             });
 

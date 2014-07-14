@@ -12,6 +12,4 @@ return array(
     'list.names' => 'Field of objects',
     'list.create' => 'Field creating',
     'list.edit' => 'Field editing',
-    'list.btn.edit' => 'Edit field',
-    'list.btn.delete' => 'Delete field', 
 );

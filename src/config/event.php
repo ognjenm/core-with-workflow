@@ -1,7 +1,5 @@
 <?php
 
-\Config::set('auth.model', \Config::get('core::config.auth.model'));
-
 \Validator::resolver(function($translator, $data, $rules, $messages, $customAttributes)
 {
     return new \Telenok\Core\Interfaces\Validator\Validator($translator, $data, $rules, $messages, $customAttributes);
@@ -35,6 +33,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 {
     $list->push('Telenok\Core\Filter\Acl\Resource\ObjectType\Controller');
     $list->push('Telenok\Core\Filter\Acl\Resource\Own\Controller');
+    $list->push('Telenok\Core\Filter\Acl\Resource\DirectRight\Controller');
 });
 
 \Event::listen('telenok.module.menu.left', function($list)
@@ -127,6 +126,19 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 
 \App::make('telenok.config')->runWorkflowListener();
+
+
+Event::listen('illuminate.query', function($sql, $bindings, $time) {
+    
+	if (\Config::get('querylog'))
+	{
+		// Uncomment this if you want to include bindings to queries
+		$sql = str_replace(array('%', '?'), array('%%', '"%s"'), $sql);
+		$sql = vsprintf($sql, $bindings);
+
+		var_dump($sql);
+	}
+});
 
 
 

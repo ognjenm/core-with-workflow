@@ -8,7 +8,7 @@ class Guard extends \Illuminate\Auth\Guard {
     { 
         return parent::check() && $this->user()->active;
     }
-    
+
     /*
      * \Auth::cannot(\Telenok\Security\Permission->code eg: 'write', \Telenok\Security\Resource->code 'log')
      * \Auth::cannot(222, \News $news)
@@ -19,7 +19,7 @@ class Guard extends \Illuminate\Auth\Guard {
     {
         return !$this->can($permissionCode, $resourceCode);
     }
-    
+
     /*
      * \Auth::can(\Telenok\Security\Permission->code eg: 'write', \Telenok\Security\Resource->code 'log')
      * \Auth::can(222, \News $news)
@@ -28,6 +28,11 @@ class Guard extends \Illuminate\Auth\Guard {
     */
     public function can($permissionCode = null, $resourceCode = null)
     {
+		if (!\Config::get('app.acl.enabled'))
+		{
+			return true;
+		}
+		
         if ($this->check()) 
         {
             if (\Telenok\Core\Security\Acl::user()->can($permissionCode, $resourceCode))

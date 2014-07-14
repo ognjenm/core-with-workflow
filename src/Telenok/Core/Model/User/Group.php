@@ -22,11 +22,5 @@ class Group extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		return $this->belongsToMany('\Telenok\User\User', 'pivot_relation_m2m_group_user', 'group', 'group_user')->withTimestamps();
 	}
 
-
-    public function group()
-    {
-        return $this->belongsToMany('\Telenok\User\User', 'pivot_relation_m2m_group_group', 'group_group', 'group')->withTimestamps();
-    }
-
 }
 ?>

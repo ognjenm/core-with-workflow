@@ -8,6 +8,10 @@ return [
     'list.save.success' => 'Виджет обновлен',
     'list.btn.choose' => 'Выбрать',
     'list.btn.delete.all' => 'Удалить всё',
+    'list.btn.edit' => 'Редактировать',
+    'list.btn.delete' => 'Удалить', 
+    'list.btn.active' => 'Активно',
+    'list.btn.inactive' => 'Неактивно',
 
     'btn.save' => 'Сохранить',
     'btn.save.close' => 'Сохранить и закрыть',

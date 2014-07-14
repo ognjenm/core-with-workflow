@@ -8,6 +8,10 @@ return [
     'list.save.success' => 'Widget updated',
     'list.btn.choose' => 'Choose',
     'list.btn.delete.all' => 'Delete all',
+    'list.btn.edit' => 'Edit',
+    'list.btn.delete' => 'Delete', 
+    'list.btn.active' => 'Actively',
+    'list.btn.inactive' => 'Inactive',
 
     'btn.save' => 'Save',
     'btn.save.close' => 'Save and close',

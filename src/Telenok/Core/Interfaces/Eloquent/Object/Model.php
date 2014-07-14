@@ -223,7 +223,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		
 		try
 		{
-			$this->validateTypePermission($type, $input);
+			$this->validateStoreOrUpdatePermission($type, $input);
 
 			\DB::transaction(function() use ($type, $input, &$model)
 			{  
@@ -323,7 +323,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return $attr;
 	}
 
-	protected function validateTypePermission($type = null, $input = null)
+	protected function validateStoreOrUpdatePermission($type = null, $input = null)
 	{
 		if (!$type)
 		{
@@ -334,7 +334,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			throw new \LogicException('Cant create. Access denied.');
 		}
-		else if ($this->exists && !\Auth::can('update', "object_type.{$type->code}"))
+		else if ($this->exists && (!\Auth::can('update', "object_type.{$type->code}") || !\Auth::can('update', $this->getKey())))
 		{
 			throw new \LogicException('Cant update. Access denied.');
 		}
@@ -463,7 +463,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function getFieldList()
 	{
-		return $this->type()->field()->get()->filter(function($item)
+		return $this->type()->field()->withPermission()->get()->filter(function($item)
 				{
 					return $item->show_in_list == 1;
 				});
@@ -471,7 +471,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function getFieldForm()
 	{
-		return $this->type()->field()->get()->filter(function($item)
+		return $this->type()->field()->withPermission()->get()->filter(function($item)
 				{
 					return $item->show_in_form == 1;
 				});
@@ -734,7 +734,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			$join->on('osequence.sequences_object_type', '=', 'otype.id');
 			$join->on('otype.' . $type->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-			$join->where('otype.active', '=', \DB::raw(1));
+			$join->where('otype.active', '=', 1);
 			$join->where('otype.start_at', '<=', $now);
 			$join->where('otype.end_at', '>=', $now);
 		});
@@ -743,16 +743,16 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		$query->leftJoin($spr->getTable() . ' as spr_permission_direct', function($join) use ($spr, $subject, $permission, $now)
 		{
 			$join->on($this->getTable() . '.id', '=', 'spr_permission_direct.acl_resource_object_sequence');
-			$join->where('spr_permission_direct.acl_subject_object_sequence', '=', \DB::raw($subject->getKey()));
-			$join->where('spr_permission_direct.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
+			$join->where('spr_permission_direct.acl_subject_object_sequence', '=', $subject->getKey());
+			$join->where('spr_permission_direct.acl_permission_object_sequence', '=', $permission->getKey());
 			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-			$join->where('spr_permission_direct.active', '=', \DB::raw(1));
+			$join->where('spr_permission_direct.active', '=', 1);
 			$join->where('spr_permission_direct.start_at', '<=', $now);
 			$join->where('spr_permission_direct.end_at', '>=', $now);
 		});
 			
 
-		// for logined user's right on resource
+		// for user's right on resource
 		if ($subject instanceof \Telenok\Core\Model\User\User)
 		{
 			$userGroupRole = \Telenok\User\User::with([
@@ -787,7 +787,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				$join->on('spr_permission_user.acl_subject_object_sequence', ' in ', \DB::raw('(' . implode(',', $roles) . ')'));
 				$join->where('spr_permission_user.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
 				$join->on('spr_permission_user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-				$join->where('spr_permission_user.active', '=', \DB::raw(1));
+				$join->where('spr_permission_user.active', '=', 1);
 				$join->where('spr_permission_user.start_at', '<=', $now);
 				$join->where('spr_permission_user.end_at', '>=', $now);
 			}); 
@@ -806,12 +806,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			if (!empty($filterCode))
 			{
-				$filters->only((array) $filterCode);
+				//$filters->only((array) $filterCode);
 			}
 
 			$filters->each(function($item) use ($query, $query_, $permission, $subject)
 			{
-				$item->filter($query, $query_, $this, $permission, $subject);
+				//$item->filter($query, $query_, $this, $permission, $subject);
 			});
 		});
 
