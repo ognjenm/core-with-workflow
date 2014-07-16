@@ -11,7 +11,7 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Use
 
 	use UserTrait, RemindableTrait;
 
-	protected $ruleList = ['title' => ['required', 'min:1']];
+	protected $ruleList = ['title' => ['required', 'min:1'], 'email' => ['unique:user'], 'usernick' => ['unique:user']];
 	protected $table = 'user';
 	protected $hidden = ['password'];
 	protected $fillable = ['remember_token'];
@@ -36,6 +36,10 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Use
 		if ($value = trim($value))
 		{
 			$this->attributes['password'] = \Hash::make($value);
+		}
+		else if (!$this->exists && !$value)
+		{
+			$this->attributes['password'] = \Hash::make(str_random());
 		}
 	}
 

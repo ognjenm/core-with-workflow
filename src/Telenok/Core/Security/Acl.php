@@ -213,7 +213,7 @@ class Acl
         }
         else if (is_scalar($id))
         {
-            $role = \Telenok\Security\Role::where('code', $id)->orWhere('id', $id)->firstOrFail(); 
+            $role = \Telenok\Security\Role::where('code', $id)->orWhere('id', $id)->first(); 
         }
 
         if ($role)
@@ -264,7 +264,7 @@ class Acl
         }
         else if (is_scalar($id))
         {
-            $resource = \Telenok\Security\Resource::where('code', $id)->orWhere('id', $id)->firstOrFail(); 
+            $resource = \Telenok\Security\Resource::where('code', $id)->orWhere('id', $id)->first(); 
         }
 
         if ($resource)
@@ -316,7 +316,7 @@ class Acl
         }
         else if (is_scalar($id))
         {
-            $permission = \Telenok\Security\Permission::where('code', $id)->orWhere('id', $id)->firstOrFail(); 
+            $permission = \Telenok\Security\Permission::where('code', $id)->orWhere('id', $id)->first(); 
         }
 
         if ($permission)
@@ -640,13 +640,13 @@ class Acl
      * Validate subject's permission
      * 
      * \Telenok\Core\Security\Acl::group($admin)->can(\Telenok\Security\Permission->code eg: 'write', \Telenok\Security\Resource->code 'log')
-     * \Telenok\Core\Security\Acl::user(103)->can(222, \News $news)
+     * \Telenok\Core\Security\Acl::user(103)->can(222, \News $news, ['object-type-own']) - only 'object-type-own' filter used
      * \Telenok\Core\Security\Acl::subject(103)->can(\Telenok\Security\Permission $read, \User $user)
      * \Telenok\Core\Security\Acl::subject(103)->can(12, 'object_type.language')
      * \Telenok\Core\Security\Acl::subject(103)->can('read', 148)
      * 
      */
-    public function can($permissionCode = null, $resourceCode = null)
+    public function can($permissionCode = null, $resourceCode = null, $filterCode = null)
     {
         if (!\Config::get('app.acl.enabled') || ($this->subject instanceof \Telenok\Core\Model\User\User && $this->hasRole('super_administrator'))) 
         {
@@ -709,91 +709,33 @@ class Acl
 			$join->where('otype.end_at', '>=', $now);
 		}); 
 		
-		$query->where(function($queryWhere) use ($query, $permission, $resource)
+		$query->where(function($queryWhere) use ($query, $permission, $resource, $filterCode)
 		{
-			$queryWhere->whereNotNull('otype.id');
+			$queryWhere->where(\DB::raw(1), 0);
 			
 			$filters = \App::make('telenok.config')->getAclResourceFilter();
+
+			if (!empty($filterCode))
+			{
+				$filters->only((array) $filterCode);
+			}
 
 			// submit joined query with sequence of resource and linked type
 			$filters->each(function($item) use ($query, $queryWhere, $permission, $resource)
 			{
-				//$item->filterCan($query, $queryWhere, $resource, $permission, $this->subject);
+				$item->filterCan($query, $queryWhere, $resource, $permission, $this->subject);
 			});
 		});
 
-		$query->take(1)->count();
+		//\Config::set('querylog', 1);
 		
-		dd( last(\DB::getQueryLog()) );
-
-		return $query->count() ? true : false;
+		//$q = $query->take(1)->count();
 		
-		
-		
-		/*
+		//dd('ssssssssssss: ' . $q);
 		
 		
-		
-		
-		// for direct right on resource (we can set rigth for anything on anything)
-		$query->leftJoin($spr->getTable() . ' as spr_permission_direct', function($join) use ($sequence, $spr, $now)
-		{
-			$join->on($sequence->getTable() . '.id', '=', 'spr_permission_direct.acl_resource_object_sequence');
-			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-			$join->where('spr_permission_direct.active', '=', \DB::raw(1));
-			$join->where('spr_permission_direct.start_at', '<=', $now);
-			$join->where('spr_permission_direct.end_at', '>=', $now);
-		});
-
-		$query->leftJoin($spr->getTable() . ' as spr_permission_direct', function($join) use ($sequence, $spr, $now)
-		{
-			$join->on($sequence->getTable() . '.id', '=', 'spr_permission_direct.acl_resource_object_sequence');
-			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-			$join->where('spr_permission_direct.active', '=', \DB::raw(1));
-			$join->where('spr_permission_direct.start_at', '<=', $now);
-			$join->where('spr_permission_direct.end_at', '>=', $now);
-		});
-
-
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		$query = \Telenok\Security\SubjectPermissionResource::select($spr->getTable() . '.id');
-		
-		// for direct right on resource (we can set rigth for anything on anything)
-		$query->join($sequence->getTable() . ' as osequence', function($join) use ($spr)
-		{
-			$join->on($spr->getTable() . '.acl_resource_object_sequence', '=', 'osequence.id');
-		});
-		
-		
-		
-		
-		
-		
-		
-		$query->join($sequence->getTable() . ' as osequence', function($join) use ($resource)
-		{
-			$join->on($resource->getTable() . '.id', '=', 'osequence.id');
-		});
-		
-		$query->join($type->getTable() . ' as otype', function($join) use ($type, $now)
-		{
-			$join->on('osequence.sequences_object_type', '=', 'otype.id');
-			$join->on('otype.' . $type->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-			$join->where('otype.active', '=', \DB::raw(1));
-			$join->where('otype.start_at', '<=', $now);
-			$join->where('otype.end_at', '>=', $now);
-		});
-*/
+		return $query->take(1)->count() ? true : false;
+		  
     }
 
     /* 

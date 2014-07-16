@@ -53,6 +53,7 @@ class UserProvider extends \Illuminate\Auth\EloquentUserProvider {
 		// Then we can execute the query and, if we found a user, return it in a
 		// Eloquent User "model" that will be utilized by the Guard instances.
 		$query = $this->createModel()->newQuery();
+		$now = \Carbon\Carbon::now();
 
 		foreach ($credentials as $key => $value)
 		{

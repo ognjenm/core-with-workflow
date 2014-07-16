@@ -32,8 +32,8 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 \Event::listen('telenok.acl.filter.resource.add', function($list)
 {
     $list->push('Telenok\Core\Filter\Acl\Resource\ObjectType\Controller');
-    $list->push('Telenok\Core\Filter\Acl\Resource\Own\Controller');
-    $list->push('Telenok\Core\Filter\Acl\Resource\DirectRight\Controller');
+	$list->push('Telenok\Core\Filter\Acl\Resource\ObjectTypeOwn\Controller');
+	$list->push('Telenok\Core\Filter\Acl\Resource\DirectRight\Controller');
 });
 
 \Event::listen('telenok.module.menu.left', function($list)

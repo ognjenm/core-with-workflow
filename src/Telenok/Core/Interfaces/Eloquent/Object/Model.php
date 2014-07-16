@@ -674,9 +674,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}); 
 	}
 
-	// ->permission() - can current user read
+	// ->permission() - can current user read (read - by default)
 	// ->permission('write', null) - can current user read
-	// ->permission(null, 'user_authorized') - can current user read (read - default)
+	// ->permission(null, 'user_authorized') - can authorized user read 
 	// ->permission('read', 'user_authorized', ['object-type', 'own'])
 	public function scopeWithPermission($query, $permissionCode = 'read', $subjectCode = null, $filterCode = null)
 	{
@@ -716,11 +716,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 
 		$now = \Carbon\Carbon::now();
-		
 		$spr = new \Telenok\Security\SubjectPermissionResource();
-
 		$sequence = new \Telenok\Object\Sequence();
-
 		$type = new \Telenok\Object\Type();
 		
 		$query->addSelect($this->getTable() . '.*');
@@ -739,79 +736,20 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$join->where('otype.end_at', '>=', $now);
 		});
 
-		//for direct right on resource
-		$query->leftJoin($spr->getTable() . ' as spr_permission_direct', function($join) use ($spr, $subject, $permission, $now)
+		$query->where(function($queryWhere) use ($query, $filterCode, $permission, $subject)
 		{
-			$join->on($this->getTable() . '.id', '=', 'spr_permission_direct.acl_resource_object_sequence');
-			$join->where('spr_permission_direct.acl_subject_object_sequence', '=', $subject->getKey());
-			$join->where('spr_permission_direct.acl_permission_object_sequence', '=', $permission->getKey());
-			$join->on('spr_permission_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-			$join->where('spr_permission_direct.active', '=', 1);
-			$join->where('spr_permission_direct.start_at', '<=', $now);
-			$join->where('spr_permission_direct.end_at', '>=', $now);
-		});
-			
-
-		// for user's right on resource
-		if ($subject instanceof \Telenok\Core\Model\User\User)
-		{
-			$userGroupRole = \Telenok\User\User::with([
-				'group' => function($query)
-				{
-					$query->whereActive(1);
-				},
-						'group.role' => function($query)
-				{
-					$query->whereActive(1);
-				}])
-					->whereId($subject->getKey())
-					->active()
-					->get();
-
-			$roles = [0];
-
-			$userGroupRole->each(function($user) use (&$roles)
-			{
-				$user->group->each(function($group) use (&$roles)
-				{
-					$group->role->each(function($role) use (&$roles)
-					{
-						$roles[] = $role->getKey();
-					});
-				});
-			});
-
-			$query->leftJoin($spr->getTable() . ' as spr_permission_user', function($join) use ($spr, $roles, $permission, $now)
-			{
-				$join->on($this->getTable() . '.id', '=', 'spr_permission_user.acl_resource_object_sequence');
-				$join->on('spr_permission_user.acl_subject_object_sequence', ' in ', \DB::raw('(' . implode(',', $roles) . ')'));
-				$join->where('spr_permission_user.acl_permission_object_sequence', '=', \DB::raw($permission->getKey()));
-				$join->on('spr_permission_user.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
-				$join->where('spr_permission_user.active', '=', 1);
-				$join->where('spr_permission_user.start_at', '<=', $now);
-				$join->where('spr_permission_user.end_at', '>=', $now);
-			}); 
-		}
-
-		$query->where(function($query_) use ($query, $filterCode, $permission, $subject)
-		{
-			$query_->whereNotNull('spr_permission_direct.id');
-
-			if ($subject instanceof \Telenok\Core\Model\User\User)
-			{
-				$query_->orWhereNotNull('spr_permission_user.id');
-			}
+			$queryWhere->where(\DB::raw(1), 0);
 
 			$filters = \App::make('telenok.config')->getAclResourceFilter();
 
 			if (!empty($filterCode))
 			{
-				//$filters->only((array) $filterCode);
+				$filters->only((array) $filterCode);
 			}
 
-			$filters->each(function($item) use ($query, $query_, $permission, $subject)
+			$filters->each(function($item) use ($query, $queryWhere, $permission, $subject)
 			{
-				//$item->filter($query, $query_, $this, $permission, $subject);
+				$item->filter($query, $queryWhere, $this, $permission, $subject);
 			});
 		});
 
