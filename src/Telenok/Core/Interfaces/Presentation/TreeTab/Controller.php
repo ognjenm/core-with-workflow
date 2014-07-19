@@ -511,7 +511,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller imp
         $query->where('object_sequence.treeable', 1);
         $query->whereIn('object_sequence.sequences_object_type', $sequences_object_type);
 		$query->withPermission();
-		
+
         return $query->get();
     } 
 

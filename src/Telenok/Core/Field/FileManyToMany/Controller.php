@@ -98,11 +98,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
     {
 		$input->put('relation_many_to_many_has', \Telenok\Object\Type::whereCode('file')->pluck('id'));
 
-		if (!$input->has('show_in_form_belong'))
+		if (!$input->get('show_in_form_belong'))
 		{
 			$input->put('show_in_form_belong', 0);
-		}
-		
+		} 
+
         return parent::preProcess($model, $type, $input);
     } 
 	

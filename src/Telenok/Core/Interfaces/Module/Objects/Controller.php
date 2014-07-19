@@ -97,8 +97,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getTreeContent()
     {
-        if (!$this->typeTree) return;
-
+        if (!$this->typeTree) 
+		{
+			return;
+		}
+		
         return \View::make($this->getPresentationTreeView(), array(
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
@@ -119,15 +122,14 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getModelFieldFilter()
     {
-        $model = $this->getModelList();
         $type = $this->getTypeList();
         $fields = [];
 
-        $type->field()->get()->each(function($item) use (&$fields)
+        $type->field()->get()->each(function($field) use (&$fields, $type)
 		{
-            if ($item->allow_search)
+			if ($field->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $field->code))
             {
-                $fields[] = $item;
+                $fields[] = $field;
             }
         }); 
 
@@ -145,9 +147,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 			$input = \Illuminate\Support\Collection::make($input);
 		}
 
-        $type->field()->get()->each(function($field) use ($input, $query, $fieldConfig, $model)
+        $type->field()->get()->each(function($field) use ($input, $query, $fieldConfig, $model, $type)
         {
-			if ($field->allow_search)
+			if ($field->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $field->code))
 			{
 				if ($input->has($field->code))
 				{
@@ -178,11 +180,13 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
             $config = \App::make('telenok.config')->getObjectFieldController();
 
+			$fields = $model->getFieldList();
+			
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
             {
                 $put = ['tableCheckAll' => '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]" value="'.$item->getKey().'" /><span class="lbl"></span></label>'];
 
-                foreach ($model->getFieldList() as $field)
+                foreach ($fields as $field)
                 {
 					$put[$field->code] = $config->get($field->key)->getListFieldContent($field, $item, $type);
                 }
@@ -214,8 +218,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getListItem($model)
     {  
-        $query = $model::select($model->getTable().'.*');
-        $query->withPermission();
+        $query = $model::withPermission();
 
         $this->getFilterQuery($model, $query); 
 
@@ -228,7 +231,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     { 
         $model = $this->getModelList();
         $type = $this->getTypeList();
-        $fields = $type->field()->get();
+        $fields = $model->getFieldForm();
 
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
         
@@ -252,7 +255,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     { 
         $model = $this->getModelList()->findOrFail($id);
         $type = $this->getTypeList();
-        $fields = $type->field()->get();
+        $fields = $model->getFieldForm();
 
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
@@ -281,9 +284,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 				$input = \Input::all();
 			}
 
-            $type = $this->getTypeList();
-            $fields = $type->field()->get();
 			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+
+            $type = $this->getTypeList();
 
 			$model = $this->save($input, $type); 
         } 
@@ -292,6 +295,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 			throw $e;
         }
 
+		$fields = $model->getFieldForm();
+		
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
         \Event::fire('form.edit.object', [$params]);
@@ -321,10 +326,10 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 				$input = \Input::all();
 			}
 
-            $type = $this->getTypeList();
-            $fields = $type->field()->get();
 			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
 
+            $type = $this->getTypeList();
+			
 			$model = $this->save($input, $type); 
         } 
         catch (\Exception $e) 
@@ -332,6 +337,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 			throw $e;
         }  
 	
+		$fields = $model->getFieldForm();
+		
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
         \Event::fire('form.edit.object', [$params]);

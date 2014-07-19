@@ -82,45 +82,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		{
 			\App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
 		}
-
-		// tab validate and set default
-		if (!$model->exists && !$input->get('field_object_tab'))
-		{
-			$input->put('field_object_tab', 'main');
-		}
-
-		if (!$model->exists || ($model->exists && $input->has('field_object_tab') && $model->getOriginal('field_object_tab') && $input->get('field_object_tab') != $model->getOriginal('field_object_tab')))
-		{
-			try
-			{
-				if ($model->exists)
-				{
-					$modelTypeId = \Telenok\Object\Type::find($model->getOriginal('field_object_type'))->getKey();
-				}
-				else
-				{
-					$modelTypeId = \Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail()->getKey();
-				}
-			} 
-			catch (\Exception $e) 
-			{
-				throw new \Exception($this->LL('error.add.field.type'));
-			}
-			
-			try
-			{
-				$input->put('field_object_tab', \Telenok\Object\Tab::where('tab_object_type', $modelTypeId)
-						->where(function($query) use ($input)
-						{
-							$query->where('code', $input->get('field_object_tab'));
-							$query->orWhere('id', $input->get('field_object_tab'));
-						})->firstOrFail()->getKey());
-			} 
-			catch (\Exception $e) 
-			{
-				throw new \Exception($this->LL('error.tab.field.key'));
-			}
-		}
 		
         return parent::preProcess($model, $type, $input);
     }

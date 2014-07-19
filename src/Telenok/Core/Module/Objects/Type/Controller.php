@@ -25,7 +25,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     { 
         parent::postProcess($model, $type, $input); 
 		
-        $code = trim($input->get('code'));
         $nsPathClassModel = trim($input->get('namespace_path_class_model'), '.');
         $nsPathClassForm = trim($input->get('namespace_path_class_form'), '.'); 
         $multilanguage = intval($input->get('multilanguage', 1));
@@ -377,6 +376,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			(new \Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'permission',
 				'field_object_type' => $model->getKey(),
+				//'field_object_tab' => $tabAdditionally->getKey(),
 			]); 
 		}
     }    

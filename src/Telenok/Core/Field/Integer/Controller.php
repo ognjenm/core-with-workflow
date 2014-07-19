@@ -51,7 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			}
 		}
 	}
-	
+
 	public function postProcess($model, $type, $input)
 	{
 		$table = $model->fieldObjectType()->first()->getAttribute('code');

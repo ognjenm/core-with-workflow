@@ -330,57 +330,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         }
     }
 
-    public function processScheme($table, $typeOrClosure, $name = '', $default = null)
-    {
-        try
-        {
-            if (\Schema::hasTable($table)) 
-            {
-                if (!\Schema::hasColumn($table, $name) && !\Schema::hasColumn($table, "`{$name}`"))
-                {
-                    if ($typeOrClosure instanceof \Closure)
-                    {
-                        \Schema::table($table, $typeOrClosure($table));
-                    }
-                    else 
-					{
-                        \Schema::table($table, function($table) use ($typeOrClosure, $name, $default)
-                        {
-                            $field = $table->$typeOrClosure($name);
-
-                            if ($default !== null)
-                            {
-                                $field->default($default);
-                            }
-                            else
-                            {
-                                $field->nullable();
-                            }
-                        });
-                    }
-                }
-
-                if (!\Schema::hasColumn($table, $name) && !\Schema::hasColumn($table, "`{$name}`"))
-                {
-                    throw $this->validateException()->setMessageError($this->LL('error.field.create', array('table' => $table, 'field' => $name)));
-                }
-            }
-            else
-            {
-                throw $this->validateException()->setMessageError($this->LL('error.table.nonexists', array('table' => $table)));
-            }
-        }
-        catch (\Exception $e)
-        {
-            throw $this->validateException()->setMessageError($this->LL('error.field.create', array('table' => $table, 'field' => $name)));
-        }
-    }
-
-    public function upSchema($model)
-    { 
-        return $this;
-    }  
-
     public function validator($model = null, $input = null, $messages = [])
     {
         return new \Telenok\Core\Interfaces\Validator\Model($model, $input, $messages);
@@ -393,6 +342,10 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     
     public function preProcess($model, $type, $input)
     {  
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
+
+		$input->put('field_object_tab', $tab->getKey());
+		
         return $this;
     }
 
@@ -413,6 +366,56 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 			return [$field->code];
 		}
     }
+
+	public function getFieldTab($typeId, $tabCode)
+	{
+		try
+		{
+			$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)
+						->where(function($query) use ($tabCode)
+						{
+							$query->where('id', $tabCode);
+							$query->orWhere('code', $tabCode);
+						})
+						->firstOrFail();
+		} 
+		catch (\Exception $ex) 
+		{
+			try
+			{
+				$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
+			} 
+			catch (\Exception $ex) 
+			{
+				throw new \Exception($this->LL('error.tab.field.key'));
+			}
+		}
+
+		return $tabTo;
+	}
+	
+	public function getFieldTabBelongTo($typeId, $tabHasId)
+	{
+		try
+		{
+			$tabHas = \Telenok\Object\Tab::firstOrFail('id', $tabHasId);
+			
+			$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)->whereCode($tabHas->code);
+		} 
+		catch (\Exception $ex) 
+		{
+			try
+			{
+				$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
+			} 
+			catch (\Exception $ex) 
+			{
+				throw new \Exception($this->LL('error.tab.field.key'));
+			}
+		}
+
+		return $tabTo;
+	}
 
     public function getPackage()
     {

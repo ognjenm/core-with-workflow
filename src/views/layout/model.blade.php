@@ -24,13 +24,24 @@
         var button_type = jQuery(this).data('btn-clicked');
         
         if (button_type=='close')
-        {
+        {	
 			var divId = $el.closest('div.tab-pane').attr('id');
 
 			jQuery('li a[href=#' + divId + '] i.fa.fa-times').click();
 			
 			return;
         }
+		else if (button_type == 'delete.close')
+		{ 
+			if (confirm('{{{ $controller->LL('notice.sure') }}}'))
+			{
+				$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getKey()])}}");
+			}
+			else
+			{
+				return;
+			}
+		}
         
 		@section('beforeAjax')
  
@@ -44,13 +55,12 @@
             cache: false,
 			processData: false,
 			contentType: false,
- 
 		})
 		.done(function(data, textStatus, jqXHR) {
 			
 		@section('ajaxDone')
 				
-			if (button_type=='save.close')
+			if (button_type == 'save.close' || button_type == 'delete.close')
 			{
 				var divId = $el.closest('div.tab-pane').attr('id');
 

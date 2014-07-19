@@ -381,11 +381,11 @@ class Acl
         {
             try
             {
-                $opr = \Telenok\Security\SubjectPermissionResource::where('acl_permission_object_sequence', $permission->getKey())
+                \Telenok\Security\SubjectPermissionResource::where('acl_permission_object_sequence', $permission->getKey())
                         ->where('acl_subject_object_sequence', $this->subject->getKey())
                         ->where('acl_resource_object_sequence', $resource->getKey())
                         ->firstOrFail();
-            }
+           }
             catch (\Exception $e)
             {
                 if ($this->subject instanceof \Telenok\Core\Model\Object\Sequence)
@@ -406,30 +406,30 @@ class Acl
                     $typeResource = $resource->type();
                 }
 				
-                $opr = (new \Telenok\Security\SubjectPermissionResource())->storeOrUpdate([
+                $spr = (new \Telenok\Security\SubjectPermissionResource())->storeOrUpdate([
                     'title' => '[' . $permission->translate('title') . '] [' . $typeResource->translate('title') . ': ' . $resource->translate('title') . '] by [' . $typeSubject->translate('title') . ': '. $this->subject->translate('title') . '] ',
                     'code' => $permission->code . '__' . $typeResource->code . '_' . $resource->getKey() . '__by_' . $typeSubject->code . '_' . $this->subject->getKey(),
                     'active' => 1,
                 ]);
 
-                $permission->aclPermission()->save($opr);
+                $permission->aclPermission()->save($spr);
                 
                 if ($resource instanceof \Telenok\Core\Model\Object\Sequence)
                 {
-                    $resource->aclResource()->save($opr);
+                    $resource->aclResource()->save($spr);
                 }
                 else
                 {
-                    $resource->sequence->aclResource()->save($opr);
+                    $resource->sequence->aclResource()->save($spr);
                 }
                 
                 if ($this->subject instanceof \Telenok\Core\Model\Object\Sequence)
                 {
-                    $this->subject->aclSubject()->save($opr);
+                    $this->subject->aclSubject()->save($spr);
                 }
                 else
                 {
-                    $this->subject->sequence->aclSubject()->save($opr);
+                    $this->subject->sequence->aclSubject()->save($spr);
                 }
             }
         });
@@ -521,7 +521,7 @@ class Acl
             throw new \Exception('Can\'t find group');
 		}
 
-        $this->subject->group()->save($group);
+		$this->subject->group()->save($group);
 
         return $this;
     }
@@ -726,16 +726,8 @@ class Acl
 				$item->filterCan($query, $queryWhere, $resource, $permission, $this->subject);
 			});
 		});
-
-		//\Config::set('querylog', 1);
-		
-		//$q = $query->take(1)->count();
-		
-		//dd('ssssssssssss: ' . $q);
-		
 		
 		return $query->take(1)->count() ? true : false;
-		  
     }
 
     /* 
@@ -788,7 +780,7 @@ class Acl
 
 		$now = \Carbon\Carbon::now();
 		
-        $opr = $this->subject->with(
+        $spr = $this->subject->with(
 		[
             'group' => function($query) use ($now) 
 			{ 
@@ -806,7 +798,7 @@ class Acl
         ])
         ->whereId($this->subject->getKey())->get();
         
-        foreach($opr as $user)
+        foreach($spr as $user)
         { 
             foreach($user->group as $group)
             { 

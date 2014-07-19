@@ -19,9 +19,25 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			{
 				static::eraseStatic(\App::build($type->class_model));
 			}
+			
+			$model->createFieldResource($type);
 		});
 	}
-	
+
+	public function createFieldResource($type)
+	{
+		$code = 'object_field.' . $type->code . '.' . $this->code;
+		
+		if (!\Telenok\Security\Resource::where('code', $code)->count())
+		{
+			(new \Telenok\Security\Resource())->storeOrUpdate([
+				'title' => 'Object ' . $type->code . '. Field ' . $this->code,
+				'code' => $code,
+				'active' => 1
+			]);
+		}
+	}
+
 	public function getFillable()
 	{ 
 		$class = get_class($this);

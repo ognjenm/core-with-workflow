@@ -66,7 +66,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
             if (!\Auth::can('read', "object_type.{$type->code}"))
             {
-                throw new \LogicException('Access denied.');
+                throw new \LogicException($this->LL('error.access'));
             } 
 
 			if ($type->classController())
@@ -115,9 +115,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 	{
 		$fields = [];
 
-		$type->field()->withPermission()->get()->each(function($item) use (&$fields)
+		$type->field()->get()->each(function($item) use (&$fields, $type)
 		{
-			if ($item->allow_search)
+			if ($item->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code))
 			{
 				$fields[] = $item;
 			}
@@ -137,9 +137,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			$input = \Illuminate\Support\Collection::make($input);
 		}
 
-		$type->field()->withPermission()->get()->each(function($field) use ($input, $query, $fieldConfig, $model)
+		$type->field()->get()->each(function($field) use ($input, $query, $fieldConfig, $model, $type)
 		{
-			if ($field->allow_search)
+			if ($field->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $field->code))
 			{
 				if ($input->has($field->code))
 				{
@@ -178,7 +178,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
             if (!\Auth::can('read', "object_type.{$type->code}"))
             {
-                throw new \LogicException('Access denied.');
+                throw new \LogicException($this->LL('error.access'));
             } 
 
 			if ($type->classController())
@@ -238,7 +238,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
 
-                    ' . ( \Auth::can('delete', $item) ? '
+                    ' . ( \Auth::can('delete', 'object_type.' . $type->code) || \Auth::can('delete', $item) ? '
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
                         onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');return false;">
@@ -251,11 +251,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {   
         $model = $this->modelByType($id);
         $type = $this->getType($id);
-        $fields = $type->field()->withPermission()->get();
+        $fields = $model->getFieldForm();
 
         if (!\Auth::can('create', "object_type.{$type->code}"))
         {
-            throw new \LogicException('Access denied.');
+            throw new \LogicException($this->LL('error.access'));
         } 
 
         if ($type->classController())
@@ -276,7 +276,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 'type' => $params['type'], 
                 'fields' => $params['fields'], 
                 'uniqueId' => uniqid(), 
-				'routerParam' => $this->getRouterParam('create', $type, $model),
+				'routerParam' => $this->getRouterParam('create', $params['type'], $params['model']),
+				'canCreate' => \Auth::can('create', "object_type.{$params['type']->code}"),
             ), $this->getAdditionalViewParam()))->render()
         ];
     }
@@ -285,11 +286,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     { 
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
-        $fields = $type->field()->withPermission('read')->get();
+        $fields = $model->getFieldForm();
 
-        if (!\Auth::can('read', "object_type.{$type->code}"))
+        if (!\Auth::can('read', $id))
         {
-            throw new \LogicException('Access denied.');
+            throw new \LogicException($this->LL('error.access'));
         }
 
         if ($type->classController())
@@ -310,7 +311,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 'type' => $params['type'], 
                 'fields' => $params['fields'], 
                 'uniqueId' => uniqid(), 
-				'routerParam' => $this->getRouterParam('edit', $type, $model),
+				'routerParam' => $this->getRouterParam('edit', $params['type'], $params['model']),
+				'canUpdate' => \Auth::can('update', $params['model']),
+				'canDelete' => \Auth::can('delete', $params['model']),
             ), $this->getAdditionalViewParam()))->render()
         ];
     }
@@ -320,9 +323,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
 
-        if (!\Auth::can('delete', "object_type.{$type->code}"))
+        if (!\Auth::can('delete', $id))
         {
-            throw new \LogicException('Access denied.');
+            throw new \LogicException($this->LL('error.access'));
         }
 
         try
@@ -344,7 +347,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
         catch (\Exception $e)
         {
-            return ['error' => 1];
+            throw new \LogicException($this->LL('error.access'));
         }
     }
 
@@ -361,15 +364,20 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         
         $model = $this->modelByType($id);
         $type = $this->getType($id);
-        $fields = $type->field()->get();
+        $fields = $model->getFieldForm();
 
         if (!\Auth::can('read', "object_type.{$type->code}"))
         {
-            throw new \LogicException('Access denied.');
+            throw new \LogicException($this->LL('error.access'));
         }
 
         foreach ($ids as $id_)
         {
+			if (!\Auth::can('read', $id_))
+			{
+				continue;
+			}
+			
             if ($type->classController())
             {
                 $content[] = with(new \Illuminate\Support\Collection($this->typeForm($type)->edit($id_)))->get('tabContent');
@@ -411,7 +419,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         if (!\Auth::can('delete', "object_type.{$type->code}"))
         {
-            throw new \LogicException('Access denied.');
+            throw new \LogicException($this->LL('error.access'));
         }
 
         $error = false;
@@ -424,7 +432,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 				foreach ($ids as $id_)
 				{
-					$model::findOrFail($id_)->delete();
+			        if (!\Auth::can('delete', $id_))
+					{
+						$model::findOrFail($id_)->delete();
+					}
 				}
 			}
 			catch (\Exception $e)
@@ -452,23 +463,31 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				$input = \Input::all();
 			}
 
-            $type = $this->getType($id);
 			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+
+			$type = $this->getType($id);
 
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->store($id, $input);
 			}
-			
-            $fields = $type->field()->get();
-			
-			$model = $this->save($input, $type); 
+
+			if (\Auth::can('create', 'object_type.' . $type->code))
+			{
+				$model = $this->save($input, $type); 
+			}
+			else
+			{
+				throw new \Exception('Access denied for creating model with type "object_type.' . $type->code . '"');
+			}
         } 
         catch (\Exception $e) 
         {   
 			throw $e;
         } 
         
+		$fields = $model->getFieldForm();
+		
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
         \Event::fire('form.edit.object', [$params]);
@@ -484,6 +503,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     'success' => true,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('store', $type, $model),
+					'canUpdate' => \Auth::can('update', $params['model']),
+					'canDelete' => \Auth::can('delete', $params['model']),
                ), $this->getAdditionalViewParam()))->render();
 
         return $return;

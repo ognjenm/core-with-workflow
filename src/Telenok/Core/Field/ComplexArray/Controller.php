@@ -48,12 +48,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			$value_ = $value;
 		}
-		/*
-		if ($model->{$key} instanceof \Illuminate\Support\Collection && is_array($value_))
-		{
-			$value_ = array_replace_recursive($model->{$key}->toArray(), $value_);
-		}
-		*/
+
         $model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));
     }
 
@@ -65,7 +60,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);
-
+	 
         return parent::preProcess($model, $type, $input);
     }  
 

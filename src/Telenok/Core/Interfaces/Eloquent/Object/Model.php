@@ -463,17 +463,21 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function getFieldList()
 	{
-		return $this->type()->field()->withPermission()->get()->filter(function($item)
+		$type = $this->type();
+		
+		return $type->field()->get()->filter(function($item) use ($type)
 				{
-					return $item->show_in_list == 1;
+					return $item->show_in_list == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
 				});
 	}
 
 	public function getFieldForm()
 	{
-		return $this->type()->field()->withPermission()->get()->filter(function($item)
+		$type = $this->type();
+		
+		return $type->field()->get()->filter(function($item) use ($type)
 				{
-					return $item->show_in_form == 1;
+					return $item->show_in_form == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
 				});
 	}
 

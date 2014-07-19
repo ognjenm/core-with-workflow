@@ -237,8 +237,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
 		$input->put('morph_one_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_one_to_many_has'))->orWhere('id', $input->get('morph_one_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
-		$input->put('allow_sort', 0);
-
+		$input->put('allow_sort', 0); 
+		
         return parent::preProcess($model, $type, $input);
     } 
 
@@ -297,16 +297,10 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				foreach($relatedTypeOfModelField->title_list->toArray() as $language => $val)
 				{
 					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
-				}
-
-				if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', \Telenok\Object\Tab::find($input->get('field_object_tab'))->code)->first()))
-				{
-					if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', 'main')->first()))
-					{
-						throw new \Exception($this->LL('error.tab.field.key'));
-					}
-				}
-
+				} 
+		
+				$tabTo = $this->getFieldTabBelongTo($typeBelongTo->getKey(), $input->get('field_object_tab')); 
+  
 				$toSave = [
 					'title' => $title,
 					'title_list' => $title_list,

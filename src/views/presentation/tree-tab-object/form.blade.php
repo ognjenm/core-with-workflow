@@ -5,6 +5,7 @@
 
 					@foreach($type->tab()->get() as $tab) 
 
+					@if ($tab->field()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->count())
 					<li>
 						<a data-toggle="tab" href="#{{{$uniqueId}}}_{{{$tab->code}}}">
 							@if ($tab->icon_class)
@@ -13,7 +14,8 @@
 							{{{$tab->translate('title')}}}
 						</a>
 					</li>
-
+					@endif
+					
 					@endforeach
 				</ul>
 
@@ -31,7 +33,7 @@
 
 					<div id="{{{$uniqueId}}}_{{{$tab->code}}}" class="tab-pane in">
 						
-						@foreach($tab->field()->get()->filter(function($item) use ($fields) { return $item->show_in_form == 1 && $fields->filter(function($i) use ($item) { return $i->getKey() == $item->getKey(); })->count(); })->sortBy('field_order') as $field) 
+						@foreach($tab->field()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->sortBy('field_order') as $field) 
 
 							@include($controller->getPresentationFormFieldListView())
 							

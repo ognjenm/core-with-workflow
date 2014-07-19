@@ -239,7 +239,13 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		$input->put('allow_choose', 1);
 		$input->put('allow_update', 1);
 		$input->put('field_order', 5);
+		 
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
 
+		$input->put('field_object_tab', $tab->getKey()); 
+		
+		$tabTo = $this->getFieldTabBelongTo($sequenceTypeId, $input->get('field_object_tab')); 
+		
 		$toSave = [
 			'title' => array_get($translationSeed, 'model.children'),
 			'title_list' => array_get($translationSeed, 'model.children'),
@@ -258,8 +264,9 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			'allow_choose' => $input->get('allow_choose'),
 			'allow_update' => $input->get('allow_update'),
 			'field_order' => $input->get('field_order'),
-		];
-
+			'field_object_tab' => $tabTo->getKey(),
+		];  
+ 
 		$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
 
 		if ($input->get('create_belong') !== false && $validator->passes()) 

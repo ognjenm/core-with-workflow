@@ -13,10 +13,10 @@ class SeedLast extends Migration {
 		{
 			$item->model()->get()->each(function($i) use ($now)
 			{
-				$i->storeOrUpdate(['updated_at' => $now]);
+				$i->storeOrUpdate(['created_at' => $now, 'updated_at' => $now]);
 			});
 		});
-
+		
 		(new \Telenok\Core\Model\System\Language())->storeOrUpdate(['title' => 'German', 'locale' => 'de', 'active' => 1]);
 		(new \Telenok\Core\Model\System\Language())->storeOrUpdate(['title' => 'French', 'locale' => 'fr', 'active' => 1]);
 		(new \Telenok\Core\Model\System\Language())->storeOrUpdate(['title' => 'Dutch', 'locale' => 'nl', 'active' => 1]);
@@ -803,5 +803,4 @@ class SeedLast extends Migration {
 			'code' => 'app.backend.brand',
 		]);
 	}
-
 }

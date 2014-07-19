@@ -95,7 +95,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
         return true;
     }
-
+	
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

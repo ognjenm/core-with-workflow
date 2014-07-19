@@ -74,8 +74,9 @@ return [
     'error.field.create' => 'Cant create field ":key" in table ":table"',
     'error.file.update' => 'Error update file :file',
     'error.widget.link.nonexistent' => 'Original linked widget nonexistent or deleted',
-	'error.tab.field.key' => 'Please, set "Id" or "Code" for tab of field in "field_object_tab" key',
+	'error.tab.field.key' => 'Please, choose tab. Set "Id" or "Code" for tab of field in "field_object_tab" key',
 	'error.file.upload.require' => 'Please, upload required file in field ":attribute"',
+	'error.access' => 'Sorry, access denied',
 	
     'error' => [
         'undefined' => 'Sorry, an error occurred',

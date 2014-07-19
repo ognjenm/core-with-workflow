@@ -74,8 +74,9 @@ return [
     'error.field.create' => 'Поле ":key" в таблице ":table" не создано',
     'error.file.update' => 'Ошибка обновления файла :file',
     'error.widget.link.nonexistent' => 'Оригинальный связанный виджет не создан или удален',
-	'error.tab.field.key' => 'Пожалуйста, укажите "Id" или "Code" для расположения во вкладке в поле "field_object_tab"',
+	'error.tab.field.key' => 'Пожалуйста, выберите вкладку. Укажите "Id" или "Code" в поле "field_object_tab" для расположения элемента во вкладке',
 	'error.file.upload.require' => 'Пожалуйста, загрузите обязательный файл в поле ":attribute"',
+	'error.access' => 'Извините, в доступе отказано',
 
     'error' => array(
         'undefined' => 'Извините, произошла ошибка',

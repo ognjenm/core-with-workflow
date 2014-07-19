@@ -280,13 +280,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
 				}
 
-				if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', \Telenok\Object\Tab::find($input->get('field_object_tab'))->code)->first()))
-				{
-					if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', 'main')->first()))
-					{
-						throw new \Exception($this->LL('error.tab.field.key'));
-					}
-				}
+				$tabTo = $this->getFieldTabBelongTo($typeBelongTo->getKey(), $input->get('field_object_tab')); 
 
 				$toSave = [
 					'title' => $title,

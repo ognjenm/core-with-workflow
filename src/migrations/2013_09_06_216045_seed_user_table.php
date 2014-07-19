@@ -365,6 +365,11 @@ class SeedUserTable extends Migration {
 				$table->timestamps();
 				$table->integer('group')->unsigned()->default(0);
 				$table->integer('group_user')->unsigned()->default(0);
+				
+				$table->unique(['group', 'group_user'], 'uniq_key');
+				
+				$table->foreign('group')->references('id')->on('group')->onDelete('cascade');
+				$table->foreign('group_user')->references('id')->on('user')->onDelete('cascade');
 			});
 		}
 	}

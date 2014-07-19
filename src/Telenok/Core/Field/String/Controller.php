@@ -116,7 +116,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {  
         return \Str::limit($item->translate((string)$field->code), $field->string_list_size ?: 30);
     } 
-	
+
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

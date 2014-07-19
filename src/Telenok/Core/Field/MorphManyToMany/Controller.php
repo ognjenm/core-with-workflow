@@ -219,8 +219,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
 		$input->put('morph_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
-		$input->put('allow_sort', 0);
-
+		$input->put('allow_sort', 0); 
+		
         return parent::preProcess($model, $type, $input);
     } 
 	
@@ -280,6 +280,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                     $table->string($morphManyCode . '_type')->nullable();
 
                     $table->unique(['morph_id', $morphManyCode . '_linked_id', $morphManyCode . '_type'], 'uniq_key');
+
+					$table->foreign($morphManyCode . '_linked_id')->references('id')->on('object_sequence')->onDelete('cascade');
                 });
             }
 
@@ -297,15 +299,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
 				}
-
-				if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', \Telenok\Object\Tab::find($input->get('field_object_tab'))->code)->first()))
-				{
-					if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', 'main')->first()))
-					{
-						throw new \Exception($this->LL('error.tab.field.key'));
-					}
-				}
-
+  
+				$tabTo = $this->getFieldTabBelongTo($typeBelongTo->getKey(), $input->get('field_object_tab'));
+  
 				$toSave = [
 					'title' => $title,
 					'title_list' => $title_list,

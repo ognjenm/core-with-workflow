@@ -199,7 +199,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$input->put('relation_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('relation_many_to_many_has'))->orWhere('id', $input->get('relation_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);
-
+		
         return parent::preProcess($model, $type, $input);
     } 
  
@@ -262,13 +262,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
 				}
 
-				if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', \Telenok\Object\Tab::find($input->get('field_object_tab'))->code)->first()))
-				{
-					if (!($tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeBelongTo->getKey())->where('code', 'main')->first()))
-					{
-						throw new \Exception($this->LL('error.tab.field.key'));
-					}
-				}
+				$tabTo = $this->getFieldTabBelongTo($typeBelongTo->getKey(), $input->get('field_object_tab')); 
 
 				$toSave = [
 					'title' => $title,
@@ -310,7 +304,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
             if (!\Schema::hasTable($pivotTable)) 
 			{
-                \Schema::create($pivotTable, function(Blueprint $table) use ($codeFieldHasMany, $pivotTable, $pivotField)
+                \Schema::create($pivotTable, function(Blueprint $table) use ($codeFieldHasMany, $pivotTable, $pivotField, $tableHasMany, $tableBelongTo)
                 {
                     $table->increments('id');
                     $table->timestamps();
@@ -318,6 +312,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                     $table->integer($pivotField)->unsigned()->nullable();
 
                     $table->unique([$pivotField, $codeFieldHasMany], 'uniq_key');
+					
+					$table->foreign($codeFieldHasMany)->references('id')->on($tableBelongTo)->onDelete('cascade');
+					$table->foreign($pivotField)->references('id')->on($tableHasMany)->onDelete('cascade');
                 });
             }
 

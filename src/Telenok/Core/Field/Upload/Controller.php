@@ -210,8 +210,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     public function preProcess($model, $type, $input)
     {
 		$input->put('multilanguage', 0);
-		$input->put('allow_sort', 0);
-
+		$input->put('allow_sort', 0); 
+		
         return parent::preProcess($model, $type, $input);
     } 
  

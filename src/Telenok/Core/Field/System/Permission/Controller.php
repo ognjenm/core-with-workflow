@@ -8,7 +8,6 @@ use Illuminate\Database\Migrations\Migration;
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	protected $key = 'permission';
-    protected $specialField = array('relation_many_to_many_has', 'relation_many_to_many_belong_to');
     protected $allowMultilanguage = false;
 	
 	public function getTitleList($id = null)
@@ -69,11 +68,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	public function preProcess($model, $type, $input)
 	{ 
-		if (!$input->has('field_object_tab'))
+		if (!$input->get('field_object_tab'))
 		{
 			$input->put('field_object_tab', 'additionally');
 		}
-
+		
 		$input->put('title', ['en' => 'Permission']);
 		$input->put('title_list', ['en' => 'Permission']);
 		$input->put('code', 'permission');
@@ -86,7 +85,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$input->put('allow_create', 1);
 		$input->put('allow_update', 1); 
 		$input->put('field_order', $input->get('field_order', 3)); 
-
+		
 		return parent::preProcess($model, $type, $input);
 	}
 
