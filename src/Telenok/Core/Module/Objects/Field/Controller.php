@@ -20,9 +20,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function getListItem($model)
     {
-        $query = $model::select($model->getTable().'.*')->where(function($query) use ($model)
+        $query = $model::where(function($query) use ($model)
         {
-            if ($treePid = \Input::get('treePid', 0))
+            if (!\Input::get('filter_want_search', false) && ($treePid = \Input::get('treePid', 0)))
             { 
                 $query->where($model->getTable().'.field_object_type', $treePid);
             }

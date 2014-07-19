@@ -95,6 +95,6 @@
             
             jQuery('#telenok-{{$controller->getPresentation()}}-presentation-grid-{{$gridId}}')
                 .dataTable()
-                .fnReloadAjax('{{ $controller->getRouterList(['treePid' => $type->getKey()]) }}?' + (erase ? '' : jQuery.param(jQuery(dom_obj).closest('form').serializeArray())));
+                .fnReloadAjax('{{ $controller->getRouterList(['treePid' => $type->getKey()]) }}&' + (erase ? '' : jQuery.param(jQuery(dom_obj).closest('form').serializeArray())));
         }
     </script>

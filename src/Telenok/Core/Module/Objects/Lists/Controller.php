@@ -115,9 +115,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 	{
 		$fields = [];
 
-		$type->field()->get()->each(function($item) use (&$fields, $type)
+		$model->getFieldForm()->each(function($item) use (&$fields)
 		{
-			if ($item->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code))
+			if ($item->allow_search)
 			{
 				$fields[] = $item;
 			}
@@ -128,8 +128,6 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 	public function getFilterSubQuery($input, $model, $query)
 	{
-		$type = \Telenok\Object\Type::where('code', $model->getTable())->firstOrFail();
-
 		$fieldConfig = \App::make('telenok.config')->getObjectFieldController();
 
 		if (!$input instanceof \Illuminate\Support\Collection)
@@ -137,9 +135,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			$input = \Illuminate\Support\Collection::make($input);
 		}
 
-		$type->field()->get()->each(function($field) use ($input, $query, $fieldConfig, $model, $type)
+		$model->getFieldForm()->each(function($field) use ($input, $query, $fieldConfig, $model)
 		{
-			if ($field->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $field->code))
+			if ($field->allow_search)
 			{
 				if ($input->has($field->code))
 				{
@@ -395,6 +393,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     'fields' => $params['fields'], 
 					'routerParam' => $this->getRouterParam('edit', $type, $model),
                     'uniqueId' => uniqid(), 
+					'canUpdate' => \Auth::can('update', $params['model']),
+					'canDelete' => \Auth::can('delete', $params['model']),
                 ), $this->getAdditionalViewParam()))->render();
             }
         }
@@ -527,16 +527,23 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				return $this->typeForm($type)->update($id, $input);
 			}
 
-			$fields = $type->field()->get();
-
-			$model = $this->save($input, $type); 
+			if (\Auth::can('update', $id))
+			{
+				$model = $this->save($input, $type); 
+			}
+			else
+			{
+				throw new \Exception('Access denied for creating model with type "object_type.' . $type->code . '"');
+			} 
         }
         catch (\Exception $e) 
         {   
 			throw $e;
         } 
         
-        $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
+		$fields = $model->getFieldForm();
+
+		$params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
         \Event::fire('form.edit.object', [$params]);
         
@@ -551,6 +558,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     'success' => true,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('update', $type, $model),
+					'canUpdate' => \Auth::can('update', $params['model']),
+					'canDelete' => \Auth::can('delete', $params['model']),
                 ), $this->getAdditionalViewParam()))->render();
 
         return $return;

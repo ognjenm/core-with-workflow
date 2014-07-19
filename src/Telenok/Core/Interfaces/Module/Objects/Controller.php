@@ -122,12 +122,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getModelFieldFilter()
     {
-        $type = $this->getTypeList();
+		$model = $this->getModelList();
         $fields = [];
 
-        $type->field()->get()->each(function($field) use (&$fields, $type)
+        $model->getFieldForm()->each(function($field) use (&$fields)
 		{
-			if ($field->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $field->code))
+			if ($field->allow_search)
             {
                 $fields[] = $field;
             }
@@ -138,8 +138,6 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getFilterSubQuery($input, $model, $query)
     {
-        $type = \Telenok\Object\Type::where('code', $model->getTable())->firstOrFail();
-
         $fieldConfig = \App::make('telenok.config')->getObjectFieldController();
 
 		if (!$input instanceof \Illuminate\Support\Collection)
@@ -147,9 +145,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 			$input = \Illuminate\Support\Collection::make($input);
 		}
 
-        $type->field()->get()->each(function($field) use ($input, $query, $fieldConfig, $model, $type)
+        $model->getFieldForm()->each(function($field) use ($input, $query, $fieldConfig, $model)
         {
-			if ($field->allow_search && \Auth::can('read', 'object_field.' . $type->code . '.' . $field->code))
+			if ($field->allow_search)
 			{
 				if ($input->has($field->code))
 				{
@@ -247,6 +245,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'fields' => $params['fields'], 
                 'uniqueId' => uniqid(), 
 				'routerParam' => $this->getRouterParam('create', $type, $model),
+				'canCreate' => \Auth::can('create', $params['model']), 
             ], $this->getAdditionalViewParam()))->render()
         ];
     }
@@ -271,6 +270,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 				'fields' => $params['fields'], 
 				'uniqueId' => uniqid(), 
 				'routerParam' => $this->getRouterParam('edit', $type, $model),
+				'canUpdate' => \Auth::can('update', $params['model']),
+				'canDelete' => \Auth::can('delete', $params['model']),
             ), $this->getAdditionalViewParam()))->render()
         ];
     }
@@ -312,6 +313,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                     'success' => true,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('store', $type, $model),
+					'canUpdate' => \Auth::can('update', $params['model']),
+					'canDelete' => \Auth::can('delete', $params['model']),
                 ), $this->getAdditionalViewParam()))->render();
 
         return $return;
@@ -354,6 +357,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                     'success' => TRUE,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('update', $type, $model),
+					'canUpdate' => \Auth::can('update', $params['model']),
+					'canDelete' => \Auth::can('delete', $params['model']),
                 ), $this->getAdditionalViewParam()))->render();
 
         return $return;
@@ -406,6 +411,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'fields' => $params['fields'], 
 				'routerParam' => $this->getRouterParam('edit', $type, $model),
                 'uniqueId' => uniqid(), 
+				'canUpdate' => \Auth::can('update', $params['model']),
+				'canDelete' => \Auth::can('delete', $params['model']),
             ), $this->getAdditionalViewParam()))->render();
         }
 

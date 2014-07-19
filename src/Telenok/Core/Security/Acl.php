@@ -445,7 +445,7 @@ class Acl
      * \Telenok\Core\Security\Acl::user($admin)->unsetPermission(\Telenok\Security\Permission $permission, \News $resource)
      * 
      */
-    public function unsetPermission($permissionCode = null, $subjectId = null)
+    public function unsetPermission($permissionCode = null, $resourceCode = null)
     {
         if (!$this->subject) 
         {
@@ -453,9 +453,9 @@ class Acl
         }
         
         $permission = null;
-        $subject = null;
+        $resource = null;
 
-        $resource = $this->subject;
+        $subject = $this->subject;
 
         if ($permissionCode instanceof \Telenok\Core\Model\Security\Permission)
         {
@@ -466,28 +466,33 @@ class Acl
             $permission = \Telenok\Security\Permission::where('code', $permissionCode)->orWhere('id', $permissionCode)->first();
         }
 
-        if ($subjectId instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model)
+        if ($resourceCode instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model)
         {
-            $subject = $subjectId;
+            $resource = $resourceCode;
         }
-        else if (is_scalar($subjectId))
+        else if (is_numeric($resourceCode))
         {
-            $subject = \Telenok\Security\Resource::where('code', $subjectId)->orWhere('id', $subjectId)->first();
+			$resource = \Telenok\Core\Model\Object\Sequence::find($resourceCode); 
         }
+		else if (is_string($resourceCode))
+		{
+            $resource = \Telenok\Security\Resource::where('code', $resourceCode)->orWhere('id', $resourceCode)->first();
+		}
         
-        $query = \Telenok\Security\SubjectPermissionResource::where('acl_resource_object_sequence', $resource->getKey()); 
+        $query = \Telenok\Security\SubjectPermissionResource::where('acl_subject_object_sequence', $subject->getKey()); 
 
         if ($permission)
         {
             $query->where('acl_permission_object_sequence', $permission->getKey()); 
         }
 
-        if ($subject)
+        if ($resource)
         {
-            $query->where('acl_subject_object_sequence', $subject->getKey());
+            $query->where('acl_resource_object_sequence', $resource->getKey());
         }
 
 		$query->forceDelete();
+		
 		
         return $this;
     }

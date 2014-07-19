@@ -129,6 +129,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
                 'controller' => $this,
                 'model' => $model,
                 'field' => $field,
+                'permissionCreate' => \Auth::can('create', 'object_field.' . $model->getTable() . '.' . $field->code),
+                'permissionUpdate' => \Auth::can('update', 'object_field.' . $model->getTable() . '.' . $field->code),
                 'displayLength' => $this->displayLength,
                 'uniqueId' => $uniqueId,
             ))->render();
