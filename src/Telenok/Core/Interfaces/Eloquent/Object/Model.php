@@ -190,25 +190,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			throw new \Exception('Cant storeOrUpdate sequence model directly');
 		} 
-
-		foreach($this->fillable as $fillable)
-		{ 
-			if (isset($input[$fillable]))
-			{
-				$this->__set($fillable, $input[$fillable]);
-			}
-			else if (!$this->exists)
-			{
-				$this->__set($fillable, null);
-				$input[$fillable] = null;
-			}
-			else
-			{
-				$input[$fillable] = $this->$fillable;
-			} 
-		} 
-		
-		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
  
 		try
 		{
@@ -219,30 +200,51 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			throw new \Exception("Telenok\Core\Interfaces\Eloquent\Object\Model::storeOrUpdate() - Error: 'type of object not found, please, define it'");
 		}
 
-		$model = null;
+		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
+		
+		try
+		{
+			if (!$this->exists)
+			{
+				$model = $this->findOrFail($input->get($this->getKeyName()));
+			}
+			else
+			{
+				$model = $this;
+			}
+		} 
+		catch (\Exception $ex) 
+		{
+			$model = new static();
+		}
+
+		foreach($model->fillable as $fillable)
+		{ 
+			if ($input->has($fillable))
+			{
+				$model->__set($fillable, $input->get($fillable));
+			}
+			else if (!$model->exists)
+			{
+				$this->__set($fillable, null);
+				$input->put($fillable, null);
+			}
+			else
+			{
+				$input->put($fillable, $model->$fillable);
+			} 
+		} 
 		
 		try
 		{
 			$this->validateStoreOrUpdatePermission($type, $input);
 
-			\DB::transaction(function() use ($type, $input, &$model)
+			\DB::transaction(function() use ($type, $input, $model)
 			{  
-				$exists = $this->exists;
 				$classControllerObject = null;
 
-				if ($this->exists || !$input->get($this->getKeyName()))
-				{
-					$model = $this;
-
-					$exists = $this->exists;
-				} 
-				else
-				{
-					$model = $this->findOrFail($input->get($this->getKeyName()));
-
-					$exists = true;
-				}
-
+				$exists = $model->exists;
+				
 				if (!$exists && !\Auth::can('create', "object_type.{$type->code}"))
 				{
 					throw new \LogicException('Cant create. Access denied.');

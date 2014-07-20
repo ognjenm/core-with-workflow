@@ -28,7 +28,11 @@
             <i class="{{{ $field->icon_class }}}"></i>
         </span>
         @endif
-
+        
+		@if ($disabled)
+        {{ Form::hidden("{$field->code}", $value) }}
+        @endif
+		
         {{ Form::text($disabled ? uniqid() : "{$field->code}", $value, $domAttr) }}
 
 		@if ($field->translate('description'))

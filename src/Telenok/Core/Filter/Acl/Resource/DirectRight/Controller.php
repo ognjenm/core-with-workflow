@@ -96,7 +96,7 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$role = new \Telenok\Security\Role();
 			$group = new \Telenok\User\Group();
  
-			$queryCommon->leftJoin($spr->getTable() . ' as spr_permission_user_filter_direct_right', function($join) use ($spr, $sequence, $permission, $now)
+			$queryCommon->leftJoin($spr->getTable() . ' as spr_permission_user_filter_direct_right', function($join) use ($spr, $permission, $now)
 			{
 				$join->on('osequence.id', '=', 'spr_permission_user_filter_direct_right.acl_resource_object_sequence');
 				$join->where('spr_permission_user_filter_direct_right.acl_permission_object_sequence', '=', $permission->getKey());

@@ -668,15 +668,15 @@ class Acl
 
         if ($resourceCode instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model)
         {
-			$resource = \Telenok\Object\Sequence::where('id', $resourceCode->getKey())->active()->first(); 
+			$resource = $resourceCode; 
         }
         else if (is_numeric($resourceCode))
         {
-			$resource = \Telenok\Object\Sequence::where('id', $resourceCode)->active()->first(); 
+			$resource = \Telenok\Object\Sequence::where('id', $resourceCode)->first(); 
         }
         else if (is_string($resourceCode))
 		{
-			$resource = \Telenok\Security\Resource::where('code', $resourceCode)->active()->first(); 
+			$resource = \Telenok\Security\Resource::where('code', $resourceCode)->first(); 
 		}
 		
 		if (!$resource)
@@ -703,7 +703,7 @@ class Acl
 		$sequence = new \Telenok\Object\Sequence();
 		$now = \Carbon\Carbon::now();
 
-		$query = $sequence::select($sequence->getTable() . '.id')->active()->where($sequence->getTable() . '.id', $resource->getKey());
+		$query = $sequence::select($sequence->getTable() . '.id')->where($sequence->getTable() . '.id', $resource->getKey());
 
 		$query->join($type->getTable() . ' as otype', function($join) use ($type, $now, $sequence)
 		{

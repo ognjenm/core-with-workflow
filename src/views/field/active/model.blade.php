@@ -1,7 +1,8 @@
 <div class="form-group">
     {{ Form::hidden("{$field->code}", 0) }}
 	<?php
-	$domAttr = ['class' => 'ace ace-switch ace-switch-3'];
+	$switchDomAttr = ['class' => 'ace ace-switch ace-switch-3'];
+	$inputDomAttr = ['class' => 'form-control'];
 	$disabled = false;
 
 	if (!$model->exists)
@@ -13,9 +14,10 @@
 		$value = $model->{$field->code};
 	}
 
-	if ((!$model->exists && !$field->allow_create) || ($model->exists && !$field->allow_update))
+        if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
 	{
-		$domAttr['disabled'] = 'disabled';
+		$switchDomAttr['disabled'] = 'disabled';
+		$inputDomAttr['disabled'] = 'disabled';
 		$disabled = true;
 	}
 	?> 
@@ -24,7 +26,7 @@
         @if ($disabled)
         {{ Form::hidden("{$field->code}", $value) }}
         @endif
-        {{ Form::checkbox("{$field->code}", 1, $value, $domAttr) }}
+        {{ Form::checkbox("{$field->code}", 1, $value, $switchDomAttr) }}
         <span class="lbl"></span>
     </div> 
 </div>
@@ -36,7 +38,7 @@
 			<span class="input-group-addon">
 				<i class="fa fa-calendar bigger-110"></i>
 			</span>
-			<input type="text" name="start_at" value="{{{$model->start_at->setTimezone(\Config::get('app.timezone'))->format("d-m-Y H:i:s")}}}" class="form-control" /	>
+			{{ Form::text("start_at", $model->start_at->setTimezone(\Config::get('app.timezone'))->format("d-m-Y H:i:s"), $inputDomAttr ) }}
 		</div>
 	</div>
 </div>
@@ -48,7 +50,7 @@
 			<span class="input-group-addon">
 				<i class="fa fa-calendar bigger-110"></i>
 			</span>
-			<input type="text" name="end_at" value="{{{$model->end_at->setTimezone(\Config::get('app.timezone'))->format("d-m-Y H:i:s")}}}" class="form-control" />
+			{{ Form::text("end_at", $model->end_at->setTimezone(\Config::get('app.timezone'))->format("d-m-Y H:i:s"), $inputDomAttr ) }}
 		</div>
 	</div>
 </div>

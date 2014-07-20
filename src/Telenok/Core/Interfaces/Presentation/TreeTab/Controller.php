@@ -4,7 +4,7 @@ namespace Telenok\Core\Interfaces\Presentation\TreeTab;
 
 use \Telenok\Core\Interfaces\Exception\Validate as ValidateException;
 
-abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller implements \Telenok\Core\Interfaces\Eloquent\Controller {
+abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     protected $tabKey = '';
     protected $presentation = 'tree-tab';
