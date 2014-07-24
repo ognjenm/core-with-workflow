@@ -100,6 +100,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'field' => $field,
 					'uniqueId' => $uniqueId,
 					'permissions' => $permissions,
+					'permissionCreate' => \Auth::can('create', 'object_field.' . $model->getTable() . '.' . $field->code),
+					'permissionUpdate' => \Auth::can('update', 'object_field.' . $model->getTable() . '.' . $field->code),
 				))->render();
 	}
 

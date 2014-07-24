@@ -133,11 +133,17 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     }
 
     public function saveModelField($field, $model, $input)
-    {
-        $id = (int)$input->get($field->code, 0); 
-
+    { 
+		// if created field
+		if ($model instanceof \Telenok\Core\Model\Object\Field && !$input->get('id'))
+		{
+			return $model;
+		}
+		
         if ($field->relation_one_to_one_has)
         { 
+	        $id = (int)$input->get($field->code, 0); 
+
             $method = camel_case($field->code);
             
             $currentRelatedModel = $model->$method()->getResults();
@@ -149,15 +155,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 $currentRelatedModel->fill([ $field => 0 ])->save();
             }
 
-            if (intval($id))
-            {
-                try
-                {
-                    $relatedModel = \App::build(\Telenok\Object\Type::findOrFail($field->relation_one_to_one_has)->class_model);
-                    $model->$method()->save($relatedModel);
-                }
-                catch(\Exception $e) {}
-            }
+			try
+			{
+				$relatedModel = \App::build(\Telenok\Object\Type::findOrFail($field->relation_one_to_one_has)->class_model)->findOrFail($id);
+				$model->$method()->save($relatedModel);
+			}
+			catch(\Exception $e) {}
         }
 
         return $model;

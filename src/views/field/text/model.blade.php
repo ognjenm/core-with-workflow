@@ -1,4 +1,16 @@
- 
+<?php
+
+	$disabled = false;
+    
+    $domAttr = ['class' => $field->css_class?: 'form-control'];
+	
+	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
+    {
+        $domAttr['disabled'] = 'disabled';
+        $disabled = true; 
+    }
+
+?>
 
 @if ($field->multilanguage)
 
@@ -36,7 +48,7 @@
 			<div class="tab-content">
 				@foreach($languages as $language)
 				<div id="{{$uniqueId}}-language-{{$language->locale}}-{{{$field->code}}}" class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					{{ Form::textarea("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), ['class' => 'form-control'] ) }}
+					{{ Form::textarea("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) }}
 				</div>
 				@endforeach
 			</div> 
@@ -49,7 +61,7 @@
 <div class="form-group">
 	{{ Form::label("{$field->code}", $field->translate('title'), array('class'=>'control-label')) }}
 	<div class="controls">
-		{{ Form::textarea($field->code, $model->translate($field->code), ['class' => 'span'] ) }}
+		{{ Form::textarea($field->code, $model->translate($field->code), $domAttr) }}
 	</div>
 </div>
 @endif

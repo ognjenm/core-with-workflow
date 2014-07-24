@@ -47,7 +47,7 @@
 								}
 							},
 							"data": function(n) {
-								return {id: n.attr ? n.attr("id") : ''};
+								return {id: n.attr("id")};
 							}
 						}
 					},

@@ -744,7 +744,7 @@
 			allow_single_deselect: true
 		});
 		
-		$("#module-web-page-widget-list-language-list").chosen({disable_search_threshold: 10, width: "200px"});
+		jQuery("#module-web-page-widget-list-language-list").chosen({disable_search_threshold: 10, width: "200px"});
 
 		updateContainer();
 </script>

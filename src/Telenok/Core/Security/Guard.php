@@ -27,11 +27,11 @@ class Guard extends \Illuminate\Auth\Guard {
      * \Auth::can(\Telenok\Security\Permission $read, ['object_type.language.%'])
     */
     public function can($permissionCode = null, $resourceCode = null)
-    {
-		if (!\Config::get('app.acl.enabled'))
-		{
+    { 
+        if (!\Config::get('app.acl.enabled')) 
+        {
 			return true;
-		}
+        }
 		
         if ($this->check()) 
         {
@@ -47,8 +47,8 @@ class Guard extends \Illuminate\Auth\Guard {
         else 
         {
             return \Telenok\Core\Security\Acl::subject('user_unauthorized')->can($permissionCode, $resourceCode);
-        }
-
+        } 
+		
         return false;
     }
     

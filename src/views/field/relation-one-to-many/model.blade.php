@@ -7,12 +7,6 @@
 
 @if ($field->relation_one_to_many_has)
 
-<?php
-
-    $domAttr = ['disabled' => 'disabled'];
-
-?>
-
     <div class="widget-box transparent">
         <div class="widget-header widget-header-small">
 			<h4 class="row">
@@ -33,7 +27,7 @@
                             {{{$controller->LL('current')}}}
                         </a>
                     </li>
-                    @if ($field->allow_create || $field->allow_choose)
+                    @if ( (!$model->exists && $field->allow_create && $permissionCreate) || ($model->exists && $field->allow_choose && $permissionChoose))
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>

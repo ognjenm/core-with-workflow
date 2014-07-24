@@ -169,6 +169,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function saveModelField($field, $model, $input)
     { 
+		// if created field
+		if ($model instanceof \Telenok\Core\Model\Object\Field && !$input->get('id'))
+		{
+			return $model;
+		}
+
 		$id = $input->get("{$field->code}", 0);
 		
 		if ($field->morph_one_to_one_belong_to)

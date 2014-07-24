@@ -143,6 +143,8 @@ class SeedSubjectPermissionResourceTable extends Migration {
 				]
 		);
 
+		DB::table('object_field')->update(['start_at' => \DB::raw('NOW()'), 'end_at' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
+
 		(new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('acl.field.code'),

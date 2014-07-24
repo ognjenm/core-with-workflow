@@ -131,6 +131,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
                 'field' => $field,
                 'permissionCreate' => \Auth::can('create', 'object_field.' . $model->getTable() . '.' . $field->code),
                 'permissionUpdate' => \Auth::can('update', 'object_field.' . $model->getTable() . '.' . $field->code),
+                'permissionDelete' => \Auth::can('delete', 'object_field.' . $model->getTable() . '.' . $field->code),
+                'permissionChoose' => \Auth::can('choose', 'object_field.' . $model->getTable() . '.' . $field->code),
                 'displayLength' => $this->displayLength,
                 'uniqueId' => $uniqueId,
             ))->render();
@@ -274,7 +276,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     public function validate($input = null, $messages = [])
     {
-        $validator = $this->validator($this, $input, $this->LL('error'), [], $input);
+        $validator = $this->validator($this, $input, $this->LL('error'));
         
         if ($validator->fails()) 
         {

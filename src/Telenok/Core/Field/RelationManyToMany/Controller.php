@@ -164,7 +164,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function saveModelField($field, $model, $input)
     {
-        $idsAdd = array_unique((array)$input->get("{$field->code}_add", []));
+		// if created field
+		if ($model instanceof \Telenok\Core\Model\Object\Field && !$input->get('id'))
+		{
+			return $model;
+		}
+
+		$idsAdd = array_unique((array)$input->get("{$field->code}_add", []));
         $idsDelete = array_unique((array)$input->get("{$field->code}_delete", []));
          
         if ( (!empty($idsAdd) || !empty($idsDelete)))

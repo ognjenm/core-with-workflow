@@ -7,16 +7,27 @@ class SeedLast extends Migration {
 
 	public function up()
 	{ 
-		$now = (new \Telenok\Core\Model\Object\Sequence())->freshTimestamp()->now();
-
-		\Telenok\Core\Model\Object\Sequence::all()->each(function($item) use ($now)
+		\Telenok\Core\Model\Object\Sequence::all()->each(function($item)
 		{
-			$item->model()->get()->each(function($i) use ($now)
+			$item->model()->get()->each(function($i)
 			{
-				$i->storeOrUpdate(['created_at' => $now, 'updated_at' => $now]);
+				$i->storeOrUpdate([
+					'start_at' => null, 
+					'end_at' => null,
+					'created_at' => \DB::raw('NOW()'),
+					'updated_at' => \DB::raw('NOW()')
+				]);
 			});
 		});
 		
+		/*
+		\Telenok\Core\Model\Object\Sequence::all()->each(function($item)
+		{
+			\DB::table($item->model()->get)->update([
+
+				]);
+		});
+		*/
 		(new \Telenok\Core\Model\System\Language())->storeOrUpdate(['title' => 'German', 'locale' => 'de', 'active' => 1]);
 		(new \Telenok\Core\Model\System\Language())->storeOrUpdate(['title' => 'French', 'locale' => 'fr', 'active' => 1]);
 		(new \Telenok\Core\Model\System\Language())->storeOrUpdate(['title' => 'Dutch', 'locale' => 'nl', 'active' => 1]);
@@ -481,6 +492,12 @@ class SeedLast extends Migration {
 		(new \Telenok\Core\Model\Security\Permission())->storeOrUpdate([
 			'title' => ['en' => 'Update', 'ru' => 'Изменение'],
 			'code' => 'update',
+			'active' => 1,
+		]);
+
+		(new \Telenok\Core\Model\Security\Permission())->storeOrUpdate([
+			'title' => ['en' => 'Choose', 'ru' => 'Выбирание'],
+			'code' => 'choose',
 			'active' => 1,
 		]);
 

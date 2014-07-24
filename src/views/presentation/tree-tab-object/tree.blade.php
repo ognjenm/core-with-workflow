@@ -12,7 +12,7 @@
             "move": {
                 "default_position": "first",
                 "check_move": function(m) {
-                    return (m.o[0].prop("rel") === "folder") ? true : false;
+                    return (m.o[0].attr("rel") === "folder") ? true : false;
                 }
             }
         },

@@ -2,7 +2,7 @@
     $domAttr = ['class' => $field->css_class?: ''];
     $disabled = false;
     
-    if ( (!$model->exists && !$field->allow_create) || ($model->exists && !$field->allow_update) )
+	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
     {
         $domAttr['disabled'] = 'disabled';
         $disabled = true; 

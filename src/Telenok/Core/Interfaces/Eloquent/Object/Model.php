@@ -336,7 +336,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			throw new \LogicException('Cant create. Access denied.');
 		}
-		else if ($this->exists && (!\Auth::can('update', "object_type.{$type->code}") || !\Auth::can('update', $this->getKey())))
+		else if ($this->exists && !\Auth::can('update', $this->getKey()))
 		{
 			throw new \LogicException('Cant update. Access denied.');
 		}
@@ -453,9 +453,16 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
  
 		if (!isset(static::$staticListField[$class]))
 		{
+			$now = \Carbon\Carbon::now();
+			
 			$type = \DB::table('object_type')->where('code', $this->getTable())->first();
 
-			$f = \DB::table('object_field')->where('field_object_type', $type->id)->get();
+			$f = \DB::table('object_field')
+					->where('field_object_type', $type->id)
+					->where('active', '=', 1)
+					->where('start_at', '<=', $now)
+					->where('end_at', '>=', $now)
+					->get();
 
 			static::$staticListField[$class] = new \Illuminate\Support\Collection(array_combine(array_pluck($f, 'code'), $f));
 		}
@@ -467,7 +474,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		$type = $this->type();
 		
-		return $type->field()->get()->filter(function($item) use ($type)
+		return $type->field()->active()->get()->filter(function($item) use ($type)
 				{
 					return $item->show_in_list == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
 				});
@@ -477,7 +484,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		$type = $this->type();
 		
-		return $type->field()->get()->filter(function($item) use ($type)
+		return $type->field()->active()->get()->filter(function($item) use ($type)
 				{
 					return $item->show_in_form == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
 				});
@@ -509,8 +516,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	
 	public function addMultilanguage($fieldCode)
 	{ 
-		$multilanguage = $this->getMultilanguage();
-
 		$class = get_class($this);
 	
 		static::$staticListMultilanguage[$class][] = $fieldCode;
@@ -606,15 +611,13 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				}
 			}
 
-			foreach ($this->getObjectField()->toArray() as $key => $field)
-			{
-				$fieldController = \App::make('telenok.config')->getObjectFieldController()->get($field->key);
-
-				foreach ($fieldController->getRule($field) as $key => $value)
-				{
-					foreach ($value as $key_ => $value_)
+			foreach ($this->type()->field()->active()->get() as $key => $field)
+			{ 
+				if ($field->rule instanceof \Illuminate\Support\Collection)
+				{ 
+					foreach ($field->rule->toArray() as $key => $value)
 					{
-						$rule[$class][$key][head(explode(':', $value_))] = $value_;
+						$rule[$class][$field->code][head(explode(':', $value))] = $value;
 					}
 				}
 			}
@@ -688,7 +691,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
         if (!\Config::get('app.acl.enabled')) 
         {
-            return $query;
+			return $query;
         }
 		
 		if (empty($subjectCode))
@@ -713,7 +716,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			$subject = \Telenok\Object\Sequence::where('id', $subjectCode)->active()->first();
 		}
-
+		
 		$permission = \Telenok\Security\Permission::where('id', $permissionCode)->orWhere('code', $permissionCode)->active()->first();
 
 		if (!$subject || !$permission)

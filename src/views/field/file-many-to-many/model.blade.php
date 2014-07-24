@@ -1,9 +1,17 @@
 <?php
     
-    $domAttr = ['class' => 'col-md-6', 'disabled' => 'disabled'];
     $method = camel_case($field->code);
     $jsUnique = uniqid("{$uniqueId}_");
 
+	$disabledCreateFile = false;
+	
+	
+	if (!\Auth::can('create', 'object_type.file'))
+	{
+		$disabledCreateFile = true;
+	}
+	
+	
     $linkedField = $field->relation_many_to_many_has ? 'relation_many_to_many_has' : 'relation_many_to_many_belong_to';
 ?>
     <div class="widget-box transparent">
@@ -24,7 +32,15 @@
                             {{{$controller->LL('current')}}}
                         </a>
                     </li>
-                    @if ($field->allow_create || $field->allow_choose)
+                    @if ( 
+							($field->allow_create && $permissionCreate) 
+								|| 
+							($field->allow_choose && $permissionChoose)
+								|| 
+							($field->allow_update && $permissionUpdate)
+								||
+							($field->allow_delete && $permissionDelete) 
+						)
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
@@ -32,22 +48,46 @@
                         </a>
                     </li>
                     @endif
+					
+                    @if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) || ($model->exists && $field->allow_update && $permissionUpdate))
+								&&
+							!$disabledCreateFile
+						)
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload">
                             <i class="green fa fa-upload bigger-110"></i>
                             {{{$controller->LL('upload')}}}
                         </a>
                     </li>
+                    @endif
+
                 </ul>
 
                 <div class="tab-content">
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
                     </div>
-                    @if ($field->allow_create || $field->allow_choose)
+					
+                    @if ( 
+							($field->allow_create && $permissionCreate) 
+								|| 
+							($field->allow_choose && $permissionChoose)
+								|| 
+							($field->allow_update && $permissionUpdate)
+								||
+							($field->allow_delete && $permissionDelete) 
+						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
                     </div>
+                    @endif
+					
+                    @if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) || ($model->exists && $field->allow_update && $permissionUpdate))
+								&&
+							!$disabledCreateFile
+						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload" class="tab-pane ">
 						<button onclick="Dropzone.forElement('div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload-dropzone').processQueue(); return false;" class="btn btn-sm btn-success">Upload</button>
 						<div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload-dropzone" class="form-group dropzone">
@@ -63,10 +103,32 @@
                     var presentation = telenok.getPresentationByKey('{{ $parentController->getPresentation()}}');
 
                     var aoColumns = []; 
+                    var aButtons = []; 
 					
 							@foreach($controller->getFormModelTableColumn($field, $model, $jsUnique) as $row)
                             aoColumns.push({{json_encode($row)}});
 							@endforeach
+
+
+							aButtons.push({
+                                            "sExtends": "text",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
+                                            'sButtonClass': 'btn-sm',
+                                            "fnClick": function(nButton, oConfig, oFlash) {
+                                                jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
+                                            }
+                                        });
+
+							@if ($field->allow_delete && $permissionDelete)
+							aButtons.push({
+                                            "sExtends": "text",
+                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
+                                            'sButtonClass': 'btn-sm btn-danger',
+                                            "fnClick": function(nButton, oConfig, oFlash) {
+                                                removeAllM2M{{$jsUnique}}();
+                                            }
+                                        });								
+							@endif
 
                             presentation.addDataTable({
                                 domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}",
@@ -76,28 +138,33 @@
                                 iDisplayLength : {{$displayLength}},
                                 sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
                                 oTableTools: {
-                                    aButtons : [
-                                        {
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
-                                            'sButtonClass': 'btn-sm',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
-                                            }
-                                        }
-                                        @if ($field->allow_delete)
-                                        ,{
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
-                                            'sButtonClass': 'btn-sm btn-danger',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                removeAllM2M{{$jsUnique}}();
-                                            }
-                                        }
-                                        @endif
-                                    ] 
+                                    aButtons : aButtons
                                 }
                             });
+
+							aButtons = [];
+
+							@if ($field->allow_create && $permissionCreate && !$disabledCreateFile)
+							aButtons.push({
+								"sExtends": "text",
+								"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
+								'sButtonClass': 'btn-success btn-sm',
+								"fnClick": function(nButton, oConfig, oFlash) {
+									createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField} ]) }}');
+								}
+							});
+							@endif	
+							
+							@if ($field->allow_choose && $permissionChoose) 
+							aButtons.push({
+									"sExtends": "text",
+									"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
+									'sButtonClass': 'btn-yellow btn-sm',
+									"fnClick": function(nButton, oConfig, oFlash) {
+										chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
+									}
+							});
+							@endif
 
                             presentation.addDataTable({
                                 domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
@@ -107,29 +174,7 @@
 								aaSorting: [],
                                 aaData : [], 
                                 oTableTools: {
-                                    aButtons : [
-                                    @if ($field->allow_create)
-										{
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
-                                            'sButtonClass': 'btn-success btn-sm',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField} ]) }}');
-                                            }
-                                        }
-									@endif	
-									@if ($field->allow_create && $field->allow_choose)	, @endif
-									@if ($field->allow_choose) 
-                                        {
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
-                                            'sButtonClass': 'btn-yellow btn-sm',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
-                                            }
-                                        }
-                                    @endif
-									]
+                                    aButtons : aButtons
                                 }
                             });
                 </script>
@@ -142,7 +187,7 @@
     <script type="text/javascript">
 		try
 		{
-			$("div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload-dropzone").dropzone({
+			jQuery("div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload-dropzone").dropzone({
 					url: "{{ URL::route($controller->getRouteUpload()) }}",
 					paramName: "upload", // The name that will be used to transfer the file
 					maxFilesize: 2.5, // MB
@@ -159,7 +204,7 @@
 
 			Dropzone.forElement('div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload-dropzone')
 				.on("success", function(file, id) {
-					$('div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload').append(
+					jQuery('div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload').append(
 						'<input type="hidden" class="{{$field->code}}_add_{{$jsUnique}}" name="{{$field->code}}_add[]" value="' + id + '" />'
 					);
 				});

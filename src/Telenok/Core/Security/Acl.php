@@ -653,7 +653,7 @@ class Acl
      */
     public function can($permissionCode = null, $resourceCode = null, $filterCode = null)
     {
-        if (!\Config::get('app.acl.enabled') || ($this->subject instanceof \Telenok\Core\Model\User\User && $this->hasRole('super_administrator'))) 
+        if (!\Config::get('app.acl.enabled') || $this->subject instanceof \Telenok\Core\Model\User\User && $this->hasRole('super_administrator'))
         {
             return true;
         }
@@ -761,9 +761,9 @@ class Acl
     {
         if (!\Config::get('app.acl.enabled')) 
         {
-            return true;
+			return true;
         }
-
+		
         if (!$this->subject instanceof \Telenok\Core\Model\User\User) 
         {
             return false;

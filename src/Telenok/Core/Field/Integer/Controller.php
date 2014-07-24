@@ -9,7 +9,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	protected $key = 'integer';
 	protected $specialField = ['integer_default', 'integer_min', 'integer_max'];
-	protected $ruleList = ['integer_default' => ['integer', 'between:-2147483648,2147483647'], 'integer_min' => ['required', 'integer', 'between:-2147483648,2147483647'], 'integer_max' => ['required', 'integer', 'between:-2147483648,2147483647']];
+	protected $ruleList = ['integer_default' => ['integer', 'between:-2147483648,2147483647'], 'integer_min' => ['integer', 'between:-2147483648,2147483647'], 'integer_max' => ['integer', 'between:-2147483648,2147483647']];
 	protected $allowMultilanguage = false;
 
 	public function getListFieldContent($field, $item, $type = null)
@@ -29,7 +29,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	{
 		if ($value === null)
 		{
-			$value = $field->integer_default;
+			$value = $field->integer_default?:0;
 		}
 
 		return $value;
