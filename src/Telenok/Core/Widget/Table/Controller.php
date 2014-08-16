@@ -43,7 +43,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			{
 				for ($col = 0; $col < $structure->get('col'); $col++)
 				{
-					$ids["$row:$col"] = isset($ids["$row:$col"]) ? $ids["$row:$col"] : md5(uniqid("", true));
+					$ids["$row:$col"] = isset($ids["$row:$col"]) ? $ids["$row:$col"] : str_random();
 				}
 			}
 
@@ -177,7 +177,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 		foreach($structure->get('containerIds') as $key => $container)
 		{ 
-			$newContainres[$key] = md5(uniqid("", true));
+			$newContainres[$key] = str_random();
 
 			\Telenok\Web\WidgetOnPage::where("container", $container)->get()->each(function($item) use ($widgetOnPage, $buffer, $newContainres, $key)
 			{
@@ -225,7 +225,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			{
 				for ($col = 0; $col < $structure->get('col'); $col++)
 				{
-					$ids["$row:$col"] = isset($ids["$row:$col"]) ? $ids["$row:$col"] : md5(uniqid("", true));
+					$ids["$row:$col"] = isset($ids["$row:$col"]) ? $ids["$row:$col"] : str_random();
 				}
 			}
 

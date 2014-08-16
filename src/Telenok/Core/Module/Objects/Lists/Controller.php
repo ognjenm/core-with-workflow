@@ -53,7 +53,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return \View::make($this->getPresentationTreeView(), array(
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
-                'id' => uniqid()
+                'id' => str_random()
             ))->render();
     }
 
@@ -95,7 +95,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 'fields' => $fields,
                 'fieldsFilter' => $this->getModelFieldFilterExtended($model, $type),
                 'gridId' => $this->getGridId($model->getTable()),
-                'uniqueId' => uniqid(),
+                'uniqueId' => str_random(),
             ])->render()
         ];
     }
@@ -157,9 +157,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         $this->getFilterQuery($model, $query); 
 
-        $result = $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1)->get();
-
-        return $result;
+        return $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function getList()
@@ -183,21 +181,23 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			{
 				return $this->typeForm($type)->getList();
 			}
-			
-            $items = $this->getListItem($model);
-			
+
+            $items = $this->getListItem($model)->get();
+
 			$config = \App::make('telenok.config')->getObjectFieldController();
 
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
             {
                 $put = ['tableCheckAll' => '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]" value="'.$item->getKey().'" /><span class="lbl"></span></label>'];
-                
+
                 foreach ($model->getFieldList() as $field)
                 { 
 					$put[$field->code] = $config->get($field->key)->getListFieldContent($field, $item, $type);
                 }
 
-                $put['tableManageItem'] = $this->getListButtonExtended($item, $type);
+				$canDelete = \Auth::can('delete', $item);
+
+                $put['tableManageItem'] = $this->getListButtonExtended($item, $type, $canDelete);
 
                 $content[] = $put;
             }
@@ -223,7 +223,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         ];
     }
 
-    public function getListButtonExtended($item, $type)
+    public function getListButtonExtended($item, $type, $canDelete)
     {
         return '<div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info" title="'.$this->LL('list.btn.edit').'" 
@@ -231,12 +231,12 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                         . $this->getRouterEdit(['id' => $item->getKey()]) . '\'});return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
-                    
+
                     <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->active ? 'active' : 'inactive')) . '">
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
 
-                    ' . ( \Auth::can('delete', 'object_type.' . $type->code) || \Auth::can('delete', $item) ? '
+                    ' . ($canDelete ? '
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
                         onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');return false;">
@@ -266,14 +266,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         \Event::fire('form.create.object', [$params]);
 
         return [
-            'tabKey' => $this->getTabKey().'-new-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-new-'.str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
                 'controller' => $this,
                 'model' => $params['model'], 
                 'type' => $params['type'], 
                 'fields' => $params['fields'], 
-                'uniqueId' => uniqid(), 
+                'uniqueId' => str_random(), 
 				'routerParam' => $this->getRouterParam('create', $params['type'], $params['model']),
 				'canCreate' => \Auth::can('create', "object_type.{$params['type']->code}"),
             ), $this->getAdditionalViewParam()))->render()
@@ -301,14 +301,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         \Event::fire('form.edit.object', [$params]); 
 		
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
                 'controller' => $this,
                 'model' => $params['model'], 
                 'type' => $params['type'], 
                 'fields' => $params['fields'], 
-                'uniqueId' => uniqid(), 
+                'uniqueId' => str_random(), 
 				'routerParam' => $this->getRouterParam('edit', $params['type'], $params['model']),
 				'canUpdate' => \Auth::can('update', $params['model']),
 				'canDelete' => \Auth::can('delete', $params['model']),
@@ -392,7 +392,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     'type' => $params['type'], 
                     'fields' => $params['fields'], 
 					'routerParam' => $this->getRouterParam('edit', $type, $model),
-                    'uniqueId' => uniqid(), 
+                    'uniqueId' => str_random(), 
 					'canUpdate' => \Auth::can('update', $params['model']),
 					'canDelete' => \Auth::can('delete', $params['model']),
                 ), $this->getAdditionalViewParam()))->render();
@@ -400,7 +400,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
 
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];
@@ -472,14 +472,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				return $this->typeForm($type)->store($id, $input);
 			}
 
-			if (\Auth::can('create', 'object_type.' . $type->code))
-			{
-				$model = $this->save($input, $type); 
-			}
-			else
-			{
-				throw new \Exception('Access denied for creating model with type "object_type.' . $type->code . '"');
-			}
+			$model = $this->save($input, $type); 
         } 
         catch (\Exception $e) 
         {   
@@ -499,7 +492,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     'model' => $params['model'], 
                     'type' => $params['type'], 
                     'fields' => $params['fields'], 
-                    'uniqueId' => uniqid(), 
+                    'uniqueId' => str_random(), 
                     'success' => true,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('store', $type, $model),
@@ -527,14 +520,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				return $this->typeForm($type)->update($id, $input);
 			}
 
-			if (\Auth::can('update', $id))
-			{
-				$model = $this->save($input, $type); 
-			}
-			else
-			{
-				throw new \Exception('Access denied for creating model with type "object_type.' . $type->code . '"');
-			} 
+			$model = $this->save($input, $type); 
         }
         catch (\Exception $e) 
         {   
@@ -554,7 +540,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                     'model' => $params['model'], 
                     'type' => $params['type'], 
                     'fields' => $params['fields'], 
-                    'uniqueId' => uniqid(),
+                    'uniqueId' => str_random(),
                     'success' => true,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('update', $type, $model),
@@ -625,7 +611,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		
         $this->validate($model, $input); 
 
-		$model_ = $model->storeOrUpdate($input, $type);
+		$model_ = $model->storeOrUpdate($input, true);
 		
         $this->postProcess($model_, $type, $input);
 		

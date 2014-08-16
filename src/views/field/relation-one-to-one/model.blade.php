@@ -1,7 +1,7 @@
 
 <?php
 
-    $domAttr = ['disabled' => 'disabled'];
+	$domAttr = ['disabled' => 'disabled', 'class' => 'col-xs-5 col-sm-5'];
     $method = camel_case($field->code);
     $linkedField = $field->relation_one_to_one_has ? 'relation_one_to_one_has' : 'relation_one_to_one_belong_to';
 
@@ -13,11 +13,28 @@
         $title = $result->translate('title');
         $id = $result->id;
     }
+	
+	$disabledCreateLinkedType = false;
+	$disabledReadLinkedType = false;
+
+	$linkedType = $controller->getLinkedModelType($field);
+	
+	if (!\Auth::can('create', 'object_type.' . $linkedType->code))
+	{
+		$disabledCreateLinkedType = true;
+	}
+	
+	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
+	{
+		$disabledReadLinkedType = true;
+	}
+
+	
 ?>
 
     <div class="form-group">
-        {{ Form::label($field->code, $field->translate('title'), array('class'=>'control-label')) }}
-        <div class="controls">
+        {{ Form::label($field->code, $field->translate('title'), ['class'=>'col-sm-3 control-label no-padding-right']) }}
+        <div class="col-sm-9"> 
             @if ($field->icon_class)
             <span class="input-group-addon">
                 <i class="{{{$field->icon_class}}}"></i>
@@ -25,24 +42,51 @@
             @endif
             
             {{ Form::hidden($field->code, $id) }}
-            {{ Form::text(uniqid(), $title, $domAttr ) }}
+            {{ Form::text(str_random(), $title, $domAttr ) }}
             
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+				)
             <button onclick="chooseO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button>
-            <button onclick="createO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField} ]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            @endif
+			
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
+				)
+            <button onclick="createO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
                 {{{ $controller->LL('btn.create') }}}
             </button>
-            <button onclick="editO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:' ]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            @endif
+			
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+				)
+            <button onclick="editO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>
+            @endif
+
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate))
+				)
             <button onclick="deleteO2O{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{{ $controller->LL('btn.delete') }}}
             </button>
+            @endif
 
             @if ($field->translate('description'))
             <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 

@@ -85,7 +85,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					throw new \Exception($this->LL('error.extension', ['attribute' => $extension]));
 				}
-
+				
 				$rule = $field->rule;
 
 				if ($field->upload_allow_ext->isEmpty() && $field->upload_allow_mime->isEmpty())
@@ -235,10 +235,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'multilanguage' => 0,
 					'allow_create' => 0,
-					'allow_choose' => 0,
 					'allow_update' => 0, 
 					'field_order' => $model->field_order + 1,
 				]
@@ -260,10 +258,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'multilanguage' => 0,
 					'allow_create' => 0,
-					'allow_choose' => 0,
 					'allow_update' => 0, 
 					'field_order' => $model->field_order + 2,
 				]
@@ -287,7 +283,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'allow_search' => 1,
 					'allow_create' => 0,
 					'allow_update' => 0,
-					'allow_delete' => 0,
 					'field_order' => $model->field_order + 3,
 				]
 			);
@@ -310,7 +305,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'allow_search' => 1,
 					'allow_create' => 0,
 					'allow_update' => 0,
-					'allow_delete' => 0, 
 					'field_order' => $model->field_order + 4,
 				]
 			); 
@@ -333,7 +327,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'allow_search' => 1,
 					'allow_create' => 0,
 					'allow_update' => 0,
-					'allow_delete' => 0, 
 					'field_order' => $model->field_order + 5, 
 				]
 			);

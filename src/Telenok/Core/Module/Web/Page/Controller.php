@@ -18,7 +18,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			'key' => $this->getKey(),
 			'breadcrumbs' => $this->getBreadcrumbs(),
 			'pageHeader' => $this->getPageHeader(),
-			'uniqueId' => uniqid(),
+			'uniqueId' => str_random(),
 		]);
 	}
 
@@ -28,7 +28,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 					'presentation' => $this->getPresentation(),
 					'controller' => $this,
 					'iDisplayLength' => $this->displayLength,
-					'uniqueId' => uniqid()
+					'uniqueId' => str_random()
 				])->render();
 	}
 

@@ -26,7 +26,6 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		$input->get('show_in_list', 0);
 		$input->get('show_in_form', 1);
 		$input->get('allow_search', 1);
-		$input->get('allow_delete', 0);
 		$input->get('allow_create', 0);
 		$input->get('allow_update', 1);
 

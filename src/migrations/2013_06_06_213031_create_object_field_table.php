@@ -32,9 +32,7 @@ class CreateObjectFieldTable extends Migration {
 				$table->integer('show_in_list')->unsigned()->nullable()->default(0);
 				$table->integer('show_in_form')->unsigned()->nullable()->default(0);
 				$table->integer('allow_search')->unsigned()->nullable()->default(0);
-				$table->integer('allow_delete')->unsigned()->nullable()->default(0);
 				$table->integer('allow_create')->unsigned()->nullable()->default(1);
-				$table->integer('allow_choose')->unsigned()->nullable()->default(1);
 				$table->integer('allow_update')->unsigned()->nullable()->default(1);
 				$table->integer('allow_sort')->unsigned()->nullable()->default(0);
 				$table->integer('multilanguage')->unsigned()->nullable()->default(0);

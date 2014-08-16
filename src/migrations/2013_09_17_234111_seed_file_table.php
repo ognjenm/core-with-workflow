@@ -58,7 +58,6 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 0,
 						'allow_update' => 0,
 						'field_order' => 1,
@@ -79,7 +78,6 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 2,
 						'string_list_size' => 50,
 					]
@@ -99,7 +97,6 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0, 
 						'field_order' => 6,
 					]
 			);
@@ -117,10 +114,8 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'multilanguage' => 0,
 						'allow_create' => 0,
-						'allow_choose' => 0,
 						'allow_update' => 0, 
 						'field_order' => 21,
 					]
@@ -138,10 +133,8 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'multilanguage' => 0,
 						'allow_create' => 1,
-						'allow_choose' => 0,
 						'allow_update' => 1, 
 						'field_order' => 33,
 						'upload_allow_ext' => ['jpg', 'jpeg', 'png', 'txt', 'doc', 'gif'],
@@ -164,7 +157,6 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0, 
 						'field_order' => 9,
 					]
 			);
@@ -184,7 +176,6 @@ class SeedFileTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0, 
 						'field_order' => 10,
 					]
 			);

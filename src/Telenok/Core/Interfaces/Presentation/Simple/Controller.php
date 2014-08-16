@@ -68,7 +68,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     {
         return \View::make($this->getPresentationContentView(), array(
             'controller' => $this,
-            'uniqueId' => uniqid(),                 
+            'uniqueId' => str_random(),                 
             'success' => false, 
         ))->render();
     }

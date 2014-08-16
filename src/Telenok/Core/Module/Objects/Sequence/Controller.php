@@ -6,12 +6,8 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     protected $key = 'objects-sequence';
     protected $parent = 'objects';
-
     protected $typeList = 'object_sequence';
-
     protected $presentation = 'tree-tab-object';
-    //protected $presentationModelView = 'core::module.objects-version.model';
-    //protected $presentationContentView = 'core::module.objects-version.content';
 
     public function getActionParam()
     { 
@@ -35,9 +31,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
         $this->getFilterQuery($model, $query); 
         
-        $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
-
-        return $query->get();
+        return $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function getList()
@@ -52,7 +46,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         {
             $model = $this->getModelList();
             $type = $this->getTypeList(); 
-            $items = $this->getListItem($model);
+            $items = $this->getListItem($model)->get();
 
             $config = \App::make('telenok.config')->getObjectFieldController();
 

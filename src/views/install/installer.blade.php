@@ -78,7 +78,7 @@
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div data-target="#modal-step-contents" class="modal-header table-header">
-						<h3>{{\Lang::get('core::install/process.header')}}</h3>
+						<h4>{{\Lang::get('core::install/process.header')}}</h4>
 						<hr/>
 						<ul class="wizard-steps clearfix">
 							<li class="active" data-target="#modal-step1" style="min-width: 25%; max-width: 25%;">

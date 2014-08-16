@@ -4,8 +4,8 @@
 			<div class="modal-content">
 
 				<div class="modal-header table-header">
-					<a class="close" data-dismiss="modal">×</a>
-					<h3>Modal header</h3>
+					<button data-dismiss="modal" class="close" type="button">×</button>
+					<h4>Modal header</h4>
 				</div>
 				<div class="modal-body" style="max-height: none;text-align: center;">
 					<p>One fine body…</p>

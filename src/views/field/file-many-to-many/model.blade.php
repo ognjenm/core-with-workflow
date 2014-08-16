@@ -1,14 +1,20 @@
 <?php
     
     $method = camel_case($field->code);
-    $jsUnique = uniqid("{$uniqueId}_");
+    $jsUnique = str_random();
 
 	$disabledCreateFile = false;
+	$disabledReadFile = false;
 	
 	
 	if (!\Auth::can('create', 'object_type.file'))
 	{
 		$disabledCreateFile = true;
+	}
+	
+	if (!\Auth::can('read', 'object_type.file'))
+	{
+		$disabledReadFile = true;
 	}
 	
 	
@@ -33,13 +39,9 @@
                         </a>
                     </li>
                     @if ( 
-							($field->allow_create && $permissionCreate) 
+							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($field->allow_choose && $permissionChoose)
-								|| 
-							($field->allow_update && $permissionUpdate)
-								||
-							($field->allow_delete && $permissionDelete) 
+							($model->exists && $field->allow_update && $permissionUpdate)) && (!$disabledCreateFile || !$disabledReadFile)
 						)
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
@@ -69,14 +71,10 @@
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
                     </div>
 					
-                    @if ( 
-							($field->allow_create && $permissionCreate) 
+                    @if (
+							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($field->allow_choose && $permissionChoose)
-								|| 
-							($field->allow_update && $permissionUpdate)
-								||
-							($field->allow_delete && $permissionDelete) 
+							($model->exists && $field->allow_update && $permissionUpdate)) && (!$disabledCreateFile || !$disabledReadFile)
 						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
@@ -107,8 +105,7 @@
 					
 							@foreach($controller->getFormModelTableColumn($field, $model, $jsUnique) as $row)
                             aoColumns.push({{json_encode($row)}});
-							@endforeach
-
+							@endforeach 
 
 							aButtons.push({
                                             "sExtends": "text",
@@ -119,7 +116,7 @@
                                             }
                                         });
 
-							@if ($field->allow_delete && $permissionDelete)
+							@if ($model->exists && $field->allow_update && $permissionUpdate)
 							aButtons.push({
                                             "sExtends": "text",
                                             "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
@@ -130,21 +127,28 @@
                                         });								
 							@endif
 
-                            presentation.addDataTable({
-                                domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}",
-                                bRetrieve : true,
-                                aoColumns : aoColumns,
-								aaSorting: [],
-                                iDisplayLength : {{$displayLength}},
-                                sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
-                                oTableTools: {
-                                    aButtons : aButtons
-                                }
-                            });
+							if (aoColumns.length)
+							{
+								presentation.addDataTable({
+									domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}",
+									bRetrieve : true,
+									aoColumns : aoColumns,
+									aaSorting: [],
+									iDisplayLength : {{$displayLength}},
+									sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
+									oTableTools: {
+										aButtons : aButtons
+									}
+								});
+							}
 
 							aButtons = [];
 
-							@if ($field->allow_create && $permissionCreate && !$disabledCreateFile)
+							@if ( 
+									((!$model->exists && $field->allow_create && $permissionCreate) 
+										|| 
+									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateFile
+								)
 							aButtons.push({
 								"sExtends": "text",
 								"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
@@ -155,7 +159,11 @@
 							});
 							@endif	
 							
-							@if ($field->allow_choose && $permissionChoose) 
+							@if ( 
+									((!$model->exists && $field->allow_create && $permissionCreate) 
+										|| 
+									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadFile
+								)
 							aButtons.push({
 									"sExtends": "text",
 									"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
@@ -166,17 +174,20 @@
 							});
 							@endif
 
-                            presentation.addDataTable({
-                                domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
-                                sDom: "<'row'<'col-md-6'T>r>t<'row'<'col-md-6'T>>",
-                                bRetrieve : true,
-                                aoColumns : aoColumns,
-								aaSorting: [],
-                                aaData : [], 
-                                oTableTools: {
-                                    aButtons : aButtons
-                                }
-                            });
+							if (aoColumns.length)
+							{
+								presentation.addDataTable({
+									domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
+									sDom: "<'row'<'col-md-6'T>r>t<'row'<'col-md-6'T>>",
+									bRetrieve : true,
+									aoColumns : aoColumns,
+									aaSorting: [],
+									aaData : [], 
+									oTableTools: {
+										aButtons : aButtons
+									}
+								});
+							}
                 </script>
  
             </div>

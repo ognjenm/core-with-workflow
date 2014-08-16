@@ -58,7 +58,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 0,
-						'allow_delete' => 0,
 						'allow_create' => 0,
 						'allow_update' => 0,
 						'field_order' => 1,
@@ -79,7 +78,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 2,
 						'string_list_size' => 50,
@@ -100,7 +98,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 3,
 					]
@@ -120,7 +117,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 3,
 					]
@@ -140,7 +136,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 0,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 3,
 					]
@@ -160,7 +155,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 0,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 3,
 					]
@@ -182,7 +176,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_list' => 0,
 						'allow_search' => 1,
 						'allow_update' => 0,
-						'allow_delete' => 0,
 						'field_order' => 9,
 					]
 			);
@@ -202,7 +195,6 @@ class SeedObjectVersionTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_update' => 0,
 						'field_order' => 10,
 					]

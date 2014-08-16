@@ -303,7 +303,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             'contentUrl' => $this->getRouterContent(),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'pageHeader' => $this->getPageHeader(),
-            'uniqueId' => uniqid(), 
+            'uniqueId' => str_random(), 
         ));
     }
     
@@ -312,7 +312,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return \View::make($this->getPresentationView(), array(
             'presentation' => $this->getPresentation(),
             'controller' => $this,
-            'uniqueId' => uniqid(),
+            'uniqueId' => str_random(),
             'iDisplayLength' => $this->displayLength
         ))->render();
     } 
@@ -329,7 +329,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                 'fields' => $model->getFieldList(),
                 'fieldsFilter' => $this->getModelFieldFilter(),
                 'gridId' => $this->getGridId(), 
-                'uniqueId' => uniqid(),
+                'uniqueId' => str_random(),
             ))->render()
         );
     }
@@ -339,7 +339,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return \View::make($this->getPresentationTreeView(), array(
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
-                'id' => uniqid(),
+                'id' => str_random(),
             ))->render();
     }
     
@@ -432,9 +432,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
         $this->getFilterQuery($model, $query); 
         
-        $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
-
-        return $query->get();
+        return $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function getListItemProcessed($field, $item)
@@ -573,7 +571,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         $iDisplayStart = \Input::get('iDisplayStart', 0);
 
         $model = $this->getModelList();
-        $items = $this->getListItem($model);
+        $items = $this->getListItem($model)->get();
         
         foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
         {
@@ -601,13 +599,13 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     public function create($id = null)
     {  
         return [
-            'tabKey' => $this->getTabKey().'-new-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-new-'.str_random(),
             'tabLabel' => $this->LL('list.create'),
             'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList(), 
                 'route' => $this->getRouterStore(),
-                'uniqueId' => uniqid(),  
+                'uniqueId' => str_random(),  
             ), $this->getAdditionalViewParam()))->render()
         ];
     }
@@ -621,7 +619,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                 'controller' => $this,
                 'model' => $this->getModelList()->find($id), 
                 'route' => $this->getRouterUpdate(),
-                'uniqueId' => uniqid(),  
+                'uniqueId' => str_random(),  
             ), $this->getAdditionalViewParam()))->render()
         ];
     }
@@ -643,12 +641,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                 'controller' => $this,
                 'model' => $this->getModelList()->find($id), 
                 'route' => $this->getRouterUpdate(),
-                'uniqueId' => uniqid(),  
+                'uniqueId' => str_random(),  
             ), $this->getAdditionalViewParam()))->render();
         }
 
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
             'tabLabel' => $this->LL('list.edit'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];
@@ -745,7 +743,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                     'controller' => $this,
                     'model' => $model,
                     'route' => $this->getRouterStore(),
-                    'uniqueId' => uniqid(), 
+                    'uniqueId' => str_random(), 
                     'success' => true,
                     'warning' => \Session::get('warning'),
                 ], $this->getAdditionalViewParam()))->render();
@@ -782,7 +780,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                     'controller' => $this,
                     'model' => $model,
                     'route' => $this->getRouterUpdate(),
-                    'uniqueId' => uniqid(),                 
+                    'uniqueId' => str_random(),                 
                     'success' => true,
                     'warning' => \Session::get('warning'), 
                 ], $this->getAdditionalViewParam()))->render();

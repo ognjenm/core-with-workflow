@@ -30,7 +30,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
                         $this->createModelDirectory($path . DIRECTORY_SEPARATOR . $new);
 
-                        return ['success'=>1, 'path' => $path . DIRECTORY_SEPARATOR . $new, 'id' => uniqid()];
+                        return ['success'=>1, 'path' => $path . DIRECTORY_SEPARATOR . $new, 'id' => str_random()];
                     break;
                 case 'rename':
                     break;
@@ -76,7 +76,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return array(
             'content' => \View::make("core::module/files-browser.wizard-directory", array(
                     'controller' => $this,
-                    'uniqueId' => uniqid(),
+                    'uniqueId' => str_random(),
                 ))->render() 
         );
     }

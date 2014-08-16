@@ -22,6 +22,14 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			
 			$model->createFieldResource($type);
 		});
+		
+		static::deleting(function($model)
+		{
+			if ($fieldController = \App::make('telenok.config')->getObjectFieldController()->get($model->key))
+			{
+				return $fieldController->processDeleting($model);
+			}
+		});
 	}
 
 	public function createFieldResource($type)

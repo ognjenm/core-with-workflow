@@ -32,9 +32,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
         $this->getFilterQuery($model, $query); 
 
-        $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
-
-        return $query->get();
+        return $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function validate($model = null, $input = null, $message = [])

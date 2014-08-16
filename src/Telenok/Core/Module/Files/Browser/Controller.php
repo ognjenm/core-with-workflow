@@ -23,7 +23,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return array(
             'content' => \View::make("core::module/file-browser.wizard", array(
                     'controller' => $this,
-                    'uniqueId' => uniqid(),
+                    'uniqueId' => str_random(),
                 ))->render() 
         );
     }

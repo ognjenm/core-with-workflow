@@ -39,7 +39,6 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		$input->put('show_in_list', 0);
 		$input->put('show_in_form', 1);
 		$input->put('allow_search', 1);
-		$input->put('allow_delete', 0);
 		$input->put('allow_create', 0);
 		$input->put('allow_update', 1);
 		$input->put('field_object_type', \Telenok\Object\Type::where('code', 'user')->first()->getKey());
@@ -56,7 +55,6 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 			'show_in_list' => $input->get('show_in_list'),
 			'show_in_form' => $input->get('show_in_form'),
 			'allow_search' => $input->get('allow_search'),
-			'allow_delete' => $input->get('allow_delete'),
 			'multilanguage' => $input->get('multilanguage'),
 			'allow_create' => $input->get('allow_create'),
 			'allow_update' => $input->get('allow_update'),

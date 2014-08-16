@@ -2,7 +2,7 @@
 
     $method = camel_case($field->code);
     $linkedField = $field->morph_one_to_many_has ? 'morph_one_to_many_has' : 'morph_one_to_many_belong_to';
-    $jsUnique = uniqid("{$uniqueId}_");
+    $jsUnique = str_random();
 ?>
 
 @if ($field->morph_one_to_many_has)
@@ -84,7 +84,7 @@
                                                 jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
                                             }
                                         }
-                                        @if ($field->allow_delete)
+										@if ($model->exists && $field->allow_update && $permissionUpdate)
                                         ,{
                                             "sExtends": "text",
                                             "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
@@ -326,17 +326,17 @@
         {{ Form::label("{$field->code}", $field->translate('title'), array('class'=>'control-label')) }}
         <div class="controls"> 
             {{ Form::hidden("{$field->code}", $id) }}
-            {{ Form::text(uniqid(), $title, $domAttr ) }}
+            {{ Form::text(str_random(), $title, $domAttr ) }}
             
             <button onclick="chooseO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button>
-            <button onclick="createO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField} ]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="createO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
                 {{{ $controller->LL('btn.create') }}}
             </button>
-            <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:' ]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>

@@ -56,7 +56,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 0,
 					'allow_update' => 0,
 					'field_order' => 1,
@@ -77,7 +76,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'required' => 1,
 					'field_order' => 2,
 					'string_list_size' => 50,
@@ -98,7 +96,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 1,
 					'allow_update' => 1,
 					'field_order' => 3,
@@ -119,7 +116,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 1,
 					'allow_update' => 1,
 					'field_order' => 4,
@@ -140,7 +136,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 1,
 					'allow_update' => 1,
 					'field_order' => 5,
@@ -161,7 +156,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 1,
 					'allow_update' => 1,
 					'field_order' => 6,
@@ -183,7 +177,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 0,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 1,
 					'allow_update' => 1,
 					'field_order' => 7,
@@ -204,7 +197,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'field_order' => 8,
 				]
 		);
@@ -223,10 +215,8 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'multilanguage' => 0,
 					'allow_create' => 1,
-					'allow_choose' => 1,
 					'allow_update' => 1,
 					'field_order' => 8,
 				]
@@ -246,10 +236,8 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'multilanguage' => 0,
 					'allow_create' => 1,
-					'allow_choose' => 1,
 					'allow_update' => 1,
 					'field_order' => 9,
 				]
@@ -270,9 +258,7 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 1,
-					'allow_choose' => 1,
 					'allow_update' => 1,
 					'field_order' => 7,
 				]
@@ -293,7 +279,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'field_order' => 9,
 				]
 		);
@@ -313,7 +298,6 @@ class SeedUserTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 0,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'field_order' => 10,
 				]
 		);
@@ -333,7 +317,6 @@ class SeedUserTable extends Migration {
 					'show_in_list' => 0,
 					'show_in_form' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 				]
 		);
 
@@ -352,7 +335,6 @@ class SeedUserTable extends Migration {
 					'show_in_list' => 0,
 					'show_in_form' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 				]
 		);
 

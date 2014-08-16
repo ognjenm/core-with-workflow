@@ -8,19 +8,89 @@ use Illuminate\Database\Migrations\Migration;
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     protected $key = 'morph-one-to-one'; 
-    protected $specialField = ['morph_one_to_one_has', 'morph_one_to_one_belong_to'];
+    protected $specialField = ['morph_one_to_one_has', 'morph_one_to_one_belong_to', 'morph_one_to_one_belong_to_type_list'];
     protected $allowMultilanguage = false;
 
 	public function getLinkedModelType($field)
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->morph_one_to_one_has, $field->morph_one_to_one_belong_to])->first();
 	}
-
+	
+    public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
+    { 		
+		if ($field->morph_one_to_one_has || $field->morph_one_to_one_belong_to)
+		{
+			return parent::getFormModelContent($controller, $model, $field, $uniqueId);
+		}
+	} 
+	
     public function getModelField($model, $field)
     {
 		return $field->morph_one_to_one_belong_to ? [$field->code . '_type', $field->code . '_id'] : [];
     }
+	
+    public function getModelSpecialAttribute($model, $key, $value)
+    {
+        try
+        {
+			if (in_array($key, ['morph_one_to_one_belong_to_type_list']))
+			{
+				$value = $value ? : '[]';
 
+				$v = json_decode($value, true);
+
+				if (is_array($v))
+				{
+					return \Illuminate\Support\Collection::make($v);
+				}
+				else
+				{
+					return $v;
+				}
+			}
+			else
+			{
+				return parent::getModelSpecialAttribute($model, $key, $value);
+			}
+        }
+        catch (\Exception $e)
+        {
+            return null;
+        }
+    }
+
+    public function setModelSpecialAttribute($model, $key, $value)
+    {
+		if (in_array($key, ['morph_one_to_one_belong_to_type_list']))
+		{
+			$default = [];
+
+			if ($value instanceof \Illuminate\Support\Collection) 
+			{
+				if ($value->count())
+				{
+					$value = $value->toArray();
+				}
+				else
+				{
+					$value = $default;
+				}
+			}
+			else
+			{
+				$value = $value ? : $default;
+			} 
+
+			$model->setAttribute($key, json_encode($value, JSON_UNESCAPED_UNICODE));
+		}
+		else
+		{
+			parent::setModelSpecialAttribute($model, $key, $value);
+		}
+        
+        return true;
+    }
+	
     public function getTitleList($id = null) 
     {
         $term = trim(\Input::get('term'));
@@ -49,11 +119,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         return $return;
     }
 
-    public function getListButtonExtended($item, $field, $type, $uniqueId)
+    public function getListButtonExtended($item, $field, $type, $uniqueId, $canUpdate)
     {
         return '<div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="editO2MHas'.$uniqueId.'(this, \''.\URL::route('cmf.module.objects-lists.wizard.edit', ['id' => $item->getKey() ]).'\'); return false;">
+                        onclick="editO2MHas'.$uniqueId.'(this, \''.\URL::route($this->getRouteWizardEdit(), ['id' => $item->getKey(), 'saveBtn' => 1, 'chooseBtn' => 0]).'\'); return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
                     
@@ -61,7 +131,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
                     ' .
-                    ($field->allow_delete ? '
+                    ($canUpdate ? '
                     <button class="btn btn-minier btn-danger trash-it" title="'.$this->LL('list.btn.delete').'" 
                         onclick="deleteO2MHas'.$uniqueId.'(this); return false;">
                         <i class="fa fa-trash-o"></i>
@@ -82,7 +152,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 				$query->join($linkedTable, function($join) use ($modelTable, $linkedTable, $name, $field)
 				{
-					$join->on($modelTable . '.id', '=', $linkedTable . '.' . $field->code . '_' . $modelTable . '_id');
+					$join->on($modelTable . '.id', '=', $linkedTable . '.' . $field->code . 'able_id');
 				});
 
 				$query->whereIn($linkedTable.'.id', (array)$value);
@@ -105,7 +175,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getFilterContent($field = null)
     {
-        $uniqueId = uniqid();
+        $uniqueId = str_random();
         $option = [];
         
         $id = $field->morph_one_to_one_has ?: $field->morph_one_to_one_belong_to;
@@ -176,7 +246,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		}
 
 		$id = $input->get("{$field->code}", 0);
-		
+
 		if ($field->morph_one_to_one_belong_to)
 		{
 			if ($id)
@@ -197,8 +267,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{  
 			$method = camel_case($field->code);
 
-			$relatedField = $field->code . '_' . $model->sequence->sequencesObjectType->code;
-
+			$relatedField = $field->code . 'able';
+ 
 			$model->$method()->get()->each(function($item) use ($relatedField) 
 			{
 				$item->fill([$relatedField . '_id' => 0, $relatedField . '_type' => null])->save();
@@ -219,6 +289,30 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		
         return $model;
     }
+
+    public function processDeleting($model)
+    {  
+		if ($model->morph_one_to_one_has)
+		{
+			$f = \Telenok\Object\Field::where('code', $model->code . 'able')->where('morph_one_to_one_belong_to', '>', 0)->first();
+
+			if ($f)
+			{
+				$tList = $f->morph_one_to_one_belong_to_type_list;
+
+				$tNewList = $tList->reject(function($item) use ($model) 
+				{
+					return $item == $model->fieldObjectType->getKey();
+				});
+
+				$f->morph_one_to_one_belong_to_type_list = $tNewList;
+
+				$f->update();
+			}
+		}
+
+        return parent::processDeleting($model);
+    } 
 	
     public function preProcess($model, $type, $input)
     {
@@ -240,7 +334,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				return parent::postProcess($model, $type, $input);
 			} 
 
-            $relatedTypeOfModelField = $model->fieldObjectType()->first();   // eg object \Telenok\Object\Type which DB-field "code" is "author"
+            $relatedTypeOfModelField = $model->fieldObjectType()->first();
 
             $classModelHasMany = $relatedTypeOfModelField->class_model;
             $codeFieldHasMany = $model->code; 
@@ -250,11 +344,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 
-            $relatedSQLField = $codeFieldHasMany . '_' . $codeTypeHasMany;
+            $relatedSQLField = $codeFieldHasMany . 'able';
 
             $hasMany = [
                     'method' => camel_case($codeFieldHasMany),
-					'name' => $codeFieldHasMany,
+					'name' => $relatedSQLField,
                     'class' => $classBelongTo,
                     'type' => $relatedSQLField . '_type',
                     'foreignKey' => $relatedSQLField . '_id',
@@ -263,7 +357,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 			$belongTo = [
                     'method' => camel_case($relatedSQLField),
-					'name' => $codeFieldHasMany,
+					'name' => $relatedSQLField,
                     'type' => $relatedSQLField . '_type',
                     'id' => $relatedSQLField . '_id',
                 ];
@@ -278,12 +372,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 				foreach($relatedTypeOfModelField->title->toArray() as $language => $val)
 				{
-					$title[$language] = array_get($title, $language, $val . '/' . $model->translate('title', $language));
+					$title[$language] = array_get($title, $language, $model->translate('title', $language) . ' [morphTo]');
 				}
 
 				foreach($relatedTypeOfModelField->title_list->toArray() as $language => $val)
 				{
-					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
+					$title_list[$language] = array_get($title_list, $language, $model->translate('title_list', $language) . ' [morphTo]');
 				}
 
 				$tabTo = $this->getFieldTabBelongTo($typeBelongTo->getKey(), $input->get('field_object_tab')); 
@@ -295,41 +389,55 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'code' => $relatedSQLField,
 					'field_object_type' => $typeBelongTo->getKey(),
 					'field_object_tab' => $tabTo->getKey(),
-					'morph_one_to_one_belong_to' => $relatedTypeOfModelField->getKey(),
+					'morph_one_to_one_belong_to' => \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id'),
 					'show_in_form' => $input->get('show_in_form_belong', $model->show_in_form),
 					'show_in_list' => $input->get('show_in_list_belong', $model->show_in_list),
 					'allow_search' => $input->get('allow_search_belong', $model->allow_search),
-					'allow_delete' => $input->get('allow_delete_belong', $model->allow_delete),
 					'multilanguage' => 0,
+					'morph_one_to_one_belong_to_type_list' => [$relatedTypeOfModelField->getKey()],
 					'active' => $input->get('active_belong', $model->active),
-					'allow_choose' => $input->get('allow_choose_belong', $model->allow_choose),
+					'start_at' => $input->get('start_at_belong', $model->start_at),
+					'end_at' => $input->get('end_at_belong', $model->end_at),
 					'allow_create' => $input->get('allow_create_belong', $model->allow_create),
 					'allow_update' => $input->get('allow_update_belong', $model->allow_update),
 					'field_order' => $input->get('field_order_belong', $model->field_order),
 				];
 
-				$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
 
-				if ($validator->passes()) 
+				$f = \Telenok\Object\Field::where('code', $relatedSQLField)->where('morph_one_to_one_belong_to', '>', 0)->first();
+				
+				if ($f)
 				{
-					\Telenok\Object\Field::create($toSave);
+					$tList = $f->morph_one_to_one_belong_to_type_list;
+
+					$tList->push($relatedTypeOfModelField->getKey());
+
+					$f->morph_one_to_one_belong_to_type_list = $tList;
+
+					$f->update();
+				}
+				else
+				{
+					$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
+					
+					if ($validator->passes()) 
+					{
+						\Telenok\Object\Field::create($toSave);
+					}
 				}
 
-				if (!\Schema::hasColumn($tableBelongTo, $relatedSQLField . '_type') && !\Schema::hasColumn($tableBelongTo, "`" . $relatedSQLField . "_type`"))
+				try
 				{
 					\Schema::table($tableBelongTo, function(Blueprint $table) use ($relatedSQLField)
 					{
-						$table->string($relatedSQLField . '_type')->nullable();
-					});
-				}
+						$table->unsignedInteger("{$relatedSQLField}_id")->nullable();
 
-				if (!\Schema::hasColumn($tableBelongTo, $relatedSQLField . '_id') && !\Schema::hasColumn($tableBelongTo, "`" . $relatedSQLField . "_id`"))
-				{
-					\Schema::table($tableBelongTo, function(Blueprint $table) use ($relatedSQLField)
-					{
-						$table->unsignedInteger($relatedSQLField . '_id')->nullable();
+						$table->string("{$relatedSQLField}_type")->nullable();
+
+						$table->index(array("{$relatedSQLField}_id", "{$relatedSQLField}_type"));					
 					});
-				}
+				} 
+				catch (\Exception $ex) {}
 
 				if (!$this->validateMethodExists($belongToObject, $belongTo['method']))
 				{

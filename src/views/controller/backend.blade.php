@@ -217,7 +217,7 @@
 				<div class="modal-content">
 					<div class="modal-header table-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3>{{{$controller->LL("notice.title")}}}</h3>
+						<h4>{{{$controller->LL("notice.title")}}}</h4>
 					</div>
 					<div class="modal-body">
 					</div>

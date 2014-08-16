@@ -31,7 +31,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller
         return \View::make($this->diagramBody, [
                 'controller' => $this,
                 'model' => $model,
-                'uniqueId' => uniqid(),
+                'uniqueId' => str_random(),
             ])->render();
     }
 
@@ -40,7 +40,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller
       /*
         return \View::make($this->diagramStensilSet, [
                 'controller' => $this,  
-                'uniqueId' => uniqid(),
+                'uniqueId' => str_random(),
             ])->render();
         */
         $data = [

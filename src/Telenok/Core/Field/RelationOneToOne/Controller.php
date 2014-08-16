@@ -11,10 +11,23 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     protected $specialField = ['relation_one_to_one_has', 'relation_one_to_one_belong_to'];
     protected $allowMultilanguage = false;
 
+	public function getLinkedModelType($field)
+	{
+		return \Telenok\Object\Type::whereIn('id', [$field->relation_one_to_one_has, $field->relation_one_to_one_belong_to])->first();
+	}
+	
     public function getModelField($model, $field)
     {
 		return $field->relation_one_to_one_belong_to ? [$field->code] : [];
     } 
+	
+    public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
+    { 		
+		if ($field->relation_one_to_one_has || $field->relation_one_to_one_belong_to)
+		{
+			return parent::getFormModelContent($controller, $model, $field, $uniqueId);
+		}
+	} 
 
     public function getTitleList($id = null) 
     {
@@ -70,7 +83,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getFilterContent($field = null)
     {
-        $uniqueId = uniqid();
+        $uniqueId = str_random();
         $option = [];
         
         $id = $field->relation_one_to_one_has ?: $field->relation_one_to_one_belong_to;
@@ -241,10 +254,10 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'show_in_form' => $input->get('show_in_form_belong', $model->show_in_form),
 					'show_in_list' => $input->get('show_in_list_belong', $model->show_in_list),
 					'allow_search' => $input->get('allow_search_belong', $model->allow_search),
-					'allow_delete' => $input->get('allow_delete_belong', $model->allow_delete),
 					'multilanguage' => 0,
 					'active' => $input->get('active_belong', $model->active),
-					'allow_choose' => $input->get('allow_choose_belong', $model->allow_choose),
+					'start_at' => $input->get('start_at_belong', $model->start_at),
+					'end_at' => $input->get('end_at_belong', $model->end_at),
 					'allow_create' => $input->get('allow_create_belong', $model->allow_create),
 					'allow_update' => $input->get('allow_update_belong', $model->allow_update),
 					'field_order' => $input->get('field_order_belong', $model->field_order),

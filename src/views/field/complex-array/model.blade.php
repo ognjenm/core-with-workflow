@@ -13,7 +13,7 @@ if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($mod
 ?> 
 
 <div class="form-group">
-    {{ Form::label($disabled ? uniqid() : "{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+    {{ Form::label($disabled ? str_random() : "{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
 		
 		@if ((is_string($value) && mb_strlen($value) < 250) || is_numeric($value))

@@ -23,7 +23,7 @@
             @endif
             
             {{ Form::hidden('tree_pid', $tree_pid) }}
-            {{ Form::text(uniqid(), $title, $domAttr ) }}
+            {{ Form::text(str_random(), $title, $domAttr ) }}
             
             <button onclick="chooseTreePid{{$uniqueId}}(this, '{{ URL::route('cmf.module.objects-lists.wizard.choose', ['id' => $folderType->getKey()]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>

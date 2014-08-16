@@ -23,10 +23,15 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     }
 
     public function getModelAttribute($model, $key, $value, $field)
-    {
+    { 
 		$value = $value === null ? '[]' : $value;
 		
 		$v = json_decode($value, true);
+		
+		if ($field->code == 'rule')
+		{
+			//var_dump($field->code, $value, json_encode((array)null, JSON_UNESCAPED_UNICODE));
+		}
 		
 		if (is_array($v))
 		{
@@ -49,7 +54,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			$value_ = $value;
 		}
 
-        $model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));
+		$model->setAttribute($key, is_null($value_) ? null : json_encode($value_, JSON_UNESCAPED_UNICODE));
     }
 
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 

@@ -56,7 +56,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'allow_create' => 0,
 					'allow_update' => 0,
 					'field_order' => 2,
@@ -77,7 +76,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'required' => 1,
 					'field_order' => 3,
 					'string_list_size' => 50,
@@ -98,7 +96,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'field_order' => 4,
 				]
 		);
@@ -118,7 +115,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'field_order' => 5,
 				]
 		);
@@ -138,7 +134,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'field_order' => 6,
 				]
 		);
@@ -157,7 +152,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 1,
-					'allow_delete' => 0,
 					'required' => 1,
 					'field_order' => 7,
 				]
@@ -177,7 +171,6 @@ class SeedSettingTable extends Migration {
 					'show_in_form' => 1,
 					'show_in_list' => 1,
 					'allow_search' => 0,
-					'allow_delete' => 0,
 					'required' => 0,
 					'field_order' => 8,
 				]

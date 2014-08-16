@@ -109,114 +109,6 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			$query->whereIn($pivotTable.'.'.$fieldSearchIn, (array)$value);
 		}
     }
-
-    public function getFormModelTableColumn($field, $model, $jsUnique)
-    {
-		$fields = [];
-		
-		$objectField = \Telenok\Object\Type::where('code', 'object_sequence')->first()->field()->where('show_in_list', 1)->get();
-		
-		foreach($objectField as $key => $field)
-		{
-			$fields[$field->code] = [
-				"mData" => $field->code, 
-				"sTitle" => e($field->translate('title_list')), 
-				"mDataProp" => null, 
-				"bSortable" => $field->allow_sort ? true : false
-			];
-			
-			if ( ($key==1 && $objectField->count() > 1) || ($key == 0 && $objectField->count() == 1))
-			{
-				$fields['tableManageItem'] = [
-					"mData" => 'tableManageItem', 
-					"sTitle" => e($this->LL('action')), 
-					"mDataProp" => null, 
-					"bSortable" => false
-				];
-			}
-		}
-		
-		return $fields;
-    }
-
-    public function getTableList1111($id = null, $fieldId = null, $uniqueId = null) 
-    {
-        $term = trim(\Input::get('sSearch'));
-        $iDisplayStart = intval(\Input::get('iDisplayStart', 0));
-        $iDisplayLength = intval(\Input::get('iDisplayLength', 10));
-        $sEcho = \Input::get('sEcho');
-        $content = [];
-
-        try 
-        {
-            $model = \Telenok\Object\Sequence::find($id);
-            $type = $model->sequencesObjectType;
-            $field = \Telenok\Object\Sequence::getModel($fieldId);
-
-            if ($field->relation_many_to_many_has)
-            {
-                $fieldRelated = 'tree_child';
-            }
-            else
-            {
-                $fieldRelated = 'tree_parent';
-            }
-
-			$query = $model->{camel_case($fieldRelated)}();
-
-            if ($term)
-            { 
-				$query->where(function ($query) use ($term)
-				{
-					\Illuminate\Support\Collection::make(explode(' ', $term))
-							->reject(function($i) { return !trim($i); })
-							->each(function($i) use ($query)
-					{
-						$query->where('title', 'like', "%{$i}%");
-					});
-				}); 
-            }
-
-            $query->skip($iDisplayStart)->take($this->displayLength + 1);
-
-            $items = $query->get(); 
-
-			$objectField = $model->type()->field()->where('show_in_list', 1)->get();
-
-			$config = \App::make('telenok.config')->getObjectFieldController();
-			
-            foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
-            {
-				$c = [];
-				
-				foreach($objectField as $f)
-				{
-					$c[$f->code] = $config->get($f->key)->getListFieldContent($f, $item, $type);
-				}
-
-				$c['tableManageItem'] = $this->getListButtonExtended($item, $field, $type, $uniqueId);
-						
-                $content[] = $c;
-            }
-
-            return [
-                'sEcho' => $sEcho,
-                'iTotalRecords' => ($iDisplayStart + $items->count()),
-                'iTotalDisplayRecords' => ($iDisplayStart + $items->count()),
-                'aaData' => $content
-            ]; 
-        }
-        catch (\Exception $e) 
-        {
-			return [
-                'sEcho' => $sEcho,
-                'iTotalRecords' => 0,
-                'iTotalDisplayRecords' => 0,
-                'aaData' => [],
-                'exception' => $e->getMessage(),
-            ];
-        } 
-    } 
 	
     public function preProcess($model, $type, $input)
     {
@@ -234,9 +126,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		$input->put('show_in_list', 0);
 		$input->put('show_in_form', 1);
 		$input->put('allow_search', 1);
-		$input->put('allow_delete', 1);
 		$input->put('allow_create', 0);
-		$input->put('allow_choose', 1);
 		$input->put('allow_update', 1);
 		$input->put('field_order', 5);
 		 
@@ -257,11 +147,9 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			'show_in_list' => $input->get('show_in_list'),
 			'show_in_form' => $input->get('show_in_form'),
 			'allow_search' => $input->get('allow_search'),
-			'allow_delete' => $input->get('allow_delete'),
 			'multilanguage' => 0,
 			'active' => $input->get('active'),
 			'allow_create' => $input->get('allow_create'),
-			'allow_choose' => $input->get('allow_choose'),
 			'allow_update' => $input->get('allow_update'),
 			'field_order' => $input->get('field_order'),
 			'field_object_tab' => $tabTo->getKey(),

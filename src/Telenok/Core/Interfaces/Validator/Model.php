@@ -16,7 +16,7 @@ class Model {
         $input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
 
         $this->model = $model;
-        $this->input = !$input->isEmpty() ? $input : \Illuminate\Support\Collection::make(\Input::all());
+        $this->input = !$input->isEmpty() ? $input : \Illuminate\Support\Collection::make([]);
         $this->message = array_merge(\Lang::get('core::default.error'), (array)$message);
         $this->ruleList = $this->processRule($model->getRule());
         $this->customAttributes = $customAttributes;

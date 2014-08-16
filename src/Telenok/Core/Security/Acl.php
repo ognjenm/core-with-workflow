@@ -722,7 +722,7 @@ class Acl
 
 			if (!empty($filterCode))
 			{
-				$filters->only((array) $filterCode);
+				$filters = $filters->filter(function($i) use ($filterCode) { return in_array($i->getKey(), (array)$filterCode); });
 			}
 
 			// submit joined query with sequence of resource and linked type

@@ -20,7 +20,7 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->where('resource_type_permission_user_filter_object_type.start_at', '<=', $now);
 			$join->where('resource_type_permission_user_filter_object_type.end_at', '>=', $now);
 		}); 
-		
+
 		// verify user's right via SubjectPermissionResource on resource with code like "object.some_object_type_code" eg "object.object_type"
 		if ($subject instanceof \Telenok\Core\Model\User\User)
 		{

@@ -2,8 +2,8 @@
 	<div class="modal-content">
 
 		<div class="modal-header table-header">
-			<a class="close" data-dismiss="modal">×</a>
-			<h3>{{{ $controller->LL('wizard.file.header') }}}</h3>
+			<button data-dismiss="modal" class="close" type="button">×</button>
+			<h4>{{{ $controller->LL('wizard.file.header') }}}</h4>
 		</div>
 		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
 			<script type="text/javascript">

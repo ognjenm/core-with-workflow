@@ -2,8 +2,8 @@
 	<div class="modal-content">
 
 		<div class="modal-header table-header">
-			<a class="close" data-dismiss="modal">×</a>
-			<h3>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title_list') }}}</h3>
+			<button data-dismiss="modal" class="close" type="button">×</button>
+			<h4>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title_list') }}}</h4>
 		</div>
 		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
 			<div class="widget-main">
@@ -27,7 +27,7 @@
 				"bAutoWidth": true,
 				"bProcessing": true,
 				"bServerSide": true,
-				"sAjaxSource" : '{{ URL::route("cmf.module.{$controller->getKey()}.wizard.list", ["id" => $type->getKey()]) }}',
+				"sAjaxSource" : '{{ URL::route("cmf.module.{$controller->getKey()}.wizard.list", ["id" => empty($typeList) ? $type->getKey() : $typeList]) }}',
 				"bDeferRender": '',
 				"bJQueryUI": false,
 				"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",

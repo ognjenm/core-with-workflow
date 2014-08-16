@@ -89,7 +89,7 @@
             { 
                 ORYX.Editor.setMissingClasses();
                 oryxEditor = new ORYX.Editor({
-                    id: 'oryx-{{uniqid()}}',
+                    id: 'oryx-{{str_random()}}',
                     fullscreen: false,
                     stencilset: {
                         url: "{{ URL::route("cmf.module.workflow-process.diagram.stensilset") }}"

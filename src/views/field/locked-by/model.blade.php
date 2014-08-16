@@ -15,7 +15,7 @@
 
 
 <div class="form-group input-group">
-    {{ Form::label(uniqid(), $controller->LL('title'), array('class'=>'control-label')) }}
+    {{ Form::label(str_random(), $controller->LL('title'), array('class'=>'control-label')) }}
     <div class="controls">
         <span class="input-group-addon">
             <i class="fa fa-calendar bigger-110"></i>

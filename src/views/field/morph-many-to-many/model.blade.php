@@ -2,9 +2,26 @@
     
     $domAttr = ['class' => 'col-md-6', 'disabled' => 'disabled'];
     $method = camel_case($field->code);
-    $jsUnique = uniqid("{$uniqueId}_");
+    $jsUnique = str_random();
 
     $linkedField = $field->morph_many_to_many_has ? 'morph_many_to_many_has' : 'morph_many_to_many_belong_to';
+	
+	
+	$disabledCreateLinkedType = false;
+	$disabledReadLinkedType = false;
+
+	$linkedType = $controller->getLinkedModelType($field);
+
+	if (!\Auth::can('create', 'object_type.' . $linkedType->code))
+	{
+		$disabledCreateLinkedType = true;
+	}
+	
+	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
+	{
+		$disabledReadLinkedType = true;
+	}
+
 ?>
     <div class="widget-box transparent">
         <div class="widget-header widget-header-small">
@@ -75,7 +92,7 @@
                                                 jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
                                             }
                                         }
-                                        @if ($field->allow_delete)
+										@if ($model->exists && $field->allow_update && $permissionUpdate)
                                         ,{
                                             "sExtends": "text",
                                             "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",

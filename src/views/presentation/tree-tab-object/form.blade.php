@@ -3,9 +3,9 @@
 			<div class="tabbable">
 				<ul class="nav nav-tabs" id='form-nav-{{{$uniqueId}}}'>
 
-					@foreach($type->tab()->get() as $tab) 
+					@foreach($type->tab()->active()->get() as $tab) 
 
-					@if ($tab->field()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->count())
+					@if ($tab->field()->active()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->count())
 					<li>
 						<a data-toggle="tab" href="#{{{$uniqueId}}}_{{{$tab->code}}}">
 							@if ($tab->icon_class)
@@ -29,11 +29,11 @@
 
 				<div class="tab-content">
 
-					@foreach($type->tab()->get()->sortBy('tab_order') as $tab) 
+					@foreach($type->tab()->active()->get()->sortBy('tab_order') as $tab) 
 
 					<div id="{{{$uniqueId}}}_{{{$tab->code}}}" class="tab-pane in">
 						
-						@foreach($tab->field()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->sortBy('field_order') as $field) 
+						@foreach($tab->field()->active()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->sortBy('field_order') as $field) 
 
 							@include($controller->getPresentationFormFieldListView())
 							

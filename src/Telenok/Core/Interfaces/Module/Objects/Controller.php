@@ -90,7 +90,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'fields' => $fields,
                 'fieldsFilter' => $this->getModelFieldFilter(),
                 'gridId' => $this->getGridId(),
-                'uniqueId' => uniqid(),
+                'uniqueId' => str_random(),
             ))->render()
         ];
     }
@@ -105,7 +105,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return \View::make($this->getPresentationTreeView(), array(
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
-                'id' => uniqid()
+                'id' => str_random()
             ))->render();
     } 
 
@@ -174,7 +174,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
             $model = $this->getModelList();
             $type = $this->getTypeList();
 
-            $items = $this->getListItem($model);
+            $items = $this->getListItem($model)->get();
 
             $config = \App::make('telenok.config')->getObjectFieldController();
 
@@ -220,9 +220,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
         $this->getFilterQuery($model, $query); 
 
-        $result = $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1)->get();
-			
-        return $result;
+        return $query->orderBy('updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function create($id = NULL)
@@ -236,14 +234,14 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         \Event::fire('form.create.object', [$params]);
 
         return [
-            'tabKey' => $this->getTabKey().'-new-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-new-'.str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge([
                 'controller' => $this,
                 'model' => $params['model'], 
                 'type' => $params['type'], 
                 'fields' => $params['fields'], 
-                'uniqueId' => uniqid(), 
+                'uniqueId' => str_random(), 
 				'routerParam' => $this->getRouterParam('create', $type, $model),
 				'canCreate' => \Auth::can('create', $params['model']), 
             ], $this->getAdditionalViewParam()))->render()
@@ -261,14 +259,14 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         \Event::fire('form.edit.object', [$params]);
 			
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
 				'controller' => $this,
 				'model' => $params['model'], 
 				'type' => $params['type'], 
 				'fields' => $params['fields'], 
-				'uniqueId' => uniqid(), 
+				'uniqueId' => str_random(), 
 				'routerParam' => $this->getRouterParam('edit', $type, $model),
 				'canUpdate' => \Auth::can('update', $params['model']),
 				'canDelete' => \Auth::can('delete', $params['model']),
@@ -309,7 +307,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                     'model' => $params['model'], 
                     'type' => $params['type'], 
                     'fields' => $params['fields'], 
-                    'uniqueId' => uniqid(), 
+                    'uniqueId' => str_random(), 
                     'success' => true,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('store', $type, $model),
@@ -353,7 +351,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                     'model' => $model,
                     'type' => $type, 
                     'fields' => $params['fields'], 
-                    'uniqueId' => uniqid(), 
+                    'uniqueId' => str_random(), 
                     'success' => TRUE,
                     'warning' => \Session::get('warning'),
 					'routerParam' => $this->getRouterParam('update', $type, $model),
@@ -380,7 +378,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
             $type = $this->getTypeList();
         }
 
-		return $model->storeOrUpdate($input, $type);
+		return $model->storeOrUpdate($input, true);
     }
 
     public function editList($id = null)
@@ -410,14 +408,14 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'type' => $params['type'], 
                 'fields' => $params['fields'], 
 				'routerParam' => $this->getRouterParam('edit', $type, $model),
-                'uniqueId' => uniqid(), 
+                'uniqueId' => str_random(), 
 				'canUpdate' => \Auth::can('update', $params['model']),
 				'canDelete' => \Auth::can('delete', $params['model']),
             ), $this->getAdditionalViewParam()))->render();
         }
 
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.uniqid(),
+            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];

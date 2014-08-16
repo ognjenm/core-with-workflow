@@ -184,7 +184,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return parent::fillableFromArray($attributes);
 	}
 
-	public function storeOrUpdate($input = [])
+	public function storeOrUpdate($input = [], $withPermission = false)
 	{
 		if ($this instanceof \Telenok\Core\Model\Object\Sequence)
 		{
@@ -201,7 +201,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 
 		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
-		
+		 
 		try
 		{
 			if (!$this->exists)
@@ -216,6 +216,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		catch (\Exception $ex) 
 		{
 			$model = new static();
+		}
+		
+		if ($withPermission)
+		{
+			$model->validateStoreOrUpdatePermission($type, $input);
 		}
 
 		foreach($model->fillable as $fillable)
@@ -234,25 +239,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				$input->put($fillable, $model->$fillable);
 			} 
 		} 
-		
+
 		try
 		{
-			$this->validateStoreOrUpdatePermission($type, $input);
-
 			\DB::transaction(function() use ($type, $input, $model)
 			{  
 				$classControllerObject = null;
 
 				$exists = $model->exists;
-				
-				if (!$exists && !\Auth::can('create', "object_type.{$type->code}"))
-				{
-					throw new \LogicException('Cant create. Access denied.');
-				}
-				else if ($exists && !\Auth::can('update', "object_type.{$type->code}"))
-				{
-					throw new \LogicException('Cant update. Access denied.');
-				}
 
 				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.before', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}"));
 
@@ -340,6 +334,61 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			throw new \LogicException('Cant update. Access denied.');
 		}
+		 
+		$objectField = $this->getObjectField();
+
+		foreach($input->all() as $key => $value)
+		{
+			$f = $objectField->get($key);
+			$f_ = \App::make('telenok.config')->getObjectFieldController();
+
+			if ($f)
+			{
+
+				if ( 
+						(!$this->exists && !\Auth::can('create', 'object_field.' . $type->code . '.' . $key)) 
+							|| 
+						($this->exists && !\Auth::can('update', 'object_field.' . $type->code . '.' . $key)) 
+					)
+				{
+					$input->forget($key);
+				}
+			}
+			
+			else
+			{
+				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField())
+						&&
+					( 
+						(!$this->exists && !\Auth::can('create', 'object_type.object_field')) 
+							|| 
+						($this->exists && !\Auth::can('update', $this->getKey())) 
+					)
+				)
+				{
+					$input->forget($key);
+				}
+				else
+				{
+					foreach ($objectField->all() as $key_ => $field_)
+					{
+						$fieldController = $f_->get($field_->key);
+
+						if ($fieldController && in_array($key, $fieldController->getModelField($this, $field_))
+								&&
+							( 
+								(!$this->exists && !\Auth::can('create', 'object_field.' . $type->code . '.' . $key_)) 
+									|| 
+								($this->exists && !\Auth::can('update', 'object_field.' . $type->code . '.' . $key_)) 
+							)
+						)
+						{
+							$input->forget($key);
+						}
+					}
+				}
+			}
+		}
 	}
 
 	public function preProcess($type, $input)
@@ -375,7 +424,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$value = null;
 		}
 		
-		$f = $this->getObjectField()->get($key);
+		$objectField = $this->getObjectField();
+
+		$f = $objectField->get($key);
 
 		$f_ = \App::make('telenok.config')->getObjectFieldController();
 
@@ -393,7 +444,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 			else
 			{
-				foreach ($this->getObjectField()->toArray() as $key_ => $field_)
+				foreach ($objectField->toArray() as $key_ => $field_)
 				{
 					$fieldController = $f_->get($field_->key);
 
@@ -410,7 +461,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function __set($key, $value)
 	{  
-		$f = $this->getObjectField()->get($key);
+		$objectField = $this->getObjectField();
+		
+		$f = $objectField->get($key);
 
 		$f_ = \App::make('telenok.config')->getObjectFieldController();
 
@@ -424,7 +477,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 		else
 		{  
-			foreach ($this->getObjectField()->toArray() as $key_ => $field_)
+			foreach ($objectField->toArray() as $key_ => $field_)
 			{
 				if ($fieldController = $f_->get($field_->key))
 				{
@@ -753,7 +806,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			if (!empty($filterCode))
 			{
-				$filters->only((array) $filterCode);
+				$filters = $filters->filter(function($i) use ($filterCode) { return in_array($i->getKey(), (array)$filterCode); });
 			}
 
 			$filters->each(function($item) use ($query, $queryWhere, $permission, $subject)

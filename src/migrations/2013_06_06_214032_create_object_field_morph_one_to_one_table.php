@@ -13,6 +13,7 @@ class CreateObjectFieldMorphOneToOneTable extends Migration {
 			{
 				$table->integer('morph_one_to_one_has')->unsigned()->default('0')->nullable();
 				$table->integer('morph_one_to_one_belong_to')->unsigned()->default('0')->nullable();
+				$table->string('morph_one_to_one_belong_to_type_list')->nullable();
 			});
 		}
 	}

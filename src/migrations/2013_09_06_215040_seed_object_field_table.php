@@ -59,7 +59,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 0,
 						'allow_update' => 0,
 						'field_order' => 1,
@@ -80,7 +79,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'required' => 1,
 						'field_order' => 2,
 						'string_list_size' => 50,
@@ -101,7 +99,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'required' => 1,
 						'field_order' => 3,
 					]
@@ -121,7 +118,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 0,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'required' => 0,
 						'field_order' => 3,
 					]
@@ -139,9 +135,8 @@ class SeedObjectFieldTable extends Migration {
 						'field_object_tab' => $tabMainId,
 						'multilanguage' => 0,
 						'show_in_form' => 1,
-						'show_in_list' => 0,
+						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 0,
 						'field_order' => 4,
@@ -163,9 +158,7 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
-						'allow_choose' => 1,
 						'allow_update' => 0,
 						'field_order' => 5,
 					]
@@ -186,9 +179,7 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
-						'allow_choose' => 1,
 						'allow_update' => 0,
 					]
 			); 
@@ -207,7 +198,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 6,
@@ -228,7 +218,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 0,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 0,
 						'field_order' => 7,
@@ -249,7 +238,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 0,
 						'show_in_list' => 0,
 						'allow_search' => 0,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 8,
@@ -270,7 +258,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 9,
 					]
 			);
@@ -290,7 +277,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 10,
 					]
 			);
@@ -310,7 +296,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 11,
 					]
 			);
@@ -329,28 +314,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 0,
-						'allow_delete' => 0,
-						'allow_create' => 1,
-						'allow_update' => 1,
-						'field_order' => 12,
-					]
-			);
-
-			DB::table('object_field')->insert(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
-						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_choose'), JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_choose'), JSON_UNESCAPED_UNICODE),
-						'key' => 'checkbox',
-						'code' => 'allow_choose',
-						'active' => 1,
-						'field_object_type' => $modelFieldId,
-						'field_object_tab' => $tabAdditionallyId,
-						'multilanguage' => 0,
-						'show_in_form' => 1,
-						'show_in_list' => 0,
-						'allow_search' => 0,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 12,
@@ -371,31 +334,9 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 0,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 13,
-					]
-			);
-
-			DB::table('object_field')->insert(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
-						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_delete'), JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_delete'), JSON_UNESCAPED_UNICODE),
-						'key' => 'checkbox',
-						'code' => 'allow_delete',
-						'active' => 1,
-						'field_object_type' => $modelFieldId,
-						'field_object_tab' => $tabAdditionallyId,
-						'multilanguage' => 0,
-						'show_in_form' => 1,
-						'show_in_list' => 0,
-						'allow_search' => 0,
-						'allow_delete' => 0,
-						'allow_create' => 1,
-						'allow_update' => 1,
-						'field_order' => 14,
 					]
 			);
 
@@ -413,7 +354,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 15,
@@ -434,7 +374,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 16,
@@ -455,7 +394,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'field_order' => 17,
@@ -476,7 +414,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
 						'checkbox_default' => 1,
@@ -498,7 +435,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 0,
-						'allow_delete' => 0,
 						'allow_create' => 1,
 						'allow_update' => 0,
 						'field_order' => 19,
@@ -519,7 +455,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 20,
 					]
 			);
@@ -538,7 +473,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 21,
 					]
 			);
@@ -557,7 +491,6 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 0,
 						'allow_search' => 1,
-						'allow_delete' => 0,
 						'field_order' => 22,
 					]
 			);
@@ -617,10 +550,6 @@ class SeedObjectFieldTableTranslation extends \Telenok\Core\Interfaces\Translati
 					'ru' => "Доступно при создании объекта",
 					'en' => "Available at object creation",
 				],
-				'allow_choose' => [
-					'ru' => "Доступно при выборе объекта",
-					'en' => "Available at choosing object",
-				],
 				'allow_search' => [
 					'ru' => "Разрешить искать по полю",
 					'en' => "Available search by field",
@@ -628,10 +557,6 @@ class SeedObjectFieldTableTranslation extends \Telenok\Core\Interfaces\Translati
 				'allow_update' => [
 					'ru' => "Доступно при редактировании объекта",
 					'en' => "Available at object editing",
-				],
-				'allow_delete' => [
-					'ru' => "Можно удалить",
-					'en' => "Сan delete",
 				],
 				'allow_sort' => [
 					'ru' => "Cортировка в списке",

@@ -11,7 +11,7 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Use
 
 	use UserTrait, RemindableTrait;
 
-	protected $ruleList = ['title' => ['required', 'min:1'], 'email' => ['unique:user'], 'usernick' => ['unique:user']];
+	protected $ruleList = ['title' => ['required', 'min:1'], 'email' => ['unique:user,email,:id:,id'], 'usernick' => ['unique:user,usernick,:id:,id']];
 	protected $table = 'user';
 	protected $hidden = ['password'];
 	protected $fillable = ['remember_token'];

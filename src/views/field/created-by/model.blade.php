@@ -9,7 +9,7 @@
 ?>
 
 <div class="form-group">
-	{{ Form::label(uniqid(), $controller->LL('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+	{{ Form::label(str_random(), $controller->LL('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-xs-8">
 		<div class="input-group">
 			<span class="input-group-addon">

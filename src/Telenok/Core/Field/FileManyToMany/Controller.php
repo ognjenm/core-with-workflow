@@ -22,6 +22,14 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		return $this->routeUpload;
 	}	
 	
+    public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
+    { 		
+		if ($field->relation_many_to_many_has)
+		{
+			return parent::getFormModelContent($controller, $model, $field, $uniqueId);
+		}
+	} 
+
     public function getListFieldContent($field, $item, $type = null)
     {
 		$file = $item->{camel_case($field->code)}()->first();

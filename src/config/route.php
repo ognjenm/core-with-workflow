@@ -122,8 +122,8 @@
 \Route::any('cmf/module/objects-lists/wizard/store/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@store"));
 \Route::any('cmf/module/objects-lists/wizard/update/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@update"));
 \Route::any('cmf/module/objects-lists/wizard/delete/{id}', array('as' => 'cmf.module.objects-lists.wizard.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@delete"));
-\Route::any('cmf/module/objects-lists/wizard/choose/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.choose', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@choose"));
-\Route::any('cmf/module/objects-lists/wizard/list/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.list', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@getWizardList"));
+\Route::any('cmf/module/objects-lists/wizard/choose', array('as' => 'cmf.module.objects-lists.wizard.choose', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@choose"));
+\Route::any('cmf/module/objects-lists/wizard/list', array('as' => 'cmf.module.objects-lists.wizard.list', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@getWizardList"));
 
 // Module Objects\Version
 \Route::any('cmf/module/objects-version/action-param', array('as' => 'cmf.module.objects-version.action.param', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@getActionParam"));

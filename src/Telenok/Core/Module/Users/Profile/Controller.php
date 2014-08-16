@@ -21,7 +21,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             'tabLabel' => $this->LL('tab.name'),
             'tabContent' => \View::make($this->getPresentationContentView(), array(
                 'controller' => $this, 
-                'uniqueId' => uniqid(),
+                'uniqueId' => str_random(),
             ))->render()
         );
     }

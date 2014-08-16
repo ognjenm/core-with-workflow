@@ -89,7 +89,6 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		$input->put('show_in_list', 0);
 		$input->put('show_in_form', 1);
 		$input->put('allow_search', 1);
-		$input->put('allow_delete', 0);
 		$input->put('allow_create', 1);
 		$input->put('allow_update', 1);
 		$input->put('field_order', 1); 

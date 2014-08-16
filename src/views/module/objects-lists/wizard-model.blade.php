@@ -97,8 +97,8 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 	<div class="modal-content">
 
 		<div class="modal-header table-header">
-			<a class="close" data-dismiss="modal">×</a>
-			<h3>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title') }}}</h3>
+			<button data-dismiss="modal" class="close" type="button">×</button>
+			<h4>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title') }}}</h4>
 		</div>
 
 
@@ -131,7 +131,7 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 					{{{ $controller->LL('btn.choose') }}}
 				</button>
 				@endif
-				@if (\Input::get('saveBtn'))
+				@if (\Input::get('saveBtn') && ( (!$model->exists && \Auth::can('create', 'object_type.' . $type->code)) || ($model->exists && \Auth::can('update', $model->getKey())) ))
 				<button type="submit" class="btn btn-info">
 					<i class="fa fa-floppy-o"></i>
 					{{{ $controller->LL('btn.save') }}}

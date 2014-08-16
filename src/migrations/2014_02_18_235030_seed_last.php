@@ -254,9 +254,7 @@ class SeedLast extends Migration {
 			'show_in_form' => 1,
 			'show_in_list' => 1,
 			'allow_search' => 1,
-			'allow_delete' => 1,
 			'allow_create' => 1,
-			'allow_choose' => 1,
 			'allow_update' => 1,
 			'field_order' => 6,
 		]);
@@ -348,7 +346,6 @@ class SeedLast extends Migration {
 				'show_in_form' => 1,
 				'show_in_list' => 0,
 				'allow_search' => 1,
-				'allow_delete' => 0,
 				'multilanguage' => 0,
 				'allow_create' => 1,
 				'allow_update' => 1, 
@@ -368,7 +365,6 @@ class SeedLast extends Migration {
 				'show_in_form' => 1,
 				'show_in_list' => 0,
 				'allow_search' => 1,
-				'allow_delete' => 0,
 				'multilanguage' => 0,
 				'allow_create' => 1,
 				'allow_update' => 1, 
@@ -388,7 +384,6 @@ class SeedLast extends Migration {
 				'show_in_form' => 1,
 				'show_in_list' => 0,
 				'allow_search' => 1,
-				'allow_delete' => 0,
 				'multilanguage' => 0,
 				'allow_create' => 1,
 				'allow_update' => 1, 
@@ -492,12 +487,6 @@ class SeedLast extends Migration {
 		(new \Telenok\Core\Model\Security\Permission())->storeOrUpdate([
 			'title' => ['en' => 'Update', 'ru' => 'Изменение'],
 			'code' => 'update',
-			'active' => 1,
-		]);
-
-		(new \Telenok\Core\Model\Security\Permission())->storeOrUpdate([
-			'title' => ['en' => 'Choose', 'ru' => 'Выбирание'],
-			'code' => 'choose',
 			'active' => 1,
 		]);
 

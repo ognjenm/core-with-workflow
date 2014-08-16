@@ -21,7 +21,7 @@
 		$disabled = true;
 	}
 	?> 
-    {{ Form::label($disabled ? uniqid() : "{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+    {{ Form::label($disabled ? str_random() : "{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
         @if ($disabled)
         {{ Form::hidden("{$field->code}", $value) }}

@@ -69,9 +69,19 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         return parent::update($id, $input);
     } 
     
-    public function choose($id)
+    public function choose()
     {
-        try {
+		$typeList = [];
+		$id = \Input::get('id', 0);
+		
+		try
+		{
+			if (is_array($id))
+			{
+				$typeList = $id;
+				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
+			}
+			
             $model = $this->modelByType($id);
             $type = $this->getType($id); 
             $fields = $model->getFieldList(); 
@@ -89,28 +99,49 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				'presentation' => $this->getPresentation(),
                 'model' => $model,
                 'type' => $type,
+				'typeList' => $typeList,
                 'fields' => $fields,
-                'uniqueId' => ($uniqueId = uniqid()),
-                'gridId' => uniqid(),
+                'uniqueId' => ($uniqueId = str_random()),
+                'gridId' => str_random(),
 				'saveBtn' => \Input::get('saveBtn', true), 
 				'chooseBtn' => \Input::get('chooseBtn', true), 
                 'contentForm' => ( $model->classController() ? $this->typeForm($model)->getFormContent($model, $type, $fields, $uniqueId) : FALSE),
             ))->render()
         );
     }    
-    
-    public function getWizardList($id)
+	
+    public function getFilterQuery($model, $query)
+    {
+		
+	}
+	
+    public function getWizardList()
     {
         $content = [];
+		$typeList = [];
 
         $iDisplayStart = intval(\Input::get('iDisplayStart', 10));
         $sEcho = \Input::get('sEcho');
-
+		$id = \Input::get('id', 0);
+		
         try
         {
+			if (is_array($id))
+			{
+				$typeList = $id;
+				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
+			}
+			
             $type = $this->getType($id);
             $model = $this->modelByType($id);  
-            $items = $this->getListItem($model);
+			$items = $this->getListItem($model)->where(function($query) use ($typeList)
+			{
+				if (!empty($typeList))
+				{
+					$query->whereIn('sequences_object_type', $typeList);
+				}
+			})->get();
+			
 			$config = \App::make('telenok.config')->getObjectFieldController();
 
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)

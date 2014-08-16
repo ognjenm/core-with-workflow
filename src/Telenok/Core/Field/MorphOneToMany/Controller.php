@@ -15,6 +15,14 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->morph_one_to_many_has, $field->morph_one_to_many_belong_to])->first();
 	}
+	
+    public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
+    { 		
+		if ($field->morph_one_to_many_has || $field->morph_one_to_many_belong_to)
+		{
+			return parent::getFormModelContent($controller, $model, $field, $uniqueId);
+		}
+	} 
 
     public function getModelField($model, $field)
     {
@@ -49,11 +57,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         return $return;
     }
 
-    public function getListButtonExtended($item, $field, $type, $uniqueId)
+    public function getListButtonExtended($item, $field, $type, $uniqueId, $canUpdate)
     {
         return '<div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="editO2MHas'.$uniqueId.'(this, \''.\URL::route('cmf.module.objects-lists.wizard.edit', ['id' => $item->getKey() ]).'\'); return false;">
+                        onclick="editO2MHas'.$uniqueId.'(this, \''.\URL::route($this->getRouteWizardEdit(), ['id' => $item->getKey(), 'saveBtn' => 1, 'chooseBtn' => 0]).'\'); return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
                     
@@ -61,7 +69,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
                     ' .
-                    ($field->allow_delete ? '
+                    ($canUpdate ? '
                     <button class="btn btn-minier btn-danger trash-it" title="'.$this->LL('list.btn.delete').'" 
                         onclick="deleteO2MHas'.$uniqueId.'(this); return false;">
                         <i class="fa fa-trash-o"></i>
@@ -105,7 +113,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getFilterContent($field = null)
     {
-        $uniqueId = uniqid();
+        $uniqueId = str_random();
         $option = [];
         
         $id = $field->morph_one_to_many_has ?: $field->morph_one_to_many_belong_to;
@@ -318,10 +326,10 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'show_in_form' => $input->get('show_in_form_belong', $model->show_in_form),
 					'show_in_list' => $input->get('show_in_list_belong', $model->show_in_list),
 					'allow_search' => $input->get('allow_search_belong', $model->allow_search),
-					'allow_delete' => $input->get('allow_delete_belong', $model->allow_delete),
 					'multilanguage' => 0,
 					'active' => $input->get('active_belong', $model->active),
-					'allow_choose' => $input->get('allow_choose_belong', $model->allow_choose),
+					'start_at' => $input->get('start_at_belong', $model->start_at),
+					'end_at' => $input->get('end_at_belong', $model->end_at),
 					'allow_create' => $input->get('allow_create_belong', $model->allow_create),
 					'allow_update' => $input->get('allow_update_belong', $model->allow_update),
 					'field_order' => $input->get('field_order_belong', $model->field_order),

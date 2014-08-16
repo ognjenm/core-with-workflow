@@ -132,7 +132,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
                 'permissionCreate' => \Auth::can('create', 'object_field.' . $model->getTable() . '.' . $field->code),
                 'permissionUpdate' => \Auth::can('update', 'object_field.' . $model->getTable() . '.' . $field->code),
                 'permissionDelete' => \Auth::can('delete', 'object_field.' . $model->getTable() . '.' . $field->code),
-                'permissionChoose' => \Auth::can('choose', 'object_field.' . $model->getTable() . '.' . $field->code),
                 'displayLength' => $this->displayLength,
                 'uniqueId' => $uniqueId,
             ))->render();
@@ -151,9 +150,9 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         try 
         {
             $model = \Telenok\Object\Sequence::getModel($id);
-            $type = \Telenok\Object\Sequence::find($id)->sequencesObjectType;
             $field = \Telenok\Object\Sequence::getModel($fieldId);
-
+            $type = $this->getLinkedModelType($field);
+			
 			$query = $model->{camel_case($field->code)}();
 
             if ($term)
@@ -173,10 +172,15 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
             $items = $query->get();
 
-			$objectField = $this->getLinkedModelType($field)->field()->where('show_in_list', 1)->get();
+			$objectField = $type->field()->active()->get()->filter(function($item) use ($type)
+					{
+						return $item->show_in_list == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
+					});
 
 			$config = \App::make('telenok.config')->getObjectFieldController();
 
+			$canUpdate = \Auth::can('update', 'object_field.' . $model->getTable() . '.' . $field->code);
+			
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
             {
 				$c = [];
@@ -186,7 +190,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 					$c[$f->code] = $config->get($f->key)->getListFieldContent($f, $item, $type);
 				}
 
-				$c['tableManageItem'] = $this->getListButtonExtended($item, $field, $type, $uniqueId);
+				$c['tableManageItem'] = $this->getListButtonExtended($item, $field, $type, $uniqueId, $canUpdate);
 						
                 $content[] = $c;
             }
@@ -212,10 +216,14 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	
     public function getFormModelTableColumn($field, $model, $jsUnique)
     {
-		$fields = []; 
+		$fields = [];
+		$type = $this->getLinkedModelType($field);
 		
-		$objectField = $this->getLinkedModelType($field)->field()->where('show_in_list', 1)->get();
-		
+		$objectField = $type->field()->active()->get()->filter(function($item) use ($type)
+				{
+					return $item->show_in_list == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
+				});
+
 		foreach($objectField as $key => $field)
 		{
 			$fields[$field->code] = [
@@ -357,7 +365,12 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     {  
         return $this;
     } 
-    
+
+    public function processDeleting($model)
+    {  
+        return true;
+    } 
+	
     public function allowMultilanguage()
     {
         return $this->allowMultilanguage;
