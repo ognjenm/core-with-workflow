@@ -46,7 +46,7 @@ class Sequence extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
     public function aclPermission()
     {
-        return $this->hasMany('\Telenok\Core\Model\Security\SubjectPermissionResource', 'acl_permission_object_sequence');
+        return $this->hasMany('\Telenok\Security\SubjectPermissionResource', 'acl_permission_object_sequence');
     }
 
 }

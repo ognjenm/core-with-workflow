@@ -365,7 +365,7 @@ class Acl
         }
         else if (is_numeric($resourceCode))
         {
-			$resource = \Telenok\Core\Model\Object\Sequence::find($resourceCode); 
+			$resource = \Telenok\Object\Sequence::find($resourceCode); 
         }
 		else if (is_string($resourceCode))
 		{
@@ -472,7 +472,7 @@ class Acl
         }
         else if (is_numeric($resourceCode))
         {
-			$resource = \Telenok\Core\Model\Object\Sequence::find($resourceCode); 
+			$resource = \Telenok\Object\Sequence::find($resourceCode); 
         }
 		else if (is_string($resourceCode))
 		{

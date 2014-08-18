@@ -248,12 +248,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$id = $input->get("{$field->code}", 0);
 
 		if ($field->morph_one_to_one_belong_to)
-		{
+		{ 
 			if ($id)
 			{
 				$objectModel = \Telenok\Object\Sequence::find($id)->model()->first();
 
-				if ($objectModel->type()->getKey() == $field->morph_one_to_one_belong_to)
+				if (in_array($objectModel->type()->getKey(), $field->morph_one_to_one_belong_to_type_list->toArray()))
 				{
 					$model->fill([$field->code . '_type' => get_class($objectModel), $field->code . '_id' => $objectModel->getKey()])->save();
 				}
@@ -294,8 +294,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {  
 		if ($model->morph_one_to_one_has)
 		{
-			$f = \Telenok\Object\Field::where('code', $model->code . 'able')->where('morph_one_to_one_belong_to', '>', 0)->first();
-
+			$f = \Telenok\Object\Field::where(function($query) use ($model)
+					{
+						$query->where('code', $model->code . 'able');
+						$query->where('field_object_type', $model->morph_one_to_one_has);
+					})
+					->first();
 			if ($f)
 			{
 				$tList = $f->morph_one_to_one_belong_to_type_list;
@@ -390,11 +394,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'field_object_type' => $typeBelongTo->getKey(),
 					'field_object_tab' => $tabTo->getKey(),
 					'morph_one_to_one_belong_to' => \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id'),
+					'morph_one_to_one_belong_to_type_list' => [$relatedTypeOfModelField->getKey()],
 					'show_in_form' => $input->get('show_in_form_belong', $model->show_in_form),
 					'show_in_list' => $input->get('show_in_list_belong', $model->show_in_list),
 					'allow_search' => $input->get('allow_search_belong', $model->allow_search),
 					'multilanguage' => 0,
-					'morph_one_to_one_belong_to_type_list' => [$relatedTypeOfModelField->getKey()],
 					'active' => $input->get('active_belong', $model->active),
 					'start_at' => $input->get('start_at_belong', $model->start_at),
 					'end_at' => $input->get('end_at_belong', $model->end_at),
@@ -404,7 +408,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				];
 
 
-				$f = \Telenok\Object\Field::where('code', $relatedSQLField)->where('morph_one_to_one_belong_to', '>', 0)->first();
+				$f = \Telenok\Object\Field::where(function($query) use ($relatedSQLField, $model)
+						{
+							$query->where('code', $relatedSQLField);
+							$query->where('field_object_type', $model->morph_one_to_one_has);
+						})
+						->first();
 				
 				if ($f)
 				{
@@ -445,7 +454,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				}
 				else
 				{
-					\Session::flash('warning.hasManyBelongTo', $this->LL('error.method.defined', ['method'=>$belongTo['method'], 'class'=>$classBelongTo]));
+					\Session::flash('warning.morphOneTo', $this->LL('error.method.defined', ['method'=>$belongTo['method'], 'class'=>$classBelongTo]));
 				} 
 			}
 
@@ -455,7 +464,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             } 
             else
             {
-                \Session::flash('warning.hasMany', $this->LL('error.method.defined', ['method'=>$hasMany['method'], 'class'=>$classModelHasMany]));
+                \Session::flash('warning.morphOneHas', $this->LL('error.method.defined', ['method'=>$hasMany['method'], 'class'=>$classModelHasMany]));
             }
         }
         catch (\Exception $e) 

@@ -14,7 +14,7 @@ class SeedObjectFieldTable extends Migration {
 
 			$tabMainId = DB::table('object_tab')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Tab']),
 						'title' => json_encode(['en' => 'Main', 'ru' => 'Основное'], JSON_UNESCAPED_UNICODE),
 						'code' => 'main',
 						'active' => 1,
@@ -25,7 +25,7 @@ class SeedObjectFieldTable extends Migration {
 
 			$tabVisibleId = DB::table('object_tab')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Tab']),
 						'title' => json_encode(['en' => 'Visibility', 'ru' => 'Видимость'], JSON_UNESCAPED_UNICODE),
 						'code' => 'visibility',
 						'active' => 1,
@@ -36,7 +36,7 @@ class SeedObjectFieldTable extends Migration {
 
 			$tabAdditionallyId = DB::table('object_tab')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Tab']),
 						'title' => json_encode(['en' => 'Additionally', 'ru' => 'Дополнительно'], JSON_UNESCAPED_UNICODE),
 						'code' => 'additionally',
 						'active' => 1,
@@ -47,7 +47,7 @@ class SeedObjectFieldTable extends Migration {
 			
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.id'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.id'), JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
@@ -67,7 +67,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.title'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.title'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -87,7 +87,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.title_list'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.title_list'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -106,7 +106,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.required'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.required'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -125,7 +125,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.code'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.code'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -145,7 +145,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.field_object_type'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.field_object_type'), JSON_UNESCAPED_UNICODE),
 						'key' => 'relation-one-to-many',
@@ -166,7 +166,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Tab'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Tab'], JSON_UNESCAPED_UNICODE),
 						'key' => 'relation-one-to-many',
@@ -186,7 +186,7 @@ class SeedObjectFieldTable extends Migration {
 			
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Order in field list'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Order in field list'], JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
@@ -206,7 +206,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.multilanguage'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.multilanguage'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -226,7 +226,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.rule'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.rule'), JSON_UNESCAPED_UNICODE),
 						'key' => 'complex-array',
@@ -246,7 +246,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
 						'key' => 'active',
@@ -264,7 +264,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Created by'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Created by'], JSON_UNESCAPED_UNICODE),
 						'key' => 'created-by',
@@ -283,7 +283,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Updated by'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Updated by'], JSON_UNESCAPED_UNICODE),
 						'key' => 'updated-by',
@@ -302,7 +302,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_create'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_create'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -322,7 +322,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_update'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_update'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -342,7 +342,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_sort'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_sort'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -362,7 +362,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_search'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.allow_search'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -382,7 +382,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.show_in_list'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.show_in_list'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -402,7 +402,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.show_in_form'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.show_in_form'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -423,7 +423,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.key'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.key'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -443,7 +443,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.description'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.description'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -461,7 +461,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.css_class'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.css_class'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -479,7 +479,7 @@ class SeedObjectFieldTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.icon_class'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.icon_class'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',

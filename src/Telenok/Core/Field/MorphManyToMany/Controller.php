@@ -25,7 +25,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         $term = trim(\Input::get('term'));
         $return = [];
-        
+ 
         try 
         {
             $class = \Telenok\Object\Sequence::getModel($id)->class_model;
@@ -223,7 +223,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 }
                 catch(\Exception $e) {}
             }
-
         }
 
         return $model;
@@ -234,7 +233,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$input->put('morph_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0); 
-		
+
         return parent::preProcess($model, $type, $input);
     } 
 	
@@ -257,13 +256,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
             $classModelMorphMany = $typeMorphMany->class_model;
             $classModelMorphTo = $typeBelongTo->class_model;
-
-            $tableMorphTo = $typeBelongTo->code;
+ 
 
             $morphManyObject = \App::build($classModelMorphMany);
             $morphToObject = \App::build($classModelMorphTo);
 
-            $pivotTable = 'pivot_morph_m2m_' . $morphManyCode . '_' . $tableMorphTo;
+            $pivotTable = 'pivot_morph_m2m_' . $morphManyCode . '_' . $typeBelongTo->code;
 
             $morphMany = [
                 'method' => camel_case($morphManyCode),
@@ -285,7 +283,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
             if (!\Schema::hasTable($pivotTable)) 
 			{
-                \Schema::create($pivotTable, function(Blueprint $table) use ($tableMorphTo, $morphManyCode)
+                \Schema::create($pivotTable, function(Blueprint $table) use ($morphManyCode, $typeMorphMany, $typeBelongTo)
                 {
                     $table->increments('id');
                     $table->timestamps();
@@ -295,7 +293,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
                     $table->unique(['morph_id', $morphManyCode . '_linked_id', $morphManyCode . '_type'], 'uniq_key');
 
-					$table->foreign($morphManyCode . '_linked_id')->references('id')->on('object_sequence')->onDelete('cascade');
+					$table->foreign($morphManyCode . '_linked_id', 'linked_id')->references('id')->on($typeMorphMany->code)->onDelete('cascade');
+					$table->foreign('morph_id', 'morph_id')->references('id')->on($typeBelongTo->code)->onDelete('cascade');
                 });
             }
 
@@ -306,16 +305,16 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 				foreach($typeMorphMany->title->toArray() as $language => $val)
 				{
-					$title[$language] = array_get($title, $language, $val . '/' . $model->translate('title', $language));
+					$title[$language] = array_get($title, $language, $model->translate('title', $language) . ' [morphMany]');
 				}
 
 				foreach($typeMorphMany->title_list->toArray() as $language => $val)
 				{
-					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
+					$title_list[$language] = array_get($title_list, $language, $model->translate('title_list', $language) . ' [morphMany]');
 				}
-  
+
 				$tabTo = $this->getFieldTabBelongTo($typeBelongTo->getKey(), $input->get('field_object_tab'));
-  
+
 				$toSave = [
 					'title' => $title,
 					'title_list' => $title_list,
@@ -336,6 +335,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'field_order' => $input->get('field_order_belong', $model->field_order),
 				];
 
+
 				$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
 
 				if ($validator->passes()) 
@@ -349,9 +349,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				} 
 				else
 				{
-					\Session::flash('warning.morphTo', $this->LL('error.method.defined', ['method' => $morphTo['method'], 'class' => $classModelMorphTo]));
+					\Session::flash('warning.morphManyTo', $this->LL('error.method.defined', ['method' => $morphTo['method'], 'class' => $classModelMorphTo]));
 				} 
-
 			}
 
             if (!$this->validateMethodExists($morphManyObject, $morphMany['method']))
@@ -360,7 +359,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             } 
             else
             {
-                \Session::flash('warning.morphOne', $this->LL('error.method.defined', ['method' => $morphMany['method'], 'class' => $classModelMorphMany]));
+                \Session::flash('warning.morphManyHas', $this->LL('error.method.defined', ['method' => $morphMany['method'], 'class' => $classModelMorphMany]));
             }
         }
         catch (\Exception $e) 
@@ -370,7 +369,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
         return parent::postProcess($model, $type, $input);
     } 
-
 }
 
 ?>

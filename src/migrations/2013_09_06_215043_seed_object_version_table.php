@@ -13,7 +13,7 @@ class SeedObjectVersionTable extends Migration {
 
 			$tabMainId = DB::table('object_tab')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Tab']),
 						'title' => json_encode(['en' => 'Main', 'ru' => 'Основное'], JSON_UNESCAPED_UNICODE),
 						'code' => 'main',
 						'active' => 1,
@@ -24,7 +24,7 @@ class SeedObjectVersionTable extends Migration {
 
 			$tabVisibleId = DB::table('object_tab')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Tab']),
 						'title' => json_encode(['en' => 'Visibility', 'ru' => 'Видимость'], JSON_UNESCAPED_UNICODE),
 						'code' => 'visibility',
 						'active' => 1,
@@ -35,7 +35,7 @@ class SeedObjectVersionTable extends Migration {
 
 			$tabAdditionallyId = DB::table('object_tab')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Tab']),
 						'title' => json_encode(['en' => 'Additionally', 'ru' => 'Дополнительно'], JSON_UNESCAPED_UNICODE),
 						'code' => 'additionally',
 						'active' => 1,
@@ -46,7 +46,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['ru' => '№', 'en' => '№'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => '№', 'en' => '№'], JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
@@ -66,7 +66,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['ru' => 'Заголовок', 'en' => 'Title'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => 'Заголовок', 'en' => 'Title'], JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -86,7 +86,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
 						'key' => 'active',
@@ -105,7 +105,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['ru' => 'ID объекта', 'en' => 'ID of object'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => 'ID объекта', 'en' => 'ID of object'], JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
@@ -124,7 +124,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['ru' => 'ID типа объекта', 'en' => 'ID type of object'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => 'ID типа объекта', 'en' => 'ID type of object'], JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
@@ -143,7 +143,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insertGetId(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['ru' => 'Данные объекта', 'en' => 'Data of object'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => 'Данные объекта', 'en' => 'Data of object'], JSON_UNESCAPED_UNICODE),
 						'key' => 'complex-array',
@@ -162,7 +162,7 @@ class SeedObjectVersionTable extends Migration {
 			
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Created by'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Created by'], JSON_UNESCAPED_UNICODE),
 						'key' => 'created-by',
@@ -182,7 +182,7 @@ class SeedObjectVersionTable extends Migration {
 
 			DB::table('object_field')->insert(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['en' => 'Updated by'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['en' => 'Updated by'], JSON_UNESCAPED_UNICODE),
 						'key' => 'updated-by',

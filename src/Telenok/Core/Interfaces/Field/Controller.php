@@ -152,7 +152,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
             $model = \Telenok\Object\Sequence::getModel($id);
             $field = \Telenok\Object\Sequence::getModel($fieldId);
             $type = $this->getLinkedModelType($field);
-			
+			 
 			$query = $model->{camel_case($field->code)}();
 
             if ($term)

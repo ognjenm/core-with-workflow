@@ -110,10 +110,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         );
     }    
 	
-    public function getFilterQuery($model, $query)
-    {
-		
-	}
+    public function getFilterQuery($model, $query) {}
 	
     public function getWizardList()
     {
@@ -123,7 +120,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         $iDisplayStart = intval(\Input::get('iDisplayStart', 10));
         $sEcho = \Input::get('sEcho');
 		$id = \Input::get('id', 0);
-		
+
         try
         {
 			if (is_array($id))
@@ -131,16 +128,22 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				$typeList = $id;
 				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
 			}
-			
+
             $type = $this->getType($id);
             $model = $this->modelByType($id);  
-			$items = $this->getListItem($model)->where(function($query) use ($typeList)
+			$query = $this->getListItem($model);
+
+			if (!empty($typeList))
 			{
-				if (!empty($typeList))
+				$query->join('object_sequence as osequence_wizard_list', function($join) use ($model, $typeList)
 				{
-					$query->whereIn('sequences_object_type', $typeList);
-				}
-			})->get();
+					$join->on($model->getTable() . '.id', '=', 'osequence_wizard_list.id');
+				}); 
+
+				$query->whereIn('osequence_wizard_list.sequences_object_type', $typeList);
+			}
+
+			$items = $query->get();
 			
 			$config = \App::make('telenok.config')->getObjectFieldController();
 

@@ -228,7 +228,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				return parent::postProcess($model, $type, $input);
 			}
 
-            $relatedTypeOfModelField = $model->fieldObjectType()->first();   // eg object \Telenok\Object\Type which DB-field "code" is "author"
+            $relatedTypeOfModelField = $model->fieldObjectType()->first();
 
             $classModelHasMany = $relatedTypeOfModelField->class_model;
             $tableHasMany = $relatedTypeOfModelField->code;
@@ -326,8 +326,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
                     $table->unique([$pivotField, $codeFieldHasMany], 'uniq_key');
 					
-					$table->foreign($codeFieldHasMany)->references('id')->on($tableBelongTo)->onDelete('cascade');
-					$table->foreign($pivotField)->references('id')->on($tableHasMany)->onDelete('cascade');
+					$table->foreign($codeFieldHasMany, 'linked_id')->references('id')->on($tableBelongTo)->onDelete('cascade');
+					$table->foreign($pivotField, 'linked_id')->references('id')->on($tableHasMany)->onDelete('cascade');
                 });
             }
 

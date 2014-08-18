@@ -23,7 +23,7 @@
 
 			jQuery('#table-{{$gridId}}').dataTable({
 				"multipleSelection": true,
-				"aoColumns": [],
+				"aaSorting": [],
 				"bAutoWidth": true,
 				"bProcessing": true,
 				"bServerSide": true,
@@ -31,7 +31,7 @@
 				"bDeferRender": '',
 				"bJQueryUI": false,
 				"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'i><'col-md-6'p>>",
-				aoColumns : aoColumns,
+				"aoColumns" : aoColumns,
 				"oTableTools": {"aButtons": []},
 				"oLanguage": {
 					"oPaginate": {

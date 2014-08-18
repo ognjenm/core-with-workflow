@@ -13,7 +13,6 @@ class CreateObjectFieldMorphManyToManyTable extends Migration {
 			{
 				$table->integer('morph_many_to_many_has')->unsigned()->default('0')->nullable();
 				$table->integer('morph_many_to_many_belong_to')->unsigned()->default('0')->nullable();
-				$table->string('morph_many_to_many_belong_to_type_list')->nullable();
 			});
 		}
 	}
