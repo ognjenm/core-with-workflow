@@ -328,11 +328,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		if (!$this->exists && !\Auth::can('create', "object_type.{$type->code}"))
 		{
-			throw new \LogicException('Cant create. Access denied.');
+			throw new \LogicException('Cant create model with type "' . $type->code . '". Access denied.');
 		}
 		else if ($this->exists && !\Auth::can('update', $this->getKey()))
 		{
-			throw new \LogicException('Cant update. Access denied.');
+			throw new \LogicException('Cant update model with type "' . $type->code . '". Access denied.');
 		}
 		 
 		$objectField = $this->getObjectField();

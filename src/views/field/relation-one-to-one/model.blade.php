@@ -1,4 +1,3 @@
-
 <?php
 
 	$domAttr = ['disabled' => 'disabled', 'class' => 'col-xs-5 col-sm-5'];
@@ -13,23 +12,21 @@
         $title = $result->translate('title');
         $id = $result->id;
     }
-	
+
 	$disabledCreateLinkedType = false;
 	$disabledReadLinkedType = false;
 
 	$linkedType = $controller->getLinkedModelType($field);
-	
+
 	if (!\Auth::can('create', 'object_type.' . $linkedType->code))
 	{
 		$disabledCreateLinkedType = true;
 	}
-	
+
 	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
 	{
 		$disabledReadLinkedType = true;
 	}
-
-	
 ?>
 
     <div class="form-group">
@@ -42,7 +39,7 @@
             @endif
             
             {{ Form::hidden($field->code, $id) }}
-            {{ Form::text(str_random(), $title, $domAttr ) }}
+            {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
             
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
@@ -71,7 +68,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
 				)
-            <button onclick="editO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>

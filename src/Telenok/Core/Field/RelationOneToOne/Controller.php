@@ -5,7 +5,7 @@ namespace Telenok\Core\Field\RelationOneToOne;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration; 
 
-class Controller extends \Telenok\Core\Interfaces\Field\Controller {
+class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
     protected $key = 'relation-one-to-one'; 
     protected $specialField = ['relation_one_to_one_has', 'relation_one_to_one_belong_to'];
@@ -27,35 +27,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			return parent::getFormModelContent($controller, $model, $field, $uniqueId);
 		}
-	} 
-
-    public function getTitleList($id = null) 
-    {
-        $term = trim(\Input::get('term'));
-        $return = [];
-        
-        try 
-        {
-            $class = \Telenok\Object\Sequence::getModel($id)->class_model;
-            
-            $class::where(function($query) use ($term)
-			{
-				\Illuminate\Support\Collection::make(explode(' ', $term))
-						->reject(function($i) { return !trim($i); })
-						->each(function($i) use ($query)
-				{
-					$query->where('title', 'like', "%{$i}%");
-				});
-			})
-			->take(20)->get()->each(function($item) use (&$return)
-            {
-                $return[] = ['value' => $item->id, 'text' => $item->translate('title')];
-            });
-        }
-        catch (\Exception $e) {}
-
-        return $return;
-    }
+	}  
     
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
     {
@@ -67,16 +39,22 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			}
 			else
 			{
-				$modelTable = $model->getTable();
+				$method = camel_case($field->code);
 
-				$linkedTable = \Telenok\Object\Sequence::getModel($field->relation_one_to_one_has)->code;
+				$relatedQuery = $model->$method();
+				dd( $relatedQuery->getPlainForeignKey() );
 
-				$query->join($linkedTable, function($join) use ($modelTable, $linkedTable, $name, $field)
+				$linkedTable = $relatedQuery->getRelated()->getTable();
+
+				
+				$alias = $linkedTable . $field->code;
+				
+				$query->join($linkedTable . ' as ' . $alias, function($join) use ($linkedTable, $relatedQuery, $model, $alias)
 				{
-					$join->on($linkedTable . '.' . $field->code . '_' . $modelTable, '=', $modelTable . '.id');
+					$join->on($model->getTable() . '.id', '=', $alias . '.' . $relatedQuery->getPlainForeignKey());
 				});
 
-				$query->whereIn($linkedTable.'.id', (array)$value);
+				$query->whereIn($alias . '.id', (array)$value);
 			}
 		}
     }
@@ -90,7 +68,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         
         $class = \Telenok\Object\Sequence::getModel($id)->class_model;
         
-        $class::take(200)->get()->each(function($item) use (&$option)
+		$model = new $class;
+		
+        $model::withPermission()->groupBy($model->getTable() . '.id')->take(200)->get()->each(function($item) use (&$option)
         {
             $option[] = "<option value='{$item->id}'>[{$item->id}] {$item->translate('title')}</option>";
         });
@@ -127,53 +107,26 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             </script>';
     }
 
-    public function getListFieldContent($field, $item, $type = null)
-    {
-        $method = camel_case($field->code);
-
-        $items = [];
-        $rows = \Illuminate\Support\Collection::make($item->$method()->getResults());
-        
-        if ($rows->count())
-        {
-            foreach($rows->slice(0, 7, TRUE) as $row)
-            { 
-                $items[] = $row->translate('title');
-            }
-
-            return '"'.implode('", "', $items).'"'.(count($rows)>7 ? ', ...' : '');
-        }
-    }
-
     public function saveModelField($field, $model, $input)
     { 
 		// if created field
 		if ($model instanceof \Telenok\Core\Model\Object\Field && !$input->get('id'))
 		{
 			return $model;
-		}
+		} 
 		
         if ($field->relation_one_to_one_has)
         { 
-	        $id = (int)$input->get($field->code, 0); 
+			$method = camel_case($field->code);
 
-            $method = camel_case($field->code);
-            
-            $currentRelatedModel = $model->$method()->getResults();
-            
-            $field = $field->code . '_' . \Telenok\Object\Type::find($field->field_object_type)->code;
-            
-            if ($currentRelatedModel)
-            {
-                $currentRelatedModel->fill([ $field => 0 ])->save();
-            }
-
+			$relatedQuery = $model->$method();
+			
 			try
 			{
-				$relatedModel = \App::build(\Telenok\Object\Type::findOrFail($field->relation_one_to_one_has)->class_model)->findOrFail($id);
-				$model->$method()->save($relatedModel);
+				$relatedQuery->getRelated()->findOrFail((int)$input->get($field->code, 0))
+					->storeOrUpdate([$relatedQuery->getPlainForeignKey() => $model->getKey()], true);
 			}
-			catch(\Exception $e) {}
+			catch (\Exception $e) {}
         }
 
         return $model;

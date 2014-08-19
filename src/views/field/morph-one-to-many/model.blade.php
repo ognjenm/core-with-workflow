@@ -42,17 +42,17 @@
             <div class="widget-main form-group field-list">
                  
                 <ul class="nav nav-tabs" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab">
+                    @if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) 
+								|| 
+							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
                             {{{$controller->LL('current')}}}
                         </a>
                     </li>
-                    @if ( 
-							((!$model->exists && $field->allow_create && $permissionCreate) 
-								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && (!$disabledCreateLinkedType || !$disabledReadLinkedType)
-						)
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
@@ -63,14 +63,14 @@
                 </ul>
 
                 <div class="tab-content">
-                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
-                        <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
-                    </div>
                     @if (
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && (!$disabledCreateLinkedType || !$disabledReadLinkedType)
+							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
 						)
+                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
+                        <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
+                    </div>
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
                     </div>
@@ -139,7 +139,7 @@
                                             "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
                                             'sButtonClass': 'btn-success btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                createO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has ]) }}');
+                                                createO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
                                             }
                                         });
 							@endif	
@@ -365,7 +365,7 @@
         {{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
         <div class="col-sm-9"> 
             {{ Form::hidden("{$field->code}", $id) }}
-            {{ Form::text(str_random(), $title, $domAttr ) }}
+            {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
             
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
@@ -376,7 +376,7 @@
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button> 
-            <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>

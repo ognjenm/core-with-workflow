@@ -415,7 +415,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     {
         $sequence = (new \Telenok\Object\Sequence());
         
-        $query = $model::select($model->getTable().'.*')
+        $query = $model::select($model->getTable() . '.*')
             ->join($sequence->getTable(), function($join) use ($sequence, $model)
             {
                 $join->on($model->getTable() . '.' . $model->getKeyName(), '=', $sequence->getTable() . '.' . $sequence->getKeyName());
@@ -432,7 +432,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
         $this->getFilterQuery($model, $query); 
         
-        return $query->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function getListItemProcessed($field, $item)

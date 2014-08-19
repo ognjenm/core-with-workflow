@@ -21,7 +21,7 @@
         {{ Form::label("{$field->code}", $field->translate('title'), ['class' => 'col-sm-3 control-label no-padding-right']) }}
         <div class="col-sm-9"> 
             {{ Form::hidden("{$field->code}", $id) }}
-            {{ Form::text(str_random(), $title, $domAttr ) }}
+            {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
             
             
 			@if ( 
@@ -33,7 +33,7 @@
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button>
-            <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>

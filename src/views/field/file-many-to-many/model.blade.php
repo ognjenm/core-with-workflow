@@ -154,7 +154,7 @@
 								"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
 								'sButtonClass': 'btn-success btn-sm',
 								"fnClick": function(nButton, oConfig, oFlash) {
-									createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField} ]) }}');
+									createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
 								}
 							});
 							@endif	

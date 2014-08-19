@@ -20,7 +20,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function getListItem($model)
     {
-        $query = $model::where(function($query) use ($model)
+        $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
         {
             if (!\Input::get('filter_want_search', false) && ($treePid = \Input::get('treePid', 0)))
             { 
@@ -28,11 +28,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
             }
         });
 
-        $query->withPermission();
-
         $this->getFilterQuery($model, $query); 
 
-        return $query->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function validate($model = null, $input = null, $message = [])

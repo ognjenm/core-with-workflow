@@ -6,7 +6,6 @@
 
     $linkedField = $field->morph_many_to_many_has ? 'morph_many_to_many_has' : 'morph_many_to_many_belong_to';
 	
-	
 	$disabledCreateLinkedType = false;
 	$disabledReadLinkedType = false;
 
@@ -33,17 +32,22 @@
 			</h4>
         </div>
         <div class="widget-body">
+			
             <div class="widget-main form-group field-list">
 
                 <ul class="nav nav-tabs" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab">
+                    @if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) 
+								|| 
+							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
                             {{{$controller->LL('current')}}}
                         </a>
                     </li>
-                    @if ($field->allow_create || $field->allow_choose)
-                    <li>
+					<li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
                             {{{$controller->LL('addition')}}}
@@ -53,10 +57,13 @@
                 </ul>
 
                 <div class="tab-content">
-                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
+                    @if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) 
+								|| 
+							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+						)                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
-                    </div>
-                    @if ($field->allow_create || $field->allow_choose)
+                    </div>  
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
                     </div>
@@ -71,42 +78,85 @@
                     var presentation = telenok.getPresentationByKey('{{ $parentController->getPresentation()}}');
 
                     var aoColumns = []; 
+                    var aButtons = [];
+
 							@foreach($controller->getFormModelTableColumn($field, $model, $jsUnique) as $row)
                             aoColumns.push({{json_encode($row)}});
 							@endforeach
+							
+							aButtons.push({
+										"sExtends": "text",
+										"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
+										'sButtonClass': 'btn-sm',
+										"fnClick": function(nButton, oConfig, oFlash) {
+											jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
+										}
+									});
 
-                            presentation.addDataTable({
-                                domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}",
-                                bRetrieve : true,
-                                aoColumns : aoColumns,
-								aaSorting: [],
-                                iDisplayLength : {{$displayLength}},
-                                sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
-                                oTableTools: {
-                                    aButtons : [
-                                        {
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
-                                            'sButtonClass': 'btn-sm',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
-                                            }
-                                        }
-										@if ($model->exists && $field->allow_update && $permissionUpdate)
-                                        ,{
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
-                                            'sButtonClass': 'btn-sm btn-danger',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                removeAllM2M{{$jsUnique}}();
-                                            }
-                                        }
-                                        @endif
-                                    ]
-                                }
-                            });
+							@if ($model->exists && $field->allow_update && $permissionUpdate)
+								aButtons.push({
+										"sExtends": "text",
+										"sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
+										'sButtonClass': 'btn-sm btn-danger',
+										"fnClick": function(nButton, oConfig, oFlash) {
+											removeAllM2M{{$jsUnique}}();
+										}
+									});
+							@endif
 
-                            presentation.addDataTable({
+							if (aoColumns.length)
+							{
+								presentation.addDataTable({
+									domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}",
+									bRetrieve : true,
+									aoColumns : aoColumns,
+									aaSorting: [],
+									iDisplayLength : {{$displayLength}},
+									sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
+									oTableTools: {
+										aButtons : aButtons
+									}
+								});
+							}
+							
+							aButtons = [];
+
+							@if ( 
+									((!$model->exists && $field->allow_create && $permissionCreate) 
+										|| 
+									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
+								)
+							aButtons.push({
+									"sExtends": "text",
+									"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
+									'sButtonClass': 'btn-success btn-sm',
+									"fnClick": function(nButton, oConfig, oFlash) {
+										createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
+									}
+								});
+							@endif	
+
+							@if ( 
+									((!$model->exists && $field->allow_create && $permissionCreate) 
+										|| 
+									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+								)
+							aButtons.push({
+                                            "sExtends": "text",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
+                                            'sButtonClass': 'btn-yellow btn-sm',
+                                            "fnClick": function(nButton, oConfig, oFlash) {
+                                                chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
+                                            }
+                                        });
+							@endif
+							
+							@if ( 
+									((!$model->exists && $field->allow_create && $permissionCreate) 
+										|| 
+									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+								)
+							presentation.addDataTable({
                                 domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
                                 sDom: "<'row'<'col-md-6'T>r>t<'row'<'col-md-6'T>>",
                                 bRetrieve : true,
@@ -114,31 +164,10 @@
 								aaSorting: [],
                                 aaData : [], 
                                 oTableTools: {
-                                    aButtons : [
-                                    @if ($field->allow_create) 
-										{
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
-                                            'sButtonClass': 'btn-success btn-sm',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField} ]) }}');
-                                            }
-                                        }
-									@endif	
-									@if ($field->allow_create && $field->allow_choose)	, @endif
-									@if ($field->allow_choose) 
-                                        {
-                                            "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
-                                            'sButtonClass': 'btn-yellow btn-sm',
-                                            "fnClick": function(nButton, oConfig, oFlash) {
-                                                chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
-                                            }
-                                        }
-									@endif	
-                                    ]
+                                    aButtons : aButtons
                                 }
                             });
+							@endif
                 </script>
  
             </div>
