@@ -137,6 +137,23 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
                 });
             }
 
+			$method = camel_case($field->code);
+
+			$relatedQuery = $model->$method();
+
+			try
+			{
+				foreach($idsAdd as $id)
+				{
+					$relatedQuery->getRelated()->findOrFail((int)$id)
+						->storeOrUpdate([$relatedQuery->getPlainForeignKey() => $model->getKey()], true);
+				}
+			}
+			catch (\Exception $e) {}
+			
+			return $model;
+			
+			
             $relatedModel = \App::build(\Telenok\Object\Type::findOrFail($field->relation_one_to_many_has)->class_model);
 
             \Illuminate\Support\Collection::make($idsAdd)->each(function($id) use ($model, $method, $relatedModel) 

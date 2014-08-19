@@ -42,7 +42,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				$method = camel_case($field->code);
 
 				$relatedQuery = $model->$method();
-				//dd( $relatedQuery->getPlainForeignKey() );
 
 				$linkedTable = $relatedQuery->getRelated()->getTable();
 

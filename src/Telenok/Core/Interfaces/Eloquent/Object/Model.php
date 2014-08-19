@@ -12,7 +12,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	protected $hasVersioning = true;
 	protected $ruleList = [];
 	protected $multilanguageList = []; 
-	protected $dates = ['deleted_at'];
+	protected $dates = [];
 
 	protected static $staticListField = [];
 	protected static $staticListFillable = [];

@@ -50,29 +50,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		/*
-		$resCodeAll = 'object_type.'.$model->code.'.all';
-		$resource = \Telenok\Security\Resource::where('code', $resCodeAll)->first();
-
-		if (!$resource)
-		{
-			$title = $model->title->toArray();
-			$toAdd = ['ru' => 'Тип объекта', 'en' => 'Type of object'];
-			$toAddAfter = ['ru' => 'Все записи', 'en' => 'All records'];
-
-			foreach($title as $language => $value)
-			{
-				$title[$language] = array_get($toAdd, $language, 'Type of object') . ': ' . $value . '. ' . array_get($toAddAfter, $language, 'All records');
-			}
-
-			\Telenok\Security\Resource::create([
-				'title' => $title,
-				'code' => $resCodeAll,
-				'active' => 1
-			]);
-		}
-		*/
-
 		$resCodeOwn = 'object_type.'.$model->code.'.own';
 		$resource = \Telenok\Security\Resource::where('code', $resCodeOwn)->first();
 

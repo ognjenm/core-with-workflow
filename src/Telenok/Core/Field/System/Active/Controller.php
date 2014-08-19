@@ -60,12 +60,8 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 				}
 				else if ($key == 'end_at')
 				{
-					$value = \Carbon\Carbon::now()->modify('15 year');
+					$value = \Carbon\Carbon::now()->addYears(15);
 				}
-			}
-			else
-			{
-				$value = \Carbon\Carbon::createFromFormat('d-m-Y H:i:s', $value);
 			}
 		} 
 		

@@ -7,19 +7,81 @@ class SeedLast extends Migration {
 
 	public function up()
 	{ 
-		\Telenok\Object\Sequence::all()->each(function($item)
+		\Telenok\Object\Type::all()->each(function($type)
 		{
-			$item->model()->get()->each(function($i)
+			$table = $type->code;
+			
+			\DB::table($table)->update([
+				'created_at' => \DB::raw('NOW()'),
+				'updated_at' => \DB::raw('NOW()'),
+				'start_at' => \DB::raw('NOW()'),
+				'end_at' => \DB::raw('NOW() + INTERVAL 15 YEAR'),
+			]);
+		});   
+		
+		//User superadmin
+		$user = (new \Telenok\User\User())->storeOrUpdate([
+			'title' => 'Super Administrator',
+			'username' => 'admin',
+			'usernick' => 'Super administrator',
+			'email' => 'support@telenok.com',
+			'password' => '11111',
+			'active' => 1,
+		]);
+		
+		\Telenok\Object\Type::all()->each(function($type) use ($user)
+		{
+			$class = $type->class_model;
+			
+			$model = new $class;
+			
+			$model::all()->each(function($i) use ($user)
 			{
-				$i->storeOrUpdate([
-					'start_at' => null, 
-					'end_at' => null,
-					'created_at' => \DB::raw('NOW()'),
-					'updated_at' => \DB::raw('NOW()')
+				$i->update([
+					'created_by_user' => $user->getKey(),
+					'updated_by_user' => $user->getKey(),
 				]);
+			});
+
+			try
+			{
+				\Telenok\Core\Security\Acl::addResource('Type of object: ' . $type->code, "object_type.{$type->code}");
+			}
+			catch (\Exception $exc) {}
+			
+			try
+			{
+				\Telenok\Core\Security\Acl::addResource('Own records with object: ' . $type->code, "object_type.{$type->code}.own");
+			}
+			catch (\Exception $exc) {}
+			
+			$type->field()->get()->each(function($field) use ($type)
+			{
+				try
+				{
+					\Telenok\Core\Security\Acl::addResource('Object ' . $type->code . '. Field ' . $field->code , "object_field.{$type->code}.{$field->code}");
+				}
+				catch (\Exception $exc) {}
 			});
 		});
 		
+		(new \Telenok\Object\Field())->storeOrUpdate([
+			'title' => SeedGroupTableTranslation::get('group.field.role'),
+			'title_list' => SeedGroupTableTranslation::get('group.field.role'),
+			'key' => 'relation-many-to-many',
+			'code' => 'role',
+			'active' => 1,
+			'field_object_type' => 'group',
+			'relation_many_to_many_has' => 'role',
+			'field_object_tab' => 'main',
+			'multilanguage' => 0,
+			'show_in_form' => 1,
+			'show_in_list' => 1,
+			'allow_search' => 1,
+			'allow_create' => 1,
+			'allow_update' => 1,
+			'field_order' => 6,
+		]);
 
 		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'German', 'locale' => 'de', 'active' => 1]);
 		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'French', 'locale' => 'fr', 'active' => 1]);
@@ -232,26 +294,7 @@ class SeedLast extends Migration {
 		(new \Telenok\File\FileMimeType())->storeOrUpdate(['title' => 'QuickTime video', 'mime_type' => 'video/quicktime', 'active' => 1]);
 		(new \Telenok\File\FileMimeType())->storeOrUpdate(['title' => 'WebM Matroska-based open media format', 'mime_type' => 'video/webm', 'active' => 1]);
 		(new \Telenok\File\FileMimeType())->storeOrUpdate(['title' => 'FLV Flash video', 'mime_type' => 'video/x-flv', 'active' => 1]);
- 
 		
-		(new \Telenok\Object\Field())->storeOrUpdate([
-			'title' => SeedGroupTableTranslation::get('group.field.role'),
-			'title_list' => SeedGroupTableTranslation::get('group.field.role'),
-			'key' => 'relation-many-to-many',
-			'code' => 'role',
-			'active' => 1,
-			'field_object_type' => 'group',
-			'relation_many_to_many_has' => 'role',
-			'field_object_tab' => 'main',
-			'multilanguage' => 0,
-			'show_in_form' => 1,
-			'show_in_list' => 1,
-			'allow_search' => 1,
-			'allow_create' => 1,
-			'allow_update' => 1,
-			'field_order' => 6,
-		]);
-
 		//Resource
 		(new \Telenok\Security\Resource())->storeOrUpdate([
 			'title' => ['en' => 'Control Panel', 'ru' => 'Панель управления'],
@@ -394,21 +437,43 @@ class SeedLast extends Migration {
 			'show_in_form' => 1,
 			'field_order' => 8,
 			'field_object_tab' => 'main',
-		]); 
-
-		//User superadmin
-		$user = (new \Telenok\User\User())->storeOrUpdate([
-			'title' => 'Super Administrator',
-			'username' => 'admin',
-			'usernick' => 'Super administrator',
-			'email' => 'support@telenok.com',
-			'password' => '11111',
-			'active' => 1,
-		]);
-
+		]);   
+		
 		//Login User
 		Auth::login($user);
 
+		\Telenok\Object\Type::all()->each(function($item)
+		{
+			var_dump($item->getKey());
+			
+			if ($item->treeable && !$item->field()->where('code', 'tree_parent')->count())
+			{
+				$modelField = new \Telenok\Object\Field();
+				
+				$modelField->storeOrUpdate([
+					'key' => 'tree',
+					'field_object_type' => $item->getKey(),
+					'field_object_tab' => 'main',
+					'field_order' => 10,
+				]); 
+				
+				$modelField = null;
+				
+				$modelField = new \Telenok\Object\Field();
+
+				try
+				{
+					$modelField->storeOrUpdate([
+						'key' => 'permission',
+						'field_object_type' => $item->getKey(),
+					]); 
+				} catch (\Exception $ex) {}
+
+				$modelField = null;
+			}
+		});
+		
+		
 		//Group
 		(new \Telenok\User\Group())->storeOrUpdate([
 			'title' => ['en' => 'Super administrator', 'ru' => 'Супер администратор'],
@@ -487,31 +552,7 @@ class SeedLast extends Migration {
 			'title' => ['en' => 'Delete', 'ru' => 'Удаление'],
 			'code' => 'delete',
 			'active' => 1,
-		]);
-
-		\Telenok\Object\Type::all()->each(function($item) use ($user) 
-		{
-			\DB::table( $item->code )
-			->update(
-				[
-					'created_by_user' => $user->getKey(),
-					'updated_by_user' => $user->getKey(),
-					'created_at' => \DB::raw('NOW()'),
-					'updated_at' => \DB::raw('NOW()'),
-					'start_at' => \DB::raw('NOW()'),
-					'end_at' => \DB::raw('NOW() + INTERVAL 10 YEAR'),
-				]
-			);
-		});
-
-		/*
-		\Telenok\Object\Sequence::all()->each(function($item)
-		{
-			\DB::table($item->model()->get)->update([
-
-				]);
-		});
-		*/
+		]); 
 		
 		//ACL
 		$user = \Telenok\User\User::where('username', 'admin')->first();
@@ -708,36 +749,6 @@ class SeedLast extends Migration {
 		]);
 
 
-		
-		
-		\Telenok\Object\Type::all()->each(function($item)
-		{
-			if ($item->treeable && !$item->field()->where('code', 'tree_parent')->count())
-			{
-				$modelField = new \Telenok\Object\Field();
-				
-				$modelField->storeOrUpdate([
-					'key' => 'tree',
-					'field_object_type' => $item->getKey(),
-					'field_object_tab' => 'main',
-					'field_order' => 10,
-				]); 
-				
-				$modelField = null;
-				
-				$modelField = new \Telenok\Object\Field();
-
-				try
-				{
-					$modelField->storeOrUpdate([
-						'key' => 'permission',
-						'field_object_type' => $item->getKey(),
-					]); 
-				} catch (\Exception $ex) {}
-
-				$modelField = null;
-			}
-		});
 		 
 
 
