@@ -23,7 +23,7 @@ class CreateObjectFieldStringTable extends Migration {
 
 				if (!\Schema::hasColumn('object_field', 'string_max'))
 				{
-					$table->integer('string_max')->unsigned()->default(255)->nullable();
+					$table->integer('string_max')->unsigned()->default(1000)->nullable();
 				}
 
 				if (!\Schema::hasColumn('object_field', 'string_min'))

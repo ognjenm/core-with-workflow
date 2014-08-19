@@ -13,28 +13,28 @@ class Model {
 
     public function __construct($model = null, $input = null, $message = [], $customAttributes = [])
     { 
-        $input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
-
         $this->model = $model;
-        $this->input = !$input->isEmpty() ? $input : \Illuminate\Support\Collection::make([]);
-        $this->message = array_merge(\Lang::get('core::default.error'), (array)$message);
+        $this->input = \Illuminate\Support\Collection::make($input instanceof \Illuminate\Support\Collection ? $input->all() : $input);
+		$this->message = array_merge(\Lang::get('core::default.error'), (array)$message);
         $this->ruleList = $this->processRule($model->getRule());
-        $this->customAttributes = $customAttributes;
+        $this->customAttributes = $customAttributes;  
     }
 
     protected function processRule($rule)
     {
-        array_walk_recursive($rule, function(&$el, $key, $this_) {
-            $el = preg_replace_callback('/\:\w+\:/', function($matches) use ($this_) {
-                return array_get($this_->input, trim($matches[0], ':'));
+        array_walk_recursive($rule, function(&$el, $key, $this_) 
+		{
+            $el = preg_replace_callback('/\:\w+\:/', function($matches) use ($this_) 
+			{
+                return $this_->input->get(trim($matches[0], ':'), 'NULL');
             }, $el);
         }, $this);
-        
+
         return $rule;
     }
 
     public function passes()
-    {
+    { 
         if ($this->model instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model && $this->model->exists)
         {
             $this->ruleList = array_intersect_key($this->ruleList, $this->input->all());
@@ -51,7 +51,7 @@ class Model {
 		{
 			return true;
 		}
-		
+
         return false;
     }
 
@@ -63,7 +63,7 @@ class Model {
     public function messages()
     {
         $messages = $this->validator->messages()->all();
-        
+
         return empty($messages) ? ['undefined' => $this->message['undefined']] : $messages;
     }
 

@@ -491,9 +491,13 @@ class Acl
             $query->where('acl_resource_object_sequence', $resource->getKey());
         }
 
-		$query->forceDelete();
-		
-		
+		$list = $query->get();
+
+		$list->each(function($i)
+		{
+			$i->forceDelete();
+		});
+
         return $this;
     }
     

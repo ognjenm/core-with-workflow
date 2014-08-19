@@ -20,14 +20,7 @@ class SeedLast extends Migration {
 			});
 		});
 		
-		/*
-		\Telenok\Object\Sequence::all()->each(function($item)
-		{
-			\DB::table($item->model()->get)->update([
 
-				]);
-		});
-		*/
 		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'German', 'locale' => 'de', 'active' => 1]);
 		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'French', 'locale' => 'fr', 'active' => 1]);
 		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Dutch', 'locale' => 'nl', 'active' => 1]);
@@ -511,6 +504,15 @@ class SeedLast extends Migration {
 			);
 		});
 
+		/*
+		\Telenok\Object\Sequence::all()->each(function($item)
+		{
+			\DB::table($item->model()->get)->update([
+
+				]);
+		});
+		*/
+		
 		//ACL
 		$user = \Telenok\User\User::where('username', 'admin')->first();
 		$groupSuperAdmin = \Telenok\User\Group::where('code', 'super_administrator')->first();

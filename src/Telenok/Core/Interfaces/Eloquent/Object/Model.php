@@ -98,7 +98,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 
 			$type = $this->type();
-
+			
 			$this->sequence->fill([
 				'title' => ($this->title instanceof \Illuminate\Support\Collection ? $this->title->toArray() : $this->title),
 				'created_at' => $this->created_at,
@@ -111,7 +111,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				'updated_by_user' => $this->updated_by_user,
 				'sequences_object_type' => $type->getKey(),
 				'treeable' => $type->treeable,
-			])->save();
+			])
+			->save();
 		}
 	}
 
@@ -239,7 +240,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				$input->put($fillable, $model->$fillable);
 			} 
 		} 
-
+		
 		try
 		{
 			\DB::transaction(function() use ($type, $input, $model)

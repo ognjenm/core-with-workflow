@@ -26,7 +26,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Object\Type::whereIn('id', [$field->relation_many_to_many_has, $field->relation_many_to_many_belong_to])->active()->first();
+		return \Telenok\Object\Type::whereIn('id', [$field->relation_many_to_many_has, $field->relation_many_to_many_belong_to])->first();
 	}
 
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 

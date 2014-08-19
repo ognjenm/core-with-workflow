@@ -5,7 +5,7 @@ namespace Telenok\Core\Interfaces\Field\Relation;
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getTitleList($id = null) 
-    {
+    { 
         $term = trim(\Input::get('term'));
         $return = [];
         

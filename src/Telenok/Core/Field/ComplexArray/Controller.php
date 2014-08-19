@@ -28,11 +28,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		
 		$v = json_decode($value, true);
 		
-		if ($field->code == 'rule')
-		{
-			//var_dump($field->code, $value, json_encode((array)null, JSON_UNESCAPED_UNICODE));
-		}
-		
 		if (is_array($v))
 		{
 			return \Illuminate\Support\Collection::make($v);

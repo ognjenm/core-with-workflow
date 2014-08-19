@@ -112,6 +112,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 	
     public function preProcess($model, $type, $input)
     {
+		if (!$input->get('relation_many_to_many_has'))
+		{
+			return parent::preProcess($model, $type, $input);
+		} 
+		
 		$sequenceTypeId = \DB::table('object_type')->where('code', 'object_sequence')->pluck('id');
 		
 		$translationSeed = $this->translationSeed();
