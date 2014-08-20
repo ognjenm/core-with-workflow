@@ -45,7 +45,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 				$linkedTable = $relatedQuery->getRelated()->getTable();
 
-				$alias = $linkedTable . $field->code;
+				$alias = $linkedTable . '_O2O_' . $field->code;
 				
 				$query->join($linkedTable . ' as ' . $alias, function($join) use ($linkedTable, $relatedQuery, $model, $alias)
 				{

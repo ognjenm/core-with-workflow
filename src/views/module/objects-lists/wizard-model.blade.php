@@ -121,10 +121,27 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 		<div class="modal-footer">
 
 			<div class="center no-margin">
-				@if (\Input::get('chooseBtn'))
+				@if (\Input::get('chooseBtn') && $model->exists)
+				
+				<script>
+					<?php
+					
+						$config = \App::make('telenok.config')->getObjectFieldController();
+
+						$put = \Illuminate\Support\Collection::make([]); 
+
+						foreach ($model->getFieldList() as $field)
+						{ 
+							$put->put($field->code, $config->get($field->key)->getListFieldContent($field, $model, $type));
+						}
+					?>
+					
+					var chooseWizard = {{ $put->toJson() }};
+				</script> 
+ 
 				<button class="btn btn-success" onclick="
 					var $modal = jQuery(this).closest('.modal');
-						$modal.data('model-data')( { id: '{{$model->getKey()}}', title: '{{{ $model->translate("title") }}}' } ); 
+						$modal.data('model-data')(chooseWizard); 
 						$modal.modal('hide');
 						return false;">
 					<i class="fa fa-bullseye"></i>

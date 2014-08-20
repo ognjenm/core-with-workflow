@@ -7,7 +7,6 @@
     $linkedField = $field->morph_many_to_many_has ? 'morph_many_to_many_has' : 'morph_many_to_many_belong_to';
 	
 	$disabledCreateLinkedType = false;
-	$disabledReadLinkedType = false;
 
 	$linkedType = $controller->getLinkedModelType($field);
 
@@ -15,12 +14,6 @@
 	{
 		$disabledCreateLinkedType = true;
 	}
-	
-	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
-	{
-		$disabledReadLinkedType = true;
-	}
-
 ?>
     <div class="widget-box transparent">
         <div class="widget-header widget-header-small">
@@ -39,7 +32,7 @@
                     @if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate)) 
 						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
@@ -60,7 +53,7 @@
                     @if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate))
 						)                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
                     </div>  
@@ -99,7 +92,7 @@
 										"sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
 										'sButtonClass': 'btn-sm btn-danger',
 										"fnClick": function(nButton, oConfig, oFlash) {
-											removeAllM2M{{$jsUnique}}();
+											removeMorphAllM2M{{$jsUnique}}();
 										}
 									});
 							@endif
@@ -131,7 +124,7 @@
 									"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
 									'sButtonClass': 'btn-success btn-sm',
 									"fnClick": function(nButton, oConfig, oFlash) {
-										createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
+										createMorphM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
 									}
 								});
 							@endif	
@@ -139,14 +132,14 @@
 							@if ( 
 									((!$model->exists && $field->allow_create && $permissionCreate) 
 										|| 
-									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+									($model->exists && $field->allow_update && $permissionUpdate))
 								)
 							aButtons.push({
                                             "sExtends": "text",
                                             "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
                                             'sButtonClass': 'btn-yellow btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
+                                                chooseMorphM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
                                             }
                                         });
 							@endif
@@ -154,7 +147,7 @@
 							@if ( 
 									((!$model->exists && $field->allow_create && $permissionCreate) 
 										|| 
-									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+									($model->exists && $field->allow_update && $permissionUpdate))
 								)
 							presentation.addDataTable({
                                 domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
@@ -177,7 +170,7 @@
 
     <script type="text/javascript">
         
-        function addM2M{{$jsUnique}}(val) 
+        function addMorphM2M{{$jsUnique}}(val) 
         {
             jQuery('<input type="hidden" class="{{$field->code}}_add_{{$jsUnique}}" name="{{$field->code}}_add[]" value="'+val+'" />')
                     .insertBefore("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
@@ -186,7 +179,7 @@
             jQuery("input.{{$field->code}}_delete_{{$jsUnique}}[value='*']").remove();
         }
         
-        function removeM2M{{$jsUnique}}(val) 
+        function removeMorphM2M{{$jsUnique}}(val) 
         {
             jQuery('<input type="hidden" class="{{$field->code}}_delete_{{$jsUnique}}" name="{{$field->code}}_delete[]" value="'+val+'" />')
                     .insertBefore("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
@@ -195,7 +188,7 @@
             jQuery("input.{{$field->code}}_delete_{{$jsUnique}}[value='*']").remove(); 
         }
         
-        function removeAllM2M{{$jsUnique}}() 
+        function removeMorphAllM2M{{$jsUnique}}() 
         {
             jQuery("input.{{$field->code}}_delete_{{$jsUnique}}").remove();
             
@@ -209,7 +202,7 @@
             jQuery('tbody tr button.trash-it', $table).removeClass('btn-danger').addClass('btn-success');
         }
 
-        function createM2M{{$jsUnique}}(obj, url) 
+        function createMorphM2M{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -226,7 +219,7 @@
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphM2MAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 					
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -234,7 +227,7 @@
                     var oSettings = $dt.fnSettings();
                     var nTr = oSettings.aoData[ a[0] ].nTr;
 
-                    addM2M{{$jsUnique}}(data.id);
+                    addMorphM2M{{$jsUnique}}(data.id);
                     
                 });
 					
@@ -247,7 +240,7 @@
             });
         }
         
-        function editM2M{{$jsUnique}}(obj, url) 
+        function editMorphM2M{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -280,7 +273,7 @@
             });
         }
 
-        function deleteM2M{{$jsUnique}}(obj) 
+        function deleteMorphM2M{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
             var $tr = jQuery(obj).closest("tr");
@@ -291,10 +284,10 @@
             jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
             jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
             
-            removeM2M{{$jsUnique}}(data.id);
+            removeMorphM2M{{$jsUnique}}(data.id);
         }
 
-        function deleteM2MAddition{{$jsUnique}}(obj) 
+        function deleteMorphM2MAddition{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
             var $tr = jQuery(obj).closest("tr");
@@ -303,10 +296,10 @@
             var rownum = $dt.fnGetPosition($tr[0]);
                 $dt.fnDeleteRow(rownum);
             
-            removeM2M{{$jsUnique}}(data.id);
+            removeMorphM2M{{$jsUnique}}(data.id);
         } 
 
-        function chooseM2M{{$jsUnique}}(obj, url) 
+        function chooseMorphM2M{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -323,7 +316,7 @@
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphM2MAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 				
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -331,7 +324,7 @@
                     var oSettings = $dt.fnSettings();
                     var nTr = oSettings.aoData[ a[0] ].nTr;
 
-                    addM2M{{$jsUnique}}(data.id);
+                    addMorphM2M{{$jsUnique}}(data.id);
 
                 });
 					

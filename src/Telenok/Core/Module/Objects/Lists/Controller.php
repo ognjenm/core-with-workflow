@@ -64,11 +64,6 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             $model = $this->modelByType(\Input::get('treePid', 0));
             $type = $this->getType(\Input::get('treePid', 0)); 
 
-            if (!\Auth::can('read', "object_type.{$type->code}"))
-            {
-                throw new \LogicException($this->LL('error.access'));
-            } 
-
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getContent();
@@ -171,12 +166,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         {
             $type = $this->getType(\Input::get('treePid', 0));
             $model = $this->modelByType(\Input::get('treePid', 0)); 
-
-            if (!\Auth::can('read', "object_type.{$type->code}"))
-            {
-                throw new \LogicException($this->LL('error.access'));
-            } 
-
+			
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getList();
@@ -363,11 +353,6 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $model = $this->modelByType($id);
         $type = $this->getType($id);
         $fields = $model->getFieldForm();
-
-        if (!\Auth::can('read', "object_type.{$type->code}"))
-        {
-            throw new \LogicException($this->LL('error.access'));
-        }
 
         foreach ($ids as $id_)
         {

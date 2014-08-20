@@ -14,18 +14,12 @@
     }
 
 	$disabledCreateLinkedType = false;
-	$disabledReadLinkedType = false;
 
 	$linkedType = $controller->getLinkedModelType($field);
 
 	if (!\Auth::can('create', 'object_type.' . $linkedType->code))
 	{
 		$disabledCreateLinkedType = true;
-	}
-
-	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
-	{
-		$disabledReadLinkedType = true;
 	}
 ?>
 
@@ -44,7 +38,7 @@
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
-					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+					($model->exists && $field->allow_update && $permissionUpdate))
 				)
             <button onclick="chooseO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
@@ -66,7 +60,7 @@
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
-					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+					($model->exists && $field->allow_update && $permissionUpdate))
 				)
             <button onclick="editO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>

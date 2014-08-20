@@ -7,18 +7,12 @@
     $linkedField = $field->relation_many_to_many_has ? 'relation_many_to_many_has' : 'relation_many_to_many_belong_to';
 	
 	$disabledCreateLinkedType = false;
-	$disabledReadLinkedType = false;
 
 	$linkedType = $controller->getLinkedModelType($field);
 
 	if (!\Auth::can('create', 'object_type.' . $linkedType->code))
 	{
 		$disabledCreateLinkedType = true;
-	}
-	
-	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
-	{
-		$disabledReadLinkedType = true;
 	}
 
 ?>
@@ -39,7 +33,7 @@
                     @if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate))
 						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
@@ -60,7 +54,7 @@
                     @if (
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate))
 						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
@@ -140,7 +134,7 @@
 							@if ( 
 									((!$model->exists && $field->allow_create && $permissionCreate) 
 										|| 
-									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+									($model->exists && $field->allow_update && $permissionUpdate))
 								)
 							aButtons.push({
 									"sExtends": "text",
@@ -323,19 +317,16 @@
 					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 					
-					console.log( data );
-					
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
                     var a = $dt.fnAddData(data, true);
                     var oSettings = $dt.fnSettings();
                     var nTr = oSettings.aoData[ a[0] ].nTr;
 
                     addM2M{{$jsUnique}}(data.id);
-
                 });
-				
+
 				$modal.html(data.tabContent);
-					
+
 				$modal.modal('show').on('hidden', function() 
                 { 
                     jQuery(this).html(""); 

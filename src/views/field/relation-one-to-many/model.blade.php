@@ -5,7 +5,6 @@
     $jsUnique = str_random();
 	
 	$disabledCreateLinkedType = false;
-	$disabledReadLinkedType = false;
 
 	$linkedType = $controller->getLinkedModelType($field);
 	
@@ -13,12 +12,6 @@
 	{
 		$disabledCreateLinkedType = true;
 	}
-	
-	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
-	{
-		$disabledReadLinkedType = true;
-	}
-	
 ?>
 
 @if ($field->relation_one_to_many_has)
@@ -40,7 +33,7 @@
                     @if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate))
 						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
@@ -61,7 +54,7 @@
                     @if (
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate))
 						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
@@ -142,7 +135,7 @@
 							@if ( 
 									((!$model->exists && $field->allow_create && $permissionCreate) 
 										|| 
-									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+									($model->exists && $field->allow_update && $permissionUpdate))
 								)
 							aButtons.push({
                                             "sExtends": "text",
@@ -366,7 +359,7 @@
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
-					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+					($model->exists && $field->allow_update && $permissionUpdate))
 				)
             <button onclick="chooseO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}])}}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
@@ -389,7 +382,7 @@
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
-					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+					($model->exists && $field->allow_update && $permissionUpdate))
 				)
             <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>

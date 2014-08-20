@@ -20,12 +20,26 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		return $field->relation_one_to_many_belong_to ? [$field->code, 'updated_at'] : [];
     } 
 
+	public function getModelAttribute($model, $key, $value, $field)
+	{ 
+		if ($key == 'updated_at' && $value === null)
+		{
+			$value = \Carbon\Carbon::now();
+		}
+		
+		return $value;
+	}
+
     public function setModelAttribute($model, $key, $value, $field)
     { 
 		if ($key == 'updated_by_user' && $value === null)
 		{
 			$value = \Auth::check() ? \Auth::user()->id : 0; 
-		} 
+		}
+		else if ($key == 'updated_at' && $value === null)
+		{
+			$value = \Carbon\Carbon::now();
+		}
 		
 		$model->setAttribute($key, $value);
     }

@@ -38,7 +38,7 @@
 			<span class="input-group-addon">
 				<i class="fa fa-calendar bigger-110"></i>
 			</span>
-			{{ Form::text("start_at", $model->start_at->setTimezone(\Config::get('app.timezone'))->format("d-m-Y H:i:s"), $inputDomAttr ) }}
+			{{ Form::text("start_at", $model->start_at->setTimezone(\Config::get('app.timezone')), $inputDomAttr ) }}
 		</div>
 	</div>
 </div>
@@ -50,7 +50,7 @@
 			<span class="input-group-addon">
 				<i class="fa fa-calendar bigger-110"></i>
 			</span>
-			{{ Form::text("end_at", $model->end_at->setTimezone(\Config::get('app.timezone'))->format("d-m-Y H:i:s"), $inputDomAttr ) }}
+			{{ Form::text("end_at", $model->end_at->setTimezone(\Config::get('app.timezone')), $inputDomAttr ) }}
 		</div>
 	</div>
 </div>

@@ -67,7 +67,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         {
             foreach($rows->slice(0, 7, TRUE) as $row)
             {
-                $items[] = $row->translate('title');
+                $items[] = \Str::limit($row->translate('title'), 20);
             }
 
             return '"'.implode('", "', $items).'"'.(count($rows)>7 ? ', ...' : '');

@@ -18,14 +18,28 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
     { 
 		return $field->relation_one_to_many_belong_to ? [$field->code, 'created_at'] : [];
     } 
-	
+
+	public function getModelAttribute($model, $key, $value, $field)
+	{ 
+		if ($key == 'created_at' && $value === null)
+		{
+			$value = \Carbon\Carbon::now();
+		}
+		
+		return $value;
+	}
+
     public function setModelAttribute($model, $key, $value, $field)
     { 
 		if ($key == 'created_by_user' && $value === null)
 		{
 			$value = \Auth::check() ? \Auth::user()->id : 0; 
 		} 
-		
+		else if ($key == 'created_at' && $value === null)
+		{
+			$value = \Carbon\Carbon::now();
+		}
+
 		$model->setAttribute($key, $value);
     }
 
@@ -45,16 +59,16 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		$input->put('allow_update', 1); 
 		$input->put('relation_one_to_many_belong_to', \DB::table('object_type')->where('code', 'user')->pluck('id'));
 		$input->put('field_order', 1);
-		
+
  		if (!$input->get('field_object_tab'))
 		{
 			$input->put('field_object_tab', 'additionally');
 		}
 
 		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
-		
+
 		$fieldName = 'created_by_user';
-		
+
 		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)

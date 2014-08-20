@@ -12,7 +12,6 @@
     $domAttr = ['disabled' => 'disabled'];
 
 	$disabledCreateLinkedType = false;
-	$disabledReadLinkedType = false;
 
 	$linkedType = $controller->getLinkedModelType($field);
 
@@ -20,12 +19,6 @@
 	{
 		$disabledCreateLinkedType = true;
 	}
-	
-	if (!\Auth::can('read', 'object_type.' . $linkedType->code))
-	{
-		$disabledReadLinkedType = true;
-	}
-	
 ?>
 
     <div class="widget-box transparent">
@@ -45,7 +38,7 @@
                     @if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate)) 
 						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
@@ -66,7 +59,7 @@
                     @if (
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+							($model->exists && $field->allow_update && $permissionUpdate)) 
 						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
@@ -107,7 +100,7 @@
                                             "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
                                             'sButtonClass': 'btn-sm btn-danger',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                removeAllO2MHas{{$jsUnique}}();
+                                                removeMorphAllO2MHas{{$jsUnique}}();
                                             }
                                         });
 							@endif
@@ -139,7 +132,7 @@
                                             "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
                                             'sButtonClass': 'btn-success btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                createO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
+                                                createMorphO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
                                             }
                                         });
 							@endif	
@@ -147,14 +140,14 @@
 							@if ( 
 									((!$model->exists && $field->allow_create && $permissionCreate) 
 										|| 
-									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadLinkedType
+									($model->exists && $field->allow_update && $permissionUpdate)) 
 								)
 							aButtons.push({
                                             "sExtends": "text",
                                             "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
                                             'sButtonClass': 'btn-yellow btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                chooseO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_many_has]) }}');
+                                                chooseMorphO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_many_has]) }}');
                                             }
                                         });
 							@endif
@@ -176,7 +169,7 @@
     </div>
 
     <script type="text/javascript">
-        function addO2MHas{{$jsUnique}}(val) 
+        function addMorphO2MHas{{$jsUnique}}(val) 
         {
             jQuery('<input type="hidden" class="{{$field->code}}_add_{{$jsUnique}}" name="{{$field->code}}_add[]" value="'+val+'" />')
                     .insertBefore("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
@@ -185,7 +178,7 @@
             jQuery("input.{{$field->code}}_delete_{{$jsUnique}}[value='*']").remove();
         }
         
-        function removeO2MHas{{$jsUnique}}(val) 
+        function removeMorphO2MHas{{$jsUnique}}(val) 
         {
             jQuery('<input type="hidden" class="{{$field->code}}_delete_{{$jsUnique}}" name="{{$field->code}}_delete[]" value="'+val+'" />')
                     .insertBefore("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
@@ -194,7 +187,7 @@
             jQuery("input.{{$field->code}}_delete_{{$jsUnique}}[value='*']").remove(); 
         }
         
-        function removeAllO2MHas{{$jsUnique}}() 
+        function removeMorphAllO2MHas{{$jsUnique}}() 
         {
             jQuery("input.{{$field->code}}_delete_{{$jsUnique}}").remove();
             
@@ -208,7 +201,7 @@
             jQuery('tbody tr button.trash-it', $table).removeClass('btn-danger').addClass('btn-success');
         }
         
-        function createO2MHas{{$jsUnique}}(obj, url) 
+        function createMorphO2MHas{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -225,7 +218,7 @@
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteO2MHasAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 					
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -233,7 +226,7 @@
                     var oSettings = $dt.fnSettings();
                     var nTr = oSettings.aoData[ a[0] ].nTr;
 
-                    addO2MHas{{$jsUnique}}(data.id);
+                    addMorphO2MHas{{$jsUnique}}(data.id);
                     
                 });
 					
@@ -246,7 +239,7 @@
             });
         }
         
-        function editO2MHas{{$jsUnique}}(obj, url) 
+        function editMorphO2MHas{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -279,7 +272,7 @@
             });
         }
 
-        function deleteO2MHas{{$jsUnique}}(obj) 
+        function deleteMorphO2MHas{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
             var $tr = jQuery(obj).closest("tr");
@@ -290,10 +283,10 @@
             jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
             jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
             
-            removeO2MHas{{$jsUnique}}(data.id);
+            removeMorphO2MHas{{$jsUnique}}(data.id);
         }
 
-        function deleteO2MHasAddition{{$jsUnique}}(obj) 
+        function deleteMorphO2MHasAddition{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
             var $tr = jQuery(obj).closest("tr");
@@ -302,10 +295,10 @@
             var rownum = $dt.fnGetPosition($tr[0]);
                 $dt.fnDeleteRow(rownum);
             
-            removeO2MHas{{$jsUnique}}(data.id);
+            removeMorphO2MHas{{$jsUnique}}(data.id);
         } 
 
-        function chooseO2MHas{{$jsUnique}}(obj, url) 
+        function chooseMorphO2MHas{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -322,7 +315,7 @@
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteO2MHasAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 				
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -330,7 +323,7 @@
                     var oSettings = $dt.fnSettings();
                     var nTr = oSettings.aoData[ a[0] ].nTr;
 
-                    addO2MHas{{$jsUnique}}(data.id);
+                    addMorphO2MHas{{$jsUnique}}(data.id);
 
                 });
 					
@@ -372,15 +365,15 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_many_has ? $field->{$linkedField} : $field->morph_one_to_many_belong_to_type_list->toArray()]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_many_has ? $field->{$linkedField} : $field->morph_one_to_many_belong_to_type_list->toArray()]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button> 
-            <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>
-            <button onclick="deleteO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
+            <button onclick="deleteMorphO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{{ $controller->LL('btn.delete') }}}
             </button>
@@ -391,7 +384,7 @@
 
     <script type="text/javascript">
         
-        function createO2MBelongTo{{$uniqueId}}(obj, url) 
+        function createMorphO2MBelongTo{{$uniqueId}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -424,7 +417,7 @@
             });
         }
 
-        function editO2MBelongTo{{$uniqueId}}(obj, url) 
+        function editMorphO2MBelongTo{{$uniqueId}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -463,7 +456,7 @@
             });
         }
 
-        function deleteO2MBelongTo{{$uniqueId}}(obj) 
+        function deleteMorphO2MBelongTo{{$uniqueId}}(obj) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -471,7 +464,7 @@
             jQuery('input[type="hidden"]', $block).val(0);
         }
 
-        function chooseO2MBelongTo{{$uniqueId}}(obj, url) 
+        function chooseMorphO2MBelongTo{{$uniqueId}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 

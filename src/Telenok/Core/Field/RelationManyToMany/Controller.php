@@ -15,7 +15,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
     {
 		return [];
     } 
-	
+
     public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
     { 		
 		if ($field->relation_many_to_many_has || $field->relation_many_to_many_belong_to)
@@ -33,40 +33,29 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
     {
 		if (!empty($value))
 		{
-			$modelTable = $model->getTable();
+			$method = camel_case($field->code);
+			$relatedQuery = $model->$method();
 
-			if ($field->relation_many_to_many_has)
+			$query->join($relatedQuery->getTable(), function($join) use ($model, $relatedQuery)
 			{
-				$pivotTable = 'pivot_relation_m2m_' . $field->code . '_' . $field->fieldObjectType()->first()->code;
-				$relatedField = $field->code . '_' . $field->fieldObjectType()->first()->code;
-			}
-			else
-			{
-				$pivotTable = 'pivot_relation_m2m_' . $field->code;
-				$codeTypeHasMany = \Telenok\Object\Sequence::getModel($field->relation_many_to_many_belong_to)->code;
-				$relatedField = preg_replace('/_'.$codeTypeHasMany.'$/', '', $pivotTable);
-			}
-
-			$query->join($pivotTable, function($join) use ($pivotTable, $modelTable, $relatedField)
-			{
-				$join->on($pivotTable . '.'.$relatedField, '=', $modelTable . '.id');
+				$join->on($relatedQuery->getForeignKey(), '=', $model->getTable() . '.id');
 			});
 
-			$query->whereIn($pivotTable.'.'.$name, (array)$value);
+			$query->whereIn($relatedQuery->getTable() . '.' . $name, (array)$value);
 		}
     }
-    
+
     public function getFilterContent($field = null)
     {
         $uniqueId = str_random();
         $option = [];
-         
+
         $id = $field->relation_many_to_many_has ?: $field->relation_many_to_many_belong_to;
-        
+
         $class = \Telenok\Object\Sequence::getModel($id)->class_model;
-        
+
 		$model = new $class;
-		
+
         $model::withPermission()->take(200)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$option)
         {
             $option[] = "<option value='{$item->id}'>[{$item->id}] {$item->translate('title')}</option>";
@@ -133,11 +122,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
             {
                 try
                 {
-                    $model->$method()->attach($id);
+					if (\Auth::can('update', $id))
+					{
+	                    $model->$method()->attach($id);
+					}
                 }
                 catch(\Exception $e) {}
             }
-
         }
 
         return $model;

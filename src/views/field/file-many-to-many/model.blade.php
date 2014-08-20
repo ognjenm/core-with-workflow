@@ -3,20 +3,12 @@
     $method = camel_case($field->code);
     $jsUnique = str_random();
 
-	$disabledCreateFile = false;
-	$disabledReadFile = false;
-	
+	$disabledCreateFile = false;  
 	
 	if (!\Auth::can('create', 'object_type.file'))
 	{
 		$disabledCreateFile = true;
-	}
-	
-	if (!\Auth::can('read', 'object_type.file'))
-	{
-		$disabledReadFile = true;
-	}
-	
+	} 
 	
     $linkedField = $field->relation_many_to_many_has ? 'relation_many_to_many_has' : 'relation_many_to_many_belong_to';
 ?>
@@ -41,7 +33,7 @@
                     @if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && (!$disabledCreateFile || !$disabledReadFile)
+							($model->exists && $field->allow_update && $permissionUpdate))
 						)
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
@@ -74,7 +66,7 @@
                     @if (
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) && (!$disabledCreateFile || !$disabledReadFile)
+							($model->exists && $field->allow_update && $permissionUpdate)) 
 						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
@@ -162,7 +154,7 @@
 							@if ( 
 									((!$model->exists && $field->allow_create && $permissionCreate) 
 										|| 
-									($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledReadFile
+									($model->exists && $field->allow_update && $permissionUpdate)) 
 								)
 							aButtons.push({
 									"sExtends": "text",
