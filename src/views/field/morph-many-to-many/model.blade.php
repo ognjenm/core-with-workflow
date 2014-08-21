@@ -240,7 +240,7 @@
             });
         }
         
-        function editMorphM2M{{$jsUnique}}(obj, url) 
+        function editTableRow{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -273,7 +273,7 @@
             });
         }
 
-        function deleteMorphM2M{{$jsUnique}}(obj) 
+        function deleteTableRow{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
             var $tr = jQuery(obj).closest("tr");

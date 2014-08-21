@@ -175,6 +175,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	
     public function preProcess($model, $type, $input)
     {
+		$this->validateExistsInputField($input, ['field_has', 'relation_one_to_many_has']);
+
+		if (!$input->get('relation_one_to_many_has') && $input->get('field_has'))
+		{
+			$input->put('relation_one_to_many_has', $input->get('field_has'));
+		}
+
 		$input->put('relation_one_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('relation_one_to_many_has'))->orWhere('id', $input->get('relation_one_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);

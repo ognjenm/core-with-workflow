@@ -29,19 +29,26 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 		return \Telenok\Object\Type::whereIn('id', [$field->relation_many_to_many_has, $field->relation_many_to_many_belong_to])->first();
 	}
 
-    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null)
     {
 		if (!empty($value))
 		{
 			$method = camel_case($field->code);
 			$relatedQuery = $model->$method();
 
+			$relatedTable = $relatedQuery->getRelated()->getTable();
+			
 			$query->join($relatedQuery->getTable(), function($join) use ($model, $relatedQuery)
 			{
 				$join->on($relatedQuery->getForeignKey(), '=', $model->getTable() . '.id');
 			});
 
-			$query->whereIn($relatedQuery->getTable() . '.' . $name, (array)$value);
+			$query->join($relatedTable, function($join) use ($relatedTable, $relatedQuery)
+			{
+				$join->on($relatedQuery->getOtherKey(), '=', $relatedTable . '.id');
+			});
+
+			$query->whereIn($relatedTable . '.id', (array)$value);
 		}
     }
 
@@ -136,6 +143,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	
     public function preProcess($model, $type, $input)
     {
+		$this->validateExistsInputField($input, ['field_has', 'relation_many_to_many_has']);
+
+		if (!$input->get('relation_many_to_many_has') && $input->get('field_has'))
+		{
+			$input->put('relation_many_to_many_has', $input->get('field_has'));
+		}
+
 		$input->put('relation_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('relation_many_to_many_has'))->orWhere('id', $input->get('relation_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);

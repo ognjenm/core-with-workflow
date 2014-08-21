@@ -271,7 +271,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     }
 
     public function edit($id = null)
-    { 
+    {  
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
         $fields = $model->getFieldForm();

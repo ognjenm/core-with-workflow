@@ -265,6 +265,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	
     public function preProcess($model, $type, $input)
     {
+		$this->validateExistsInputField($input, ['field_has', 'morph_one_to_many_has']);
+
+		if (!$input->get('morph_one_to_many_has') && $input->get('field_has'))
+		{
+			$input->put('morph_one_to_many_has', $input->get('field_has'));
+		}
+
 		$input->put('morph_one_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_one_to_many_has'))->orWhere('id', $input->get('morph_one_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0); 

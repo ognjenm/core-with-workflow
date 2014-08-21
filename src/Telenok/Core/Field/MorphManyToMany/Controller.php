@@ -20,52 +20,27 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->morph_many_to_many_has, $field->morph_many_to_many_belong_to])->first();
 	} 
-
-    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+	
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null)
     {
 		if (!empty($value))
 		{
-			if ($field->morph_many_to_many_has)
+			$method = camel_case($field->code);
+			$relatedQuery = $model->$method();
+
+			$relatedTable = $relatedQuery->getRelated()->getTable();
+			
+			$query->join($relatedQuery->getTable(), function($join) use ($model, $relatedQuery)
 			{
-				$typeHasMany = \Telenok\Object\Type::findOrFail($field->morph_many_to_many_has);
-				$pivotTable = 'pivot_morph_m2m_' . $field->code . '_' . $typeHasMany->code;
+				$join->on($relatedQuery->getForeignKey(), '=', $model->getTable() . '.id');
+			});
 
-				$query->join($pivotTable, function($join) use ($pivotTable, $field, $model)
-				{
-					$join->on($pivotTable . '.' . $field->code . '_linked_id', '=', $model->getTable() . '.id');
-				});
-
-				$query->join($typeHasMany->code, function($join) use ($pivotTable, $typeHasMany, $field)
-				{
-					$join->on($pivotTable . '.morph_id', '=', $typeHasMany->code . '.id');
-				});
-
-				$query->whereIn($typeHasMany->code.'.id', (array)$value);
-				$query->where($pivotTable . '.' . $field->code . '_type', get_class(\App::build($typeHasMany->class_model)));
-			}
-			else
+			$query->join($relatedTable, function($join) use ($relatedTable, $relatedQuery)
 			{
-				$typeHasMany = \Telenok\Object\Type::findOrFail($field->morph_many_to_many_belong_to);
-				$typeRelated = $field->fieldObjectType()->first();
+				$join->on($relatedQuery->getOtherKey(), '=', $relatedTable . '.id');
+			});
 
-				$morphToField = preg_replace('/_'.$typeHasMany->code.'$/', '_' . $typeRelated->code, $field->code);
-				$morphManyField = preg_replace('/_'.$typeHasMany->code.'$/', '', $field->code);
-
-				$pivotTable = 'pivot_morph_m2m_' . $morphToField;
-
-				$query->join($pivotTable, function($join) use ($pivotTable, $model)
-				{
-					$join->on($pivotTable . '.morph_id', '=', $model->getTable() . '.id');
-				});
-
-				$query->join($typeHasMany->code, function($join) use ($pivotTable, $typeHasMany, $morphManyField)
-				{
-					$join->on($pivotTable . '.' . $morphManyField . '_linked_id', '=', $typeHasMany->code . '.id');
-				});
-
-				$query->whereIn($typeHasMany->code.'.id', (array)$value);
-				$query->where($pivotTable . '.' . $morphManyField . '_type', get_class($model));
-			}
+			$query->whereIn($relatedTable . '.id', (array)$value);
 		}
     }
 
@@ -73,20 +48,20 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
     {
         $uniqueId = str_random();
         $option = [];
-        
+
         $id = $field->morph_many_to_many_has ?: $field->morph_many_to_many_belong_to;
-        
+
         $class = \Telenok\Object\Sequence::getModel($id)->class_model;
-        
+
 		$model = new $class;
-		
+
         $model::withPermission()->take(200)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$option)
         {
             $option[] = "<option value='{$item->id}'>[{$item->id}] {$item->translate('title')}</option>";
         });
-        
+
         $option[] = "<option value='0' disabled='disabled'>...</option>";
-        
+
         return '
             <select class="chosen" multiple data-placeholder="'.$this->LL('notice.choose').'" id="input'.$uniqueId.'" name="filter['.$field->code.'][]">
             ' . implode('', $option) . ' 
@@ -165,6 +140,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
     public function preProcess($model, $type, $input)
     {
+		$this->validateExistsInputField($input, ['field_has', 'morph_many_to_many_has']);
+
+		if (!$input->get('morph_many_to_many_has') && $input->get('field_has'))
+		{
+			$input->put('morph_many_to_many_has', $input->get('field_has'));
+		}
+
 		$input->put('morph_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0); 

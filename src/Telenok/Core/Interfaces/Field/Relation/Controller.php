@@ -4,6 +4,19 @@ namespace Telenok\Core\Interfaces\Field\Relation;
 
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
+	public function validateExistsInputField($input, $param = [])
+	{
+		foreach((array)$param as $p)
+		{
+			if ($input->get($p))
+			{
+				return;
+			}
+		}
+		
+		throw new \Exception('Please, define one or more keys "' . implode('", "', (array)$param) . '"');
+	}
+	
     public function getTitleList($id = null) 
     { 
         $term = trim(\Input::get('term'));
@@ -39,7 +52,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         return '<div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="editM2M'.$uniqueId.'(this, \''.\URL::route($this->getRouteWizardEdit(), ['id' => $item->getKey(), 'saveBtn' => 1, 'chooseBtn' => 0]).'\'); return false;">
+                        onclick="editTableRow'.$uniqueId.'(this, \''.\URL::route($this->getRouteWizardEdit(), ['id' => $item->getKey(), 'saveBtn' => 1, 'chooseBtn' => 0]).'\'); return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
                     
@@ -49,7 +62,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                     ' .
                     ($canUpdate ? '
                     <button class="btn btn-minier btn-danger trash-it" title="'.$this->LL('list.btn.delete').'" 
-                        onclick="deleteM2M'.$uniqueId.'(this); return false;">
+                        onclick="deleteTableRow'.$uniqueId.'(this); return false;">
                         <i class="fa fa-trash-o"></i>
                     </button>' : ''
                     ). '

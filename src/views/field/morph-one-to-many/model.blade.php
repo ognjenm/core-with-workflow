@@ -239,7 +239,7 @@
             });
         }
         
-        function editMorphO2MHas{{$jsUnique}}(obj, url) 
+        function editTableRow{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -272,7 +272,7 @@
             });
         }
 
-        function deleteMorphO2MHas{{$jsUnique}}(obj) 
+        function deleteTableRow{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
             var $tr = jQuery(obj).closest("tr");
@@ -352,6 +352,15 @@
             $title = $result->translate('title');
             $id = $result->id;
         }
+
+		$disabledCreateLinkedType = false;
+
+		$linkedType = $controller->getLinkedModelType($field);
+
+		if (!\Auth::can('create', 'object_type.' . $linkedType->code))
+		{
+			$disabledCreateLinkedType = true;
+		}
     ?>
 
     <div class="form-group">
@@ -359,7 +368,7 @@
         <div class="col-sm-9"> 
             {{ Form::hidden("{$field->code}", $id) }}
             {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
-            
+
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
@@ -369,16 +378,46 @@
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button> 
+			@endif
+
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
+				)
+            <button onclick="createMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+                <i class="fa fa-plus"></i>
+                {{{ $controller->LL('btn.create') }}}
+            </button>
+            @endif
+
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate))
+				)
             <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>
+			@endif
+
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate))
+				)
             <button onclick="deleteMorphO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{{ $controller->LL('btn.delete') }}}
             </button>
 			@endif
-   
+
+            @if ($field->translate('description'))
+            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            @endif
+
         </div>
     </div>
 

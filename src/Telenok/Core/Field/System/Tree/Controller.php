@@ -14,7 +14,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Object\Type::whereIn('code', 'object_sequence')->first();
+		return \Telenok\Object\Type::where('code', 'object_sequence')->first();
 	}
 	
     public function saveModelField($field, $model, $input)

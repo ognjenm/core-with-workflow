@@ -235,7 +235,7 @@
             });
         }
         
-        function editO2MHas{{$jsUnique}}(obj, url) 
+        function editTableRow{{$jsUnique}}(obj, url) 
         {
             jQuery.ajax({
                 url: url,
@@ -268,7 +268,7 @@
             });
         }
 
-        function deleteO2MHas{{$jsUnique}}(obj) 
+        function deleteTableRow{{$jsUnique}}(obj) 
         {
             var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
             var $tr = jQuery(obj).closest("tr");
@@ -348,6 +348,15 @@
             $title = $result->translate('title');
             $id = $result->id;
         }
+
+		$disabledCreateLinkedType = false;
+
+		$linkedType = $controller->getLinkedModelType($field);
+
+		if (!\Auth::can('create', 'object_type.' . $linkedType->code))
+		{
+			$disabledCreateLinkedType = true;
+		}
     ?> 
 
     <div class="form-group">

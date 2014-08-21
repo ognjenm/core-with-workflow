@@ -444,8 +444,6 @@ class SeedLast extends Migration {
 
 		\Telenok\Object\Type::all()->each(function($item)
 		{
-			var_dump($item->getKey());
-			
 			if ($item->treeable && !$item->field()->where('code', 'tree_parent')->count())
 			{
 				$modelField = new \Telenok\Object\Field();
