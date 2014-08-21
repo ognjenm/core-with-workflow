@@ -61,7 +61,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         $method = camel_case($field->code);
 
         $items = [];
-        $rows = \Illuminate\Support\Collection::make($item->$method()->take(8)->getResults());
+        $rows = \Illuminate\Support\Collection::make($this->getListFieldContentItems($field, $item, $type));
         
         if ($rows->count())
         {
@@ -72,6 +72,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
             return '"'.implode('", "', $items).'"'.(count($rows)>7 ? ', ...' : '');
         }
+    }
+
+    public function getListFieldContentItems($field, $item, $type = null)
+    {
+        $method = camel_case($field->code);
+
+        return $item->$method()->take(8)->getResults();
     }
 }
 

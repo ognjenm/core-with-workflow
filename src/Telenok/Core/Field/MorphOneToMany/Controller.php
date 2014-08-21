@@ -91,6 +91,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         return true;
     } 
 
+    public function getListFieldContentItems($field, $item, $type = null)
+    {
+        $method = camel_case($field->code);
+
+        return $item->$method ? $item->$method()->take(8)->get() : [];
+    }
+
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
     {
 		if (!empty($value))
@@ -101,25 +108,30 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 				$linkedTable = \Telenok\Object\Sequence::getModel($field->morph_one_to_many_has)->code;
 
-				$query->join($linkedTable, function($join) use ($modelTable, $linkedTable, $name, $field)
+				$alias = $linkedTable . str_random();
+				
+				$query->join($linkedTable . ' as ' . $alias, function($join) use ($modelTable, $linkedTable, $name, $field, $alias)
 				{
-					$join->on($modelTable . '.id', '=', $linkedTable . '.' . $field->code . 'able_id');
+					$join->on($modelTable . '.id', '=', $alias . '.' . $field->code . 'able_id');
 				});
 
-				$query->whereIn($linkedTable.'.id', (array)$value);
+				$query->whereIn($alias.'.id', (array)$value);
 			}
 			else if ($field->morph_one_to_many_belong_to)
 			{
 				$modelTable = $model->getTable();
 
-				$linkedTable = \Telenok\Object\Sequence::getModel($field->morph_one_to_many_belong_to)->code;
+				$linkedTable = 'object_sequence';
 
-				$query->join($linkedTable, function($join) use ($modelTable, $linkedTable, $name, $field)
+				$alias = $linkedTable . str_random();
+
+				$query->join($linkedTable . ' as ' . $alias, function($join) use ($modelTable, $linkedTable, $name, $field, $alias)
 				{
-					$join->on($modelTable . '.' . $field->code . '_id', '=', $linkedTable . '.id');
+					$join->on($modelTable . '.' . $field->code . '_id', '=', $alias . '.id');
 				});
 
-				$query->whereIn($linkedTable.'.id', (array)$value);
+				$query->whereIn($alias.'.id', (array)$value);
+				$query->whereIn($alias.'.sequences_object_type', $field->morph_one_to_many_belong_to_type_list->toArray());
 			}
 		}
     }
@@ -135,7 +147,14 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         
 		$model = new $class;
 		
-        $model::withPermission()->take(200)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$option)
+        $query = $model::withPermission()->take(200)->groupBy($model->getTable() . '.id');
+		
+		if ($field->morph_one_to_many_belong_to)
+		{
+			$query->whereIn($model->getTable() . '.sequences_object_type', $field->morph_one_to_many_belong_to_type_list->toArray());
+		}
+		
+		$query->get()->each(function($item) use (&$option)
         {
             $option[] = "<option value='{$item->id}'>[{$item->id}] {$item->translate('title')}</option>";
         });
@@ -255,7 +274,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
     public function processDeleting($model)
     {  
-		if ($model->morph_one_to_one_has)
+		if ($model->morph_one_to_many_has)
 		{
 			$f = \Telenok\Object\Field::where(function($query) use ($model)
 					{

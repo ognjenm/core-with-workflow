@@ -190,7 +190,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		if ($this instanceof \Telenok\Core\Model\Object\Sequence)
 		{
 			throw new \Exception('Cant storeOrUpdate sequence model directly');
-		} 
+		}
  
 		try
 		{

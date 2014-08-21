@@ -15,39 +15,114 @@
 		$id = $result->id;
 	}
 	
+	$disabledCreateLinkedType = false;
+
+	$linkedType = $controller->getLinkedModelType($field);
+
+	if (!\Auth::can('create', 'object_type.' . $linkedType->code) && $field->morph_one_to_one_has)
+	{
+		$disabledCreateLinkedType = true;
+	}
 ?>
 
     <div class="form-group">
-        {{ Form::label("{$field->code}", $field->translate('title'), ['class' => 'col-sm-3 control-label no-padding-right']) }}
+        {{ Form::label($field->code, $field->translate('title'), ['class'=>'col-sm-3 control-label no-padding-right']) }}
         <div class="col-sm-9"> 
-            {{ Form::hidden("{$field->code}", $id) }}
-            {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
+            @if ($field->icon_class)
+            <span class="input-group-addon">
+                <i class="{{{$field->icon_class}}}"></i>
+            </span>
+            @endif
             
+            {{ Form::hidden($field->code, $id) }}
+            {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
             
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_one_has ? $field->{$linkedField} : $field->morph_one_to_one_belong_to_type_list->toArray()]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_one_has ? $field->{$linkedField} : $field->morph_one_to_one_belong_to_type_list->toArray()]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button>
-            <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            @endif
+			
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
+				)
+            <button onclick="createMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+                <i class="fa fa-plus"></i>
+                {{{ $controller->LL('btn.create') }}}
+            </button>
+            @endif
+			
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate))
+				)
+            <button onclick="editMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>
-            <button onclick="deleteMorphO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
+            @endif
+
+			@if ( 
+					((!$model->exists && $field->allow_create && $permissionCreate) 
+						|| 
+					($model->exists && $field->allow_update && $permissionUpdate))
+				)
+            <button onclick="deleteMorphO2O{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{{ $controller->LL('btn.delete') }}}
             </button>
+            @endif
+
+            @if ($field->translate('description'))
+            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
             @endif
         </div>
     </div>
 
     <script type="text/javascript">
+        
+        function createMorphO2O{{$uniqueId}}(obj, url) 
+        {
+            var $block = jQuery(obj).closest('div.form-group');
 
-        function editMorphO2MBelongTo{{$uniqueId}}(obj, url) 
+            jQuery.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json'
+            }).done(function(data) {
+
+                if (!jQuery('#modal-{{$uniqueId}}').size())
+                {
+                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                }
+				
+				var $modal = jQuery('#modal-{{$uniqueId}}');
+
+                $modal.data('model-data', function(data)
+                {
+                    jQuery('input[type="text"]', $block).val(data.title);
+                    jQuery('input[type="hidden"]', $block).val(data.id);
+                });
+						
+				$modal.html(data.tabContent);
+						
+				$modal.modal('show').on('hidden', function() 
+                { 
+                    jQuery(this).html(""); 
+                });
+            });
+        }
+
+        function editMorphO2O{{$uniqueId}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -62,23 +137,23 @@
                 method: 'get',
                 dataType: 'json'
             }).done(function(data) {
-				
+
                 if (!jQuery('#modal-{{$uniqueId}}').size())
                 {
                     jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
 				var $modal = jQuery('#modal-{{$uniqueId}}');
-				
+
                 $modal.data('model-data', function(data)
-                {  
+                {
                     jQuery('input[type="text"]', $block).val(data.title);
                     jQuery('input[type="hidden"]', $block).val(data.id);
 
                 });
 						
 				$modal.html(data.tabContent);
-				
+						
 				$modal.modal('show').on('hidden', function() 
                 { 
                     jQuery(this).html(""); 
@@ -86,7 +161,7 @@
             });
         }
 
-        function deleteMorphO2MBelongTo{{$uniqueId}}(obj) 
+        function deleteMorphO2O{{$uniqueId}}(obj) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -94,7 +169,7 @@
             jQuery('input[type="hidden"]', $block).val(0);
         }
 
-        function chooseMorphO2MBelongTo{{$uniqueId}}(obj, url) 
+        function chooseMorphO2O{{$uniqueId}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -103,19 +178,18 @@
                 method: 'get',
                 dataType: 'json'
             }).done(function(data) {
-				
+
                 if (!jQuery('#modal-{{$uniqueId}}').size())
                 {
                     jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
-
+				
 				var $modal = jQuery('#modal-{{$uniqueId}}');
 
                 $modal.data('model-data', function(data)
                 {
                     jQuery('input[type="text"]', $block).val(data.title);
                     jQuery('input[type="hidden"]', $block).val(data.id);
-
                 });
 						
 				$modal.html(data.tabContent);
