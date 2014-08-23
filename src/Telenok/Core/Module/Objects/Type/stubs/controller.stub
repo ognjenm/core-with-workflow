@@ -5,7 +5,7 @@
 use \Illuminate\Database\Eloquent\ModelNotFoundException as ModelNotFoundException;
 use \Telenok\Core\Interfaces\Exception\Validate as ValidateException;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
+class {{class}} extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
     
     protected $key = '{{key}}';
     protected $parent = '{{parent}}';
@@ -14,7 +14,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $typeList = '{{typeList}}';
     protected $typeTree = '{{typeTree}}';
 
-    protected $presentationModelView = 'core::module.objects-field.model';
 }
 
 ?>

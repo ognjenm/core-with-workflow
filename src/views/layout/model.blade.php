@@ -169,6 +169,7 @@
 @section('form')
 
 {{ Form::model($model, array('url' => $routerParam, 'files' => true, 'id' => "model-ajax-$uniqueId", 'class' => 'form-horizontal')) }}
+	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
 
     <div class="error-container"></div>
     

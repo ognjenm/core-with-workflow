@@ -27,11 +27,7 @@
         <span class="input-group-addon">
             <i class="{{{ $field->icon_class }}}"></i>
         </span>
-        @endif
-		
-        @if ($disabled)
-        {{ Form::hidden("{$field->code}", $value) }}
-        @endif
+        @endif 
 		
         {{ Form::text($disabled ? str_random() : "{$field->code}", $value, $domAttr) }}
 		

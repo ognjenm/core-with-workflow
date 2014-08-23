@@ -127,6 +127,26 @@ class SeedObjectTypeTable extends Migration {
 			DB::table('object_field')->insert(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.multilanguage'), JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.multilanguage'), JSON_UNESCAPED_UNICODE),
+						'key' => 'checkbox',
+						'code' => 'multilanguage',
+						'active' => 1,
+						'field_object_type' => $modelTypeId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_list' => 0,
+						'show_in_form' => 1,
+						'allow_search' => 1,
+						'allow_create' => 1,
+						'allow_update' => 0,
+						'field_order' => 4,
+					]
+			);
+
+			DB::table('object_field')->insert(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.code'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.code'), JSON_UNESCAPED_UNICODE),
 						'key' => 'string',
@@ -138,7 +158,9 @@ class SeedObjectTypeTable extends Migration {
 						'show_in_form' => 1,
 						'show_in_list' => 1,
 						'allow_search' => 1,
-						'field_order' => 5,
+						'allow_create' => 1,
+						'allow_update' => 0,
+						'field_order' => 4,
 					]
 			);
 
@@ -179,7 +201,7 @@ class SeedObjectTypeTable extends Migration {
 						'allow_search' => 1,
 						'allow_create' => 1,
 						'allow_update' => 0,
-						'field_order' => 7,
+						'field_order' => 4,
 					]
 			);
 
@@ -196,8 +218,9 @@ class SeedObjectTypeTable extends Migration {
 						'multilanguage' => 0,
 						'show_in_form' => 1,
 						'show_in_list' => 0,
+						'allow_update' => 0,
 						'allow_search' => 1,
-						'field_order' => 8,
+						'field_order' => 4,
 					]
 			);
 
@@ -352,6 +375,10 @@ class SeedObjectTypeTableTranslation extends \Telenok\Core\Interfaces\Translatio
 				'treeable' => [
 					'ru' => "Деревообразный",
 					'en' => "Treeable",
+				],
+				'multilanguage' => [
+					'ru' => "Мультиязычный",
+					'en' => "Multilanguage",
 				],
 				'class_model' => [
 					'ru' => "Класс модели",
