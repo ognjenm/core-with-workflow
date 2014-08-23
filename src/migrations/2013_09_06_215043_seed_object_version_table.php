@@ -96,7 +96,7 @@ class SeedObjectVersionTable extends Migration {
 						'field_object_tab' => $tabVisibleId,
 						'multilanguage' => 0,
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'allow_update' => 0,
 						'field_order' => 3,

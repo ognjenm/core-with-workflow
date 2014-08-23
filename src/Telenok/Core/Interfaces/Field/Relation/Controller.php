@@ -4,6 +4,11 @@ namespace Telenok\Core\Interfaces\Field\Relation;
 
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
+	public function getChooseTypeId($field, $linkedField)
+	{
+		return $field->{$linkedField};
+	}
+
 	public function validateExistsInputField($input, $param = [])
 	{
 		foreach((array)$param as $p)
@@ -16,7 +21,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		
 		throw new \Exception('Please, define one or more keys "' . implode('", "', (array)$param) . '"');
 	}
-	
+
     public function getTitleList($id = null) 
     { 
         $term = trim(\Input::get('term'));

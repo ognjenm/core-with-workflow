@@ -77,7 +77,10 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 			});
 		}
 
-		return parent::preProcess($model, $type, $input);
+		$input->put('multilanguage', 0);
+		$input->put('allow_sort', 0);
+		
+		return $this;
 	}
 	
 	public function postProcess($model, $type, $input)

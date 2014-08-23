@@ -42,7 +42,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->morph_one_to_one_has ? $field->{$linkedField} : $field->morph_one_to_one_belong_to_type_list->toArray()]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{{ $controller->LL('btn.choose') }}}
             </button>

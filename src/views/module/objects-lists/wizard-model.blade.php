@@ -130,9 +130,18 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 
 						$put = \Illuminate\Support\Collection::make([]); 
 
-						foreach ($model->getFieldList() as $field)
+						if (\Input::get('chooseSequence') && $model->exists())
+						{
+							$listModelField = $model->sequence;
+						}
+						else
+						{
+							$listModelField = $model;
+						}
+						
+						foreach ($listModelField->getFieldList() as $field)
 						{ 
-							$put->put($field->code, $config->get($field->key)->getListFieldContent($field, $model, $type));
+							$put->put($field->code, $config->get($field->key)->getListFieldContent($field, $listModelField, $type));
 						}
 					?>
 					

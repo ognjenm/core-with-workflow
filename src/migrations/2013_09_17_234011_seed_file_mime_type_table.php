@@ -115,7 +115,7 @@ class SeedFileMimeTypeTable extends Migration {
 						'field_object_tab' => $tabVisibleId,
 						'multilanguage' => 0,
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'field_order' => 14,
 					]
@@ -134,7 +134,7 @@ class SeedFileMimeTypeTable extends Migration {
 						'relation_one_to_many_belong_to' => DB::table('object_type')->where('code', 'user')->pluck('id'),
 						'multilanguage' => 0,
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'field_order' => 5,
 					]
@@ -153,7 +153,7 @@ class SeedFileMimeTypeTable extends Migration {
 						'relation_one_to_many_belong_to' => DB::table('object_type')->where('code', 'user')->pluck('id'),
 						'multilanguage' => 0,
 						'show_in_form' => 1,
-						'show_in_list' => 1,
+						'show_in_list' => 0,
 						'allow_search' => 1,
 						'field_order' => 6,
 					]

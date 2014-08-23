@@ -11,6 +11,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
     protected $specialField = ['relation_one_to_many_has', 'relation_one_to_many_belong_to'];
     protected $allowMultilanguage = false;
 
+	public function getChooseTypeId($field, $linkedField)
+	{
+		return $field->relation_one_to_many_belong_to ? $field->{$linkedField} : $field->relation_one_to_many_has;
+	}
+	
 	public function getLinkedModelType($field)
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->relation_one_to_many_has, $field->relation_one_to_many_belong_to])->first();

@@ -14,4 +14,6 @@ return array(
     'list.edit' => 'Редактирование поля',
     'list.btn.edit' => 'Редактирование поля',
     'list.btn.delete' => 'Удаление поля',
+
+    'btn.continue' => 'Continue',
 );

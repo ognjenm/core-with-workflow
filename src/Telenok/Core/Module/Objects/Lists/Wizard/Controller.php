@@ -28,6 +28,11 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         return \URL::route("cmf.module.{$this->getKey()}.wizard.update", $param);
     }
 
+    public function getRouterChooseTypeId($param = [])
+    {
+        return \URL::route("cmf.module.{$this->getKey()}.wizard.choose.type", $param);
+    }
+
     public function getPresentationListWizardView()
     {
         return $this->presentationListWizardView;
@@ -41,13 +46,36 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				->setRouterUpdate("cmf.module.{$this->getKey()}.wizard.update");
     }    
 	
-    public function create($id = null)
+    public function create()
+    { 
+		$id = \Input::get('id');
+  
+		if (is_array($id))
+		{
+			return $this->chooseType($id);
+		}
+
+		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
+
+        return parent::create();
+    }
+	
+    public function chooseType($id)
     { 
 		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
-		
-        return parent::create($id);
-    }
 
+		$id = (array)$id;
+		
+		return [
+				'tabContent' => \View::make('core::module.objects-lists.wizard-choose-type', 
+					[
+						'controller' => $this,
+						'typeId' => $id,
+						'uniqueId' => str_random(),
+					])->render()
+			];
+    }
+	
     public function edit($id = null)
     { 
 		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
@@ -104,7 +132,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
                 'uniqueId' => ($uniqueId = str_random()),
                 'gridId' => str_random(),
 				'saveBtn' => \Input::get('saveBtn', true), 
-				'chooseBtn' => \Input::get('chooseBtn', true), 
+				'chooseBtn' => \Input::get('chooseBtn', true),  
                 'contentForm' => ( $model->classController() ? $this->typeForm($model)->getFormContent($model, $type, $fields, $uniqueId) : FALSE),
             ))->render()
         );
@@ -120,7 +148,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         $iDisplayStart = intval(\Input::get('iDisplayStart', 10));
         $sEcho = \Input::get('sEcho');
 		$id = \Input::get('id', 0);
-
+		$sSearch = trim(\Input::get('sSearch', 0));
+		
         try
         {
 			if (is_array($id))
@@ -143,6 +172,22 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				$query->whereIn('osequence_wizard_list.sequences_object_type', $typeList);
 			}
 
+			if ($sSearch)
+			{
+				$query->join('object_translation as object_translation_list', function($join) use ($model, $typeList)
+				{
+					$join->on($model->getTable() . '.id', '=', 'object_translation_list.translation_object_model_id');
+				}); 
+				
+				$query->groupBy($model->getTable() . '.id');
+				
+				$query->where(function($query) use ($sSearch, $model)
+				{
+					$query->orWhere('object_translation_list.translation_object_string', 'like', '%' . $sSearch . '%');
+					$query->orWhere($model->getTable() . '.id', (int)$sSearch);
+				});
+			}
+			
 			$items = $query->get();
 			
 			$config = \App::make('telenok.config')->getObjectFieldController();

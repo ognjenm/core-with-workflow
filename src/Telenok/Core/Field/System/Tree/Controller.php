@@ -12,6 +12,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
     protected $viewModel = "core::field.relation-many-to-many.model";
     protected $viewField = "core::field.relation-many-to-many.field";
 
+	public function getChooseTypeId($field, $linkedField)
+	{
+		return \Telenok\Object\Type::withPermission()->where('treeable', 1)->get(['id'])->fetch('id')->toArray();
+	}
+
 	public function getLinkedModelType($field)
 	{
 		return \Telenok\Object\Type::where('code', 'object_sequence')->first();
@@ -126,16 +131,14 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		$input->put('show_in_list', 0);
 		$input->put('show_in_form', 1);
 		$input->put('allow_search', 1);
-		$input->put('allow_create', 0);
+		$input->put('allow_create', 1);
 		$input->put('allow_update', 1);
 		$input->put('field_order', 5);
 		 
 		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
 
 		$input->put('field_object_tab', $tab->getKey()); 
-		
-		$tabTo = $this->getFieldTabBelongTo($sequenceTypeId, $input->get('field_object_tab')); 
-		
+
 		$toSave = [
 			'title' => array_get($translationSeed, 'model.children'),
 			'title_list' => array_get($translationSeed, 'model.children'),
@@ -149,10 +152,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			'allow_search' => $input->get('allow_search'),
 			'multilanguage' => 0,
 			'active' => $input->get('active'),
-			'allow_create' => $input->get('allow_create'),
-			'allow_update' => $input->get('allow_update'),
+			'start_at' => $input->get('start_at_belong', $model->start_at),
+			'end_at' => $input->get('end_at_belong', $model->end_at),
+			'allow_create' => 0,
+			'allow_update' => 0,
 			'field_order' => $input->get('field_order'),
-			'field_object_tab' => $tabTo->getKey(),
 		];  
  
 		$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);

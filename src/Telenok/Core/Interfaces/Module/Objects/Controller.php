@@ -223,9 +223,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
-    public function create($id = NULL)
+    public function create()
     { 
-        $model = $this->getModelList();
+		$id = (int)\Input::get('id');
+
+		$model = $this->getModelList();
         $type = $this->getTypeList();
         $fields = $model->getFieldForm();
 

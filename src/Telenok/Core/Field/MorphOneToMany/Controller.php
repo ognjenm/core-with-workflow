@@ -11,6 +11,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
     protected $specialField = ['morph_one_to_many_has', 'morph_one_to_many_belong_to', 'morph_one_to_many_belong_to_type_list'];
     protected $allowMultilanguage = false;
 
+	public function getChooseTypeId($field, $linkedField)
+	{
+		return $field->morph_one_to_many_has ? $field->morph_one_to_many_has : $field->morph_one_to_many_belong_to_type_list->toArray();
+	}
+
 	public function getLinkedModelType($field)
 	{
 		return \Telenok\Object\Type::whereIn('id', [$field->morph_one_to_many_has, $field->morph_one_to_many_belong_to])->first();

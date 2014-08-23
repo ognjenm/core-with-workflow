@@ -596,8 +596,10 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         ];
     } 
     
-    public function create($id = null)
+    public function create()
     {  
+		$id = (int)\Input::get('id');
+		
         return [
             'tabKey' => $this->getTabKey().'-new-'.str_random(),
             'tabLabel' => $this->LL('list.create'),

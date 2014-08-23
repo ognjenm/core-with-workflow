@@ -235,8 +235,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 </div>';
     } 
 
-    public function create($id = null)
+    public function create()
     {   
+		$id = (int)\Input::get('id');
+		
         $model = $this->modelByType($id);
         $type = $this->getType($id);
         $fields = $model->getFieldForm();
@@ -541,19 +543,19 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		switch ($action)
 		{
 			case 'create':
-				return [ $this->getRouterStore(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false)]) ];
+				return [ $this->getRouterStore(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
 				break;
 
 			case 'edit':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
 				break;
 
 			case 'store':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
 				break;
 
 			case 'update':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
 				break;
 
 			default:

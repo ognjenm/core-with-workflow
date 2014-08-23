@@ -30,39 +30,39 @@
             <div class="widget-main form-group field-list">
 
                 <ul class="nav nav-tabs" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab">
-                    @if ( 
-							((!$model->exists && $field->allow_create && $permissionCreate) 
-								|| 
-							($model->exists && $field->allow_update && $permissionUpdate))
-						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
                             {{{$controller->LL('current')}}}
                         </a>
                     </li>
+					@if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) 
+								|| 
+							($model->exists && $field->allow_update && $permissionUpdate))
+						)
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
                             {{{$controller->LL('addition')}}}
                         </a>
                     </li>
-                    @endif
+					@endif
                 </ul>
 
                 <div class="tab-content">
-                    @if (
+                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
+                        <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
+                    </div>
+					@if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
 							($model->exists && $field->allow_update && $permissionUpdate))
 						)
-                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
-                        <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
-                    </div>
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
                     </div>
-                    @endif
+					@endif
                 </div>
 
             
@@ -126,25 +126,19 @@
 									"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
 									'sButtonClass': 'btn-success btn-sm',
 									"fnClick": function(nButton, oConfig, oFlash) {
-										createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
+										createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $controller->getChooseTypeId($field, $linkedField), 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
 									}
 								});
 							@endif	
 
-							@if ( 
-									((!$model->exists && $field->allow_create && $permissionCreate) 
-										|| 
-									($model->exists && $field->allow_update && $permissionUpdate))
-								)
 							aButtons.push({
 									"sExtends": "text",
 									"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
 									'sButtonClass': 'btn-yellow btn-sm',
 									"fnClick": function(nButton, oConfig, oFlash) {
-										chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
+										chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}');
 									}
 								});
-							@endif
 
 
 							if (aoColumns.length)

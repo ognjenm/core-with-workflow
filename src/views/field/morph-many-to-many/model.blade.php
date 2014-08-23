@@ -29,38 +29,39 @@
             <div class="widget-main form-group field-list">
 
                 <ul class="nav nav-tabs" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab">
-                    @if ( 
-							((!$model->exists && $field->allow_create && $permissionCreate) 
-								|| 
-							($model->exists && $field->allow_update && $permissionUpdate)) 
-						)
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
                             {{{$controller->LL('current')}}}
                         </a>
                     </li>
+					@if ( 
+							((!$model->exists && $field->allow_create && $permissionCreate) 
+								|| 
+							($model->exists && $field->allow_update && $permissionUpdate))
+						) 
 					<li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
                             {{{$controller->LL('addition')}}}
                         </a>
                     </li>
-                    @endif
+					@endif
                 </ul>
 
                 <div class="tab-content">
-                    @if ( 
+					<div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
+                        <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
+                    </div>  
+					@if ( 
 							((!$model->exists && $field->allow_create && $permissionCreate) 
 								|| 
 							($model->exists && $field->allow_update && $permissionUpdate))
-						)                    <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current" class="tab-pane in active">
-                        <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}" role="grid"></table>
-                    </div>  
+						)
                     <div id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition" class="tab-pane">
                         <table class="table table-striped table-bordered table-hover" id="telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition" role="grid"></table>
                     </div>
-                    @endif
+					@endif
                 </div>
 
             
@@ -128,39 +129,30 @@
 									}
 								});
 							@endif	
-
-							@if ( 
-									((!$model->exists && $field->allow_create && $permissionCreate) 
-										|| 
-									($model->exists && $field->allow_update && $permissionUpdate))
-								)
+							
 							aButtons.push({
                                             "sExtends": "text",
                                             "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
                                             'sButtonClass': 'btn-yellow btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                chooseMorphM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
+                                                chooseMorphM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}');
                                             }
-                                        });
-							@endif
+                                        }); 
 							
-							@if ( 
-									((!$model->exists && $field->allow_create && $permissionCreate) 
-										|| 
-									($model->exists && $field->allow_update && $permissionUpdate))
-								)
-							presentation.addDataTable({
-                                domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
-                                sDom: "<'row'<'col-md-6'T>r>t<'row'<'col-md-6'T>>",
-                                bRetrieve : true,
-                                aoColumns : aoColumns,
-								aaSorting: [],
-                                aaData : [], 
-                                oTableTools: {
-                                    aButtons : aButtons
-                                }
-                            });
-							@endif
+							if (aoColumns.length)
+							{
+								presentation.addDataTable({
+									domId: "telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition",
+									sDom: "<'row'<'col-md-6'T>r>t<'row'<'col-md-6'T>>",
+									bRetrieve : true,
+									aoColumns : aoColumns,
+									aaSorting: [],
+									aaData : [], 
+									oTableTools: {
+										aButtons : aButtons
+									}
+								});
+							}
                 </script>
  
             </div>

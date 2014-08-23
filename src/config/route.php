@@ -106,7 +106,7 @@
 // Module Objects\Lists
 \Route::any('cmf/module/objects-lists/action-param', array('as' => 'cmf.module.objects-lists.action.param', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getActionParam"));
 \Route::any('cmf/module/objects-lists', array('as' => 'cmf.module.objects-lists', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getContent"));
-\Route::any('cmf/module/objects-lists/create/type/{id}', array('as' => 'cmf.module.objects-lists.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@create"));
+\Route::any('cmf/module/objects-lists/create/type', array('as' => 'cmf.module.objects-lists.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@create"));
 \Route::any('cmf/module/objects-lists/edit/{id}', array('as' => 'cmf.module.objects-lists.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@edit"));
 \Route::any('cmf/module/objects-lists/store/type/{id}', array('as' => 'cmf.module.objects-lists.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@store"));
 \Route::any('cmf/module/objects-lists/update/type/{id}', array('as' => 'cmf.module.objects-lists.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@update"));
@@ -117,7 +117,7 @@
 \Route::any('cmf/module/objects-lists/list/tree', array('as' => 'cmf.module.objects-lists.list.tree', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getTreeList"));
 \Route::any('cmf/module/objects-lists/get/namespace-by-path', array('as' => 'cmf.module.objects-lists.get.namespace-by-path', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getNamespaceContent"));
 
-\Route::any('cmf/module/objects-lists/wizard/create/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@create"));
+\Route::any('cmf/module/objects-lists/wizard/create/type', array('as' => 'cmf.module.objects-lists.wizard.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@create"));
 \Route::any('cmf/module/objects-lists/wizard/edit/{id}', array('as' => 'cmf.module.objects-lists.wizard.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@edit"));
 \Route::any('cmf/module/objects-lists/wizard/store/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@store"));
 \Route::any('cmf/module/objects-lists/wizard/update/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@update"));

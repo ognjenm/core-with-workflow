@@ -884,12 +884,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function treeParent()
 	{
-        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
+        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_id', 'tree_pid');
 	}
 
 	public function treeChild()
 	{
-        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_id', 'tree_pid');
+        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
 	}
 
 	public function scopePivotTreeLinkedExtraAttr($query)
