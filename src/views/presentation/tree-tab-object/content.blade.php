@@ -82,19 +82,22 @@
                 
         function presentationTableFilter{{$uniqueId}}(dom_obj, erase)
         {
+			var $form = jQuery(dom_obj).closest('form');
+			
             if (erase)
             {
-                jQuery('.chosen', jQuery(dom_obj).closest('form')).val('').trigger('chosen:updated');
-                jQuery('input[name="filter_want_search"]', jQuery(dom_obj).closest('form')).val(0);
+				jQuery('select option:selected', $form).removeAttr('selected');
+                jQuery('.chosen, .chosen-select', $form).trigger('chosen:updated');
+                jQuery('input[name="filter_want_search"]', $form).val(0);
             }
             else
 			{
-                jQuery('input[name="filter_want_search"]', jQuery(dom_obj).closest('form')).val(1);
+                jQuery('input[name="filter_want_search"]', $form).val(1);
 			}
 
             
             jQuery('#telenok-{{$controller->getPresentation()}}-presentation-grid-{{$gridId}}')
                 .dataTable()
-                .fnReloadAjax('{{ $controller->getRouterList(['treePid' => $type->getKey()]) }}&' + (erase ? '' : jQuery.param(jQuery(dom_obj).closest('form').serializeArray())));
+                .fnReloadAjax('{{ $controller->getRouterList(['treePid' => $type->getKey()]) }}&' + (erase ? '' : jQuery.param($form.serializeArray())));
         }
     </script>

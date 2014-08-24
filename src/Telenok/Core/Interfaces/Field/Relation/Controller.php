@@ -36,7 +36,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			$join->on($model->getTable() . '.id', '=', 'object_translation.translation_object_model_id');
 		})	
-		->where(function($query) use ($term)
+		->where(function($query) use ($term, $model)
 		{
 			\Illuminate\Support\Collection::make(explode(' ', $term))
 					->reject(function($i) { return !trim($i); })
@@ -44,10 +44,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			{
 				$query->orWhere('object_translation.translation_object_string', 'like', "%{$i}%");
 			});
+			
+			$query->orWhere($model->getTable() . '.id', (int)$term);
 		})
 		->take(20)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$return)
 		{
-			$return[] = ['value' => $item->id, 'text' => $item->translate('title')];
+			$return[] = ['value' => $item->id, 'text' => "[{$item->id}] " . $item->translate('title')];
 		});
 
         return $return;

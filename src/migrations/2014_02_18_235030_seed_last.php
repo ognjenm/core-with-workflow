@@ -452,7 +452,7 @@ class SeedLast extends Migration {
 					'key' => 'tree',
 					'field_object_type' => $item->getKey(),
 					'field_object_tab' => 'main',
-					'field_order' => 10,
+					'field_order' => 20,
 				]); 
 				
 				$modelField = null;

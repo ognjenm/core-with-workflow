@@ -107,6 +107,65 @@ class SeedObjectTypeTable extends Migration {
 			DB::table('object_field')->insert(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.code'), JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.code'), JSON_UNESCAPED_UNICODE),
+						'key' => 'string',
+						'code' => 'code',
+						'active' => 1,
+						'field_object_type' => $modelTypeId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 1,
+						'allow_search' => 1,
+						'allow_create' => 1,
+						'allow_update' => 0,
+						'field_order' => 4,
+					]
+			);
+			
+			DB::table('object_field')->insert(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_model'), JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_model'), JSON_UNESCAPED_UNICODE),
+						'key' => 'string',
+						'code' => 'class_model',
+						'active' => 1,
+						'field_object_type' => $modelTypeId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 1,
+						'allow_search' => 1,
+						'allow_create' => 1,
+						'allow_update' => 0,
+						'field_order' => 5,
+					]
+			);
+
+			DB::table('object_field')->insert(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_controller'), JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_controller'), JSON_UNESCAPED_UNICODE),
+						'key' => 'string',
+						'code' => 'class_controller',
+						'active' => 1,
+						'field_object_type' => $modelTypeId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 0,
+						'allow_update' => 0,
+						'allow_search' => 1,
+						'field_order' => 6,
+					]
+			);
+
+			DB::table('object_field')->insert(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.treeable'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.treeable'), JSON_UNESCAPED_UNICODE),
 						'key' => 'checkbox',
@@ -120,7 +179,7 @@ class SeedObjectTypeTable extends Migration {
 						'allow_search' => 1,
 						'allow_create' => 1,
 						'allow_update' => 1,
-						'field_order' => 4,
+						'field_order' => 8,
 					]
 			);
 
@@ -140,27 +199,7 @@ class SeedObjectTypeTable extends Migration {
 						'allow_search' => 1,
 						'allow_create' => 1,
 						'allow_update' => 0,
-						'field_order' => 4,
-					]
-			);
-
-			DB::table('object_field')->insert(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
-						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.code'), JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.code'), JSON_UNESCAPED_UNICODE),
-						'key' => 'string',
-						'code' => 'code',
-						'active' => 1,
-						'field_object_type' => $modelTypeId,
-						'field_object_tab' => $tabMainId,
-						'multilanguage' => 0,
-						'show_in_form' => 1,
-						'show_in_list' => 1,
-						'allow_search' => 1,
-						'allow_create' => 1,
-						'allow_update' => 0,
-						'field_order' => 4,
+						'field_order' => 9,
 					]
 			);
 
@@ -181,48 +220,10 @@ class SeedObjectTypeTable extends Migration {
 						'allow_search' => 1,
 						'allow_create' => 0,
 						'allow_update' => 1,
-						'field_order' => 6,
+						'field_order' => 10,
 					]
-			);
+			); 
 
-			DB::table('object_field')->insert(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
-						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_model'), JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_model'), JSON_UNESCAPED_UNICODE),
-						'key' => 'string',
-						'code' => 'class_model',
-						'active' => 1,
-						'field_object_type' => $modelTypeId,
-						'field_object_tab' => $tabMainId,
-						'multilanguage' => 0,
-						'show_in_form' => 1,
-						'show_in_list' => 1,
-						'allow_search' => 1,
-						'allow_create' => 1,
-						'allow_update' => 0,
-						'field_order' => 4,
-					]
-			);
-
-			DB::table('object_field')->insert(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
-						'title' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_controller'), JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(SeedObjectTypeTableTranslation::get('objects-type.field.class_controller'), JSON_UNESCAPED_UNICODE),
-						'key' => 'string',
-						'code' => 'class_controller',
-						'active' => 1,
-						'field_object_type' => $modelTypeId,
-						'field_object_tab' => $tabMainId,
-						'multilanguage' => 0,
-						'show_in_form' => 1,
-						'show_in_list' => 0,
-						'allow_update' => 0,
-						'allow_search' => 1,
-						'field_order' => 4,
-					]
-			);
 
 			DB::table('object_field')->insert(
 					[

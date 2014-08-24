@@ -133,7 +133,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		$input->put('allow_search', 1);
 		$input->put('allow_create', 1);
 		$input->put('allow_update', 1);
-		$input->put('field_order', 5);
+		
+		if (!$input->get('field_order'))
+		{
+			$input->put('field_order', 5);
+		}
 		 
 		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
 

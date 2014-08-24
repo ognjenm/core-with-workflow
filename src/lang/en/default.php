@@ -48,7 +48,6 @@ return [
     'action' => 'Action',
 
     'field' => ':attribute [:locale]',
-    'field.rule' => 'Rules for field',
 
     'entity.title' => 'Title',
     'current' => 'Current',

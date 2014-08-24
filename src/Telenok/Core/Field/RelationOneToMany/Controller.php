@@ -73,7 +73,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         
 		$model = new $class;
 		
-        $model::withPermission()->take(200)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$option)
+        $model::withPermission()->take(20)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$option)
         {
             $option[] = "<option value='{$item->id}'>[{$item->id}] {$item->translate('title')}</option>";
         });

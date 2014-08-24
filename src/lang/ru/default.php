@@ -48,7 +48,6 @@ return [
     'action' => 'Действие',
 
     'field' => ':attribute [:locale]',
-    'field.rule' => 'Правила для поля',
 
     'entity.title' => 'Заголовок',
     'current' => 'Текущее',

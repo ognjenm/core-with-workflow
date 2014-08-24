@@ -57,7 +57,7 @@ class SeedObjectSequenceTable extends Migration {
 						'multilanguage' => 0,
 						'show_in_form' => 1,
 						'show_in_list' => 1,
-						'allow_search' => 0,
+						'allow_search' => 1,
 						'allow_create' => 0,
 						'allow_update' => 0,
 						'field_order' => 1,

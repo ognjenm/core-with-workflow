@@ -50,7 +50,29 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			return '<a href="' . \URL::asset($item->{$field->code . '_path'}) .'">' . $this->LL('download') . '</a>';
 		}
     }
-
+    public function processDeleting($model)
+    {  
+		\Telenok\Object\Field::where(function($query) use ($model)
+				{
+					$type = $model->fieldObjectType()->first();
+			
+					$query->whereIn('code', [
+						$model->code . '_path',
+						$model->code . '_size',
+						$model->code . '_original_file_name',
+						$model->code . '_' . $type->code . '_file_mime_type',
+						$model->code . '_' . $type->code . '_file_extension',
+					]);
+					$query->where('field_object_type', $model->field_object_type);
+				})
+				->get()->each(function($item)
+				{
+					$item->delete();
+				});
+				
+        return parent::processDeleting($model);
+    } 
+	
     public function saveModelField($field, $model, $input)
 	{ 
 		$file = \Input::file($field->code); 

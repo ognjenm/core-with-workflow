@@ -152,7 +152,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         
 		$model = new $class;
 		
-        $query = $model::withPermission()->take(200)->groupBy($model->getTable() . '.id');
+        $query = $model::withPermission()->take(20)->groupBy($model->getTable() . '.id');
 		
 		if ($field->morph_one_to_one_belong_to)
 		{

@@ -64,7 +64,8 @@
                 "url": '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}'
             }
         },
-        "plugins": ["themes", "json_data", "ui", "crrm", "search", "types"]
+		
+        "plugins": ["themes", "json_data", "ui", "crrm", "search", "types", "state"]
     })
     .bind("select_node.jstree", function(event, data) 
     {

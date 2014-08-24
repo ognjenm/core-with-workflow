@@ -320,19 +320,22 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         try
         {
-            \Event::fire('workflow.delete.before', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}"));
+			\DB::transaction(function() use ($model, $type, $force)
+			{
+				\Event::fire('workflow.delete.before', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}"));
 
-            if ($force)
-            {
-                $model->forceDelete();
-            }
-            else 
-            {
-                $model->delete();
-            }
+				if ($force)
+				{
+					$model->forceDelete();
+				}
+				else 
+				{
+					$model->delete();
+				}
 
-            \Event::fire('workflow.delete.after', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}")->setResource($model));
-            
+				\Event::fire('workflow.delete.after', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}")->setResource($model));
+			});
+
             return ['success' => 1];
         }
         catch (\Exception $e)
