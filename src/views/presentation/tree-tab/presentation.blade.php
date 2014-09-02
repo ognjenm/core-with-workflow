@@ -74,22 +74,41 @@
             }
 
             this.addTabByURL = function(param)
-            {
-                jQuery.ajax({
-                    url: param.contentUrl,
-                    method: 'get',
-                    dataType: 'json',
-                    data: param.data || {}
-                })
+            { 
+                jQuery.ajax(jQuery.extend({}, {
+						method: 'get',
+						dataType: 'json',
+					}, param))
                 .success(function(data)
                 {
-                    _this.addTab({tabKey: data.tabKey, tabLabel : data.tabLabel, tabContent : data.tabContent});
-                    
-                    if(jQuery.isFunction(param.after))
-                    {
-                        param.after();
-                    }
-                });
+					if (data.exception)
+					{
+						jQuery.gritter.add({
+							title: 'Error',
+							text: data.exception,
+							class_name: 'gritter-error gritter-light',
+							time: 2000,
+						});
+					}
+					else
+					{
+						_this.addTab({tabKey: data.tabKey, tabLabel: data.tabLabel, tabContent: data.tabContent});
+
+						if(jQuery.isFunction(param.after))
+						{
+							param.after();
+						}
+					} 
+                })
+				.fail(function(jqXHR, textStatus, errorThrown)
+				{
+					jQuery.gritter.add({
+						title: 'Error',
+						text: textStatus,
+						class_name: 'gritter-error gritter-light',
+						time: 2000,
+					});
+				});
 
                 return _this;
             }
@@ -128,6 +147,119 @@
 
             this.addDataTable = function(param)
             {
+				var aButtons = [];
+
+				@section('tableListBtnCreate')
+					if (param.tableListBtnCreate)
+					{
+						aButtons.push(param.tableListBtnCreate);
+					}
+					else 
+					{
+						aButtons.push({
+							"sExtends": "text",
+							"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
+							'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
+							"fnClick": function(nButton, oConfig, oFlash) {
+								if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
+								else _this.addTabByURL({url : param.btnCreateUrl});
+							}
+						});
+					}
+				@show
+
+				@section('tableListBtnRefresh')
+					if (param.tableListBtnRefresh)
+					{
+						aButtons.push(param.tableListBtnRefresh);
+					}
+					else 
+					{
+						aButtons.push({
+                                "sExtends": "text",
+                                "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
+                                'sButtonClass': 'btn-sm',
+                                "fnClick": function(nButton, oConfig, oFlash) {
+                                    jQuery('#' + param.domId).dataTable().fnReloadAjax();
+                                }
+                            });
+					}
+				@show 
+
+				@section('tableListBtnSelected')
+					if (param.tableListBtnSelected)
+					{
+						aButtons.push(param.tableListBtnSelected);
+					}
+					else 
+					{
+						aButtons.push({
+							"sExtends": "collection",
+							'sButtonClass': 'btn btn-sm btn-light',
+							"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
+							"aButtons": [ 
+								{
+									"sExtends": "text",
+									"sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
+									"fnClick": function(nButton, oConfig, oFlash) 
+										{
+											if (param.btnListEditUrl)
+											{
+												_this.addTabByURL({
+													url: param.btnListEditUrl, 
+													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
+												});
+											}
+									}
+								},
+								{
+									"sExtends": "text",
+									'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
+									"sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
+									"fnClick": function(nButton, oConfig, oFlash) {
+										if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
+										else {
+											var this_ = this;
+
+											jQuery.ajax({
+												url: param.btnListDeleteUrl,
+												method: 'post',
+												dataType: 'json',
+												data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
+											}).done(function(data) {
+												if (data.success) {
+													jQuery('input[name=tableCheckAll\\[\\]]:checked', this_.dom.table).closest("tr").remove();
+												}
+												else {
+													//
+												}  
+											});
+										}
+									}
+								}
+							]
+						});
+					}
+				@show		
+				
+				@section('tableListBtnFilter')
+					if (param.tableListBtnFilter)
+					{
+						aButtons.push(param.tableListBtnFilter);
+					}
+					else 
+					{
+						aButtons.push({
+								"sExtends": "text",
+								'sButtonClass': 'btn btn-sm btn-light',
+								"sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
+								"fnClick": function(nButton, oConfig, oFlash) {
+									jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
+								}
+							});
+					}
+				@show 				
+
                 param = jQuery.extend({}, {
                     "multipleSelection": true,
                     "aoColumns": [],
@@ -139,81 +271,9 @@
                     "iDisplayLength": {{ $iDisplayLength }},
                     "sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'T><'col-md-6'p>>",
                     "oTableTools": {
-                        "aButtons": [
-                            @section('tableListBtn')
-                            {
-                                "sExtends": "text",
-                                "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
-                                'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
-                                "fnClick": function(nButton, oConfig, oFlash) {
-                                    if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
-                                    else _this.addTabByURL({contentUrl: param.btnCreateUrl});
-                                }
-                            },
-                            {
-                                "sExtends": "text",
-                                "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
-                                'sButtonClass': 'btn-sm',
-                                "fnClick": function(nButton, oConfig, oFlash) {
-                                    jQuery('#' + param.domId).dataTable().fnReloadAjax();
-                                }
-                            },
-                            {
-                                "sExtends": "collection",
-                                'sButtonClass': 'btn btn-sm btn-light',
-                                "sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
-                                "aButtons": [ 
-                                    {
-                                        "sExtends": "text",
-                                        "sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
-                                        "fnClick": function(nButton, oConfig, oFlash) 
-                                            {
-                                                if (param.btnListEditUrl)
-                                                {
-                                                    _this.addTabByURL({
-                                                        contentUrl: param.btnListEditUrl, 
-                                                        data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-                                                    });
-                                                }
-                                        }
-                                    },
-                                    {
-                                        "sExtends": "text",
-                                        'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
-                                        "sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
-                                        "fnClick": function(nButton, oConfig, oFlash) {
-                                            if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
-                                            else {
-                                                var this_ = this;
-
-                                                jQuery.ajax({
-                                                    url: param.btnListDeleteUrl,
-                                                    method: 'post',
-                                                    dataType: 'json',
-                                                    data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-                                                }).done(function(data) {
-                                                    if (data.success) {
-                                                        jQuery('input[name=tableCheckAll\\[\\]]:checked', this_.dom.table).closest("tr").remove();
-                                                    }
-                                                    else {
-                                                        //
-                                                    }  
-                                                });
-                                            }
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "sExtends": "text",
-                                'sButtonClass': 'btn btn-sm btn-light',
-                                "sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
-                                "fnClick": function(nButton, oConfig, oFlash) {
-                                    jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
-                                }
-                            }
-							@show
-                        ]
+						@section('tableListBtn')
+                        "aButtons": aButtons
+						@show 				
                     },
                     "oLanguage": {
                         "oPaginate": {
@@ -234,13 +294,13 @@
                 return _this;
             }
 
-            this.ReloadDataTableOnClick = function(param)
+            this.reloadDataTableOnClick = function(param)
             {
                 if (jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId).size())
                 {
                     jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId)
                             .dataTable()
-                            .fnReloadAjax(param.url + '?' + jQuery.param(param.data));
+                            .fnReloadAjax(param.url + (param.data ? '?' + jQuery.param(param.data) : ''));
                 }
                 return this;
             }

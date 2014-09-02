@@ -49,8 +49,9 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->put('objects-version', 0);
     $list->put('system-setting', 0);
     $list->put('web-page', 10);
+	
     $list->put('files', 4);
-    $list->put('file-browser', 5);
+    $list->put('files-browser', 5);
 });
 
 \Event::listen('telenok.module.menu.top', function($list)

@@ -69,8 +69,6 @@
 		var $block = jQuery(obj).closest('div.modal-dialog');
 		var $modal = jQuery(obj).closest('div.modal'); 
 
-console.log( url );
-
 		jQuery.ajax({
 			url: url.replace('_id_', jQuery('#input{{$uniqueId}}').val()),
 			method: 'get',

@@ -91,10 +91,11 @@
 		this.addTabByURL = function(param, reload)
 		{
 			jQuery.ajax({
-					url: param.contentUrl,
+					url: param.url,
 					method: 'get',
 					dataType: 'json',
-					data: param.data || {}
+					data: param.data || {},
+					
 				})
 				.success(function(data)
 				{
@@ -135,7 +136,7 @@
 							'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
 							"fnClick": function(nButton, oConfig, oFlash) {
 								if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
-								else _this.addTabByURL({contentUrl: param.btnCreateUrl});
+								else _this.addTabByURL({url: param.btnCreateUrl});
 							}
 						},
 						{
@@ -159,7 +160,7 @@
 										if (param.btnListEditUrl)
 										{
 											_this.addTabByURL({
-												contentUrl: param.btnListEditUrl,
+												url: param.btnListEditUrl,
 												data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize()
 											});
 										}
@@ -218,7 +219,7 @@
 			return _this;
 		}
 
-		this.ReloadDataTableOnClick = function(param)
+		this.reloadDataTableOnClick = function(param)
 		{
 			if (jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId).size())
 			{
@@ -325,7 +326,7 @@
     <div class="clearfix">
         <select class="chosen" data-placeholder="{{{$controller->LL('page.select')}}}" id="module-web-page-widget-list-page-list" 
                 onchange="telenok.getPresentationByKey('{{$presentation}}').addTabByURL({
-								contentUrl:'{{\URL::route("cmf.module.web-page.view.page.container", ['id' => ':id:', 'languageId' => ':languageId:'])}}'
+								url:'{{\URL::route("cmf.module.web-page.view.page.container", ['id' => ':id:', 'languageId' => ':languageId:'])}}'
 										.replace(/:id:/gi, parseInt(this.value, 10))
 										.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10)),
 								after: function() { updateContainer(); }
@@ -505,7 +506,7 @@
 	function reloadWebPageContainer()
 	{
 		telenok.getPresentationByKey('{{$presentation}}').addTabByURL({
-				contentUrl:'{{\URL::route("cmf.module.web-page.view.page.container", ['id' => ':id:', 'languageId' => ':languageId:'])}}'
+				url:'{{\URL::route("cmf.module.web-page.view.page.container", ['id' => ':id:', 'languageId' => ':languageId:'])}}'
 						.replace(/:id:/gi, parseInt(telenok_module_web_page_pid, 10))
 						.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10)),
 				after: function() { updateContainer(); }

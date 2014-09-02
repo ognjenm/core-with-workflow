@@ -236,3 +236,8 @@ body.telenok-backend .chosen-container-single .chosen-single abbr:after {
 body.telenok-backend table.dataTable {
     width: 100%;
 }
+
+
+body.telenok-backend input.tree-search-query {
+    margin: 0 5px;
+}

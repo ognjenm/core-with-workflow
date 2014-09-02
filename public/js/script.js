@@ -35,7 +35,7 @@ var telenok = function()
         },
         getPresentationDomId: function(presentation) { return 'telenok-' + presentation + '-presentation'; },
         addPresentation: function(presentation, func) { presentationList[presentation] = func; },
-        hasPresentation: function(presentation) { if (presentationList[presentation]) return true; else false; },
+        hasPresentation: function(presentation) { if (presentationList[presentation]) return true; else return false; },
         callPresentation: function(presentation, param) { return presentationList[presentation](param); },
         addModule: function(moduleKey, url, callback) 
         { 
@@ -64,9 +64,10 @@ var telenok = function()
             }
 
         },
-        processModuleContent: function(moduleKey) { 
-
+        processModuleContent: function(moduleKey) 
+        { 
             var param = moduleList[moduleKey];
+            
             var domId = telenok.getPresentationDomId(param.presentation);
 
             if (!jQuery('.page-content #' + domId).length)

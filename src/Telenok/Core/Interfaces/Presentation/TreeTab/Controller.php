@@ -300,7 +300,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             'presentationContent' => $this->getPresentationContent(),
             'key' => $this->getKey(),
             'treeContent' => $this->getTreeContent(),
-            'contentUrl' => $this->getRouterContent(),
+            'url' => $this->getRouterContent(),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'pageHeader' => $this->getPageHeader(),
             'uniqueId' => str_random(), 
@@ -523,7 +523,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return '
                 <div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info disable" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({contentUrl : \'' 
+                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({url : \'' 
                         . $this->getRouterEdit(['id' => $item->getKey()]) . '\'});">
                         <i class="fa fa-pencil"></i>
                     </button>
@@ -595,10 +595,36 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             'aaData' => $content
         ];
     } 
-    
-    public function create()
+
+	public function getRouterParam($action = '', $model = null)
+	{
+		switch ($action)
+		{
+			case 'create':
+				return [ $this->getRouterStore(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				break;
+
+			case 'edit':
+				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				break;
+
+			case 'store':
+				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				break;
+
+			case 'update':
+				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				break;
+
+			default:
+				return [];
+				break;
+		}
+	} 
+
+    public function create($id = null)
     {  
-		$id = (int)\Input::get('id');
+		$id = $id ?: \Input::get('id');
 		
         return [
             'tabKey' => $this->getTabKey().'-new-'.str_random(),
@@ -606,7 +632,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList(), 
-                'route' => $this->getRouterStore(),
+				'routerParam' => $this->getRouterParam('create'),
                 'uniqueId' => str_random(),  
             ), $this->getAdditionalViewParam()))->render()
         ];
@@ -614,13 +640,15 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function edit($id = null)
     { 
+		$id = $id ?: \Input::get('id');
+		
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.$id,
+            'tabKey' => $this->getTabKey() . '-edit-' . md5($id),
             'tabLabel' => $this->LL('list.edit'),
             'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList()->find($id), 
-                'route' => $this->getRouterUpdate(),
+				'routerParam' => $this->getRouterParam('edit'),
                 'uniqueId' => str_random(),  
             ), $this->getAdditionalViewParam()))->render()
         ];
@@ -642,19 +670,19 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             $content[] = \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList()->find($id), 
-                'route' => $this->getRouterUpdate(),
+				'routerParam' => $this->getRouterParam('edit'),
                 'uniqueId' => str_random(),  
             ), $this->getAdditionalViewParam()))->render();
         }
 
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
+            'tabKey' => $this->getTabKey() . '-edit-' . md5(implode('', $ids)),
             'tabLabel' => $this->LL('list.edit'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];
     }
 
-    public function delete($id, $force = false)
+    public function delete($id = 0, $force = false)
     {
         $model = $this->getModelList();
         
@@ -673,7 +701,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         }
         catch (\Exception $e)
         {
-            return ['error' => 1];
+            return ['exception' => 1];
         }
     }
 
@@ -744,7 +772,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         $return['content'] = \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge([
                     'controller' => $this,
                     'model' => $model,
-                    'route' => $this->getRouterStore(),
+					'routerParam' => $this->getRouterParam('store'),
                     'uniqueId' => str_random(), 
                     'success' => true,
                     'warning' => \Session::get('warning'),
@@ -781,7 +809,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         $return['content'] = \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge([
                     'controller' => $this,
                     'model' => $model,
-                    'route' => $this->getRouterUpdate(),
+					'routerParam' => $this->getRouterParam('update'),
                     'uniqueId' => str_random(),                 
                     'success' => true,
                     'warning' => \Session::get('warning'), 

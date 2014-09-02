@@ -46,9 +46,9 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				->setRouterUpdate("cmf.module.{$this->getKey()}.wizard.update");
     }    
 	
-    public function create()
+    public function create($id = null)
     { 
-		$id = \Input::get('id');
+		$id = $id ?: \Input::get('id');
   
 		if (is_array($id))
 		{
@@ -57,7 +57,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
 
-        return parent::create();
+        return parent::create($id);
     }
 	
     public function chooseType($id)

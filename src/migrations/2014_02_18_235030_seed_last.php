@@ -724,6 +724,18 @@ class SeedLast extends Migration {
 			'controller_class' => 'Telenok\Core\Module\Web\Controller',
 		]);
 
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Files', 'ru' => 'Файлы'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Files\Controller',
+		]);
+
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Browser', 'ru' => 'Менеджер'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Files\Browser\Controller',
+		]);
+
  
 
 		// Widget group

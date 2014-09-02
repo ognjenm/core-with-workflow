@@ -1,11 +1,41 @@
 @extends('core::layout.model')
 
+
+@section('script')
+	@parent
+	
+	@section('buttonType')
+ 
+        if (button_type=='close')
+        {	
+			var divId = $el.closest('div.tab-pane').attr('id');
+
+			jQuery('li a[href=#' + divId + '] i.fa.fa-times').click();
+			
+			return;
+        }
+		else if (button_type == 'delete.close')
+		{ 
+			if (confirm('{{{ $controller->LL('notice.sure') }}}'))
+			{
+				$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getKey()])}}");
+			}
+			else
+			{
+				return;
+			}
+		}
+	@stop
+
+@stop
+
+
 @section('form')
 
-{{ Form::model($model, array('route' => $route, 'files' => true, 'id'=>"model-ajax-$uniqueId", 'class'=>'form-horizontal')) }}
-
-    <div class="error-container"></div>
+	@parent
     
+	@section('formBtn')
+	
     <div class='form-actions center no-margin'>
         <button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">
             <i class="fa fa-floppy-o"></i>
@@ -21,7 +51,8 @@
         </button>
     </div>
 
-{{ Form::close() }}
+	@overwrite
      
 @stop
+ 
  

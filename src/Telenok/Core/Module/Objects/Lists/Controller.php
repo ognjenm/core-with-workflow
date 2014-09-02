@@ -10,8 +10,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     protected $presentation = 'tree-tab-object';
     protected $presentationContentView = 'core::module.objects-lists.content';
-
-    protected $presentationModelView = 'core::presentation.tree-tab-object.model';
+    protected $presentationModelView = 'core::module.objects-lists.model';
+	
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
     protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
 
@@ -217,7 +217,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {
         return '<div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({contentUrl : \'' 
+                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({url : \'' 
                         . $this->getRouterEdit(['id' => $item->getKey()]) . '\'});return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
@@ -235,9 +235,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 </div>';
     } 
 
-    public function create()
+    public function create($id = null)
     {   
-		$id = (int)\Input::get('id');
+		$id = $id ?: \Input::get('id');
 		
         $model = $this->modelByType($id);
         $type = $this->getType($id);
@@ -256,24 +256,35 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
         \Event::fire('form.create.object', [$params]);
-
-        return [
-            'tabKey' => $this->getTabKey().'-new-'.str_random(),
-            'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
-                'controller' => $this,
-                'model' => $params['model'], 
-                'type' => $params['type'], 
-                'fields' => $params['fields'], 
-                'uniqueId' => str_random(), 
-				'routerParam' => $this->getRouterParam('create', $params['type'], $params['model']),
-				'canCreate' => \Auth::can('create', "object_type.{$params['type']->code}"),
-            ), $this->getAdditionalViewParam()))->render()
-        ];
+		
+		try
+		{
+			return [
+				'tabKey' => $this->getTabKey() . '-new-' . str_random(),
+				'tabLabel' => $type->translate('title'),
+				'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
+					'controller' => $this,
+					'model' => $params['model'], 
+					'type' => $params['type'], 
+					'fields' => $params['fields'], 
+					'uniqueId' => str_random(), 
+					'routerParam' => $this->getRouterParam('create', $params['type'], $params['model']),
+					'canCreate' => \Auth::can('create', "object_type.{$params['type']->code}"),
+				), $this->getAdditionalViewParam()))->render()
+			];
+		} 
+		catch (\Exception $ex) 
+		{
+			return [
+				'exception' => $ex->getMessage(),
+			];
+		}
     }
 
     public function edit($id = null)
     {  
+		$id = $id ?: \Input::get('id');
+		
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
         $fields = $model->getFieldForm();
@@ -292,23 +303,33 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         \Event::fire('form.edit.object', [$params]); 
 		
-        return [
-            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
-            'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
-                'controller' => $this,
-                'model' => $params['model'], 
-                'type' => $params['type'], 
-                'fields' => $params['fields'], 
-                'uniqueId' => str_random(), 
-				'routerParam' => $this->getRouterParam('edit', $params['type'], $params['model']),
-				'canUpdate' => \Auth::can('update', $params['model']),
-				'canDelete' => \Auth::can('delete', $params['model']),
-            ), $this->getAdditionalViewParam()))->render()
-        ];
+		try
+		{
+			return [
+				'tabKey' => $this->getTabKey() . '-edit-' . md5($id),
+				'tabLabel' => $type->translate('title'),
+				'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
+					'controller' => $this,
+					'model' => $params['model'], 
+					'type' => $params['type'], 
+					'fields' => $params['fields'], 
+					'uniqueId' => str_random(), 
+					'routerParam' => $this->getRouterParam('edit', $params['type'], $params['model']),
+					'canUpdate' => \Auth::can('update', $params['model']),
+					'canDelete' => \Auth::can('delete', $params['model']),
+				), $this->getAdditionalViewParam()))->render()
+			];
+		} 
+		catch (\Exception $ex) 
+		{
+			return [
+				'exception' => $ex->getMessage(),
+			];
+		}
+
     }
 
-    public function delete($id, $force = false)
+    public function delete($id = 0, $force = false)
     { 
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
@@ -390,7 +411,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
 
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
+            'tabKey' => $this->getTabKey() . '-edit-' . md5(implode('', $ids)),
             'tabLabel' => $type->translate('title'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];

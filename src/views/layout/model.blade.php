@@ -23,29 +23,9 @@
 
         var button_type = jQuery(this).data('btn-clicked');
         
-        if (button_type=='close')
-        {	
-			var divId = $el.closest('div.tab-pane').attr('id');
-
-			jQuery('li a[href=#' + divId + '] i.fa.fa-times').click();
-			
-			return;
-        }
-		else if (button_type == 'delete.close')
-		{ 
-			if (confirm('{{{ $controller->LL('notice.sure') }}}'))
-			{
-				$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getKey()])}}");
-			}
-			else
-			{
-				return;
-			}
-		}
-        
-		@section('beforeAjax')
- 
-		@show
+		@yield('buttonType')
+		
+		@yield('beforeAjax')
 
         jQuery.ajax({
             url: $el.attr('action'),
@@ -82,11 +62,11 @@
 
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
-	
+
 		@section('ajaxFail')
 
 			var jsonResponse = jQuery.parseJSON(jqXHR.responseText);
-			 
+
 			try
 			{
 				var jsonError = jQuery.parseJSON(jsonResponse.error.message);
@@ -122,8 +102,8 @@
 				time: 5000,
 			});
 
-
 		@show
+
 		});
 	});
 
@@ -168,14 +148,16 @@
 
 @section('form')
 
-{{ Form::model($model, array('url' => $routerParam, 'files' => true, 'id' => "model-ajax-$uniqueId", 'class' => 'form-horizontal')) }}
-	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
+{{ Form::open(array('url' => $routerParam, 'files' => true, 'id' => "model-ajax-$uniqueId", 'class' => 'form-horizontal')) }}
 
+	@section('errorContainer')
     <div class="error-container"></div>
-    
+	@show
 
-    {{ $controller->getFormContent($model, $type, $fields, $uniqueId) }}
-  
+
+	@yield('formField')
+
+
 	@section('formBtn')
     <div class='form-actions center no-margin'>
         <button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">

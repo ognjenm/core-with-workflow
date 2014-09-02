@@ -73,9 +73,9 @@
 
         telenok.getPresentationByKey('{{$controller->getPresentation()}}')
                 .addTabByURL({
-                    contentUrl:'{{ URL::route("cmf.module.{$controller->getKey()}") }}?' + jQuery.param({'treePid':data.rslt.obj.data('id')}),
+                    url:'{{ URL::route("cmf.module.{$controller->getKey()}") }}?' + jQuery.param({'treePid':data.rslt.obj.data('id')}),
                     after: function() {
-                        telenok.getPresentationByKey('{{$controller->getPresentation()}}').ReloadDataTableOnClick({
+                        telenok.getPresentationByKey('{{$controller->getPresentation()}}').reloadDataTableOnClick({
                             url: '{{ $controller->getRouterList() }}', 
                             data: { treePid: data.rslt.obj.data("id") },
                             gridId: data.rslt.obj.data("gridId")
@@ -96,7 +96,7 @@
 
             <div class="dropdown-menu dropdown-yellow dropdown-caret">
 				<div class="input-group">
-					<input type="text" class="input-medium search-query" onclick="event.stopPropagation();" 
+					<input type="text" class="input-sm search-query tree-search-query" onclick="event.stopPropagation();" 
 							placeholder="{{{ $controller->LL('btn.search') }}}..." 
 							onchange="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).val());" 
 						/>

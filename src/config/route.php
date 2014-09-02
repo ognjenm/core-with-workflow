@@ -74,19 +74,6 @@
 \Route::any('cmf/module/objects-type/action-param', array('as' => 'cmf.module.objects-type.action.param', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@getActionParam"));
 \Route::any('cmf/module/objects-type/get/namespace-model-by-path', array('as' => 'cmf.module.objects-type.get.namespace-model-by-path', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@getNamespaceModelContent"));
 \Route::any('cmf/module/objects-type/get/namespace-form-by-path', array('as' => 'cmf.module.objects-type.get.namespace-form-by-path', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@getNamespaceFormContent"));
-//\Route::any('cmf/module/objects-type', array('as' => 'cmf.module.objects-type', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@getContent"));
-
-/*
-\Route::any('cmf/module/objects-type/list', array('as' => 'cmf.module.objects-type.list', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@getList"));
-\Route::any('cmf/module/objects-type/create', array('as' => 'cmf.module.objects-type.create', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@create"));
-\Route::any('cmf/module/objects-type/edit/{id}', array('as' => 'cmf.module.objects-type.edit', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@edit"));
-\Route::any('cmf/module/objects-type/delete/{id}', array('as' => 'cmf.module.objects-type.delete', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@delete"));
-\Route::any('cmf/module/objects-type/list/edit', array('as' => 'cmf.module.objects-type.list.edit', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@editList"));
-\Route::any('cmf/module/objects-type/list/delete', array('as' => 'cmf.module.objects-type.list.delete', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@deleteList"));
-\Route::any('cmf/module/objects-type/store', array('as' => 'cmf.module.objects-type.store', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@store"));
-\Route::any('cmf/module/objects-type/update', array('as' => 'cmf.module.objects-type.update', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@update"));
-\Route::any('cmf/module/objects-type/list/tree', array('as' => 'cmf.module.objects-type.list.tree', 'uses' => "Telenok\Core\Module\Objects\Type\Controller@getTreeList"));
-*/
 
 // Module Objects\Field 
 \Route::any('cmf/module/objects-field/get/namespace-by-path', array('as' => 'cmf.module.objects-field.get.namespace-by-path', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@getNamespaceContent"));
@@ -94,20 +81,12 @@
 \Route::any('cmf/module/objects-field/list/tree', array('as' => 'cmf.module.objects-field.list.tree', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@getTreeList"));
 \Route::any('cmf/module/objects-field', array('as' => 'cmf.module.objects-field', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@getContent"));
 \Route::any('cmf/module/objects-field/list', array('as' => 'cmf.module.objects-field.list', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@getList"));
-/*
-\Route::any('cmf/module/objects-field/create', array('as' => 'cmf.module.objects-field.create', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@create"));
-\Route::any('cmf/module/objects-field/edit/{id}', array('as' => 'cmf.module.objects-field.edit', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@edit"));
-\Route::any('cmf/module/objects-field/delete/{id}', array('as' => 'cmf.module.objects-field.delete', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@delete"));
-\Route::any('cmf/module/objects-field/list/edit', array('as' => 'cmf.module.objects-field.list.edit', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@editList"));
-\Route::any('cmf/module/objects-field/list/delete', array('as' => 'cmf.module.objects-field.list.delete', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@deleteList"));
-\Route::any('cmf/module/objects-field/store', array('as' => 'cmf.module.objects-field.store', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@store"));
-\Route::any('cmf/module/objects-field/update', array('as' => 'cmf.module.objects-field.update', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@update"));
-*/
+
 // Module Objects\Lists
 \Route::any('cmf/module/objects-lists/action-param', array('as' => 'cmf.module.objects-lists.action.param', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getActionParam"));
 \Route::any('cmf/module/objects-lists', array('as' => 'cmf.module.objects-lists', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getContent"));
 \Route::any('cmf/module/objects-lists/create/type', array('as' => 'cmf.module.objects-lists.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@create"));
-\Route::any('cmf/module/objects-lists/edit/{id}', array('as' => 'cmf.module.objects-lists.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@edit"));
+\Route::any('cmf/module/objects-lists/edit', array('as' => 'cmf.module.objects-lists.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@edit"));
 \Route::any('cmf/module/objects-lists/store/type/{id}', array('as' => 'cmf.module.objects-lists.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@store"));
 \Route::any('cmf/module/objects-lists/update/type/{id}', array('as' => 'cmf.module.objects-lists.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@update"));
 \Route::any('cmf/module/objects-lists/delete/{id}', array('as' => 'cmf.module.objects-lists.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@delete"));
@@ -118,7 +97,7 @@
 \Route::any('cmf/module/objects-lists/get/namespace-by-path', array('as' => 'cmf.module.objects-lists.get.namespace-by-path', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getNamespaceContent"));
 
 \Route::any('cmf/module/objects-lists/wizard/create/type', array('as' => 'cmf.module.objects-lists.wizard.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@create"));
-\Route::any('cmf/module/objects-lists/wizard/edit/{id}', array('as' => 'cmf.module.objects-lists.wizard.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@edit"));
+\Route::any('cmf/module/objects-lists/wizard/edit', array('as' => 'cmf.module.objects-lists.wizard.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@edit"));
 \Route::any('cmf/module/objects-lists/wizard/store/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@store"));
 \Route::any('cmf/module/objects-lists/wizard/update/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@update"));
 \Route::any('cmf/module/objects-lists/wizard/delete/{id}', array('as' => 'cmf.module.objects-lists.wizard.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@delete"));
@@ -129,25 +108,25 @@
 \Route::any('cmf/module/objects-version/action-param', array('as' => 'cmf.module.objects-version.action.param', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@getActionParam"));
 \Route::any('cmf/module/objects-version', array('as' => 'cmf.module.objects-version', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@getContent"));
 \Route::any('cmf/module/objects-version/list', array('as' => 'cmf.module.objects-version.list', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@getList"));
-/*\Route::any('cmf/module/objects-version/create', array('as' => 'cmf.module.objects-version.create', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@create"));
-\Route::any('cmf/module/objects-version/edit/{id}', array('as' => 'cmf.module.objects-version.edit', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@edit"));
-\Route::any('cmf/module/objects-version/delete/{id}', array('as' => 'cmf.module.objects-version.delete', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@delete"));
-\Route::any('cmf/module/objects-version/list/edit', array('as' => 'cmf.module.objects-version.list.edit', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@editList"));
-\Route::any('cmf/module/objects-version/list/delete', array('as' => 'cmf.module.objects-version.list.delete', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@deleteList"));
-\Route::any('cmf/module/objects-version/store', array('as' => 'cmf.module.objects-version.store', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@store"));
-\Route::any('cmf/module/objects-version/update', array('as' => 'cmf.module.objects-version.update', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@update"));
-\Route::any('cmf/module/objects-version/list/tree', array('as' => 'cmf.module.objects-version.list.tree', 'uses' => "Telenok\Core\Module\Objects\Version\Controller@getTreeList"));
-*/
+
 // Module Objects\Sequence
 \Route::any('cmf/module/objects-sequence/list', array('as' => 'cmf.module.objects-sequence.list', 'uses' => "Telenok\Core\Module\Objects\Sequence\Controller@getList"));
 
 
 // Module Users
-\Route::any('cmf/module/users/action-param', array('as' => 'cmf.module.users.action.param', 'uses' => "Telenok\Core\Module\Users\Controller@getActionParam"));
-\Route::any('cmf/module/users/profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
+//\Route::any('cmf/module/users/action-param', array('as' => 'cmf.module.users.action.param', 'uses' => "Telenok\Core\Module\Users\Controller@getActionParam"));
+//\Route::any('cmf/module/users/profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
  
  
-
+// Module Files
+\Route::any('cmf/module/files/browser/action-param', array('as' => 'cmf.module.files-browser.action.param', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@getActionParam"));
+\Route::any('cmf/module/files/browser', array('as' => 'cmf.module.files-browser', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@getContent"));
+\Route::any('cmf/module/files/browser/list', array('as' => 'cmf.module.files-browser.list', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@getList"));
+\Route::any('cmf/module/files/browser/create', array('as' => 'cmf.module.files-browser.create', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@create"));
+\Route::any('cmf/module/files/browser/edit', array('as' => 'cmf.module.files-browser.edit', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@edit"));
+\Route::any('cmf/module/files/browser/store', array('as' => 'cmf.module.files-browser.store', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@store"));
+\Route::any('cmf/module/files/browser/update', array('as' => 'cmf.module.files-browser.update', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@update"));
+\Route::any('cmf/module/files/browser/delete', array('as' => 'cmf.module.files-browser.delete', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@delete"));
 
 
 
@@ -155,9 +134,9 @@
 
 
 // Module Files\Browser
-\Route::any('cmf/module/file-browser/wizard/list', array('as' => 'cmf.module.file-browser.wizard.list', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getListContent"));
-\Route::any('cmf/module/file-browser/wizard/tree', array('as' => 'cmf.module.file-browser.wizard.tree', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getTreeList"));
-\Route::any('cmf/module/file-browser/wizard/process', array('as' => 'cmf.module.file-browser.wizard.process', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@processTree"));
+//\Route::any('cmf/module/file-browser/wizard/list', array('as' => 'cmf.module.file-browser.wizard.list', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getListContent"));
+//\Route::any('cmf/module/file-browser/wizard/tree', array('as' => 'cmf.module.file-browser.wizard.tree', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getTreeList"));
+//\Route::any('cmf/module/file-browser/wizard/process', array('as' => 'cmf.module.file-browser.wizard.process', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@processTree"));
 
 
 

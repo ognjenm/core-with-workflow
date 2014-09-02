@@ -54,7 +54,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'presentationContent' => $this->getPresentationContent(),
                 'key' => $this->getKey(),
                 'treeContent' => $this->getTreeContent(),
-                'contentUrl' => $this->getRouterContent(['treePid' => $this->getTypeList()->getKey()]),
+                'url' => $this->getRouterContent(['treePid' => $this->getTypeList()->getKey()]),
                 'breadcrumbs' => $this->getBreadcrumbs(),
                 'pageHeader' => $this->getPageHeader(),
             ];
@@ -223,9 +223,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
-    public function create()
+    public function create($id = null)
     { 
-		$id = (int)\Input::get('id');
+		$id = $id ?: \Input::get('id');
 
 		$model = $this->getModelList();
         $type = $this->getTypeList();
@@ -236,7 +236,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         \Event::fire('form.create.object', [$params]);
 
         return [
-            'tabKey' => $this->getTabKey().'-new-'.str_random(),
+            'tabKey' => $this->getTabKey() . '-new-' . str_random(),
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge([
                 'controller' => $this,
@@ -250,8 +250,10 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         ];
     }
 
-    public function edit($id = NULL)
+    public function edit($id = null)
     { 
+		$id = $id ?: \Input::get('id');
+		
         $model = $this->getModelList()->findOrFail($id);
         $type = $this->getTypeList();
         $fields = $model->getFieldForm();
@@ -261,7 +263,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         \Event::fire('form.edit.object', [$params]);
 			
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
+            'tabKey' => $this->getTabKey() . '-edit-' . md5($id),
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
 				'controller' => $this,
@@ -417,7 +419,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         }
 
         return [
-            'tabKey' => $this->getTabKey().'-edit-'.str_random(),
+            'tabKey' => $this->getTabKey() . '-edit-' . md5(implode('', $ids)),
             'tabLabel' => $type->translate('title'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];

@@ -37,7 +37,7 @@
                                         <span class="input-icon">
                                             <i class="fa fa-search"></i>
 
-                                            <input type="text" placeholder="Give it a search..." class="input-medium search-query">
+                                            <input type="text" placeholder="Give it a search..." class="input-sm search-query tree-search-query">
                                         </span>
                                         <button onclick="return false;" class="btn btn-sm">Go!</button>
                                     </form>

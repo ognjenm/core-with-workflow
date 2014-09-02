@@ -41,7 +41,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 			return [
 				'pageId' => $id,
-				'tabKey' => $this->getTabKey() . '-widget-page-' . $id,
+				'tabKey' => $this->getTabKey() . '-widget-page-' . md5($id),
 				'tabLabel' => "#{$page->getKey()} " . $page->translate('title'),
 				'tabContent' => $controllerClass->getContainerContent($id, $languageId)
 			];

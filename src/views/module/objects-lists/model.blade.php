@@ -34,17 +34,16 @@
 @section('form')
 	
 	@parent
-	
-	
+
+
 	@section('formField')
 	
 	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
-	
+	 
     {{ $controller->getFormContent($model, $type, $fields, $uniqueId) }}
 
 	@overwrite
-	
-	
+  
 	@section('formBtn')
     <div class='form-actions center no-margin'>
 		

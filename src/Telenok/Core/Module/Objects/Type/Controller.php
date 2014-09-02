@@ -13,8 +13,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $nsDefault = '\\';
 
     protected $presentation = 'tree-tab-object';
-    protected $presentationFormModelView = 'core::module.objects-type.form';
-    //protected $presentationFormFieldListView = 'core::module.objects-type.form-field-list';
 
     public function getGridId($key = 'gridId')
     {
@@ -85,7 +83,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (class_exists($input->get('class_model')))
 		{
-			\Session::flash('warning.class_model_exists', $this->LL($this->LL('error.class_model_exists')));
+			\Session::flash('warning.class_model_exists', $this->LL('error.class_model_exists'));
 		}
 
 		if ($model->exists)
@@ -127,14 +125,14 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     { 
 		$input->put('code', trim($input->get('code')));
 
-		$this->validateClassModel($model, $type, $input);
-		$this->validateClassController($model, $type, $input);
-
         return parent::preProcess($model, $type, $input); 
 	}
 
     public function postProcess($model, $type, $input)
     { 
+		$this->validateClassModel($model, $type, $input);
+		$this->validateClassController($model, $type, $input);
+		
         parent::postProcess($model, $type, $input); 
 
 		$this->createResource($model);

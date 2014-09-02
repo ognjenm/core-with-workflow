@@ -142,7 +142,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
             'presentationBlockKey' => $this->getPresentation(),
             'presentationBlockContent' => $this->getPresentationContent(),
             'key' => $this->getKey(),
-            'contentUrl' => \URL::route("cmf.module.{$this->getKey()}"),
+            'url' => \URL::route("cmf.module.{$this->getKey()}"),
             'breadcrumbs' => $this->getBreadcrumbs(),
             'pageHeader' => $this->getPageHeader(), 
         ));
