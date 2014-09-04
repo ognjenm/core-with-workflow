@@ -110,6 +110,8 @@ if (!telenok.hasPresentation('{{$presentation}}'))
 @section('form') 
 
 {{ Form::model($model, array('url' => $routerParam, 'files' => true, 'id'=>"model-ajax-$uniqueId", 'class'=>'form-horizontal')) }}
+	
+		{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
 
 		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
 			<div class="widget-main">

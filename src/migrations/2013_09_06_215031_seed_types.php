@@ -248,7 +248,8 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Страница', 'en' => 'Page'], JSON_UNESCAPED_UNICODE),
 						'code' => 'page',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\Page'
+						'class_model' => '\Telenok\Web\Page',
+						'class_controller' => '\Telenok\Core\Module\Web\Page\Controller',
 					]
 			);
 
@@ -303,7 +304,8 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Контроллер страницы', 'en' => 'Page controller'], JSON_UNESCAPED_UNICODE),
 						'code' => 'page_controller',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\PageController'
+						'class_model' => '\Telenok\Web\PageController',
+						'class_controller' => '\Telenok\Core\Module\Web\PageController\Controller',
 					]
 			);
 
@@ -360,6 +362,18 @@ class SeedTypes extends Migration {
 						'code' => 'file_category',
 						'active' => 1,
 						'class_model' => '\Telenok\File\FileCategory', 
+					]
+			);
+
+			DB::table('object_type')->insertGetId(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Type']),
+						'title' => json_encode(['ru' => 'Домен', 'en' => 'Domain'], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['ru' => 'Домены', 'en' => 'Domains'], JSON_UNESCAPED_UNICODE),
+						'code' => 'domain',
+						'active' => 1,
+						'class_model' => '\Telenok\Web\Domain', 
+						'class_controller' => '\Telenok\Core\Module\Web\Domain\Controller',
 					]
 			);
 		}

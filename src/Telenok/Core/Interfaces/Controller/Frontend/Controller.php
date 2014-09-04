@@ -14,7 +14,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	protected $jsCode = array();
 	
 	protected $containerView = 'core::controller.frontend';
-	protected $containerContainer = 'core::controller.frontend-container';
+	protected $containerSkeleton = 'core::controller.frontend-container';
 
 	public function getContainerContent($pageId = 0, $languageId = 0)
 	{
@@ -33,7 +33,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 			$content[$w->container][] = $widgetConfig->get($w->key)->getInsertContent($w->id);
 		});
 
-		return \View::make($this->containerContainer, $content)->render();
+		return \View::make($this->containerSkeleton, $content)->render();
 	}
 
 	public function getContent()

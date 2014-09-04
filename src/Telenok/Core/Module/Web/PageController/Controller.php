@@ -1,18 +1,19 @@
 <?php
 
-namespace Telenok\Core\Module\Web\Page;
+namespace Telenok\Core\Module\Web\PageController;
 
 class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
-	protected $key = 'web-page';
+	protected $key = 'web-page-controller';
 	protected $parent = 'web';
 	protected $presentation = 'tree-tab-object';
-    protected $typeList = 'page';
+    protected $typeList = 'page_controller';
 
     public function getGridId($key = 'gridId')
     {
         return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
-    } 
+    }  
+	
 }
 
 ?>

@@ -16,7 +16,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 		if ($widgetOnPage->isWidgetLink())
 		{
-			$this->backendView = "core::module.web-page.widget-backend";
+			$this->backendView = "core::module.web-page-constructor.widget-backend";
 
 			return parent::getInsertContent($id);
 		}

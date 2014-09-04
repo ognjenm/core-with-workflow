@@ -1,9 +1,9 @@
 <?php
 
 return array(
-    'name' => 'Page',
+    'name' => 'Domain',
     
-    'header.title' => 'Web pages',
+    'header.title' => 'Web domains',
     'header.description' => 'creating and editing',
 
 );

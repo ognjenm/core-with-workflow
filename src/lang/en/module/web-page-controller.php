@@ -1,9 +1,9 @@
 <?php
 
 return array(
-    'name' => 'Page',
+    'name' => 'Page Controller',
     
-    'header.title' => 'Web pages',
+    'header.title' => 'Page Controllers',
     'header.description' => 'creating and editing',
 
 );

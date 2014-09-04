@@ -6,7 +6,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Frontend\Controller
 
 	protected $key = 'standart';
 	protected $containerView = 'core::controller.frontend';
-	protected $containerContainer = 'core::controller.frontend-container';
+	protected $containerSkeleton = 'core::controller.frontend-container';
 	protected $container = ['center'];
 
 	

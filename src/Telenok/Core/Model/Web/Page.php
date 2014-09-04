@@ -23,7 +23,11 @@ class Page extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		return $this->hasMany('\Telenok\Web\WidgetOnPage', 'widget_page');
 	}
-
+	
+    public function pageDomain()
+    {
+        return $this->belongsTo('\Telenok\Web\Domain', 'page_domain');
+    }
 }
 
 ?>

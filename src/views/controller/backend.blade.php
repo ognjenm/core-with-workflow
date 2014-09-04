@@ -9,7 +9,7 @@
     <body class="no-skin telenok-backend">
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="navbar-inner">
-				<a class="navbar-brand" href="cmf/"><small>{{{\Config::get('app.backend.brand')}}}</small></a>
+				<a class="navbar-brand" href="telenok/"><small>{{{\Config::get('app.backend.brand')}}}</small></a>
 				<ul class="nav ace-nav pull-right">
 
 					@foreach($ListModuleMenuTop as $itemFirstLevel)
@@ -153,7 +153,7 @@
             <div class="main-content clearfix">
                 <div class="breadcrumbs">
                     <ul class="breadcrumb">
-                        <li><i class="ace-icon fa fa-home home-icon"></i> <a href="cmf/">{{Lang::get('core::default.home')}}</a></li> 
+                        <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{Lang::get('core::default.home')}}</a></li> 
                     </ul>
 
                     <div class="nav-search">

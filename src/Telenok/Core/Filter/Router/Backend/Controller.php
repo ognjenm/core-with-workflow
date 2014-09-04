@@ -6,9 +6,16 @@ class Controller {
 
     public function auth($route, $request)
     { 
-        $accessControlPanel = \Auth::can('read', 'control_panel');
-
-        if (!$accessControlPanel)
+		if (\Config::get('app.acl.enabled'))
+		{
+			$accessControlPanel = \Auth::can('read', 'control_panel');
+		}
+		else
+		{
+			$accessControlPanel = \Auth::hasRole('super_administrator');
+		}
+        
+		if (!$accessControlPanel)
         {
             if (\Request::ajax())
             {
@@ -23,11 +30,11 @@ class Controller {
                 return \Redirect::route('error.access-denied');
             }
         }
-        else if (!$request->is('cmf/login') && ($request->is('cmf', 'cmf/*')) && \Auth::guest())
+        else if (!$request->is('telenok/login') && ($request->is('telenok', 'telenok/*')) && \Auth::guest())
         {
             return \Redirect::route('cmf.login');
         }
-        else if ($request->is('cmf/login') && !\Auth::guest() && $accessControlPanel)
+        else if ($request->is('telenok/login') && !\Auth::guest() && $accessControlPanel)
         {
             return \Redirect::route('cmf.content');
         } 

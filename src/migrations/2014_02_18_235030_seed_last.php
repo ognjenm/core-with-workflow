@@ -363,8 +363,26 @@ class SeedLast extends Migration {
 		]);
 
 		(new \Telenok\Security\Resource())->storeOrUpdate([
+			'title' => ['en' => 'Module: Constructor Web Page', 'ru' => 'Модуль: Конструктр Веб Страницы'],
+			'code' => 'module.web-page-constructor',
+			'active' => 1
+		]);
+
+		(new \Telenok\Security\Resource())->storeOrUpdate([
 			'title' => ['en' => 'Module: Web Page', 'ru' => 'Модуль: Веб Страница'],
 			'code' => 'module.web-page',
+			'active' => 1
+		]);
+
+		(new \Telenok\Security\Resource())->storeOrUpdate([
+			'title' => ['en' => 'Module: Web Domain', 'ru' => 'Модуль: Веб Домен'],
+			'code' => 'module.web-domain',
+			'active' => 1
+		]);
+
+		(new \Telenok\Security\Resource())->storeOrUpdate([
+			'title' => ['en' => 'Module: Page Controller', 'ru' => 'Модуль: Контроллер страницы'],
+			'code' => 'module.web-page-controller',
 			'active' => 1
 		]);
 
@@ -454,21 +472,21 @@ class SeedLast extends Migration {
 					'field_object_tab' => 'main',
 					'field_order' => 20,
 				]); 
-				
-				$modelField = null;
-				
-				$modelField = new \Telenok\Object\Field();
-
-				try
-				{
-					$modelField->storeOrUpdate([
-						'key' => 'permission',
-						'field_object_type' => $item->getKey(),
-					]); 
-				} catch (\Exception $ex) {}
-
-				$modelField = null;
 			}
+			
+			$modelField = null;
+
+			$modelField = new \Telenok\Object\Field();
+
+			try
+			{
+				$modelField->storeOrUpdate([
+					'key' => 'permission',
+					'field_object_type' => $item->getKey(),
+				]); 
+			} catch (\Exception $ex) {}
+
+			$modelField = null;
 		});
 		
 		
@@ -631,6 +649,7 @@ class SeedLast extends Migration {
 		\Telenok\Object\Type::where('code', 'page')->first()->makeLastChildOf($folderWeb);
 		\Telenok\Object\Type::where('code', 'page_controller')->first()->makeLastChildOf($folderWeb);
 		\Telenok\Object\Type::where('code', 'widget_on_page')->first()->makeLastChildOf($folderWeb);
+		\Telenok\Object\Type::where('code', 'domain')->first()->makeLastChildOf($folderWeb);
 /*
 		\Telenok\Object\Type::where('code', 'workflow_status')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Object\Type::where('code', 'workflow_process')->first()->makeLastChildOf($folderBusinessProcess);
@@ -643,6 +662,18 @@ class SeedLast extends Migration {
 			'title' => ['en' => 'Content', 'ru' => 'Содержание'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\ModuleGroup\Content\Controller',
+		]);
+
+		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
+			'title' => ['en' => 'User', 'ru' => 'Пользователь'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\ModuleGroup\User\Controller',
+		]);
+
+		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
+			'title' => ['en' => 'Веб', 'ru' => 'Web'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\ModuleGroup\Web\Controller',
 		]);
 
 		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
@@ -713,12 +744,6 @@ class SeedLast extends Migration {
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
-			'title' => ['en' => 'Page', 'ru' => 'Страница'],
-			'active' => 1,
-			'controller_class' => 'Telenok\Core\Module\Web\Page\Controller',
-		]);
-
-		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Web', 'ru' => 'Веб'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Controller',
@@ -736,8 +761,37 @@ class SeedLast extends Migration {
 			'controller_class' => 'Telenok\Core\Module\Files\Browser\Controller',
 		]);
 
- 
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Profile', 'ru' => 'Профиль'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Users\Profile\Controller',
+		]);
 
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Page', 'ru' => 'Страница'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Web\Page\Controller',
+		]);
+
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Page Constructor', 'ru' => 'Конструктор страницы'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Web\PageConstructor\Controller',
+		]);
+
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Domain', 'ru' => 'Домен'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Web\Domain\Controller',
+		]); 
+		
+		(new \Telenok\Web\Module())->storeOrUpdate([
+			'title' => ['en' => 'Page Controller', 'ru' => 'Контроллер страницы'],
+			'active' => 1,
+			'controller_class' => 'Telenok\Core\Module\Web\PageController\Controller',
+		]);
+		
+		
 		// Widget group
 		(new \Telenok\Web\WidgetGroup())->storeOrUpdate([
 			'title' => ['en' => 'Standart', 'ru' => 'Стандартные'],

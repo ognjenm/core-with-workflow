@@ -48,10 +48,16 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->put('objects-type', 0);
     $list->put('objects-version', 0);
     $list->put('system-setting', 0);
-    $list->put('web-page', 10);
+    $list->put('web-page-constructor', 10);
+    $list->put('web-page', 11);
+    $list->put('web-page-controller', 12);
+    $list->put('web-domain', 13);
 	
     $list->put('files', 4);
     $list->put('files-browser', 5);
+	
+    $list->put('users', 1);
+    $list->put('users-profile', 2);
 });
 
 \Event::listen('telenok.module.menu.top', function($list)

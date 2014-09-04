@@ -64,7 +64,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="editMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => ':ID:', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{{ $controller->LL('btn.edit') }}}
             </button>
@@ -130,7 +130,7 @@
             
             if (id == 0) return false;
             
-            url = url.replace(':ID:', id);
+            url = url.replace('--id--', id);
 
             jQuery.ajax({
                 url: url,

@@ -8,6 +8,7 @@
 			var moduleKey = '';
 			var presentationParam = {};
 			var _this = this;
+			
 			this.getPresentationDomId = function()
 			{
 				return _this.presentationDomId;
@@ -21,230 +22,230 @@
 				return _this;
 			}
 
-		this.setParam = function(param)
-		{
-			_this.presentationParam = param;
+			this.setParam = function(param)
+			{
+				_this.presentationParam = param;
 				_this.presentationDomId = telenok.getPresentationDomId(param.presentation);
 				_this.moduleKey = param.key;
 				return _this;
-		}
-
-		this.reloadTab = function(param)
-		{
-			if (!param.tabKey) return _this;
-			
-			var id = _this.presentationDomId + '-tab-' + param.tabKey;
-			var $el = jQuery('#' + id);
-
-			if ($el.size())
-			{
-				$el.html(param.tabContent);
-			}
-				
-			return _this;
-		}
-
-		this.addTab = function(param)
-		{
-			if (!param.tabKey) return _this;
-			
-			var id = _this.presentationDomId + '-tab-' + param.tabKey;
-			var tabs = jQuery('div.telenok-presentation-tabs', '#' + _this.presentationDomId);
-			
-			if (jQuery('div#' + id, tabs).length)
-			{
-				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a[href="#' + id + '"]', tabs).tab('show');
-				return _this;
 			}
 
-			var tabTemplate = "<li><a href='#" + id + "' data-toggle='tab' data-page-id='" + param.pageId + "'><i class='green fa fa-home bigger-110'></i>&nbsp;" + param.tabLabel + "&nbsp;<i class='fa fa-times red' style='cursor:pointer;'></i></a></li>";
-			var $li = jQuery(tabTemplate);
-			jQuery('ul.nav-tabs#nav-tabs-{{$presentation}}', tabs).append($li);
-			jQuery('div.tab-content#tab-content-{{$presentation}}', tabs).append("<div class='tab-pane web-page-structure' id='" + id + "' data-web-page-id='" + param.pageId + "'>" + param.tabContent + "</div>");
-			
-			jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).on('shown.bs.tab', function (e) 
+			this.reloadTab = function(param)
 			{
-				telenok_module_web_page_pid = jQuery(this).data('page-id'); 
-			}).tab('show');  
-			
-			jQuery('a i.fa.fa-times', $li).click(function()
-				{
-					var tabId = jQuery('a', $li).attr('href');
-						jQuery(tabId).remove();
-						$li.remove();
-						jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show'); 
-				});
-				
-			$li.on('mousedown', function(event)
-				{
-					if (event.which == 2)
-					{
-						event.stopPropagation();
-						event.preventDefault();
-						jQuery('i.fa.fa-times', this).click();
-					}
-				});
+				if (!param.tabKey) return _this;
 
-			return _this;
-		}
+				var id = _this.presentationDomId + '-tab-' + param.tabKey;
+				var $el = jQuery('#' + id);
 
-		this.addTabByURL = function(param, reload)
-		{
-			jQuery.ajax({
-					url: param.url,
-					method: 'get',
-					dataType: 'json',
-					data: param.data || {},
-					
-				})
-				.success(function(data)
+				if ($el.size())
 				{
-					if (reload)
-					{
-						_this.reloadTab({pageId: data.pageId, tabKey: data.tabKey, tabLabel: data.tabLabel, tabContent: data.tabContent});
-					}
-					else
-					{
-						_this.addTab({pageId: data.pageId, tabKey: data.tabKey, tabLabel: data.tabLabel, tabContent: data.tabContent});
-					}
-					
-					if (jQuery.isFunction(param.after))
-					{
-						param.after();
-					}
-				});
-				return _this;
-		}
-
-		this.addDataTable = function(param)
-		{
-			param = jQuery.extend({}, {
-				"multipleSelection": true,
-				"aoColumns": [],
-				"bAutoWidth": true,
-				"bProcessing": true,
-				"bServerSide": param.sAjaxSource ? true : false,
-				"bDeferRender": '',
-				"bJQueryUI": false,
-				"iDisplayLength": {{ $iDisplayLength }},
-				"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'T><'col-md-6'p>>",
-				"oTableTools": {
-					"aButtons": [
-						{
-							"sExtends": "text",
-							"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
-							'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
-							"fnClick": function(nButton, oConfig, oFlash) {
-								if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
-								else _this.addTabByURL({url: param.btnCreateUrl});
-							}
-						},
-						{
-							"sExtends": "text",
-							"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
-							'sButtonClass': 'btn-sm',
-							"fnClick": function(nButton, oConfig, oFlash) {
-								jQuery('#' + param.domId).dataTable().fnReloadAjax();
-							}
-						},
-						{
-							"sExtends": "collection",
-							'sButtonClass': 'btn btn-sm btn-light',
-							"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
-							"aButtons": [
-								{
-									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
-									"fnClick": function(nButton, oConfig, oFlash)
-									{
-										if (param.btnListEditUrl)
-										{
-											_this.addTabByURL({
-												url: param.btnListEditUrl,
-												data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize()
-											});
-										}
-									}
-								},
-								{
-									"sExtends": "text",
-									'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
-									"sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
-									"fnClick": function(nButton, oConfig, oFlash) {
-										if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
-										else {
-											var this_ = this;
-											jQuery.ajax({
-												url: param.btnListDeleteUrl,
-												method: 'post',
-												dataType: 'json',
-												data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize()
-											}).done(function(data) {
-												if (data.success) {
-													jQuery('input[name=tableCheckAll\\[\\]]:checked', this_.dom.table).closest("tr").remove();
-												}
-											});
-										}
-									}
-								}
-							]
-						},
-						{
-							"sExtends": "text",
-							'sButtonClass': 'btn btn-sm btn-light',
-							"sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
-							"fnClick": function(nButton, oConfig, oFlash) 
-								{
-									jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
-								}
-						}
-					]
-				},
-				"oLanguage": {
-					"oPaginate": {
-						"sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
-						"sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}",
-					},
-					"sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
-					"sSearch": "{{{ \Lang::get('core::default.table.search') }}}",
-					"sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
-					"sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
-					"sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
-					"sInfoFiltered": "",
+					$el.html(param.tabContent);
 				}
-			}, param);
 
-			jQuery('#' + param.domId).dataTable(param);
-
-			return _this;
-		}
-
-		this.reloadDataTableOnClick = function(param)
-		{
-			if (jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId).size())
-			{
-				jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId)
-					.dataTable()
-					.fnReloadAjax(param.url + '?' + jQuery.param(param.data));
+				return _this;
 			}
 
-			return this;
-		}
+			this.addTab = function(param)
+			{
+				if (!param.tabKey) return _this;
 
-		this.deleteByURL = function(dom_obj, url)
-		{
-			jQuery.ajax({
-					url: url,
-					method: 'post',
-					dataType: 'json'
-				})
-				.done(function(data)
+				var id = _this.presentationDomId + '-tab-' + param.tabKey;
+				var tabs = jQuery('div.telenok-presentation-tabs', '#' + _this.presentationDomId);
+
+				if (jQuery('div#' + id, tabs).length)
 				{
-					if (data.success)
+					jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a[href="#' + id + '"]', tabs).tab('show');
+					return _this;
+				}
+
+				var tabTemplate = "<li><a href='#" + id + "' data-toggle='tab' data-page-id='" + param.pageId + "'><i class='green fa fa-home bigger-110'></i>&nbsp;" + param.tabLabel + "&nbsp;<i class='fa fa-times red' style='cursor:pointer;'></i></a></li>";
+				var $li = jQuery(tabTemplate);
+				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}}', tabs).append($li);
+				jQuery('div.tab-content#tab-content-{{$presentation}}', tabs).append("<div class='tab-pane web-page-structure' id='" + id + "' data-web-page-id='" + param.pageId + "'>" + param.tabContent + "</div>");
+
+				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).on('shown.bs.tab', function (e) 
+				{
+					telenok_module_web_page_pid = jQuery(this).data('page-id'); 
+				}).tab('show');  
+
+				jQuery('a i.fa.fa-times', $li).click(function()
 					{
-						jQuery(dom_obj).closest("tr").remove();
+						var tabId = jQuery('a', $li).attr('href');
+							jQuery(tabId).remove();
+							$li.remove();
+							jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show'); 
+					});
+
+				$li.on('mousedown', function(event)
+					{
+						if (event.which == 2)
+						{
+							event.stopPropagation();
+							event.preventDefault();
+							jQuery('i.fa.fa-times', this).click();
+						}
+					});
+
+				return _this;
+			}
+
+			this.addTabByURL = function(param, reload)
+			{
+				jQuery.ajax({
+						url: param.url,
+						method: 'get',
+						dataType: 'json',
+						data: param.data || {},
+
+					})
+					.success(function(data)
+					{
+						if (reload)
+						{
+							_this.reloadTab({pageId: data.pageId, tabKey: data.tabKey, tabLabel: data.tabLabel, tabContent: data.tabContent});
+						}
+						else
+						{
+							_this.addTab({pageId: data.pageId, tabKey: data.tabKey, tabLabel: data.tabLabel, tabContent: data.tabContent});
+						}
+
+						if (jQuery.isFunction(param.after))
+						{
+							param.after();
+						}
+					});
+					return _this;
+			}
+
+			this.addDataTable = function(param)
+			{
+				param = jQuery.extend({}, {
+					"multipleSelection": true,
+					"aoColumns": [],
+					"bAutoWidth": true,
+					"bProcessing": true,
+					"bServerSide": param.sAjaxSource ? true : false,
+					"bDeferRender": '',
+					"bJQueryUI": false,
+					"iDisplayLength": {{ $iDisplayLength }},
+					"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'T><'col-md-6'p>>",
+					"oTableTools": {
+						"aButtons": [
+							{
+								"sExtends": "text",
+								"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
+								'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
+								"fnClick": function(nButton, oConfig, oFlash) {
+									if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
+									else _this.addTabByURL({url: param.btnCreateUrl});
+								}
+							},
+							{
+								"sExtends": "text",
+								"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
+								'sButtonClass': 'btn-sm',
+								"fnClick": function(nButton, oConfig, oFlash) {
+									jQuery('#' + param.domId).dataTable().fnReloadAjax();
+								}
+							},
+							{
+								"sExtends": "collection",
+								'sButtonClass': 'btn btn-sm btn-light',
+								"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
+								"aButtons": [
+									{
+										"sExtends": "text",
+										"sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
+										"fnClick": function(nButton, oConfig, oFlash)
+										{
+											if (param.btnListEditUrl)
+											{
+												_this.addTabByURL({
+													url: param.btnListEditUrl,
+													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize()
+												});
+											}
+										}
+									},
+									{
+										"sExtends": "text",
+										'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
+										"sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
+										"fnClick": function(nButton, oConfig, oFlash) {
+											if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
+											else {
+												var this_ = this;
+												jQuery.ajax({
+													url: param.btnListDeleteUrl,
+													method: 'post',
+													dataType: 'json',
+													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize()
+												}).done(function(data) {
+													if (data.success) {
+														jQuery('input[name=tableCheckAll\\[\\]]:checked', this_.dom.table).closest("tr").remove();
+													}
+												});
+											}
+										}
+									}
+								]
+							},
+							{
+								"sExtends": "text",
+								'sButtonClass': 'btn btn-sm btn-light',
+								"sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
+								"fnClick": function(nButton, oConfig, oFlash) 
+									{
+										jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
+									}
+							}
+						]
+					},
+					"oLanguage": {
+						"oPaginate": {
+							"sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
+							"sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}",
+						},
+						"sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
+						"sSearch": "{{{ \Lang::get('core::default.table.search') }}}",
+						"sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
+						"sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
+						"sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
+						"sInfoFiltered": "",
 					}
-				});
+				}, param);
+
+				jQuery('#' + param.domId).dataTable(param);
+
+				return _this;
+			}
+
+			this.reloadDataTableOnClick = function(param)
+			{
+				if (jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId).size())
+				{
+					jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId)
+						.dataTable()
+						.fnReloadAjax(param.url + '?' + jQuery.param(param.data));
+				}
+
+				return this;
+			}
+
+			this.deleteByURL = function(dom_obj, url)
+			{
+				jQuery.ajax({
+						url: url,
+						method: 'post',
+						dataType: 'json'
+					})
+					.done(function(data)
+					{
+						if (data.success)
+						{
+							jQuery(dom_obj).closest("tr").remove();
+						}
+					});
 			}
 		}
 
@@ -326,8 +327,8 @@
     <div class="clearfix">
         <select class="chosen" data-placeholder="{{{$controller->LL('page.select')}}}" id="module-web-page-widget-list-page-list" 
                 onchange="telenok.getPresentationByKey('{{$presentation}}').addTabByURL({
-								url:'{{\URL::route("cmf.module.web-page.view.page.container", ['id' => ':id:', 'languageId' => ':languageId:'])}}'
-										.replace(/:id:/gi, parseInt(this.value, 10))
+								url:'{{\URL::route("cmf.module.web-page-constructor.view.page.container", ['id' => '--id--', 'languageId' => ':languageId:'])}}'
+										.replace(/--id--/gi, parseInt(this.value, 10))
 										.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10)),
 								after: function() { updateContainer(); }
 							});">
@@ -506,8 +507,8 @@
 	function reloadWebPageContainer()
 	{
 		telenok.getPresentationByKey('{{$presentation}}').addTabByURL({
-				url:'{{\URL::route("cmf.module.web-page.view.page.container", ['id' => ':id:', 'languageId' => ':languageId:'])}}'
-						.replace(/:id:/gi, parseInt(telenok_module_web_page_pid, 10))
+				url:'{{\URL::route("cmf.module.web-page-constructor.view.page.container", ['id' => '--id--', 'languageId' => ':languageId:'])}}'
+						.replace(/--id--/gi, parseInt(telenok_module_web_page_pid, 10))
 						.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10)),
 				after: function() { updateContainer(); }
 			}, true);
@@ -531,12 +532,12 @@
 				{
 					jQuery.ajax(
 						{
-							'url' : '{{\URL::route("cmf.module.web-page.view.page.insert.widget", ['languageId' => ':languageId:', 'key' => ':key:', 'bufferId' => ':bufferId:', 'container' => ':container:', 'id' => ':id:', 'pageId' => ':pageId:', 'order' => ':order:'])}}'
+							'url' : '{{\URL::route("cmf.module.web-page-constructor.view.page.insert.widget", ['languageId' => ':languageId:', 'key' => ':key:', 'bufferId' => ':bufferId:', 'container' => ':container:', 'id' => '--id--', 'pageId' => ':pageId:', 'order' => ':order:'])}}'
 								.replace(/:container:/gi, jQuery(ui.item).closest(".frontend-container").data('container-id'))
 								.replace(/:key:/gi, jQuery(ui.item).data('widget-key'))
 								.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10))
 								.replace(/:bufferId:/gi, jQuery(ui.item).data('widget-buffer-id'))
-								.replace(/:id:/gi, parseInt(jQuery(ui.item).data('widget-id'), 10))
+								.replace(/--id--/gi, parseInt(jQuery(ui.item).data('widget-id'), 10))
 								.replace(/:pageId:/gi, parseInt(telenok_module_web_page_pid, 10))
 								.replace(/:order:/gi, ui.item.index())
 						})
@@ -589,8 +590,8 @@
 				var this_ = this;
 
 				jQuery.ajax({
-					url: '{{\URL::route("cmf.module.web-page.view.page.remove.widget", ['id' => ':id:'])}}'
-						.replace(/:id:/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id')),
+					url: '{{\URL::route("cmf.module.web-page-constructor.view.page.remove.widget", ['id' => '--id--'])}}'
+						.replace(/--id--/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id')),
 					context: document.body
 				})
 				.done(function(data)
@@ -611,8 +612,8 @@
 			.click(function(event)
 			{	
 				jQuery.ajax({
-					url: '{{\URL::route("cmf.module.objects-lists.wizard.edit", ['id' => ':id:', 'chooseBtn' => 0, 'saveBtn' => 1])}}'
-							.replace(/:id:/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id')),					
+					url: '{{\URL::route("cmf.module.objects-lists.wizard.edit", ['id' => '--id--', 'chooseBtn' => 0, 'saveBtn' => 1])}}'
+							.replace(/--id--/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id')),					
 					method: 'get',
 					dataType: 'json'
 				})
@@ -646,8 +647,8 @@
 				var this_ = this;
 
 				jQuery.ajax({
-					url: '{{\URL::route("cmf.module.web-page.view.buffer.add.widget", ['id' => ':id:', 'key' => ':key:'])}}'
-						.replace(/:id:/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id'))
+					url: '{{\URL::route("cmf.module.web-page-constructor.view.buffer.add.widget", ['id' => '--id--', 'key' => ':key:'])}}'
+						.replace(/--id--/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id'))
 						.replace(/:key:/gi, jQuery(this).data('action')),
 					context: document.body
 				})
@@ -698,8 +699,8 @@
 				this_ = this;
 
 				jQuery.ajax({
-					url: '{{\URL::route("cmf.module.web-page.view.buffer.delete.widget", ['id' => ':id:'])}}'
-						.replace(/:id:/gi, jQuery(this).closest("a").data('widget-buffer-id')),
+					url: '{{\URL::route("cmf.module.web-page-constructor.view.buffer.delete.widget", ['id' => '--id--'])}}'
+						.replace(/--id--/gi, jQuery(this).closest("a").data('widget-buffer-id')),
 					context: document.body
 				})
 				.done(function(data)
@@ -726,7 +727,7 @@
 			keepTypingMsg: "{{{$controller->LL('notice.typing')}}}",
 			lookingForMsg: "{{{$controller->LL('notice.looking-for')}}}",
 			type: "GET",
-			url: "{{\URL::route("cmf.module.web-page.list.page")}}",
+			url: "{{\URL::route("cmf.module.web-page-constructor.list.page")}}",
 			dataType: "json",
 			minTermLength: 1,
 			afterTypeDelay: 1000

@@ -80,7 +80,7 @@ abstract class Controller {
 
 	public function getBackendView()
 	{
-		return $this->backendView ? : "core::module.web-page.widget-backend";
+		return $this->backendView ? : "core::module.web-page-constructor.widget-backend";
 	}
 
 	public function getStructureView()

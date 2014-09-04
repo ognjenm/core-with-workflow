@@ -16,7 +16,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function getGridId($key = 'gridId')
     {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->getModelList()->getTable()}";
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
     }  
 	
 	public function createResource($model)

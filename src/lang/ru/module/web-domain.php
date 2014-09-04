@@ -1,8 +1,9 @@
 <?php
 
 return array(
-    'name' => 'Страница',
+    'name' => 'Домен',
     
-    'header.title' => 'Веб страницы',
+    'header.title' => 'Веб домены',
     'header.description' => 'создание и редактирование',
+
 );

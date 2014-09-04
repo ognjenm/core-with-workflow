@@ -13,6 +13,11 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $presentationModelView = 'core::module.objects-version.model';
     protected $presentationView = 'core::module.objects-version.presentation';
 
+    public function getGridId($key = 'gridId')
+    {
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
+    }  
+
 	public function save($input = [], $type = null)
 	{
 		if ($input === null)

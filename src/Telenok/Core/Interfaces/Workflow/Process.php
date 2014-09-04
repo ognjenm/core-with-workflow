@@ -192,7 +192,7 @@ class Process {
         }
     },
     "stencilset": {
-        "url": "http://laravelnew.ru/cmf/module/workflow-process/diagram/stensilset",
+        "url": "http://laravelnew.ru/telenok/module/workflow-process/diagram/stensilset",
         "namespace": "http://b3mn.org/stencilset/bpmn2.0#"
     },
     "ssextensions": []

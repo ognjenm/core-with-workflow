@@ -762,12 +762,7 @@ class Acl
      * 
      */
     public function hasRole($id = null)
-    {
-        if (!\Config::get('app.acl.enabled')) 
-        {
-			return true;
-        }
-		
+    { 
         if (!$this->subject instanceof \Telenok\Core\Model\User\User) 
         {
             return false;
