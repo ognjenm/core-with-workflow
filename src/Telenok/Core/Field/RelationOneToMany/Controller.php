@@ -180,8 +180,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	
     public function preProcess($model, $type, $input)
     {
-		$this->validateExistsInputField($input, ['field_has', 'relation_one_to_many_has']);
-
+		if (!$input->get('relation_one_to_many_belong_to'))
+		{
+			$this->validateExistsInputField($input, ['field_has', 'relation_one_to_many_has']);
+		}
+		
 		if (!$input->get('relation_one_to_many_has') && $input->get('field_has'))
 		{
 			$input->put('relation_one_to_many_has', $input->get('field_has'));

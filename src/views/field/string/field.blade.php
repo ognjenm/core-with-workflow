@@ -51,12 +51,12 @@
 <div class="form-group">
 	{{ Form::label('string_min', $controller->LL('property.string_min'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
-		{{ Form::text('string_min') }}
+		{{ Form::text('string_min', $model->string_min) }}
 	</div>
 </div>
 <div class="form-group">
 	{{ Form::label('string_max', $controller->LL('property.string_max'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
-		{{ Form::text('string_max') }}
+		{{ Form::text('string_max', $model->string_max) }}
 	</div>
 </div> 

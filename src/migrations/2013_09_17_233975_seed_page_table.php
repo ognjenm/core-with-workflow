@@ -166,6 +166,7 @@ class SeedPageTable extends Migration {
 						'key' => 'string',
 						'code' => 'url_pattern',
 						'active' => 1,
+						'string_default' => '/',
 						'field_object_type' => $modelId,
 						'field_object_tab' => $tabMainId,
 						'multilanguage' => 0,

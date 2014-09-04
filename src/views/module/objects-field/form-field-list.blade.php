@@ -4,7 +4,7 @@
 
 	@elseif ($field->code=='key')
 
-		{{ Form::hidden('key') }}
+		{{ Form::hidden('key', $model->{$field->code}) }}
 
 		<div class="form-group">
 			{{ Form::label('key', $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
@@ -33,7 +33,7 @@
 				});
 
 				?>
-			{{ Form::select('key', $selectFields, null, $key) }}
+			{{ Form::select('key', $selectFields, $model->{$field->code}, $key) }}
 			</div>
 		</div>
 

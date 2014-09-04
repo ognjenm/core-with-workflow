@@ -24,6 +24,6 @@
 
         ?>
         {{ Form::hidden($linkedField, $model->{$linkedField}) }}
-        {{ Form::select($linkedField, \Telenok\Object\Type::get(['title', 'id'])->transform(function($item) { return ['title' => $item->translate('title'), 'id' => $item->id]; })->sortBy('title')->lists('title', 'id'), null, $domAttr) }}
+        {{ Form::select($linkedField, \Telenok\Object\Type::get(['title', 'id'])->transform(function($item) { return ['title' => $item->translate('title'), 'id' => $item->id]; })->sortBy('title')->lists('title', 'id'), $model->{$linkedField}, $domAttr) }}
     </div>
 </div> 

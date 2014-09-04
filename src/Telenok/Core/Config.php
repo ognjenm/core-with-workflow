@@ -287,23 +287,66 @@ class Config {
 		}
 
 		$content = [];
+		$routeCommon = [];
+		$routeDomain = []; 
 
-		$controller = \App::make('telenok.config')->getController();
-
-		foreach (\Telenok\Web\Page::with('pagePageController')->active()->get() as $key => $page)
+		$domains = \Telenok\Web\Domain::active()->get();
+		
+		$pages = \Telenok\Web\Page::whereHas('pagePageController', function($query) 
+		{ 
+			$now = \Carbon\Carbon::now();
+			$query->where('active', 1)
+					->where('start_at', '<=', $now)
+					->where('end_at', '>=', $now);
+		})->active()->where(function($query) use ($domains)
 		{
-			if (!method_exists($page->pagePageController->controller_class, $page->pagePageController->controller_method))
-			{
-				throw new \Exception('Method "' . $page->pagePageController->controller_method . '" not exists in class "' . $page->pagePageController->controller_class . '"');
-			}
+			$query->whereNull('page_domain') 
+					->orWhere('page_domain', 0)
+					->orWhereIn('page_domain', $domains->modelKeys());
+		})->get();
 
-			$content[] = '<?php '
-					. ' Route::get("' . implode("/", array_map("rawurlencode", explode("/", $page->getAttribute('url_pattern')))) . '", array("as" => "page_' . $page->getKey() . '",'
-					. ' "uses" => "' . addcslashes($page->pagePageController->controller_class, '"') . '@' . $page->pagePageController->controller_method . '"));'
-					. ' ?>';
+		foreach ($domains->all() as $domain)
+		{ 
+			foreach ($pages->all() as $key => $page)
+			{
+				if (!method_exists($page->pagePageController->controller_class, $page->pagePageController->controller_method))
+				{
+					throw new \Exception('Method "' . $page->pagePageController->controller_method . '" not exists in class "' . $page->pagePageController->controller_class . '"');
+				} 
+
+				if ($page->page_domain && $domain->getKey() == $page->page_domain)
+				{
+					$routeDomain[$page->page_domain][] = 
+							'	Route::get("' . implode("/", array_map("rawurlencode", explode("/", $page->getAttribute('url_pattern')))) . '", array("as" => "page_' . $page->getKey() . '",'
+							. ' "uses" => "' . addcslashes($page->pagePageController->controller_class, '"') . '@' . $page->pagePageController->controller_method . '"));'
+							;
+				}
+				else if (!$page->page_domain)
+				{
+					$routeCommon[$page->getKey()] = 
+							'Route::get("' . implode("/", array_map("rawurlencode", explode("/", $page->getAttribute('url_pattern')))) . '", array("as" => "page_' . $page->getKey() . '",'
+							. ' "uses" => "' . addcslashes($page->pagePageController->controller_class, '"') . '@' . $page->pagePageController->controller_method . '"));'
+							;				
+				}
+			}
 		}
 
-		\File::put($path . '/' . $file, implode(chr(13), $content));
+		foreach ($domains->all() as $domain)
+		{
+			if (!empty($routeDomain[$domain->getKey()]) && !empty($routeDomain[$domain->getKey()]))
+			{
+				$content[] = 'Route::group(array("domain" => "' . $domain->domain . '"), function() {';
+				
+				foreach($routeDomain[$domain->getKey()] as $dC)
+				{
+					$content[] = $dC;
+				}
+				
+				$content[] = '});';
+			}
+		}		
+		
+		\File::put($path . '/' . $file, '<?php ' . PHP_EOL . PHP_EOL . implode(PHP_EOL, $content) . PHP_EOL . implode(PHP_EOL, $routeCommon) . PHP_EOL . PHP_EOL . '?>');
 	}
 
 	public function compileSetting()

@@ -44,6 +44,17 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			$value_ = $value->toArray();
 		}
+		else if (is_array($value))
+		{
+			$value_ = $model->{$key};
+			
+			foreach($value as $k => $v)
+			{
+				$value_->put($k, $v);
+			}
+			
+			$value_ = $value_->toArray();
+		}
 		else
 		{
 			$value_ = $value;

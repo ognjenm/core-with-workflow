@@ -279,8 +279,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	
     public function preProcess($model, $type, $input)
     {
-		$this->validateExistsInputField($input, ['field_has', 'morph_one_to_one_has']);
-
+		if (!$input->get('morph_one_to_one_belong_to'))
+		{
+			$this->validateExistsInputField($input, ['field_has', 'morph_one_to_one_has']);
+		}
+		
 		if (!$input->get('morph_one_to_one_has') && $input->get('field_has'))
 		{
 			$input->put('morph_one_to_one_has', $input->get('field_has'));

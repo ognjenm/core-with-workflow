@@ -361,7 +361,7 @@
 			<li class="widget-buffer">
 				<a data-toggle="tab" href="#menu-buffer-{{$uniqueId}}">
 					{{{$controller->LL('tab.widget.buffer')}}}
-					<span class="badge badge-important" id="menu-buffer-fa fa-{{$uniqueId}}">0</span>
+					<span class="badge badge-important" id="menu-buffer-fa-{{$uniqueId}}">0</span>
 				</a>
 			</li>
 			
@@ -712,14 +712,7 @@
 
 		var size = jQuery('li', "ul#widget-menu-buffer").size();
 
-		if (size)
-		{
-			jQuery('span#menu-buffer-fa fa-{{$uniqueId}}').text(size).show();
-		}
-		else
-		{
-			jQuery('span#menu-buffer-fa fa-{{$uniqueId}}').hide();
-		}
+		jQuery('span#menu-buffer-fa-{{$uniqueId}}').text(parseInt(size, 10));
 	}
 
 	jQuery("#module-web-page-widget-list-page-list").ajaxChosen(

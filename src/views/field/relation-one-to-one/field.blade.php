@@ -24,6 +24,6 @@
 
         ?>
         {{ Form::hidden($linkedField, $model->{$linkedField}) }}
-        {{ Form::select($linkedField, \Telenok\Object\Type::get(['title', 'id'])->transform(function($item) { return ['title' => $item->translate('title'), 'id' => $item->id]; })->toArray(), null, $domAttr) }}
+        {{ Form::select($linkedField, \Telenok\Object\Type::get(['title', 'id'])->transform(function($item) { return ['title' => $item->translate('title'), 'id' => $item->id]; })->toArray(), $model->{$linkedField}, $domAttr) }}
     </div>
 </div> 

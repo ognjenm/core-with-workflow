@@ -27,7 +27,7 @@
 
         @elseif ($field->code=='process')
 
-            {{Form::hidden('process')}}
+            {{Form::hidden('process', $model->{$field->code})}}
 
             <div class="form-group">
                 {{ Form::label('process', $field->translate('title'), array('class'=>'control-label')) }}

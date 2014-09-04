@@ -1,1 +1,1 @@
-    {{ Form::hidden('id') }}
+	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}

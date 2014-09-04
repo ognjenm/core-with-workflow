@@ -49,7 +49,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 			
 			foreach($this->container as $containerId)
 			{
-				$page->widget()->get()->each(function($item) use (&$content, $containerId, $listWidget)
+				$page->widget()->active()->get()->each(function($item) use (&$content, $containerId, $listWidget)
 				{
 					$content[$containerId][] = $listWidget->get($item->key)->setWidgetModel($item)->getContent();
 				});

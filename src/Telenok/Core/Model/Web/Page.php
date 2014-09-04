@@ -5,14 +5,7 @@ namespace Telenok\Core\Model\Web;
 class Page extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	protected $ruleList = ['title' => ['required', 'min:1']];
-	protected $table = 'page';
-
-	public function setUrlPatternAttribute($value)
-	{
-		$value = trim($value);
-
-		$this->attributes['url_pattern'] = trim($value) ? $value : '/';
-	}
+	protected $table = 'page'; 
 
 	public function pagePageController()
 	{

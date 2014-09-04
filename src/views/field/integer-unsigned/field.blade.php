@@ -2,7 +2,7 @@
 <div class="form-group">
     {{ Form::label("integer_unsigned_default", $controller->LL('property.default'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
     <div class="col-sm-9">
-        {{ Form::text("integer_unsigned_default") }}
+        {{ Form::text("integer_unsigned_default", $model->integer_unsigned_default) }}
     </div>
 </div>
 
@@ -17,12 +17,12 @@
 <div class="form-group">
 	{{ Form::label('integer_unsigned_min', $controller->LL('property.integer_unsigned_min'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
-		{{ Form::text('integer_unsigned_min') }}
+		{{ Form::text('integer_unsigned_min', $model->integer_unsigned_min) }}
 	</div>
 </div>
 <div class="form-group">
 	{{ Form::label('integer_unsigned_max', $controller->LL('property.integer_unsigned_max'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
-		{{ Form::text('integer_unsigned_max') }}
+		{{ Form::text('integer_unsigned_max', $model->integer_unsigned_max) }}
 	</div>
 </div>
