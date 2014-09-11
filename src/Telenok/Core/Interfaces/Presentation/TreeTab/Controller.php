@@ -25,14 +25,45 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     protected $routerUpdate = '';
     protected $routerListEdit = '';
     protected $routerListDelete = '';
-	
+    protected $routerLock = '';
+    protected $routerListLock = '';
+    protected $routerListUnlock = '';
+
     protected $modelList = '';
     protected $modelTree = '';
 
     protected $displayLength = 15;
     protected $additionalViewParam = [];
+	
+    protected $lockInListPeriod = 3600;
+    protected $lockInFormPeriod = 300;
 
-    public function getPresentation()
+	
+	public function getLockInListPeriod()
+    {
+        return $this->lockInListPeriod;
+    }
+	
+	public function setLockInListPeriod($param = 3600)
+    {
+        $this->lockInListPeriod = $param;
+		
+		return $this;
+    }
+	
+	public function getLockInFormPeriod()
+    {
+        return $this->lockInFormPeriod;
+    }
+	
+	public function setLockInFormPeriod($param = 300)
+    {
+        $this->lockInFormPeriod = $param;
+
+		return $this;
+    }
+	
+	public function getPresentation()
     {
         return $this->presentation;
     }
@@ -246,6 +277,35 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     public function getRouterListDelete($param = [])
     {
 		return \URL::route($this->routerListDelete ?: "cmf.module.{$this->getKey()}.list.delete", $param);
+    }
+	
+    public function setRouterListLock($param)
+    {
+		$this->routerListLock = $param;
+		
+		return $this;
+    }       
+
+    public function getRouterLock($param = [])
+    {
+		return \URL::route($this->routerLock ?: "cmf.module.{$this->getKey()}.lock", $param);
+    }
+
+    public function getRouterListLock($param = [])
+    {
+		return \URL::route($this->routerListLock ?: "cmf.module.{$this->getKey()}.list.lock", $param);
+    }
+	
+    public function setRouterListUnlock($param)
+    {
+		$this->routerListUnlock = $param;
+		
+		return $this;
+    }       
+
+    public function getRouterListUnlock($param = [])
+    {
+		return \URL::route($this->routerListUnlock ?: "cmf.module.{$this->getKey()}.list.unlock", $param);
     }
 
     public function getModelList()
@@ -532,6 +592,10 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
 
+                    <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->locked() ? 'locked' : 'unlocked')) . '">
+                        <i class="fa fa-' . ($item->locked() ? 'lock ' . (\Auth::user()->id == $item->locked_by_user ? 'green' : 'red') : 'unlock green'). '"></i>
+                    </button>
+
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
                         onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');">
@@ -683,19 +747,22 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     }
 
     public function delete($id = 0, $force = false)
-    {
-        $model = $this->getModelList();
-        
+    { 
         try
         {
-            if ($force)
-            {
-                $model::findOrFail($id)->forceDelete();
-            }
-            else 
-            {
-                $model::findOrFail($id)->delete();
-            }
+	        $model = $this->getModelList()->findOrFail($id);
+			
+			\DB::transaction(function() use ($model, $force)
+			{
+				if ($force)
+				{
+					$model->forceDelete();
+				}
+				else 
+				{
+					$model->delete();
+				}
+			});
 
             return ['success' => 1];
         }
@@ -724,7 +791,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 				
 				foreach ($ids as $id_)
 				{
-						$model::findOrFail($id_)->delete();
+					$model::findOrFail($id_)->delete();
 				}
 			}
 			catch (\Exception $e)
@@ -742,6 +809,78 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 			return \Response::json(['success' => 1]);
 		}
     }
+
+    public function lock()
+    {
+		$id = \Input::get('id');
+
+		try
+		{
+			$model = \Telenok\Object\Sequence::find($id)->model;
+
+			if (!$model->locked())
+			{
+				$model->lock($this->getLockInFormPeriod());
+			}
+		}
+		catch (\Exception $ex) 
+		{
+            return \Response::json(['message' => 'Expectation Failed'], 417 /* Expectation Failed */);
+		} 
+		
+		return \Response::json(['success' => 1]);
+	}
+
+    public function lockList()
+    {
+		$tableCheckAll = \Input::get('tableCheckAll', []);
+		
+		try
+		{
+			foreach($tableCheckAll as $id)
+			{
+				$model = \Telenok\Object\Sequence::find($id)->model;
+				
+				if (!$model->locked())
+				{
+					$model->lock($this->getLockInListPeriod());
+				}
+			}
+		} 
+		catch (\Exception $ex) 
+		{
+            return \Response::json(['message' => 'Expectation Failed'], 417 /* Expectation Failed */);
+		} 
+		
+		return \Response::json(['success' => 1]);
+	}
+
+	public function unlockList()
+    {
+		$tableCheckAll = \Input::get('tableCheckAll', []);
+		
+		try
+		{
+			$userId = \Auth::user()->id;
+			
+			foreach($tableCheckAll as $id)
+			{
+				$model = \Telenok\Object\Sequence::find($id)->model;
+
+				if ($model && $model->locked_by_user == $userId)
+				{
+					$model->unLock();
+				}
+			}
+		} 
+		catch (\Exception $ex) 
+		{
+            return \Response::json(['message' => 'Expectation Failed'], 417 /* Expectation Failed */);
+		} 
+		
+		return \Response::json(['success' => 1]);
+	}
+
 
     public function store($id = null, $input = [])
     {   
@@ -869,9 +1008,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     {  
         return $this;
     }
-
-    
-
+	
+	
+	
 }
 
 ?>

@@ -21,7 +21,9 @@ class CreateLanguageTable extends Migration
 				$table->timestamp('end_at');
                 $table->integer('created_by_user')->unsigned()->nullable();
                 $table->integer('updated_by_user')->unsigned()->nullable(); 
-                $table->integer('deleted_by_user')->unsigned()->nullable();  
+				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
+				$table->integer('locked_by_user')->unsigned()->nullable()->default(null);
+				$table->timestamp('locked_at');
             }); 
         }
     }

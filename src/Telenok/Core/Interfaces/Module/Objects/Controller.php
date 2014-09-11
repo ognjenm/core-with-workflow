@@ -261,7 +261,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
         \Event::fire('form.edit.object', [$params]);
-			
+		
+		$model->lock();
+
         return [
             'tabKey' => $this->getTabKey() . '-edit-' . md5($id),
             'tabLabel' => $type->translate('title'),
@@ -568,6 +570,42 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		catch (\InvalidArgumentException $ex) 
 		{
 			return \URL::route("cmf.module.objects-lists.list.delete", $param);
+		} 
+    }
+	
+    public function getRouterLock($param = [])
+    {
+		try
+		{
+			return \URL::route($this->routerLock ?: "cmf.module.{$this->getKey()}.lock", $param);
+		} 
+		catch (\InvalidArgumentException $ex) 
+		{
+			return \URL::route("cmf.module.objects-lists.lock", $param);
+		} 
+    }
+	
+    public function getRouterListLock($param = [])
+    {
+		try
+		{
+			return \URL::route($this->routerListLock ?: "cmf.module.{$this->getKey()}.list.lock", $param);
+		} 
+		catch (\InvalidArgumentException $ex) 
+		{
+			return \URL::route("cmf.module.objects-lists.list.lock", $param);
+		} 
+    }
+	
+    public function getRouterListUnlock($param = [])
+    {
+		try
+		{
+			return \URL::route($this->routerListUnlock ?: "cmf.module.{$this->getKey()}.list.unlock", $param);
+		} 
+		catch (\InvalidArgumentException $ex) 
+		{
+			return \URL::route("cmf.module.objects-lists.list.unlock", $param);
 		} 
     }
 

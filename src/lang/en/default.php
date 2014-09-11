@@ -12,6 +12,8 @@ return [
     'list.btn.delete' => 'Delete', 
     'list.btn.active' => 'Actively',
     'list.btn.inactive' => 'Inactive',
+    'list.btn.locked' => 'Locked',
+    'list.btn.unlocked' => 'Unlocked',
 
     'btn.save' => 'Save',
     'btn.save.close' => 'Save and close',
@@ -27,7 +29,8 @@ return [
     'btn.prev' => 'Back',
     'btn.next' => 'Next',
     'btn.filter' => 'Filter',
-    'btn.create.folder' => 'Create folder',
+    'btn.lock' => 'Lock',
+    'btn.unlock' => 'Unlock',
 
     'notice.title' => 'Notice',
     'notice.saved' => 'Saved',
@@ -41,6 +44,8 @@ return [
     'notice.not-found' => "Oops, nothing found!",
     'notice.typing' => 'Keep typing...',
     'notice.looking-for' => 'Looking for', 
+    'notice.locked' => 'Record is locked by :by at :at', 
+    'notice.locked.by.myself' => 'Warning! I locked record ', 
 	
     'tree.root' => 'Tree',
 

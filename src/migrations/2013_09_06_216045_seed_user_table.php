@@ -338,6 +338,41 @@ class SeedUserTable extends Migration {
 				]
 		);
 
+		DB::table('object_field')->insert(
+				[
+					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+					'title' => json_encode(['en' => 'Locked by'], JSON_UNESCAPED_UNICODE),
+					'title_list' => json_encode(['en' => 'Locked by'], JSON_UNESCAPED_UNICODE),
+					'key' => 'relation-one-to-many',
+					'code' => 'locked_by',
+					'field_object_type' => DB::table('object_type')->where('code', 'user')->pluck('id'),
+					'relation_one_to_many_has' => DB::table('object_type')->where('code', 'object_sequence')->pluck('id'),
+					'field_object_tab' => $tabAdditionallyId,
+					'active' => 1,
+					'multilanguage' => 0,
+					'show_in_list' => 0,
+					'show_in_form' => 1,
+					'allow_search' => 1,
+				]
+		);
+
+		DB::table('object_field')->insert(
+				[
+					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+					'title' => json_encode(['en' => 'Deleted by'], JSON_UNESCAPED_UNICODE),
+					'title_list' => json_encode(['en' => 'Deleted by'], JSON_UNESCAPED_UNICODE),
+					'key' => 'relation-one-to-many',
+					'code' => 'deleted_by',
+					'field_object_type' => DB::table('object_type')->where('code', 'user')->pluck('id'),
+					'relation_one_to_many_has' => DB::table('object_type')->where('code', 'object_sequence')->pluck('id'),
+					'field_object_tab' => $tabAdditionallyId,
+					'active' => 1,
+					'multilanguage' => 0,
+					'show_in_list' => 0,
+					'show_in_form' => 1,
+					'allow_search' => 1,
+				]
+		);
 
 		if (!Schema::hasTable('pivot_relation_m2m_group_user'))
 		{

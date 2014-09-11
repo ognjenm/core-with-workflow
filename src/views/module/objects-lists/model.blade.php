@@ -4,6 +4,32 @@
 @section('script')
 	@parent
 	
+	@section('ajaxLock')
+
+		function ajaxLock{{$uniqueId}}()
+		{ 
+			if (!jQuery("#model-ajax-{{$uniqueId}}").size() || !{{ intval($model->getKey()) }})
+			{
+				return;
+			}
+
+			setTimeout(function() { ajaxLock{{$uniqueId}}(); }, {{ $controller->getLockInFormPeriod() * 700}});
+
+			jQuery.ajax({
+				url: '{{{ $controller->getRouterLock() }}}',
+				type: 'post',
+				data: { id: {{ intval($model->getKey()) }} },
+				dataType: 'json',
+				cache: false
+			});
+		}
+
+		setTimeout(function() { ajaxLock{{$uniqueId}}(); }, 2000);
+	
+	@stop
+
+	
+	
 	@section('buttonType')
  
         if (button_type=='close')
@@ -35,7 +61,17 @@
 	
 	@parent
 
-
+	@section('lockedContainer')
+	@if ($model->locked())
+    <div>
+		@if (\Auth::check() && \Auth::user()->id != $model->locked_by_user)
+		<div class="alert alert-danger">{{{$controller->LL('notice.locked', ['at' => $model->locked_at, 'by' => $model->lockedByUser->username])}}}<button data-dismiss="alert" class="close" type="button"><i class="fa fa-times"></i></button></div>
+		@endif
+	</div>
+	@endif
+	@show
+	
+	
 	@section('formField')
 	
 	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}

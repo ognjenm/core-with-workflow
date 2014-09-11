@@ -486,6 +486,22 @@ class SeedLast extends Migration {
 				]); 
 			} catch (\Exception $ex) {}
 
+			try
+			{
+				$modelField->storeOrUpdate([
+					'key' => 'locked-by',
+					'field_object_type' => $item->getKey(),
+				]); 
+			} catch (\Exception $ex) {}
+
+			try
+			{
+				$modelField->storeOrUpdate([
+					'key' => 'deleted-by',
+					'field_object_type' => $item->getKey(),
+				]); 
+			} catch (\Exception $ex) {}
+
 			$modelField = null;
 		});
 		
@@ -895,5 +911,6 @@ class SeedLast extends Migration {
 			'value' => 'Company Co.',
 			'code' => 'app.backend.brand',
 		]);
+
 	}
 }

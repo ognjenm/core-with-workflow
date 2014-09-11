@@ -67,12 +67,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	}
 
 	public function preProcess($model, $type, $input)
-	{ 
-		if (!$input->get('field_object_tab'))
-		{
-			$input->put('field_object_tab', 'additionally');
-		}
-		
+	{  
 		$input->put('title', ['en' => 'Permission']);
 		$input->put('title_list', ['en' => 'Permission']);
 		$input->put('code', 'permission');
@@ -84,7 +79,16 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$input->put('allow_create', 1);
 		$input->put('allow_update', 1); 
 		$input->put('field_order', $input->get('field_order', 3)); 
+
+		if (!$input->get('field_object_tab'))
+		{
+			$input->put('field_object_tab', 'additionally');
+		}
 		
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
+
+		$input->put('field_object_tab', $tab->getKey());  
+
 		return parent::preProcess($model, $type, $input);
 	}
 

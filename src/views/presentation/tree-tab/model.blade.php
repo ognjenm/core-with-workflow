@@ -2,7 +2,32 @@
 
 
 @section('script')
+
 	@parent
+	
+	@section('ajaxLock')
+	
+		function ajaxLock{{$uniqueId}}()
+		{ 
+			if (!jQuery("#model-ajax-{{$uniqueId}}").size() || !{{ intval($model->getKey()) }})
+			{
+				return;
+			}
+
+			setTimeout(function() { ajaxLock{{$uniqueId}}(); }, {{ $controller->getLockInFormPeriod() * 700}});
+
+			jQuery.ajax({
+				url: '{{{ $controller->getRouterLock() }}}',
+				type: 'post',
+				data: { id: {{ intval($model->getKey()) }} },
+				dataType: 'json',
+				cache: false
+			});
+		}
+
+		setTimeout(function() { ajaxLock{{$uniqueId}}(); }, 2000);
+
+	@stop
 	
 	@section('buttonType')
  

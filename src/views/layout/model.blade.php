@@ -2,7 +2,7 @@
 
 <script type="text/javascript"> 
 
-    @section('script')
+@section('script')
 
     jQuery('[data-rel=popover]', '#model-ajax-{{$uniqueId}}').popover({container:'body'});
 
@@ -13,6 +13,8 @@
 		todayBtn: true,
 		minuteStep: 1
 	});
+
+	@yield('ajaxLock')  
 
     jQuery('#model-ajax-{{$uniqueId}}').on('submit', function(e) 
 	{
@@ -107,7 +109,7 @@
 		});
 	});
 
-    @show
+@show
 
 </script>
 
@@ -152,11 +154,10 @@
 
 	@section('errorContainer')
     <div class="error-container"></div>
-	@show
+	@show 
 
-
-	@yield('formField')
-
+	@yield('lockedContainer')
+	@yield('formField') 
 
 	@section('formBtn')
     <div class='form-actions center no-margin'>

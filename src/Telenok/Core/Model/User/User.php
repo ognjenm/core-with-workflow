@@ -58,6 +58,16 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Use
 		return $this->hasMany('\Telenok\Object\Sequence', 'updated_by_user');
 	}
 
+	public function deletedBy()
+	{
+		return $this->hasMany('\Telenok\Object\Sequence', 'deleted_by_user');
+	}
+
+	public function lockedBy()
+	{
+		return $this->hasMany('\Telenok\Object\Sequence', 'locked_by_user');
+	}
+
 	public function group()
 	{
 		return $this->belongsToMany('\Telenok\User\Group', 'pivot_relation_m2m_group_user', 'group_user', 'group')->withTimestamps();

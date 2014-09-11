@@ -2,8 +2,8 @@
 
 @section('script')
 
-	@parent
-
+	@parent 
+	
 	@section('buttonType')
 	if (button_type=='close')
 	{	

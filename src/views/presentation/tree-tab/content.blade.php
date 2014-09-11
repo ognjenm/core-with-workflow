@@ -63,6 +63,8 @@
                     btnCreateUrl : '{{ $controller->getRouterCreate() }}',
                     btnListEditUrl : '{{ $controller->getRouterListEdit() }}',
                     btnListDeleteUrl : '{{ $controller->getRouterListDelete() }}'
+                    btnListLockUrl : '{{ $controller->getRouterListLock() }}'
+                    btnListUnlockUrl : '{{ $controller->getRouterListUnlock() }}'
                 });
     </script>
 </div>

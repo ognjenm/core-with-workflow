@@ -35,6 +35,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		static::deleting(function($model)
 		{
+			if ($model->hasVersioning())
+			{
+				\Telenok\Object\Version::add($model);
+			}
+
 			$model->deleteSequence();
 		});
 	}
@@ -1153,7 +1158,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public static function allLeaf()
 	{
-		\Telenok\Core\Module\Objects\Sequence::pivotTreeLinkedExtraAttr()->join('pivot_relation_m2m_tree', function($join)
+		$query = \Telenok\Core\Module\Objects\Sequence::pivotTreeLinkedExtraAttr()->join('pivot_relation_m2m_tree', function($join)
 		{
 			$join->on($this->getTable() . '.tree_id', '=', 'pivot_relation_m2m_tree.tree_pid');
 		})
@@ -1165,9 +1170,35 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	/* ~Treeable section */
 	
 	
+	public function lock($period = 300)
+	{
+        \DB::transaction(function() use ($period)
+        {
+			$user = \Auth::user();
+			
+			if ($this->exists && \Auth::check() && (!$this->locked() || $this->locked_by_user == $user->id))
+			{
+				$this->locked_by_user = $user->id; 
+				$this->locked_at = \Carbon\Carbon::now()->addSeconds($period); 
+				$this->save();
+			}
+		});
+	}
 	
+	public function unLock()
+	{
+        \DB::transaction(function()
+        {
+			$this->locked_by_user = 0;
+			$this->save();
+		});
+	}
 	
-
+	public function locked()
+	{
+        return $this->exists && $this->locked_by_user && $this->locked_at->diffInSeconds(null, false) <= 0;
+	}
+	
 	public function LL($key = '', $param = [])
 	{
 		return \Lang::get("core::default.$key", $param);
@@ -1181,6 +1212,16 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	public function updatedByUser()
 	{
 		return $this->belongsTo('\Telenok\User\User', 'updated_by_user');
+	}
+
+	public function deletedByUser()
+	{
+		return $this->belongsTo('\Telenok\User\User', 'deleted_by_user');
+	}
+
+	public function lockedByUser()
+	{
+		return $this->belongsTo('\Telenok\User\User', 'locked_by_user');
 	}
 
 	public function aclSubject()

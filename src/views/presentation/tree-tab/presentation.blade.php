@@ -214,6 +214,34 @@
 								},
 								{
 									"sExtends": "text",
+									"sButtonText": "<i class='fa fa-lock'></i> {{{ $controller->LL('btn.lock') }}}",
+									"fnClick": function(nButton, oConfig, oFlash) 
+										{
+											if (param.btnListLockUrl)
+											{
+												_this.addTabByURL({
+													url: param.btnListLockUrl, 
+													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
+												});
+											}
+									}
+								},
+								{
+									"sExtends": "text",
+									"sButtonText": "<i class='fa fa-unlock'></i> {{{ $controller->LL('btn.unlock') }}}",
+									"fnClick": function(nButton, oConfig, oFlash) 
+										{
+											if (param.btnListUnlockUrl)
+											{
+												_this.addTabByURL({
+													url: param.btnListUnlockUrl, 
+													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
+												});
+											}
+									}
+								},
+								{
+									"sExtends": "text",
 									'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
 									"sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
 									"fnClick": function(nButton, oConfig, oFlash) {

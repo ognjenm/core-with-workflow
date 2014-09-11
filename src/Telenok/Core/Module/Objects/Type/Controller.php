@@ -360,6 +360,16 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 		
+		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'locked-by')->count())
+		{
+			(new \Telenok\Object\Field())->storeOrUpdate([
+				'key' => 'locked-by',
+				'field_object_type' => $model->getKey(),
+				'field_object_tab' => $tabAdditionally->getKey(),
+				'field_order' => 3,
+			]);
+		}
+		
 		if ($model->treeable)
 		{
 			if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())

@@ -226,6 +226,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
 
+                    <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->locked() ? 'locked' : 'unlocked')) . '">
+                        <i class="fa fa-' . ($item->locked() ? 'lock ' . (\Auth::user()->id == $item->locked_by_user ? 'green' : 'red') : 'unlock green'). '"></i>
+                    </button>
+
                     ' . ($canDelete ? '
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
                         onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
@@ -301,6 +305,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
+		$model->lock();
+		
         \Event::fire('form.edit.object', [$params]); 
 		
 		try
@@ -326,7 +332,6 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				'exception' => $ex->getMessage(),
 			];
 		}
-
     }
 
     public function delete($id = 0, $force = false)

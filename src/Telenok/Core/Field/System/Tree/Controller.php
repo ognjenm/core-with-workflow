@@ -138,10 +138,15 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		{
 			$input->put('field_order', 5);
 		}
-		 
-		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
 
-		$input->put('field_object_tab', $tab->getKey()); 
+		if (!$input->get('field_object_tab'))
+		{
+			$input->put('field_object_tab', 'additionally');
+		}
+		
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab', 'additionally'));
+
+		$input->put('field_object_tab', $tab->getKey());  
 
 		$toSave = [
 			'title' => array_get($translationSeed, 'model.children'),

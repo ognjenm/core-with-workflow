@@ -60,11 +60,15 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		$input->put('allow_update', 1); 
 		$input->put('relation_one_to_many_belong_to', \DB::table('object_type')->where('code', 'user')->pluck('id'));
 		$input->put('field_order', 2);
-		
+
 		if (!$input->get('field_object_tab'))
 		{
 			$input->put('field_object_tab', 'additionally');
 		}
+		
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab', 'additionally'));
+
+		$input->put('field_object_tab', $tab->getKey());  
 
 		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
 		$fieldName = 'updated_by_user';

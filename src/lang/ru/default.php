@@ -27,7 +27,6 @@ return [
     'btn.prev' => 'Назад',
     'btn.next' => 'Вперед',
     'btn.filter' => 'Фильтр',
-    'btn.create.folder' => 'Создать директорию',
 
     'notice.title' => 'Уведомление',
     'notice.saved' => 'Сохранено',

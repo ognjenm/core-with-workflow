@@ -354,7 +354,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     
     public function preProcess($model, $type, $input)
     {  
-		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab'));
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab', 'main'));
 
 		$input->put('field_object_tab', $tab->getKey());
 		

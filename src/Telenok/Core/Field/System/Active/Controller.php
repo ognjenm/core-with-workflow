@@ -70,11 +70,6 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 
 	public function preProcess($model, $type, $input)
 	{
-		if (!$input->get('field_object_tab'))
-		{
-			$input->put('field_object_tab', 'visibility');
-		}
-
 		$translationSeed = $this->translationSeed();
 
 		$input->put('title', array_get($translationSeed, 'model.active'));
@@ -88,7 +83,16 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		$input->put('allow_create', 1);
 		$input->put('allow_update', 1);
 		$input->put('field_order', 1); 
+
+		if (!$input->get('field_object_tab'))
+		{
+			$input->put('field_object_tab', 'visibility');
+		}
 		
+		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab', 'visibility'));
+
+		$input->put('field_object_tab', $tab->getKey());  
+
 		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
 		
 		$fieldName = 'start_at';
