@@ -140,6 +140,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     {
         return json_encode(array(
             'presentationBlockKey' => $this->getPresentation(),
+			'presentationModuleKey' => $this->getPresentationModuleKey(),
             'presentationBlockContent' => $this->getPresentationContent(),
             'key' => $this->getKey(),
             'url' => \URL::route("cmf.module.{$this->getKey()}"),

@@ -6,7 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         <base href="/" />
-
+		<!--[if lt IE 9]> 
+		<script src="packages/telenok/core/js/html5shiv/html5shiv.js">
+		<![endif]-->
         {{ HTML::style('packages/telenok/core/css/jquery-ui.css') }}
         {{ HTML::style('packages/telenok/core/css/jquery.gritter.css') }}
         {{ HTML::style('packages/telenok/core/js/bootstrap/css/bootstrap.min.css') }}

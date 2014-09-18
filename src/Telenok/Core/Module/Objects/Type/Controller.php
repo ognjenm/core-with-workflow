@@ -13,11 +13,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $nsDefault = '\\';
 
     protected $presentation = 'tree-tab-object';
-
-    public function getGridId($key = 'gridId')
-    {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
-    }  
 	
 	public function createResource($model)
 	{

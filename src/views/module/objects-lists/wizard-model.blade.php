@@ -3,9 +3,9 @@
 
 <script>
 
-if (!telenok.hasPresentation('{{$presentation}}'))
+if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 {
-    telenok.addPresentation('{{$presentation}}', function(param)
+    telenok.addPresentation('{{$presentationModuleKey}}', function(param)
     {
         function presentationModelWizard()
         {

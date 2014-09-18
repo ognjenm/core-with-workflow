@@ -71,7 +71,7 @@
                     
                     jQuery('ul.nav-tabs#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab a:first').tab('show');
     
-                    var presentation = telenok.getPresentationByKey('{{ $parentController->getPresentation()}}');
+                    var presentation = telenok.getPresentation('{{ $parentController->getPresentationModuleKey()}}');
                     
                     var aoColumns = [];
                     var aButtons = []; 

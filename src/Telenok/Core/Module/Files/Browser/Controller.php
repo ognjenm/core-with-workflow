@@ -74,7 +74,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		if ($directory->getPathname() != base_path())
 		{
 			$link = '<i class="fa fa-level-up"></i> <i class="fa fa-folder"></i> '
-					. '<a href="#" onclick="currentDirectory' . $uniqueId . ' = \'' . addslashes($directory->getPath()). '\'; telenok.getPresentationByKey(\'' . $this->getPresentation() . '\')'
+					. '<a href="#" onclick="currentDirectory' . $uniqueId . ' = \'' . addslashes($directory->getPath()). '\'; telenok.getPresentation(\'' . $this->getPresentationModuleKey() . '\')'
 					. '.reloadDataTableOnClick({url: \'' . $this->getRouterList() . '\', gridId: \'' . $this->getGridId() . '\', data : {uniqueId: \'' . $uniqueId . '\', currentDirectory: \'' . addslashes($directory->getPath()) . '\'}}); return false;">' . $directory->getFilename() . '</a>';
 			
 			$content[] = [
@@ -96,7 +96,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			if ($item->isDir())
 			{
 				$put['name'] = '<i class="fa fa-folder"></i> '
-					. '<a href="#" onclick="currentDirectory' . $uniqueId . ' = \'' . addslashes($item->getPathname()). '\'; telenok.getPresentationByKey(\'' . $this->getPresentation() . '\')'
+					. '<a href="#" onclick="currentDirectory' . $uniqueId . ' = \'' . addslashes($item->getPathname()). '\'; telenok.getPresentation(\'' . $this->getPresentationModuleKey() . '\')'
 					. '.reloadDataTableOnClick({url: \'' . $this->getRouterList() . '\', gridId: \'' . $this->getGridId() . '\', data : {uniqueId: \'' . $uniqueId . '\', currentDirectory: \'' . addslashes($item->getPathname()) . '\'}}); return false;">' . $item->getFilename() . '</a>';
 			}
 			else if ($item->isFile())
@@ -131,13 +131,13 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				' . (
 				$item->isReadable() && ($item->isFile() || $item->isDir()) ? '
                     <button class="btn btn-minier btn-info disable" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({url : \'' 
+                        onclick="telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').addTabByURL({url : \'' 
                         . $this->getRouterEdit(['id' => $item->getRealPath()]) . '\'});">
                         <i class="fa fa-pencil"></i>
                     </button> ' : ''
 				) . '
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
-                        onclick="if (confirm(\'' . $this->LL(preg_match('/^_delme/', $item->getFilename()) ? 'notice.delete.force' : 'notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
+                        onclick="if (confirm(\'' . $this->LL(preg_match('/^_delme/', $item->getFilename()) ? 'notice.delete.force' : 'notice.sure') . '\')) telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getRealPath()]) . '\');">
                         <i class="fa fa-trash-o"></i>
                     </button>

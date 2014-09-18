@@ -103,8 +103,8 @@
                             @if ($listModuleItem->isParentAndSingle()) 
                             <li class="parent-single">
                                 <a href="#" onclick='
-                                    telenok.addModule( "{{ $listModuleItem->getKey() }}", "{{ $listModuleItem->getRouterActionParam() }}", function() {
-                                                telenok.processModuleContent( "{{ $listModuleItem->getKey() }}" )
+                                    telenok.addModule( "{{ $listModuleItem->getKey() }}", "{{ $listModuleItem->getRouterActionParam() }}", function(moduleKey) {
+                                                telenok.processModuleContent(moduleKey);
                                             }); 
                                             return false;'>
                                     <i class="menu-icon {{{ $listModuleItem->getIcon() }}}"></i>
@@ -124,8 +124,8 @@
                                     @if ($item->getParent() == $listModuleItem->getKey())
 									
 									<li class="">
-										<a href="#" onclick='telenok.addModule("{{ $item->getKey() }}", "{{ $item->getRouterActionParam() }}", function() {
-                                                telenok.processModuleContent( "{{ $item->getKey() }}" )
+										<a href="#" onclick='telenok.addModule("{{ $item->getKey() }}", "{{ $item->getRouterActionParam() }}", function(moduleKey) {
+                                                telenok.processModuleContent(moduleKey);
                                             });
                                             return false;'>
 											<i class="menu-icon fa fa-caret-right"></i>

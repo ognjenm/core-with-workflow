@@ -8,6 +8,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     protected $tabKey = '';
     protected $presentation = 'tree-tab';
+    protected $presentationModuleKey = '';
     protected $presentationView = 'core::presentation.tree-tab.presentation';
     protected $presentationTreeView = 'core::presentation.tree-tab.tree';
     protected $presentationContentView = 'core::presentation.tree-tab.content';
@@ -74,7 +75,19 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         
         return $this;
     }
+	
+	public function getPresentationModuleKey()
+    {
+        return $this->presentationModuleKey ?: $this->presentation . '-' . $this->getKey();
+    }
 
+    public function setPresentationModuleKey($key)
+    {
+        $this->presentationModuleKey = $key;
+        
+        return $this;
+    }
+	
     public function getPresentationView()
     {
         return $this->presentationView;
@@ -357,6 +370,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     { 
         return json_encode(array(
             'presentation' => $this->getPresentation(),
+			'presentationModuleKey' => $this->getPresentationModuleKey(),
             'presentationContent' => $this->getPresentationContent(),
             'key' => $this->getKey(),
             'treeContent' => $this->getTreeContent(),
@@ -371,6 +385,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     {
         return \View::make($this->getPresentationView(), array(
             'presentation' => $this->getPresentation(),
+			'presentationModuleKey' => $this->getPresentationModuleKey(),
             'controller' => $this,
             'uniqueId' => str_random(),
             'iDisplayLength' => $this->displayLength
@@ -583,7 +598,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return '
                 <div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info disable" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({url : \'' 
+                        onclick="telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').addTabByURL({url : \'' 
                         . $this->getRouterEdit(['id' => $item->getKey()]) . '\'});">
                         <i class="fa fa-pencil"></i>
                     </button>
@@ -597,7 +612,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
                     </button>
 
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
-                        onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
+                        onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');">
                         <i class="fa fa-trash-o"></i>
                     </button>

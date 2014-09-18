@@ -11,6 +11,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     protected $presentation = 'tree-tab-object';
     protected $presentationContentView = 'core::module.objects-lists.content';
     protected $presentationModelView = 'core::module.objects-lists.model';
+    protected $presentationTreeView = 'core::module.objects-lists.tree';
 	
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
     protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
@@ -31,21 +32,36 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 	public function typeForm($type)
     {
-        return \App::build($type->classController())->setTabKey($this->key)->setAdditionalViewParam($this->additionalViewParam);
+        return \App::build($type->classController())
+					->setTabKey($this->key)
+					//->setPresentationModuleKey($this->getPresentationModuleKey())
+					->setAdditionalViewParam($this->additionalViewParam);
     }    
 
     public function getTreeListItemProcessed($item)
     {
-        $typeObjectId = \Telenok\Object\Type::where('code', 'object_type')->first()->getKey();
-        
-        $code = '';
+        $typeObjectId = \Telenok\Object\Type::where('code', 'object_type')->pluck('id');
 
+        $code = '';
+		$module = null;
+		
         if ($item->sequences_object_type == $typeObjectId)
         {
             $code = $item->model->code;
+			
+			if ($item->model->class_controller)
+			{
+				$module = \App::build($item->model->class_controller);
+			}
         }
-        
-        return ['gridId' => $this->getGridId( $code ), 'typeId' => $item->sequences_object_type];
+
+        return [
+					'gridId' => $this->getGridId($code),
+					'typeId' => $item->sequences_object_type, 
+					'module' => ($module ? 1 : 0),
+					'moduleKey' => ($module ? $module->getKey() : ""),
+					'moduleRouterActionParam' => ($module ? $module->getRouterActionParam() : ""),
+				];
     }
 
     public function getTreeContent()
@@ -217,7 +233,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {
         return '<div class="hidden-phone visible-lg btn-group">
                     <button class="btn btn-minier btn-info" title="'.$this->LL('list.btn.edit').'" 
-                        onclick="telenok.getPresentationByKey(\''.$this->getPresentation().'\').addTabByURL({url : \'' 
+                        onclick="telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').addTabByURL({url : \'' 
                         . $this->getRouterEdit(['id' => $item->getKey()]) . '\'});return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
@@ -232,7 +248,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
                     ' . ($canDelete ? '
                     <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
-                        onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentationByKey(\''.$this->getPresentation().'\').deleteByURL(this, \'' 
+                        onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');return false;">
                         <i class="fa fa-trash-o"></i>
                     </button>' : '') . '

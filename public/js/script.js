@@ -1,87 +1,157 @@
 
+
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ */
+// Inspired by base2 and Prototype
+(function() {
+    var initializing = false, fnTest = /xyz/.test(function() {
+        xyz;
+    }) ? /\b_super\b/ : /.*/;
+
+    // The base Clazzzz implementation (does nothing)
+    this.Clazzzz = function() {
+    };
+
+    // Create a new Clazzzz that inherits from this class
+    Clazzzz.extend = function(prop) {
+        var _super = this.prototype;
+
+        // Instantiate a base class (but only create the instance,
+        // don't run the init constructor)
+        initializing = true;
+        var prototype = new this();
+        initializing = false;
+
+        // Copy the properties over onto the new prototype
+        for (var name in prop) {
+            // Check if we're overwriting an existing function
+            prototype[name] = typeof prop[name] == "function" &&
+                    typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+                    (function(name, fn) {
+                        return function() {
+                            var tmp = this._super;
+
+                            // Add a new ._super() method that is the same method
+                            // but on the super-class
+                            this._super = _super[name];
+
+                            // The method only need to be bound temporarily, so we
+                            // remove it when we're done executing
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
+
+                            return ret;
+                        };
+                    })(name, prop[name]) :
+                    prop[name];
+        }
+
+        // The dummy class constructor
+        function Clazzzz() {
+            // All construction is actually done in the init method
+            if (!initializing && this.init)
+                this.init.apply(this, arguments);
+        }
+
+        // Populate our constructed prototype object
+        Clazzzz.prototype = prototype;
+
+        // Enforce the constructor to be what we expect
+        Clazzzz.prototype.constructor = Clazzzz;
+
+        // And make this class extendable
+        Clazzzz.extend = arguments.callee;
+
+        return Clazzzz;
+    };
+})();
+
+
 jQuery(function() 
 {
     jQuery('a').on('focus', function() 
     {
         this.blur();
     });
-    
+
     jQuery('div.sidebar-shortcuts button.telenok-module-group-content').click();
-    
+
     jQuery('ul.telenok-module-group ul.submenu li a, ul.telenok-module-group li.parent-single a').click(function() 
     {
         jQuery('ul.telenok-module-group li').removeClass('active');
         jQuery(this).parents('ul.telenok-module-group li').addClass('active');
     });
 });
-  
 
-var telenok = function() 
+var telenokJS = Clazzzz.extend(
 {
-    var presentationList = {};
-    var presentationObject = {};
-    var moduleList = {};
-    var moduleCallback = {};
-    
-    return {
-        setBreadcrumbs: function(param) 
+    init: function()
+    {
+        this.presentation = {};
+        this.module = {};
+    },
+    setBreadcrumbs: function(param) 
+    {
+        var $parent = jQuery('div.breadcrumbs ul.breadcrumb');
+        jQuery('li:gt(0), .divider', $parent).remove();
+        jQuery.each(param, function(i, v){
+            $parent.append('<li class="active">' + v + '</li>');
+        });
+    },
+    getModule: function(moduleKey) { return this.module[moduleKey]; },
+    getPresentation: function(presentationModuleKey) { return this.presentation[presentationModuleKey]; },
+    addPresentation: function(presentationModuleKey, obj) { this.presentation[presentationModuleKey] = obj; },
+    hasPresentation: function(presentationModuleKey) { if (this.presentation[presentationModuleKey]) { return true; } else { return false; } },
+    getPresentationDomId: function(presentation) { return 'telenok-' + presentation + '-presentation'; },
+    addModule: function(moduleKey, url, callback) 
+    { 
+        if (!this.module[moduleKey])
         {
-            var $parent = jQuery('div.breadcrumbs ul.breadcrumb');
-            jQuery('li:gt(0), .divider', $parent).remove();
-            jQuery.each(param, function(i, v){
-                $parent.append('<li class="active">' + v + '</li>');
+            var _this = this;
+
+            jQuery.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json'
+            }).done(function(data) {
+                _this.module[moduleKey] = data;
+                callback(moduleKey);
             });
-            //jQuery('li:lt(' + param.length + ')', $parent).append('<span class="divider"><i class="icon-angle-right"></i></span>');
-        },
-        getPresentationDomId: function(presentation) { return 'telenok-' + presentation + '-presentation'; },
-        addPresentation: function(presentation, func) { presentationList[presentation] = func; },
-        hasPresentation: function(presentation) { if (presentationList[presentation]) return true; else return false; },
-        callPresentation: function(presentation, param) { return presentationList[presentation](param); },
-        addModule: function(moduleKey, url, callback) 
-        { 
-            if (!moduleList[moduleKey])
-            {
-                jQuery.ajax({
-                    url: url,
-                    method: 'get',
-                    dataType: 'json'
-                }).done(function(data) {
-                    moduleList[moduleKey] = data;
-                    callback();
-                });
-            }
-            else
-            {
-                callback();
-            }
-        },
-        getPresentationByKey: function(presentation) { return presentationObject[presentation]; },
-        setPresentationObject: function(param) 
-        {
-            if (telenok.hasPresentation(param.presentation))
-            {
-                presentationObject[param.presentation] = telenok.callPresentation(param.presentation, param);
-            }
-
-        },
-        processModuleContent: function(moduleKey) 
-        { 
-            var param = moduleList[moduleKey];
-            
-            var domId = telenok.getPresentationDomId(param.presentation);
-
-            if (!jQuery('.page-content #' + domId).length)
-            {
-                jQuery('.page-content').append('<div id="' + domId + '" class="telenok-presentation row ui-helper-hidden">' + param.presentationContent + '</div>');
-            }
-
-            jQuery('.page-content div.telenok-presentation').hide();
-            jQuery('.page-content div#' + domId).show();
-
-            if (telenok.hasPresentation(param.presentation))
-            {
-                presentationObject[param.presentation] = telenok.callPresentation(param.presentation, param);
-            }
         }
-    };
-}();
+        else
+        {
+            callback(moduleKey);
+        }
+    },
+    preCallingPresentation: function(moduleKey) 
+    {
+        var param = this.getModule(moduleKey);
+
+        jQuery('.page-content').append(param.presentationContent);
+    },
+    postCallingPresentation: function(moduleKey) 
+    {
+        var param = this.getModule(moduleKey);
+        var domId = this.getPresentationDomId(param.presentation);
+
+        jQuery('.page-content div.telenok-presentation').hide();
+        jQuery('.page-content div#' + domId).show();
+    },
+    processModuleContent: function(moduleKey) 
+    { 
+        this.preCallingPresentation(moduleKey);
+
+        var param = this.getModule(moduleKey);
+
+        if (this.hasPresentation(param.presentationModuleKey))
+        {
+            this.getPresentation(param.presentationModuleKey).callMe(param);
+        }
+
+        this.postCallingPresentation(moduleKey); 
+    }
+});
+
+var telenok = new telenokJS();

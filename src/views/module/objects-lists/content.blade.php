@@ -54,7 +54,8 @@
 
     <script type="text/javascript">
 
-        var presentation = telenok.getPresentationByKey('{{$controller->getPresentation()}}');
+        var presentation = telenok.getPresentation('{{$controller->getPresentationModuleKey()}}');
+		
         var aoColumns = []; 
 
                 aoColumns.push({ "mData": "tableCheckAll", "sTitle": '<label><input type="checkbox" name="checkHeader" class="ace ace-switch ace-switch-6" onclick="var tb=jQuery(\'#' + 

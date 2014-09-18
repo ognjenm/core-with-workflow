@@ -14,6 +14,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		return json_encode([
 			'presentation' => $this->getPresentation(),
+			'presentationModuleKey' => $this->getPresentationModuleKey(),
 			'presentationContent' => $this->getPresentationContent(),
 			'key' => $this->getKey(),
 			'breadcrumbs' => $this->getBreadcrumbs(),
@@ -26,6 +27,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		return \View::make($this->getPresentationView(), [
 					'presentation' => $this->getPresentation(),
+					'presentationModuleKey' => $this->getPresentationModuleKey(),
 					'controller' => $this,
 					'iDisplayLength' => $this->displayLength,
 					'uniqueId' => str_random()
@@ -46,9 +48,13 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				'tabContent' => $controllerClass->getContainerContent($id, $languageId)
 			];
 		}
+		catch (\Illuminate\Database\Eloquent\ModelNotFoundException $ex)
+		{
+            return [];
+		}
 		catch (\Exception $ex)
 		{
-			return [];
+            return \Response::json('Define Page Controller first', 417 /* Expectation Failed */);
 		}
 	}
 

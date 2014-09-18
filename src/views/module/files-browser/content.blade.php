@@ -40,7 +40,7 @@
 
 		var currentDirectory{{$uniqueId}} = '{{$currentDirectory}}';
 
-        var presentation = telenok.getPresentationByKey('{{$controller->getPresentation()}}');
+        var presentation = telenok.getPresentation('{{$controller->getPresentationModuleKey()}}');
         var aoColumns = []; 
                 aoColumns.push({ "mData": "tableCheckAll", "sTitle": '<label><input type="checkbox" name="checkHeader" class="ace ace-switch ace-switch-6" onclick="var tb=jQuery(\'#' + 
                             presentation.getPresentationDomId() + '-grid-{{$gridId}}\').dataTable();var chbx = jQuery(\'input[name=tableCheckAll\\\\[\\\\]]\', tb.fnGetNodes());chbx.prop(\'checked\', jQuery(\'input[name=checkHeader]\', tb).prop(\'checked\'));"><span class="lbl"></span></label>',
@@ -71,7 +71,7 @@
 									"sButtonText": "<i class='fa fa-folder'></i> {{{ $controller->LL('btn.create.directory') }}}",
 									"fnClick": function(nButton, oConfig, oFlash) 
 									{ 
-										telenok.getPresentationByKey('{{$controller->getPresentation()}}').addTabByURL({
+										telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').addTabByURL({
 											url: '{{ $controller->getRouterCreate() }}',
 											data: {
 												currentDirectory: currentDirectory{{$uniqueId}},
@@ -85,7 +85,7 @@
 									'sButtonClass': '',
 									"sButtonText": "<i class='fa fa-file'></i> {{{ $controller->LL('btn.create.file') }}}",
 									"fnClick": function(nButton, oConfig, oFlash) {
-										telenok.getPresentationByKey('{{$controller->getPresentation()}}').addTabByURL({
+										telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').addTabByURL({
 											url: '{{ $controller->getRouterCreate() }}', 
 											data: {
 												currentDirectory: currentDirectory{{$uniqueId}},

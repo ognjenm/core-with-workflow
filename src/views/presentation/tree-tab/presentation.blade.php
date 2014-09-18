@@ -1,54 +1,56 @@
 <script type="text/javascript">
   
-    telenok.addPresentation('{{$presentation}}', function(param)
-    {
-        function presentationTreeTab()
-        {
-            var presentationDomId = '';
-            var moduleKey = '';
-            var presentationParam = {};
-            var _this = this;
+	if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
+	{
+		var presentationTreeTab{{$uniqueId}} = Clazzzz.extend(
+		{
+			init: function()
+			{
+				this.presentationDomId = '';
+				this.moduleKey = '';
+				this.presentationParam = {};
+			},
+			setBreadcrumbs: function(param)
+			{
+				telenok.setBreadcrumbs(param.breadcrumbs);
+			},
+			getPresentationDomId: function()
+			{
+				return this.presentationDomId;
+			},
+			setPageHeader: function()
+			{
+				jQuery('div.page-header', '#' + this.presentationDomId).html('<h1>' 
+						+ this.presentationParam.pageHeader[0] + '<small><i class="fa fa-angle-double-right"></i> ' 
+						+ this.presentationParam.pageHeader[1] + '</small></h1>');
+				return this;
+			},
+			setParam: function(param)
+			{
+				this.presentationParam = param;
+				this.presentationDomId = telenok.getPresentationDomId(param.presentation);
+				this.moduleKey = param.key;
+				return this;
+			},
+			addTab: function(param)
+			{
+				if (!param.tabKey) return this;
 
-            this.getPresentationDomId = function()
-            {
-                return _this.presentationDomId;
-            }
+				var id = this.presentationDomId + '-tab-' + param.tabKey;
+				var tabs = jQuery('div.telenok-presentation-tabs', '#' + this.presentationDomId);
 
-            this.setPageHeader = function()
-            {
-                jQuery('div.page-header', '#'+_this.presentationDomId).html('<h1>' 
-                        + _this.presentationParam.pageHeader[0] + '<small><i class="fa fa-angle-double-right"></i> ' 
-                        + _this.presentationParam.pageHeader[1] + '</small></h1>');
-                return _this;
-            }
+				if (jQuery('div#' + id, tabs).length)
+				{
+					jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a[href="#' + id + '"]', tabs).tab('show');
+					return this;
+				}
 
-            this.setParam = function(param)
-            {
-                _this.presentationParam = param;
-                _this.presentationDomId = telenok.getPresentationDomId(param.presentation);
-                _this.moduleKey = param.key;
-                return _this;
-            }
+				var tabTemplate = "<li><a href='#" + id + "' data-toggle='tab'><i class='green fa fa-home bigger-110'></i>&nbsp;" + param.tabLabel + "&nbsp;<i class='fa fa-times red' style='cursor:pointer;'></i></a></li>";
 
-            this.addTab = function(param)
-            {
-                if (!param.tabKey) return _this;
+				var $li = jQuery(tabTemplate);
 
-                var id = _this.presentationDomId + '-tab-' + param.tabKey;
-                var tabs = jQuery('div.telenok-presentation-tabs', '#' + _this.presentationDomId);
+				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}}', tabs).append($li);
 
-                if (jQuery('div#'+id, tabs).length)
-                {
-                    jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a[href="#'+id+'"]', tabs).tab('show');
-                    return _this;
-                }
-
-                var tabTemplate = "<li><a href='#" + id + "' data-toggle='tab'><i class='green fa fa-home bigger-110'></i>&nbsp;" + param.tabLabel + "&nbsp;<i class='fa fa-times red' style='cursor:pointer;'></i></a></li>";
-
-                var $li = jQuery(tabTemplate);
-
-                jQuery('ul.nav-tabs#nav-tabs-{{$presentation}}', tabs).append($li);
-				
 				$li.on('mousedown', function(event)
 				{
 					if (event.which == 2)
@@ -58,29 +60,30 @@
 						jQuery('i.fa.fa-times', this).click();
 					}
 				});
-	
+
 				jQuery('div.tab-content#tab-content-{{$presentation}}', tabs).append("<div class='tab-pane' id='" + id + "'>" + param.tabContent + "</div>");
-                jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show');
+				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show');
 
-                jQuery('a i.fa.fa-times', $li).click(function()
-                {
-                    var tabId = jQuery('a', $li).attr('href');
-                    jQuery(tabId).remove();
-                    $li.remove();
-                    jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show');
-                });
-				 
-                return _this;
-            }
+				jQuery('a i.fa.fa-times', $li).click(function()
+				{
+					var tabId = jQuery('a', $li).attr('href');
+					jQuery(tabId).remove();
+					$li.remove();
+					jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show');
+				});
 
-            this.addTabByURL = function(param)
-            { 
-                jQuery.ajax(jQuery.extend({}, {
+				return this;
+			},
+			addTabByURL: function(param)
+			{ 
+				var _this = this;
+				
+				jQuery.ajax(jQuery.extend({}, {
 						method: 'get',
 						dataType: 'json',
 					}, param))
-                .success(function(data)
-                {
+				.success(function(data)
+				{
 					if (data.exception)
 					{
 						jQuery.gritter.add({
@@ -99,55 +102,53 @@
 							param.after();
 						}
 					} 
-                })
+				})
 				.fail(function(jqXHR, textStatus, errorThrown)
 				{
 					jQuery.gritter.add({
 						title: 'Error',
-						text: textStatus,
+						text: xhr.responseText,
 						class_name: 'gritter-error gritter-light',
 						time: 2000,
 					});
 				});
 
-                return _this;
-            }
+				return this;
+			},
+			addTree: function() 
+			{
+				var key = 'telenok-presentation-' + this.presentationParam.key + '-tree';
 
-            this.addTree = function() 
-            {
- 
-                var key = 'telenok-presentation-' + _this.presentationParam.key + '-tree';
+				if (!this.presentationParam.treeContent) 
+				{
+					return this;
+				}
 
-                if (!_this.presentationParam.treeContent) 
-                {
-                    return _this;
-                }
+				jQuery('div.telenok-presentation-tabs', '#' + this.getPresentationDomId()).removeClass('col-xs-12').addClass('col-xs-9');
+				jQuery('div.telenok-presentation-tree', '#' + this.getPresentationDomId()).show();
 
-                jQuery('div.telenok-presentation-tabs', '#'+_this.getPresentationDomId()).removeClass('col-xs-12').addClass('col-xs-9');
-                jQuery('div.telenok-presentation-tree', '#'+_this.getPresentationDomId()).show();
- 
-                if (jQuery('#' + key).size()) 
-                {
-                    jQuery('div.telenok-tree', '#'+_this.presentationDomId).hide();
-                    jQuery('#' + key, '#'+_this.presentationDomId).show();
+				if (jQuery('#' + key).size()) 
+				{
+					jQuery('div.telenok-tree', '#' + this.presentationDomId).hide();
+					jQuery('#' + key, '#' + this.presentationDomId).show();
 
-                    return _this;
-                }
+					return this;
+				}
 
-                jQuery('div.telenok-tree', '#'+_this.presentationDomId).hide();
+				jQuery('div.telenok-tree', '#' + this.presentationDomId).hide();
 
-                jQuery('div.telenok-presentation-tree', '#'+_this.presentationDomId).append(
-                        '<div id="' + key + '" class="telenok-tree">'
-                        + _this.presentationParam.treeContent
-                        + '</div>'
-                    );
+				jQuery('div.telenok-presentation-tree', '#' + this.presentationDomId).append(
+						'<div id="' + key + '" class="telenok-tree">'
+						+ this.presentationParam.treeContent
+						+ '</div>'
+					);
 
-                return _this;
-            }
-
-            this.addDataTable = function(param)
-            {
+				return this;
+			},
+			addDataTable: function(param)
+			{
 				var aButtons = [];
+				var this_ = this;
 
 				@section('tableListBtnCreate')
 					if (param.tableListBtnCreate)
@@ -162,7 +163,7 @@
 							'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
 							"fnClick": function(nButton, oConfig, oFlash) {
 								if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
-								else _this.addTabByURL({url : param.btnCreateUrl});
+								else this_.addTabByURL({url : param.btnCreateUrl});
 							}
 						});
 					}
@@ -176,13 +177,13 @@
 					else 
 					{
 						aButtons.push({
-                                "sExtends": "text",
-                                "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
-                                'sButtonClass': 'btn-sm',
-                                "fnClick": function(nButton, oConfig, oFlash) {
-                                    jQuery('#' + param.domId).dataTable().fnReloadAjax();
-                                }
-                            });
+								"sExtends": "text",
+								"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
+								'sButtonClass': 'btn-sm',
+								"fnClick": function(nButton, oConfig, oFlash) {
+									jQuery('#' + param.domId).dataTable().fnReloadAjax();
+								}
+							});
 					}
 				@show 
 
@@ -205,7 +206,7 @@
 										{
 											if (param.btnListEditUrl)
 											{
-												_this.addTabByURL({
+												this_.addTabByURL({
 													url: param.btnListEditUrl, 
 													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
 												});
@@ -219,7 +220,7 @@
 										{
 											if (param.btnListLockUrl)
 											{
-												_this.addTabByURL({
+												this_.addTabByURL({
 													url: param.btnListLockUrl, 
 													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
 												});
@@ -233,7 +234,7 @@
 										{
 											if (param.btnListUnlockUrl)
 											{
-												_this.addTabByURL({
+												this_.addTabByURL({
 													url: param.btnListUnlockUrl, 
 													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
 												});
@@ -247,7 +248,6 @@
 									"fnClick": function(nButton, oConfig, oFlash) {
 										if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
 										else {
-											var this_ = this;
 
 											jQuery.ajax({
 												url: param.btnListDeleteUrl,
@@ -256,7 +256,7 @@
 												data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
 											}).done(function(data) {
 												if (data.success) {
-													jQuery('input[name=tableCheckAll\\[\\]]:checked', this_.dom.table).closest("tr").remove();
+													jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).closest("tr").remove();
 												}
 												else {
 													//
@@ -269,7 +269,7 @@
 						});
 					}
 				@show		
-				
+
 				@section('tableListBtnFilter')
 					if (param.tableListBtnFilter)
 					{
@@ -288,90 +288,108 @@
 					}
 				@show 				
 
-                param = jQuery.extend({}, {
-                    "multipleSelection": true,
-                    "aoColumns": [],
+				param = jQuery.extend({}, {
+					"multipleSelection": true,
+					"aoColumns": [],
 					"autoWidth": false,
-                    "bProcessing": true,
-                    "bServerSide": param.sAjaxSource ? true : false,
-                    "bDeferRender": '',
-                    "bJQueryUI": false,
-                    "iDisplayLength": {{ $iDisplayLength }},
-                    "sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'T><'col-md-6'p>>",
-                    "oTableTools": {
+					"bProcessing": true,
+					"bServerSide": param.sAjaxSource ? true : false,
+					"bDeferRender": '',
+					"bJQueryUI": false,
+					"iDisplayLength": {{ $iDisplayLength }},
+					"sDom": "<'row'<'col-md-6'T><'col-md-6'f>r>t<'row'<'col-md-6'T><'col-md-6'p>>",
+					"oTableTools": {
 						@section('tableListBtn')
-                        "aButtons": aButtons
+						"aButtons": aButtons
 						@show 				
-                    },
-                    "oLanguage": {
-                        "oPaginate": {
-                            "sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
-                            "sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}", 
-                        },
-                        "sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
-                        "sSearch": "{{{ \Lang::get('core::default.table.search') }}} ",
-                        "sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
-                        "sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
-                        "sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
-                        "sInfoFiltered": "",
-                    }
-                }, param);
+					},
+					"oLanguage": {
+						"oPaginate": {
+							"sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
+							"sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}", 
+						},
+						"sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
+						"sSearch": "{{{ \Lang::get('core::default.table.search') }}} ",
+						"sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
+						"sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
+						"sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
+						"sInfoFiltered": "",
+					}
+				}, param);
 
-                jQuery('#' + param.domId).dataTable(param);
+				jQuery('#' + param.domId).dataTable(param);
 
-                return _this;
-            }
+				return this;
+			},
+			reloadDataTableOnClick: function(param)
+			{
+				if (jQuery('#' + this.getPresentationDomId() + '-grid-' + param.gridId).size())
+				{
+					jQuery('#' + this.getPresentationDomId() + '-grid-' + param.gridId)
+							.dataTable()
+							.fnReloadAjax(param.url + (param.data ? '?' + jQuery.param(param.data) : ''));
+				}
+				return this;
+			},
+			deleteByURL: function(dom_obj, url)
+			{
+				jQuery.ajax({
+					url: url,
+					method: 'post',
+					dataType: 'json'
+				})
+				.done(function(data) 
+				{
+					if (data.success) 
+					{
+						jQuery(dom_obj).closest("tr").remove();
+					}
+				});
+			},
+			showSkeleton: function()
+			{
+				var domId = this.presentationDomId;
 
-            this.reloadDataTableOnClick = function(param)
-            {
-                if (jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId).size())
-                {
-                    jQuery('#' + _this.getPresentationDomId() + '-grid-' + param.gridId)
-                            .dataTable()
-                            .fnReloadAjax(param.url + (param.data ? '?' + jQuery.param(param.data) : ''));
-                }
-                return this;
-            }
-            
-            this.deleteByURL = function(dom_obj, url)
-            {
-                jQuery.ajax({
-                    url: url,
-                    method: 'post',
-                    dataType: 'json'
-                })
-                .done(function(data) 
-                {
-                    if (data.success) 
-                    {
-                        jQuery(dom_obj).closest("tr").remove();
-                    }
-                });
-            }
-        }
-        
-            telenok.setBreadcrumbs(param.breadcrumbs);
-            
-        var presentation = new presentationTreeTab();
-            presentation.setParam(param)
-                .setPageHeader()
-                .addTree()
-                .addTabByURL(param); 
-  
-        return presentation;
-    });
-</script>
+				if (!jQuery('div#' + domId).size())
+				{
+					jQuery('.page-content').append(
+					  '<div id="' + domId + '" class="telenok-presentation row ui-helper-hidden">'
+					+ '	<div>'
+					+ '		<div class="page-header position-relativee"></div>'
+					+ '		<div>'
+					+ '			<div class="telenok-presentation-tree col-xs-3" style="display: none;"></div>'
+					+ '			<div class="col-xs-12 telenok-presentation-tabs">'
+					+ '				<div class="tabbable">'
+					+ '					<ul class="nav nav-tabs" id="nav-tabs-{{$presentation}}"></ul>'
+					+ '					<div class="tab-content" id="tab-content-{{$presentation}}"></div>'
+					+ '				</div>'
+					+ '			</div>'
+					+ '		</div>'
+					+ '	</div>'
+					+ '</div>'
+					);
+				}
 
-<div>
-    <div class="page-header position-relativee"></div>
-	<div>
-		<div class="telenok-presentation-tree col-xs-3" style="display: none;"></div>
-		<div class="col-xs-12 telenok-presentation-tabs"> 
-			<div class="tabbable">
-				<ul class="nav nav-tabs" id="nav-tabs-{{$presentation}}"></ul>
-				<div class="tab-content" id="tab-content-{{$presentation}}"></div>
-			</div>
-		</div>	
-	</div>
-</div>
+				return this;
+			},
+			callMe: function(param)
+			{
+				this.setParam(param); 
+				this.setBreadcrumbs(param); 
+				this.setPageHeader();
+
+				param.addSkeleton===false ? '' : this.showSkeleton();
+				param.addTree===false  ? '' : this.addTree(); 
+				param.addTab===false  ? '' : this.addTabByURL(param); 
+
+				return this;
+			}
+		});
+	
+		@section('addPresentation')
+		telenok.addPresentation('{{$presentationModuleKey}}', new presentationTreeTab{{$uniqueId}}());
+		@show
+	}
+	
+</script> 
  

@@ -38,7 +38,7 @@
 
     <script type="text/javascript">
 
-        var presentation = telenok.getPresentationByKey('{{$controller->getPresentation()}}');
+        var presentation = telenok.getPresentation('{{$controller->getPresentationModuleKey()}}');
         var aoColumns = []; 
                 aoColumns.push({ "mData": "tableCheckAll", "sTitle": '<label><input type="checkbox" name="checkHeader" class="ace ace-switch ace-switch-6" onclick="var tb=jQuery(\'#' + 
                             presentation.getPresentationDomId() + '-grid-{{$gridId}}\').dataTable();var chbx = jQuery(\'input[name=tableCheckAll\\\\[\\\\]]\', tb.fnGetNodes());chbx.prop(\'checked\', jQuery(\'input[name=checkHeader]\', tb).prop(\'checked\'));"><span class="lbl"></span></label>',

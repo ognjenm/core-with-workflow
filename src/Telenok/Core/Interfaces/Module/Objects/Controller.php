@@ -44,6 +44,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     {
         return \Telenok\Object\Type::where('code', $this->typeList)->firstOrFail();
     } 
+	
+    public function getGridId($key = 'gridId')
+    {
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
+    }  
 
     public function getActionParam()
     { 
@@ -51,6 +56,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         {
             return [
                 'presentation' => $this->getPresentation(),
+                'presentationModuleKey' => $this->getPresentationModuleKey(),
                 'presentationContent' => $this->getPresentationContent(),
                 'key' => $this->getKey(),
                 'treeContent' => $this->getTreeContent(),

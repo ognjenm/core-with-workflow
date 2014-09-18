@@ -48,6 +48,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     { 
         return json_encode(array(
             'presentation' => $this->getPresentation(),
+			'presentationModuleKey' => $this->getPresentationModuleKey(),
             'presentationContent' => $this->getPresentationContent(),
         ));
     }

@@ -96,23 +96,6 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		}
 	}
 
-	public function save(array $options = [])
-	{
-		if (!$this->insideProcess)
-		{
-			throw new \Exception('Please, use \Telenok\Object\Version::add($model) method');
-		}
-
-		return parent::save($options);
-	}
-
-	protected function setInsideProcess($option)
-	{
-		$this->insideProcess = $option;
-
-		return $this;
-	}
-
 }
 
 ?>

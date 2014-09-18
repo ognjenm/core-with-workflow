@@ -12,11 +12,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
-
-    public function getGridId($key = 'gridId')
-    {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
-    }  
 	
     public function getListItem($model)
     {
