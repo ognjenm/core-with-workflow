@@ -84,7 +84,7 @@
                 <div class="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <button title='{{{$listModuleGroupItem->getName()}}}' onclick='jQuery("ul.telenok-module-group").hide(); jQuery("ul.telenok-module-group-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-module-group-{{ $listModuleGroupItem->getKey() }} {{{ $listModuleGroupItem->getButton() }}}"><i class="{{{ $listModuleGroupItem->getIcon() }}}"></i></button>
+                        <button title='{{{$listModuleGroupItem->getName()}}}' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} {{{ $listModuleGroupItem->getButton() }}}"><i class="{{{ $listModuleGroupItem->getIcon() }}}"></i></button>
                         @endforeach
                     </div>
                     <div class="sidebar-shortcuts-mini">
@@ -95,7 +95,7 @@
                 </div> 
 
                 @foreach($listModuleGroup as $listModuleGroupItem) 
-                <ul class="nav nav-list telenok-module-group telenok-module-group-{{$listModuleGroupItem->getKey()}}">
+                <ul class="nav nav-list telenok-sidebar telenok-sidebar-{{$listModuleGroupItem->getKey()}}">
                     @foreach($listModule as $listModuleItem)
                     
                         @if ($listModuleGroupItem->getKey() == $listModuleItem->getGroup())
@@ -222,8 +222,7 @@
 					<div class="modal-body">
 					</div>
 					<div class="modal-footer">
-						<button class="btn" data-dismiss="modal">{{{$controller->LL("btn.close")}}}</button>
-
+						<button class="btn" data-dismiss="modal">{{{$controller->LL("btn.close")}}}</button> 
 					</div>
 				</div>
 			</div>

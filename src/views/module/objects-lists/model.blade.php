@@ -78,7 +78,7 @@
 	 
     {{ $controller->getFormContent($model, $type, $fields, $uniqueId) }}
 
-	@overwrite
+	@stop
   
 	@section('formBtn')
     <div class='form-actions center no-margin'>
@@ -107,7 +107,7 @@
         </button>
 		
     </div>
-	@overwrite
+	@stop
      
 @stop
  

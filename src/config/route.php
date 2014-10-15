@@ -11,6 +11,36 @@
   |
  */
 
+
+Route::get('stencil-test', function()
+{
+    return ['aaaaaaaaaaaa'];
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \Route::filter('csrf', 'Telenok\Core\Filter\Router\Controller@csrf');
 \Route::filter('auth', 'Telenok\Core\Filter\Router\Backend\Controller@auth');
 \Route::filter('access-module', 'Telenok\Core\Filter\Router\Backend\Controller@accessModule');
@@ -65,9 +95,11 @@
 \Route::any('telenok/module/dashboard', array('as' => 'cmf.module.dashboard', 'uses' => "Telenok\Core\Module\Dashboard\Controller@getContent"));
 
 // Module Profile
-
 \Route::any('telenok/module/users-profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
 \Route::any('telenok/module/users-profile', array('as' => 'cmf.module.users-profile', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getContent"));
+// Module Users
+//\Route::any('telenok/module/users/action-param', array('as' => 'cmf.module.users.action.param', 'uses' => "Telenok\Core\Module\Users\Controller@getActionParam"));
+//\Route::any('telenok/module/users/profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
 
 
 // Module Objects\Type
@@ -121,11 +153,6 @@
 // Module Page Controller
 \Route::any('telenok/module/web-page-controller/action-param', array('as' => 'cmf.module.web-page-controller.action.param', 'uses' => "Telenok\Core\Module\Web\PageController\Controller@getActionParam"));
 
-// Module Users
-//\Route::any('telenok/module/users/action-param', array('as' => 'cmf.module.users.action.param', 'uses' => "Telenok\Core\Module\Users\Controller@getActionParam"));
-//\Route::any('telenok/module/users/profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
- 
- 
 // Module Files
 \Route::any('telenok/module/files/browser/action-param', array('as' => 'cmf.module.files-browser.action.param', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@getActionParam"));
 \Route::any('telenok/module/files/browser', array('as' => 'cmf.module.files-browser', 'uses' => "Telenok\Core\Module\Files\Browser\Controller@getContent"));
@@ -146,21 +173,6 @@
 //\Route::any('telenok/module/file-browser/wizard/tree', array('as' => 'cmf.module.file-browser.wizard.tree', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@getTreeList"));
 //\Route::any('telenok/module/file-browser/wizard/process', array('as' => 'cmf.module.file-browser.wizard.process', 'uses' => "Telenok\Core\Module\Files\Browser\Wizard\Directory\Controller@processTree"));
 
-
-
-// Module Files\Lists
-/*
-\Route::any('telenok/module/files-lists', array('as' => 'cmf.module.files-lists', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@getContent"));
-\Route::any('telenok/module/files-lists/action-param', array('as' => 'cmf.module.files-lists.action.param', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@getActionParam"));
-\Route::any('telenok/module/files-lists/list', array('as' => 'cmf.module.files-lists.list', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@getList"));
-\Route::any('telenok/module/files-lists/create', array('as' => 'cmf.module.files-lists.create', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@create"));
-\Route::any('telenok/module/files-lists/edit/{id}', array('as' => 'cmf.module.files-lists.edit', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@edit"));
-\Route::any('telenok/module/files-lists/store', array('as' => 'cmf.module.files-lists.store', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@store"));
-\Route::any('telenok/module/files-lists/update/{id}', array('as' => 'cmf.module.files-lists.update', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@update"));
-\Route::any('telenok/module/files-lists/delete/{id}', array('as' => 'cmf.module.files-lists.delete', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@delete"));
-\Route::any('telenok/module/files-lists/list/edit', array('as' => 'cmf.module.files-lists.list.edit', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@editList"));
-\Route::any('telenok/module/files-lists/list/delete', array('as' => 'cmf.module.files-lists.list.delete', 'uses' => "Telenok\Core\Module\Files\Lists\Controller@deleteList"));
-*/
 
 
 // Module System\Setting
@@ -197,11 +209,10 @@
 
 
 // Module Workflow Process
+\Route::any('telenok/module/workflow-process/action-param', array('as' => 'cmf.module.workflow-process.action.param', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getActionParam"));
 \Route::any('telenok/module/workflow-process/diagram/show/{id}', array('as' => 'cmf.module.workflow-process.diagram.show', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@diagramShow"));
 \Route::any('telenok/module/workflow-process/diagram/stensilset', array('as' => 'cmf.module.workflow-process.diagram.stensilset', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@diagramStencilSet"));
-/*
-\Route::any('telenok/module/workflow-process/action-param', array('as' => 'cmf.module.workflow-process.action.param', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getActionParam"));
-\Route::any('telenok/module/workflow-process', array('as' => 'cmf.module.workflow-process', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getContent"));
+/*\Route::any('telenok/module/workflow-process', array('as' => 'cmf.module.workflow-process', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getContent"));
 \Route::any('telenok/module/workflow-process/list', array('as' => 'cmf.module.workflow-process.list', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getList"));
 \Route::any('telenok/module/workflow-process/create', array('as' => 'cmf.module.workflow-process.create', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@create"));
 \Route::any('telenok/module/workflow-process/edit/{id}', array('as' => 'cmf.module.workflow-process.edit', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@edit"));

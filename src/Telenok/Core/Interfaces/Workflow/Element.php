@@ -29,6 +29,8 @@ class Element {
     protected $stencilConnectionRules = [];
     protected $stencilMorphingRules = [];
     protected $stencilLayoutRules = [];
+    protected $propertyView = '';
+    protected $routerPropertyContent = '';
 
     public function make()
     {
@@ -72,12 +74,33 @@ class Element {
         return $this;
     }
 
+    public function getPropertyView()
+    {
+        return $this->propertyView;
+    }
 
+    public function setPropertyView($param = '')
+    {
+        $this->propertyView = $param;
 
+        return $this;
+    } 
 
-
-
-
+    public function getPropertyContent()
+    {
+        return \View::make($this->getPropertyView(), array(
+                'controller' => $this, 
+                'uniqueId' => str_random()
+            ))->render();
+    }
+	
+    public function getRouterPropertyContent($param = [])
+    {
+		if ($this->routerPropertyContent)
+		{
+			return \URL::route($this->routerPropertyContent, $param);
+		}
+	}
 
 
 

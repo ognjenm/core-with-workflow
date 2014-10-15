@@ -6,7 +6,6 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	protected $table = 'object_version';
 	protected $hasVersioning = false;
-	protected $insideProcess = false;
 
 	public $timestamps = false;
 
@@ -41,10 +40,11 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		{
 			throw new \Telenok\Core\Interfaces\Exception\ObjectTypeNotFound();
 		}
-
+		
 		try 
 		{
-			$model = $class::findOrFail($versionData->object_id);
+			$model = $class::withTrashed()->findOrFail($versionData->object_id);
+			$model->restore();
 		} 
 		catch (\Exception $ex) 
 		{
@@ -62,8 +62,6 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		if (!($model instanceof \Telenok\Core\Model\Object\Sequence) && $model->exists && \Config::get('app.version.enabled'))
 		{
 			$this_ = new static;
-
-			$this_->setInsideProcess(true);
 
 			$this_->fill([
 				'title' => ($model->title instanceof \Illuminate\Support\Collection ? $model->title->toArray() : $model->title),
@@ -91,8 +89,6 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			$this_->active = $model->active;
 
 			$this_->save();
-
-			$this_->setInsideProcess(false);
 		}
 	}
 

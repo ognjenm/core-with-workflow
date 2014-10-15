@@ -494,14 +494,6 @@ class SeedLast extends Migration {
 				]); 
 			} catch (\Exception $ex) {}
 
-			try
-			{
-				$modelField->storeOrUpdate([
-					'key' => 'deleted-by',
-					'field_object_type' => $item->getKey(),
-				]); 
-			} catch (\Exception $ex) {}
-
 			$modelField = null;
 		});
 		
@@ -666,13 +658,13 @@ class SeedLast extends Migration {
 		\Telenok\Object\Type::where('code', 'page_controller')->first()->makeLastChildOf($folderWeb);
 		\Telenok\Object\Type::where('code', 'widget_on_page')->first()->makeLastChildOf($folderWeb);
 		\Telenok\Object\Type::where('code', 'domain')->first()->makeLastChildOf($folderWeb);
-/*
-		\Telenok\Object\Type::where('code', 'workflow_status')->first()->makeLastChildOf($folderBusinessProcess);
+
+		//\Telenok\Object\Type::where('code', 'workflow_status')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Object\Type::where('code', 'workflow_process')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Object\Type::where('code', 'workflow_event')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Object\Type::where('code', 'workflow_event_resource')->first()->makeLastChildOf($folderBusinessProcess);
 		\Telenok\Object\Type::where('code', 'workflow_thread')->first()->makeLastChildOf($folderBusinessProcess);
-*/
+
 		//Module group
 		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
 			'title' => ['en' => 'Content', 'ru' => 'Содержание'],
@@ -860,7 +852,7 @@ class SeedLast extends Migration {
 		  \Telenok\Security\Role::all()->each(function($item) use ($statusActive) { $item->workflowStatus()->save($statusActive); });
 		  \Telenok\Security\Permission::all()->each(function($item) use ($statusActive) { $item->workflowStatus()->save($statusActive); });
 		  \Telenok\User\RolePermissionResource::all()->each(function($item) use ($statusActive) { $item->workflowStatus()->save($statusActive); });
-		 */
+		*/
 
 		
 		\Telenok\Object\Type::all()->each(function($item) 

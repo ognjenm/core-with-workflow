@@ -67,6 +67,8 @@
     })
     .bind("select_node.jstree", function(event, data) 
     {
+		@section("select_node")
+		
         data.inst.toggle_node(data.rslt.obj);
 
         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}')
@@ -80,6 +82,7 @@
                             "gridId": data.rslt.obj.data("gridId")
                         });
                     }});
+		@show
     });
 </script>
 

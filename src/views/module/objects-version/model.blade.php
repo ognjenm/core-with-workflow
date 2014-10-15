@@ -1,9 +1,11 @@
-@extends('core::layout.model')
+@extends('core::presentation.tree-tab-object.model')
 
+@section('form')
+	@parent
+	
 	@section('formBtn')
-
     <div class='form-actions center no-margin'>
-		<button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">
+        <button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">
             <i class="fa fa-floppy-o"></i>
             {{{ $controller->LL('btn.restore') }}}
         </button>
@@ -14,9 +16,9 @@
     </div>
 	@stop
 	
-	<script>
-	
+@stop
+
+<script>
 	jQuery("#model-ajax-{{{$uniqueId}}} :input").not('button').not(':hidden').attr("disabled", "disabled");
-	
-	</script>
+</script>
  

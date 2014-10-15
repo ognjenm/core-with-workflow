@@ -122,10 +122,9 @@ table-layout:fixed;
 
 .ORYX_Editor {
 	/*background:url(../images/controls/background.bmp);*/
-	background: #EEF1FE;
-	width:1200px;
-	height:600px;
-	border:5px double #99BBE8;
+	/*background: #EEF1FE;*/
+	background: #FFFFFF;
+	border:0px double #99BBE8;
 }
 
 .x-layout-panel-center {
@@ -145,12 +144,10 @@ table-layout:fixed;
 	background:transparent url("../lib/ext-2.0.2/resources/images/default/form/color-trigger.gif") no-repeat 0 0;
 }
 
-/* extended by Kerstin (start)*/
 .x-form-field-wrap .x-form-complex-trigger {
-	background:transparent url("../images/complex-trigger.gif") no-repeat 0 0;
+	background:transparent url("../images/textfield.png") no-repeat 0 0;
     cursor:pointer; 
 }
-/* extended by Kerstin (end)*/
 
 .x-dd-drag-ghost {
 	opacity:1.0;
@@ -397,7 +394,7 @@ table-layout:fixed;
 
 .resizer_southeast {
 	position:relative;
-	background:url(../lib/ext-2.0.2/resources/images/default/sizer/se-handle-dark.gif);
+	background:url(../../ext-2.0.2/resources/images/default/sizer/se-handle-dark.gif);
 	width:10px; 
 	height:10px; 
 	cursor: se-resize;
@@ -405,7 +402,7 @@ table-layout:fixed;
 
 .resizer_northwest {
 	position:relative;
-	background:url(../lib/ext-2.0.2/resources/images/default/sizer/nw-handle-dark.gif);
+	background:url(../../ext-2.0.2/resources/images/default/sizer/nw-handle-dark.gif);
 	width:10px; 
 	height:10px; 
 	cursor: nw-resize;
@@ -652,7 +649,7 @@ input.text.disabled:hover, input.disabled:hover, select.disabled:hover, textarea
 
 
 .transform-epc-bpmn-window .transform-epc-bpmn-group-button .x-btn-center {
-	background:transparent url(../lib/ext-2.0.2/resources/images/default/grid/group-expand-sprite.gif) no-repeat scroll 0px 0px;
+	background:transparent url(../../ext-2.0.2/resources/images/default/grid/group-expand-sprite.gif) no-repeat scroll 0px 0px;
 	padding-left:15px;
 	border-bottom:1px solid #CCCCCC;
 	text-align:left;

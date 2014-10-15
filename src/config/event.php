@@ -41,8 +41,9 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->put('web', 1);
     $list->put('objects', 2);
     $list->put('system', 3);
-    
-    $list->put('dashboard', 0);
+    $list->put('workflow', 3);
+
+	$list->put('dashboard', 0);
     $list->put('objects-field', 0);
     $list->put('objects-lists', 0);
     $list->put('objects-type', 0);
@@ -58,6 +59,9 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 	
     $list->put('users', 1);
     $list->put('users-profile', 2);
+
+    $list->put('workflow-process', 2);
+    $list->put('workflow-thread', 3);
 });
 
 \Event::listen('telenok.module.menu.top', function($list)
@@ -69,11 +73,12 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 \Event::listen('telenok.workflow.action.add', function($list) 
 {
     $list->push('Telenok\Core\Workflow\Point\Start\BeforeSave');
-    $list->push('Telenok\Core\Workflow\Point\End');
-    $list->push('Telenok\Core\Workflow\Edge\SequenceFlow');
-    $list->push('Telenok\Core\Workflow\Action\ValidateField');
-    //$list->push('Telenok\Core\Workflow\Action\SendMessage');
-    //$list->push('Telenok\Core\Workflow\Action\Log');
+    $list->push('Telenok\Core\Workflow\Point\Start\AfterSave');
+	//$list->push('Telenok\Core\Workflow\Point\End\End');
+    $list->push('Telenok\Core\Workflow\Flow\Standart');
+    //$list->push('Telenok\Core\Workflow\Activity\ValidateField');
+	//$list->push('Telenok\Core\Workflow\Activity\SendMessage');
+    //$list->push('Telenok\Core\Workflow\Activity\Log');
 });
 
 \Event::listen('telenok.objects-field.add', function($list) 

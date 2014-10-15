@@ -1,0 +1,11 @@
+{
+	"extensions": [],
+	"perspectives": [
+		{
+			"title": "Base process",
+			"namespace": "http://oryx-editor.org/stencilsets/perspectives/telenok#",
+			"description": "Telenok process diagram",
+			"stencilset": "http://b3mn.org/stencilset/telenok#"
+		}
+	]
+}

@@ -1,7 +1,7 @@
 if(! ('ace' in window) ) window['ace'] = {}
 jQuery(function() {
 	//at some places we try to use 'tap' event instead of 'click' if jquery mobile plugin is available
-	window['ace'].click_event = $.fn.tap ? "tap" : "click";
+	window['ace'].click_event = jQuery.fn.tap ? "tap" : "click";
 });
 
 (function($ , undefined) {

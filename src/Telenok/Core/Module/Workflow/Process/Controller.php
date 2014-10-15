@@ -2,13 +2,15 @@
 
 namespace Telenok\Core\Module\Workflow\Process;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller 
-{
+class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+
     protected $key = 'workflow-process';
     protected $parent = 'workflow';
     protected $typeList = 'workflow_process';
+	
+    protected $presentation = 'tree-tab-object';
 
-    protected $presentationFormModelView = 'core::module.workflow-process.form'; 
+    protected $presentationFormFieldListView = 'core::module.workflow-process.form-field-list';
     protected $diagramStensilSet = 'core::module.workflow-process.stensilset'; 
     protected $diagramBody = 'core::module.workflow-process.diagram'; 
 
@@ -54,18 +56,53 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller
                     "title" => "Business Diagram",
                     "groups" => ["Diagram"],
                     "description" => "A Process Diagramm", 
-                    "view" => "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><svg    xmlns=\"http://www.w3.org/2000/svg\"    xmlns:svg=\"http://www.w3.org/2000/svg\"    xmlns:oryx=\"http://www.b3mn.org/oryx\"    xmlns:xlink=\"http://www.w3.org/1999/xlink\"    width=\"800\"    height=\"600\"    version=\"1.0\">   <defs></defs>   <g pointer-events=\"fill\" >     <polygon stroke=\"black\" fill=\"black\" stroke-width=\"1\" points=\"0,0 0,590 9,599 799,599 799,9 790,0\" stroke-linecap=\"butt\" stroke-linejoin=\"miter\" stroke-miterlimit=\"10\" />     <rect id=\"diagramcanvas\" oryx:resize=\"vertical horizontal\" x=\"0\" y=\"0\" width=\"790\" height=\"590\" stroke=\"black\" stroke-width=\"2\" fill=\"white\" />      <text font-size=\"22\" id=\"diagramtext\" x=\"400\" y=\"25\" oryx:align=\"top center\" stroke=\"black\"></text>   </g> </svg> ",
-                    'icon' => \Config::get('app.url')."/packages/telenok/core/js/oryx/scripts/stencilsets/telenok/icons/diagram.png",
+                    "view" => '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+									<svg
+											xmlns="http://www.w3.org/2000/svg"
+											xmlns:svg="http://www.w3.org/2000/svg"
+											xmlns:oryx="http://www.b3mn.org/oryx"
+											xmlns:xlink="http://www.w3.org/1999/xlink"
+											width="800"
+											height="600"
+											version="1.0">
+										<defs></defs>
+										<g pointer-events="fill" >
+										<polygon stroke="black" fill="black" stroke-width="1" points="0,0 0,590 9,599 799,599 799,9 790,0" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" />
+										<rect id="diagramcanvas" oryx:resize="vertical horizontal" x="0" y="0" width="790" height="590" stroke="black" stroke-width="2" fill="white" />
+											<text font-size="22" id="diagramtext" x="400" y="25" oryx:align="top center" stroke="black"></text>
+										</g>
+									</svg>',
+                    'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/scripts/stencilsets/telenok/icons/diagram.png",
                     "mayBeRoot" => true,
                     "hide" => true,
                     "roles" => ["canContainArtifacts"]
                 ]
             ],
+			'propertyPackages' => [
+				[
+					"name" => "bgColor",
+					"properties" => [
+						[
+							"id" => "bgcolor",
+							"type" => "Color",
+							"title" => "BackgroundColor",
+							"value" => "#ffffff",
+							"description" => "",
+							"readonly" => false,
+							"optional" => false,
+							"popular" => false,
+							"refToView" => "fill_el",
+							"fill" => true,
+							"stroke" => false
+						],
+					]
+				],
+			],
             'rules' => [
                 'containmentRules' => [
                     [
                         "role" => "TelenokDiagram",
-                        "contains" => ["edge", "point", "activity"]
+                        "contains" => ["point"]
                     ]
                 ],
                 'cardinalityRules' => [],
@@ -79,8 +116,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller
 
                 ],
                 'layoutRules' => [],
-            ],
-            "propertyPackages" => []
+            ]
         ];
 
         $elements = $this->getElements();

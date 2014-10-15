@@ -42,6 +42,15 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			$model->deleteSequence();
 		});
+		
+		static::restoring(function($model)
+		{
+			if ($model->hasVersioning())
+			{
+				$model->restoreSequence();
+			}
+
+		});
 	}
 
 	protected function generateKeyId()
@@ -61,6 +70,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 
 			$this->{$this->getKeyName()} = $sequence->getKey();
+		}
+	}
+
+	protected function restoreSequence()
+	{
+		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
+		{
+			\Telenok\Object\Sequence::withTrashed()->find($this->getKey())->restore();
 		}
 	}
 

@@ -76,12 +76,12 @@ jQuery(function()
         this.blur();
     });
 
-    jQuery('div.sidebar-shortcuts button.telenok-module-group-content').click();
+    jQuery('div.sidebar-shortcuts button.telenok-sidebar-content').click();
 
-    jQuery('ul.telenok-module-group ul.submenu li a, ul.telenok-module-group li.parent-single a').click(function() 
+    jQuery('ul.telenok-sidebar ul.submenu li a, ul.telenok-sidebar li.parent-single a').click(function() 
     {
-        jQuery('ul.telenok-module-group li').removeClass('active');
-        jQuery(this).parents('ul.telenok-module-group li').addClass('active');
+        jQuery('ul.telenok-sidebar li').removeClass('active');
+        jQuery(this).parents('ul.telenok-sidebar li').addClass('active');
     });
 });
 

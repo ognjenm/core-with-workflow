@@ -7,6 +7,8 @@ return [
     'description' => 'Catch event when object start saving. You can change object\'s properties, values, etc',
 
     'property.title.value' => 'Before saving',
+	'property.title.model.filter' => 'Model filter',
+	
 ];
 
 

@@ -426,12 +426,6 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			'model' => [
 				'№' => ['en' => '№', 'ru' => '№'],
 				'title' => ['en' => 'Title', 'ru' => 'Заголовок'],
-				'№' => ['en' => '№', 'ru' => '№'],
-				'№' => ['en' => '№', 'ru' => '№'],
-				'№' => ['en' => '№', 'ru' => '№'],
-				'№' => ['en' => '№', 'ru' => '№'],
-				'№' => ['en' => '№', 'ru' => '№'],
-				'№' => ['en' => '№', 'ru' => '№'],
 			],
 		];
 	}

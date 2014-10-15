@@ -14,6 +14,8 @@ return array(
     'list.btn.edit' => 'Edit diagram',
     'list.btn.delete' => 'Delete diagram',
 
+	'btn.open-process-editor' => 'Open process editor',
+	
     'diagram.title' => 'Process diagram',
     'diagram.description' => 'Business process optimally achieve the goals and conserve resources',
 

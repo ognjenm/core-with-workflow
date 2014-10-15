@@ -32,6 +32,8 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		{
 			throw new \Exception($this->LL('error.restore.type.first', ['id' => $model->object_type_id]));
 		}
+		
+		return $model;
 	}
 
 }
