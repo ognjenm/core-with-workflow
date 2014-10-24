@@ -166,6 +166,7 @@ ORYX.Core.Bounds = {
 	 * @param {Number} y
 	 */
 	moveTo: function() {
+		
 		var currentPosition = this.upperLeft();
 		switch (arguments.length) {
 			case 1:
@@ -183,6 +184,7 @@ ORYX.Core.Bounds = {
 			default:
 				//TODO error
 		}
+		
 	},
 	
 	/**

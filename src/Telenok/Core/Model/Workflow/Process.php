@@ -48,11 +48,5 @@ class Process extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
         return $this->belongsTo('\Telenok\Workflow\Process', 'thread_workflow_process');
     }
 
-
-    public function product536671e33518dShopCategoryShopProduct()
-    {
-        return $this->morphTo('product536671e33518d_shop_category', 'product536671e33518d_shop_category_shop_product_type', 'product536671e33518d_shop_category_shop_product_id');
-    }
-
 }
 ?>

@@ -135,34 +135,30 @@ ORYX.Core.StencilSet.Property = Clazz.extend({
 			jsonProp.popular = false;
 		}
         
-        if (jsonProp.complexItems && jsonProp.complexItems instanceof Array) {
-            jsonProp.complexItems.each((function(jsonComplexItem){
-               try {
-                    this._complexItems[jsonComplexItem.id] = new ORYX.Core.StencilSet.ComplexPropertyItem(jsonComplexItem, namespace, this);
-                } catch(e) {
-                    ORYX.Log.error("error while initializing complex items for " + jsonProp.title);
-                    ORYX.Log.error(e);
-                }
-            }).bind(this));
-        }
-
         if (jsonProp.type === ORYX.CONFIG.TYPE_CHOICE) {
             if (jsonProp.items && jsonProp.items instanceof Array) {
                 jsonProp.items.each((function(jsonItem){
                 	// why is the item's value used as the key???
                     this._items[jsonItem.value] = new ORYX.Core.StencilSet.PropertyItem(jsonItem, namespace, this);
                 }).bind(this));
-            } else {
+            }
+            else {
                 throw "ORYX.Core.StencilSet.Property(construct): No property items defined."
             }
+            // extended by Kerstin (start)
         }
-        if (jsonProp.type === ORYX.CONFIG.TYPE_COMPLEX && jsonProp.complexItems === undefined) {
-            throw "ORYX.Core.StencilSet.Property(construct): No complex property items defined."
-        }    
-        
-        if (jsonProp.labelProvider) {
-            this._labelProvider = jsonProp.labelProvider.transform;
-        }
+        else 
+            if (jsonProp.type === ORYX.CONFIG.TYPE_COMPLEX) {
+                if (jsonProp.complexItems && jsonProp.complexItems instanceof Array) {
+                    jsonProp.complexItems.each((function(jsonComplexItem){
+                        this._complexItems[jsonComplexItem.id] = new ORYX.Core.StencilSet.ComplexPropertyItem(jsonComplexItem, namespace, this);
+                    }).bind(this));
+                }
+                else {
+                    throw "ORYX.Core.StencilSet.Property(construct): No complex property items defined."
+                }
+            }
+        // extended by Kerstin (end)
     },
     
     /**
@@ -373,9 +369,5 @@ ORYX.Core.StencilSet.Property = Clazz.extend({
     
     complexAttributeToView: function(){
         return this._jsonProp.complexAttributeToView || "";
-    },
-    
-    labelProvider: function() {
-        return this._labelProvider;
     }
 });

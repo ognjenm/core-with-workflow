@@ -7,7 +7,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $key = 'workflow-process';
     protected $parent = 'workflow';
     protected $typeList = 'workflow_process';
-	
+
     protected $presentation = 'tree-tab-object';
 
     protected $presentationFormFieldListView = 'core::module.workflow-process.form-field-list';
@@ -16,35 +16,80 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function preProcess($model, $type, $input)
     {
-        $processConfig = (array)$input->get('process');
-        
-        if (!empty($processConfig))
+        $processConfig = json_decode($input->get('process', ""), true);
+
+		$input->put('process', $processConfig);
+
+        if (array_get($processConfig, 'stencil', false))
         {
-            \Telenok\Core\Workflow\Process::validate($processConfig);
+        //    \Telenok\Core\Workflow\Process::validate($processConfig);
         }
-        
+
         return $this;
     }
 
+    public function applyDiagram()
+    { 
+		$clear = \Input::get('clear', false);
+		$clearOnly = \Input::get('clearOnly', false);
+		$diagramData = json_decode(\Input::get('diagram', ""), true);
+		$sessionDiagramId = \Input::get('sessionDiagramId');
+
+		if ($clear || $clearOnly)
+		{
+			\Session::forget('diagram.' . $sessionDiagramId . '.stenciltemporary');
+			
+			if ($clearOnly)
+			{
+				return [];
+			}
+		}
+
+		
+		if (!$clearOnly)
+		{
+			$stencilTemporaryListData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary', []);
+			$stencilListData = \Session::get('diagram.' . $sessionDiagramId . '.stencil', []);
+
+			if (!empty($stencilTemporaryListData))
+			{
+				foreach($stencilTemporaryListData as $key => $stencil)
+				{
+					$stencilListData[$key] = $stencil;
+				}
+			} 
+
+			\Session::put('diagram.' . $sessionDiagramId . '.stencil', $stencilListData);
+			\Session::put('diagram.' . $sessionDiagramId . '.diagram', $diagramData);
+		}
+		
+		return ['stencil' => $stencilListData, 'diagram' => $diagramData];
+    }
+
+    public function getAdditionalViewParam()
+    {
+		$p = parent::getAdditionalViewParam();
+		
+		$p['sessionDiagramId'] = str_random();
+		
+        return $p;
+    }    
+
     public function diagramShow($id = 0)
     { 
-        $model = \Telenok\Workflow\Process::find($id);
-                
+		$model = \Telenok\Workflow\Process::find($id);
+		
         return \View::make($this->diagramBody, [
                 'controller' => $this,
                 'model' => $model,
-                'uniqueId' => str_random(),
+                'stencilData' => ($model ? $model->process->get('diagram', []) : false),
+                'uniqueId' => str_random(), 
+				'sessionDiagramId' => \Input::get('sessionDiagramId'),
             ])->render();
     }
 
     public function diagramStencilSet()
     {            
-      /*
-        return \View::make($this->diagramStensilSet, [
-                'controller' => $this,  
-                'uniqueId' => str_random(),
-            ])->render();
-        */
         $data = [
             'title' => $this->LL('diagram.title'),
             "namespace" => "http://b3mn.org/stencilset/telenok#",
@@ -80,20 +125,26 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
             ],
 			'propertyPackages' => [
 				[
-					"name" => "bgColor",
+					"name" => "bgcolor",
 					"properties" => [
 						[
 							"id" => "bgcolor",
 							"type" => "Color",
-							"title" => "BackgroundColor",
 							"value" => "#ffffff",
-							"description" => "",
-							"readonly" => false,
-							"optional" => false,
-							"popular" => false,
-							"refToView" => "fill_el",
+							"refToView" => ["fill_el_1", "fill_el_2", "fill_el_3", "fill_el_4", "fill_el_5", "fill_el_6", "fill_el_7", "fill_el_8"],
 							"fill" => true,
-							"stroke" => false
+						],
+					]
+				],
+				[
+					"name" => "bordercolor",
+					"properties" => [
+						[
+							"id" => "bordercolor",
+							"type" => "Color",
+							"value" => "#000000",
+							"refToView" => ["border_el_1", "border_el_2", "border_el_3", "border_el_4", "border_el_5", "border_el_6", "border_el_7", "border_el_8"],
+							"stroke" => true,
 						],
 					]
 				],
@@ -102,7 +153,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
                 'containmentRules' => [
                     [
                         "role" => "TelenokDiagram",
-                        "contains" => ["point"]
+                        "contains" => ["point", "activity"]
                     ]
                 ],
                 'cardinalityRules' => [],

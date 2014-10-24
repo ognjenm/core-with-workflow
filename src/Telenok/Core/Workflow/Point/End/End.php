@@ -13,7 +13,9 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
     protected $total = 1;
 
     protected $key = 'point-end';
-    
+    protected $propertyView = 'core::workflow.point-end.property';
+    protected $routerPropertyContent = 'cmf.workflow.point-end.property';
+
     protected $stencilCardinalityRules = [
             [
                 'role' => 'sequence_end',
@@ -38,6 +40,8 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
                         'title' => $this->LL('title'),
                         'groups' => [$this->LL('title.groups')],
                         'description' => $this->LL('description'),
+                        'urlPropertyContent' => $this->getRouterPropertyContent(),
+                        'urlStoreProperty' => $this->getRouterStoreProperty(),
 						"view" => '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 										<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +64,7 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
 
 												<circle id="bg_frame" cx="16" cy="16" r="14" stroke="black" fill="url(#background) black" stroke-width="3"/>
 												<text font-size="11" 
-													id="text_name" 
+													id="title" 
 													x="16" y="32" 
 													oryx:align="top center" 
 													stroke="black"
@@ -70,19 +74,13 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/pointend/" . $this->getKey() . ".png",
 						'defaultAlign' => "south",
 						'roles' => ["sequence_end", "point"],
+						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [
                             [
-                                "id" => "name",
-                                "type" => "String",
-                                "title" => $this->LL('property.title.title'),
+                                "id" => "title",
+                                "type" => "string",
                                 "value" => $this->LL('property.title.value'),
-                                "description" => "",
-                                "readonly" => false,
-                                "optional" => false,
-                                "popular" => false,
                                 "refToView" => "title",
-                                "length" => "",
-                                "wrapLines" => true
                             ],
                         ],
 

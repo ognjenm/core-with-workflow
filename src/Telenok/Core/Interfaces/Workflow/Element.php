@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Workflow;
 
-class Element {
+class Element extends \Illuminate\Routing\Controller {
 
     protected $linkIn = [];
     protected $linkOut = [];
@@ -31,6 +31,7 @@ class Element {
     protected $stencilLayoutRules = [];
     protected $propertyView = '';
     protected $routerPropertyContent = '';
+    protected $routerStoreProperty = 'cmf.workflow.store-property';
 
     public function make()
     {
@@ -86,13 +87,40 @@ class Element {
         return $this;
     } 
 
+    public function getPropertyValue($data = [])
+    {
+		$sessionDiagramId = array_get($data, 'sessionDiagramId');
+		$stencilId = array_get($data, 'stencilId');
+		
+		$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, []);
+		
+		if (empty($stencilData))
+		{
+			$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stencil.' . $stencilId, []);
+		}
+		
+		return [
+			'title' => ['title' => $this->LL('property.title.title'), 'value' => array_get($stencilData, 'title', $this->LL('property.title.value'))],
+			'bgcolor' => ['title' => $this->LL('property.bgcolor.title'), 'value' => array_get($stencilData, 'bgcolor', '#ffffff')],
+			'bordercolor' => ['title' => $this->LL('property.bordercolor.title'), 'value' => array_get($stencilData, 'bordercolor', '#000000')],
+		];
+	}
+	
     public function getPropertyContent()
     {
-        return \View::make($this->getPropertyView(), array(
-                'controller' => $this, 
-                'uniqueId' => str_random()
-            ))->render();
-    }
+		if (!($sessionDiagramId = \Input::get('sessionDiagramId')) || !($stencilId = \Input::get('stencilId')))
+		{
+			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
+		}
+
+		return ['tabContent' => \View::make($this->getPropertyView(), [
+				'controller' => $this,
+				'uniqueId' => str_random(),
+				'sessionDiagramId' => $sessionDiagramId,
+				'stencilId' => $stencilId,
+				'property' => $this->getPropertyValue(\Input::all()),
+			])->render()];
+	}
 	
     public function getRouterPropertyContent($param = [])
     {
@@ -101,7 +129,28 @@ class Element {
 			return \URL::route($this->routerPropertyContent, $param);
 		}
 	}
+	
+    public function getRouterStoreProperty($param = [])
+    {
+		if ($this->routerStoreProperty)
+		{
+			return \URL::route($this->routerStoreProperty, $param);
+		}
+	}
 
+    public function storeProperty()
+    {
+		if (!($sessionDiagramId = \Input::get('sessionDiagramId')) || !($stencilId = \Input::get('stencilId')))
+		{
+			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
+		}
+
+		$stencilData = \Input::get('stencil', []);
+
+		\Session::put('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, $stencilData);
+
+		return $stencilData;
+	}
 
 
 

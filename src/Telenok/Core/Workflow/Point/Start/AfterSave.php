@@ -42,6 +42,7 @@ class AfterSave extends \Telenok\Core\Interfaces\Workflow\Point {
                         'groups' => [$this->LL('title.groups')],
                         'description' => $this->LL('description'),
                         'urlPropertyContent' => $this->getRouterPropertyContent(),
+                        'urlStoreProperty' => $this->getRouterStoreProperty(),
                         'view' => '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 										<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -59,12 +60,12 @@ class AfterSave extends \Telenok\Core\Interfaces\Workflow\Point {
 												<defs>
 													<radialGradient id="background" cx="10%" cy="10%" r="100%" fx="10%" fy="10%">
 														<stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
-														<stop id="fill_el" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+														<stop id="fill_el_1" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
 													</radialGradient>
 												</defs>
 
 												<circle 
-													id="bg_frame" 
+													id="border_el_1" 
 													cx="16" 
 													cy="16" 
 													r="15" 
@@ -73,7 +74,7 @@ class AfterSave extends \Telenok\Core\Interfaces\Workflow\Point {
 													stroke-width="1" />
 
 												<circle 
-													id="frame2_non_interrupting" 
+													id="border_el_2" 
 													cx="16" 
 													cy="16" 
 													r="12" 
@@ -83,8 +84,8 @@ class AfterSave extends \Telenok\Core\Interfaces\Workflow\Point {
 
 												<path
 												   d="M 6.75,13 L6.75,19 L13,19 L13,25.75 L19,25.75 L19,19 L25.75,19 L25.75,13 L19,13 L19,6.75 L13,6.75 L13,13z"
-												   id="path9"
-												   style="fill:none;stroke:#000000;stroke-width:1" />
+												   id="border_el_3"
+												   style="fill:none;stroke-width:1" stroke="#000000" />
 
 												<text font-size="11" 
 													id="title" 
@@ -96,31 +97,13 @@ class AfterSave extends \Telenok\Core\Interfaces\Workflow\Point {
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/pointstart/" . $this->getKey() . ".png",
                         'defaultAlign' => "south",
                         'roles' => ["sequence_start", "point"],
-						'propertyPackages' => ["bgColor"],
+						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [
                             [
-                                "id" => "name",
-                                "type" => "String",
-                                "title" => $this->LL('property.title.title'),
+                                "id" => "title",
+                                "type" => "string",
                                 "value" => $this->LL('property.title.value'),
-                                "description" => "",
-                                "readonly" => false,
-                                "optional" => false,
-                                "popular" => true,
                                 "refToView" => "title",
-                                "length" => "",
-                                "wrapLines" => true
-                            ],
-                            [
-                                "id" => "reference",
-                                "type" => "script",
-                                "title" => "Refence",
-                                "value" => "",
-                                "description" => "",
-                                "popular" => true,
-                                "readonly" => false,
-                                "optional" => false,
-                                "script" => "property.telenok.eventlist",
                             ],
                         ],
                     ];

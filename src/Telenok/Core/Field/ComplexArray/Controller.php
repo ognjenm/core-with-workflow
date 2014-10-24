@@ -47,7 +47,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		else if (is_array($value))
 		{
 			$value_ = $model->{$key};
-			
+
 			foreach($value as $k => $v)
 			{
 				$value_->put($k, $v);

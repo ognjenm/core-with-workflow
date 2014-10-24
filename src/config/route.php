@@ -10,44 +10,15 @@
   | and give it the Closure to execute when that URI is requested.
   |
  */
-
-
-Route::get('stencil-test', function()
-{
-    return ['aaaaaaaaaaaa'];
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 \Route::filter('csrf', 'Telenok\Core\Filter\Router\Controller@csrf');
 \Route::filter('auth', 'Telenok\Core\Filter\Router\Backend\Controller@auth');
 \Route::filter('access-module', 'Telenok\Core\Filter\Router\Backend\Controller@accessModule');
 
 \Route::when('/*', 'csrf', ['post']);
-
-
+ 
+ 
 // Errors
 \Route::any('telenok/error', array('as' => 'error.access-denied', 'uses' => "Telenok\Core\Controller\Backend\Controller@errorAccessDenied"));
 
@@ -212,6 +183,15 @@ Route::get('stencil-test', function()
 \Route::any('telenok/module/workflow-process/action-param', array('as' => 'cmf.module.workflow-process.action.param', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getActionParam"));
 \Route::any('telenok/module/workflow-process/diagram/show/{id}', array('as' => 'cmf.module.workflow-process.diagram.show', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@diagramShow"));
 \Route::any('telenok/module/workflow-process/diagram/stensilset', array('as' => 'cmf.module.workflow-process.diagram.stensilset', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@diagramStencilSet"));
+\Route::any('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
+\Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@applyDiagram"));
+
+\Route::any('telenok/module/workflow/element/point-start-after-save/property', array('as' => 'cmf.workflow.point-start-after-save.property', 'uses' => "Telenok\Core\Workflow\Point\Start\AfterSave@getPropertyContent"));
+\Route::any('telenok/module/workflow/element/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
+\Route::any('telenok/module/workflow/element/form-element-hide/property', array('as' => 'cmf.workflow.form-element-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormElementHide@getPropertyContent"));
+
+
+
 /*\Route::any('telenok/module/workflow-process', array('as' => 'cmf.module.workflow-process', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getContent"));
 \Route::any('telenok/module/workflow-process/list', array('as' => 'cmf.module.workflow-process.list', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getList"));
 \Route::any('telenok/module/workflow-process/create', array('as' => 'cmf.module.workflow-process.create', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@create"));

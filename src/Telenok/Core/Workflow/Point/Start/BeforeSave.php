@@ -14,7 +14,8 @@ class BeforeSave extends \Telenok\Core\Interfaces\Workflow\Point {
     
     protected $key = 'point-start-before-save';
     protected $propertyView = 'core::workflow.point-start-before-save.property';
-
+    protected $routerPropertyContent = 'cmf.workflow.point-start-after-save.property';
+	
     protected $stencilCardinalityRules = [
         [
             'role' => 'sequence_start',
@@ -97,31 +98,13 @@ class BeforeSave extends \Telenok\Core\Interfaces\Workflow\Point {
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/pointstart/" . $this->getKey() . ".png",
                         'defaultAlign' => "south",
                         'roles' => ["sequence_start", "point"],
-						'propertyPackages' => ["bgColor"],
+						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [
                             [
-                                "id" => "name",
-                                "type" => "String",
-                                "title" => $this->LL('property.title.title'),
+                                "id" => "title",
+                                "type" => "string",
                                 "value" => $this->LL('property.title.value'),
-                                "description" => "",
-                                "readonly" => false,
-                                "optional" => false,
-                                "popular" => true,
                                 "refToView" => "title",
-                                "length" => "",
-                                "wrapLines" => true
-                            ],
-                            [
-                                "id" => "reference",
-                                "type" => "script",
-                                "title" => $this->LL('property.title.model.filter'),
-                                "value" => "",
-                                "description" => "",
-                                "popular" => true,
-                                "readonly" => false,
-                                "optional" => false,
-                                "script" => "property.telenok.eventlist",
                             ],
                         ],
                     ];

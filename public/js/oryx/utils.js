@@ -2,7 +2,7 @@
 /**
  * @namespace Oryx name space for different utility methods
  * @name ORYX.Utils
-*/
+ */
 
 ORYX.Utils = {
     /**
@@ -12,7 +12,7 @@ ORYX.Utils = {
      * ORYX.Utils.getParamFromUrl("param") // => "value" 
      * @param {Object} name
      */
-    getParamFromUrl: function(name){
+    getParamFromUrl: function(name) {
         name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
         var regexS = "[\\?&]" + name + "=([^&#]*)";
         var regex = new RegExp(regexS);
@@ -24,17 +24,18 @@ ORYX.Utils = {
             return results[1];
         }
     },
-	
-	adjustGradient: function(gradient, reference){
-		
-		if (ORYX.CONFIG.DISABLE_GRADIENT && gradient){
-		
-			var col = reference.getAttributeNS(null, "stop-color") || "#ffffff";
-			
-			$A(gradient.getElementsByTagName("stop")).each(function(stop){
-				if (stop == reference){ return; }
-				stop.setAttributeNS(null, "stop-color", col);
-			})
-		}
-	}
+    adjustGradient: function(gradient, reference) {
+
+        if (ORYX.CONFIG.DISABLE_GRADIENT && gradient) {
+
+            var col = reference.getAttributeNS(null, "stop-color") || "#ffffff";
+
+            $A(gradient.getElementsByTagName("stop")).each(function(stop) {
+                if (stop == reference) {
+                    return;
+                }
+                stop.setAttributeNS(null, "stop-color", col);
+            })
+        }
+    }
 }

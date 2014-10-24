@@ -177,7 +177,6 @@
 				"ORYX.Plugins.ShapeRepository",
 				"ORYX.Plugins.ShapeHighlighting",
 				"ORYX.Plugins.DragDocker",
-				"ORYX.Plugins.DragDocker",
 				"ORYX.Plugins.DragDropResize",
 				"ORYX.Plugins.PropertyWindow"
 			].each(function(pluginName)
@@ -207,19 +206,13 @@
 					}
 				};
 
-				var editor = new ORYX.Editor(editor_parameters);
-				ORYX.EDITOR = editor;
+				window.oryxEditor = new ORYX.Editor(editor_parameters);
 
-                if (typeof importJSONFromTop !== 'undefined')
-                {
-                    //oryxEditor.importJSON(importJSONFromTop());
-                }
-                else 
-                {
-                @if ($model && $model->process)
-                    //oryxEditor.importJSON('{{$model->process}}');
-                @endif
-                } 
+				if (importJSONFromTop())
+				{
+					setTimeout(function() { oryxEditor.importJSON(importJSONFromTop()); }, 1000);
+					
+				}
 			}
 		</script>
 
@@ -229,7 +222,7 @@
 			<div class="sidebar responsive" id="sidebar">
 				<ul class="nav nav-list telenok-sidebar"></ul>
 			</div>
-			<div class="main-content" id="processdata"></div>
+			<div class="main-content" id="processdata" style="float: left; text-align: left; margin: 0;"></div>
 		</div>
 	</body>
 </html>

@@ -250,11 +250,19 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{ 
 			if ($input->has($fillable))
 			{
-				$model->__set($fillable, $input->get($fillable));
+				//$model->__set($fillable, $input->get($fillable));
+				//$model->$fillable = $input->get($fillable);
+
+				if ($fillable == 'process')
+				{
+				//	dd('aaaaaaaaaaa', $model->$fillable, $input->get($fillable) );
+				}
 			}
 			else if (!$model->exists)
 			{
-				$this->__set($fillable, null);
+				//$this->__set($fillable, null);
+				//$input->put($fillable, null);
+				//$this->$fillable = null;
 				$input->put($fillable, null);
 			}
 			else
@@ -262,7 +270,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				$input->put($fillable, $model->$fillable);
 			} 
 		} 
-		
+
 		try
 		{
 			\DB::transaction(function() use ($type, $input, $model)

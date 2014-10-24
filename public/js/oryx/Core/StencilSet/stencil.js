@@ -21,6 +21,9 @@
  * DEALINGS IN THE SOFTWARE.
  **/
 
+/**
+ * Init namespace
+ */
 if (!ORYX) {
     var ORYX = {};
 }
@@ -143,16 +146,7 @@ ORYX.Core.StencilSet.Stencil = {
 
         //TODO does not work correctly, if the url does not exist
         //How to guarantee that the view is loaded correctly before leaving the constructor???
-        if (jsonStencil.view === undefined) {
-            //maybe there's no view for this stencil as it is invisible.
-        } else {
-            if (jsonStencil.view.charAt(0) == '/') { // the source is an absolute URL
-                var url = jsonStencil.view;
-            } else {
-                var url = source + "view/" + jsonStencil.view;
-            }
-        }
-
+        var url = source + "view/" + jsonStencil.view;
         // override content type when this is webkit.
 
         /*
@@ -168,50 +162,40 @@ ORYX.Core.StencilSet.Stencil = {
          } else
          */
 
-        if (this._jsonStencil.view) {
-            if (this._jsonStencil.view.trim().match(/</)) {
-                var parser = new DOMParser();
-                var xml = parser.parseFromString(this._jsonStencil.view, "text/xml");
+        if (this._jsonStencil.view.trim().match(/</)) {
+            var parser = new DOMParser();
+            var xml = parser.parseFromString(this._jsonStencil.view, "text/xml");
 
-                //check if result is a SVG document
-                if (ORYX.Editor.checkClassType(xml.documentElement, SVGSVGElement)) {
+            //check if result is a SVG document
+            if (ORYX.Editor.checkClassType(xml.documentElement, SVGSVGElement)) {
 
-                    this._view = xml.documentElement;
+                this._view = xml.documentElement;
 
-                    //updating link to images
-                    var imageElems = this._view.getElementsByTagNameNS("http://www.w3.org/2000/svg", "image");
-                    $A(imageElems).each((function(imageElem) {
-                        var link = imageElem.getAttributeNodeNS("http://www.w3.org/1999/xlink", "href");
-                        if (link && link.value.indexOf("://") == -1) {
-                            link.textContent = this._source + "view/" + link.value;
-                        }
-                    }).bind(this));
-                } else {
-                    throw "ORYX.Core.StencilSet.Stencil(_loadSVGOnSuccess): The response is not a SVG document."
-                }
+                //updating link to images
+                var imageElems = this._view.getElementsByTagNameNS("http://www.w3.org/2000/svg", "image");
+                $A(imageElems).each((function(imageElem) {
+                    var link = imageElem.getAttributeNodeNS("http://www.w3.org/1999/xlink", "href");
+                    if (link && link.value.indexOf("://") == -1) {
+                        link.textContent = this._source + "view/" + link.value;
+                    }
+                }).bind(this));
             } else {
-                new Ajax.Request(
-                        url, {
-                            asynchronous: false, method: 'get',
-                            onSuccess: this._loadSVGOnSuccess.bind(this),
-                            onFailure: this._loadSVGOnFailure.bind(this)
-                        });
+                throw "ORYX.Core.StencilSet.Stencil(_loadSVGOnSuccess): The response is not a SVG document."
             }
+        } else {
+            new Ajax.Request(
+                    url, {
+                        asynchronous: false, method: 'get',
+                        onSuccess: this._loadSVGOnSuccess.bind(this),
+                        onFailure: this._loadSVGOnFailure.bind(this)
+                    });
         }
     },
     postProcessProperties: function() {
 
         // add image path to icon
-        if (this._jsonStencil.icon) {
-
-            if (this._jsonStencil.icon.charAt(0) === '/') {
-                // then do nothing
-            } else if (this._jsonStencil.icon.indexOf("://") === -1) {
-                this._jsonStencil.icon = this._source + "icons/" + this._jsonStencil.icon;
-            } else {//secure against xss otherwise ? not sure.
-                this._jsonStencil.icon = this._jsonStencil.icon;
-            }
-        } else {
+        if (!this._jsonStencil.icon) 
+        {
             this._jsonStencil.icon = "";
         }
 
@@ -276,11 +260,14 @@ ORYX.Core.StencilSet.Stencil = {
     view: function() {
         return this._view.cloneNode(true) || this._view;
     },
-    hidden: function() {
-        return this._jsonStencil.hide;
-    },
     icon: function() {
         return this._jsonStencil.icon;
+    },
+    urlPropertyContent: function() {
+        return this._jsonStencil.urlPropertyContent;
+    },
+    urlStoreProperty: function() {
+        return this._jsonStencil.urlStoreProperty;
     },
     fixedAspectRatio: function() {
         return this._jsonStencil.fixedAspectRatio === true;
@@ -291,6 +278,9 @@ ORYX.Core.StencilSet.Stencil = {
     getRepositoryEntries: function() {
         return (this._jsonStencil.repositoryEntries) ?
                 $A(this._jsonStencil.repositoryEntries) : $A([]);
+    },
+    hidden: function() {
+        return this._jsonStencil.hide;
     },
     properties: function() {
         return this._properties.values();
@@ -446,4 +436,4 @@ function _evilSafariHack(serializedXML) {
 
     return dom;
 }
-
+	

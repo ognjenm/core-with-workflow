@@ -4,14 +4,14 @@
 				<div class="modal-content">
 
 					<div class="modal-header table-header" style="margin-bottom: 0;">
-						<button data-dismiss="modal" class="close" type="button">×</button>
+						<button class="close" type="button" onclick="applyDiagram{{$uniqueId}}(true, true, true); return false;">×</button>
 						<h4>Business process editor</h4>
 					</div>
-					<div class="modal-body" style="max-height: none; text-align: center; padding: 0;">
-						<p>One fine body…</p>
-					</div>
+					<div class="modal-body" style="max-height: none; text-align: center; padding: 0;"></div>
 					<div class="modal-footer">
-						<a href="#" class="btn" data-dismiss="modal">Close</a>
+						<a href="#" class="btn btn-success" onclick="applyDiagram{{$uniqueId}}(); return false;">Apply</a>
+						<a href="#" class="btn btn-success" onclick="applyDiagram{{$uniqueId}}(false, true); return false;">Apply and close</a>
+						<a href="#" class="btn btn-danger" onclick="applyDiagram{{$uniqueId}}(true, true, true); return false;">Close</a>
 					</div>
 
 				</div>
@@ -33,11 +33,47 @@
 		</div>
 
 		<script type="text/javascript">
+
+			var diagramData{{$uniqueId}} = {{ $model->{$field->code}->has('diagram') ? "'" . json_encode($model->{$field->code}->get('diagram')) . "'" : 'false' }};
+
+			function applyDiagram{{$uniqueId}}(clear, hide, clearOnly)
+			{
+				if (window.frames['frame-process-{{$uniqueId}}'] && window.frames['frame-process-{{$uniqueId}}'].oryxEditor)
+				{
+					jQuery.ajax({
+						url: '{{ URL::route("cmf.workflow.apply-diagram", ['sessionDiagramId' => $sessionDiagramId]) }}',
+						method: 'get',
+						dataType: 'json',
+						data: {
+							'diagram': window.frames['frame-process-{{$uniqueId}}'].oryxEditor.getSerializedJSON(),
+							'clear': clear ? 1 : 0,
+							'clearOnly': clearOnly ? 1 : 0
+						}
+					}).done(function(data) 
+					{
+						if (!clearOnly)
+						{
+							jQuery('input[name="process"]', '#model-ajax-{{$uniqueId}}').val(JSON.stringify(data, null, 2));
+
+							diagramData{{$uniqueId}} = JSON.stringify(data.diagram, null, 2);
+						}
+
+						jQuery('div.modal-body', this).empty();
+
+						if (hide)
+						{
+							jQuery('#modal-business-{{$uniqueId}}').modal('hide');
+						}  
+					});
+				}
+			}
+
 			function showProcessModal{{$uniqueId}}()
 			{
 				var modal = jQuery('#modal-business-{{$uniqueId}}').appendTo(document.body);
 					modal
 						.modal('show')
+						.on('hide.bs.modal', function() {})
 						.css({
 							'width': function () { 
 								return (jQuery(window).width() * .9) + 'px';  
@@ -52,15 +88,8 @@
 					jQuery('div.modal-body', modal)
 						.html(  '<iframe name="frame-process-{{$uniqueId}}" id="frame-process-{{$uniqueId}}" ' +
 								' style="width: 100%; border: none;"' + 
-								' src="{{ URL::route("cmf.module.workflow-process.diagram.show", ['id' => intval($model->getKey())]) }}" />')
+								' src="{{ URL::route("cmf.module.workflow-process.diagram.show", ['id' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) }}" />')
 				}
-
-				modal.on('hide', function(){
-					if (window.frames['frame-process-{{$uniqueId}}'].oryxEditor)
-					{
-						jQuery('input[name="process"]','#model-ajax-{{$uniqueId}}').val(window.frames['frame-process-{{$uniqueId}}'].oryxEditor.getSerializedJSON());
-					}
-				});
 
 				var frame = jQuery('#frame-process-{{$uniqueId}}');
 					frame.css({
@@ -68,8 +97,9 @@
 					});
 
 				frame.load(function(){
-					window.frames['frame-process-{{$uniqueId}}'].importJSONFromTop = function() {
-						return jQuery('input[name="process"]','#model-ajax-{{$uniqueId}}').val() 
+					window.frames['frame-process-{{$uniqueId}}'].importJSONFromTop = function() 
+					{
+						return diagramData{{$uniqueId}};
 					}
 				});
 			}
