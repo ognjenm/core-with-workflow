@@ -10,7 +10,7 @@ class SeedWorkflowEventTable extends Migration {
 		if (Schema::hasTable('workflow_event'))
 		{
 			$modelEventId = DB::table('object_type')->where('code', 'workflow_event')->pluck('id');
- 
+
 			$tabMainId = DB::table('object_tab')->insertGetId(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Tab']),
@@ -42,8 +42,8 @@ class SeedWorkflowEventTable extends Migration {
 						'tab_object_type' => $modelEventId,
 						'tab_order' => 3
 					]
-			); 
-			
+			);
+
 			DB::table('object_field')->insertGetId(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Core\Model\Object\Field']),
@@ -159,7 +159,6 @@ class SeedWorkflowEventTable extends Migration {
 						'field_order' => 6,
 					]
 			);
-
 		}
 	}
 
@@ -177,7 +176,7 @@ class SeedWorkflowEventTableTranslation extends \Telenok\Core\Interfaces\Transla
 				'ru' => 'Событие бизнес-процесса',
 				'en' => 'Event of business-process',
 			],
-			'field' => [  
+			'field' => [
 			],
 		]
 	];

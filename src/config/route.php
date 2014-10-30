@@ -186,8 +186,8 @@
 \Route::any('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
 \Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@applyDiagram"));
 
-\Route::any('telenok/module/workflow/element/point-start-after-save/property', array('as' => 'cmf.workflow.point-start-after-save.property', 'uses' => "Telenok\Core\Workflow\Point\Start\AfterSave@getPropertyContent"));
-\Route::any('telenok/module/workflow/element/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
+\Route::any('telenok/module/workflow/element/start/point-model/property', array('as' => 'cmf.workflow.point-model.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Modele@getPropertyContent"));
+\Route::any('telenok/module/workflow/element/end/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/form-element-hide/property', array('as' => 'cmf.workflow.form-element-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormElementHide@getPropertyContent"));
 
 

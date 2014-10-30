@@ -240,23 +240,18 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			$model = new static();
 		}
-		
+
 		if ($withPermission)
 		{
 			$model->validateStoreOrUpdatePermission($type, $input);
 		}
 
 		foreach($model->fillable as $fillable)
-		{ 
+		{
 			if ($input->has($fillable))
 			{
 				//$model->__set($fillable, $input->get($fillable));
 				//$model->$fillable = $input->get($fillable);
-
-				if ($fillable == 'process')
-				{
-				//	dd('aaaaaaaaaaa', $model->$fillable, $input->get($fillable) );
-				}
 			}
 			else if (!$model->exists)
 			{
@@ -269,7 +264,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			{
 				$input->put($fillable, $model->$fillable);
 			} 
-		} 
+		}
 
 		try
 		{
@@ -279,8 +274,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 				$exists = $model->exists;
 
-				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.before', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}"));
-
+				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.before', (new \Telenok\Core\Workflow\Event())->setResource($model)->setInput($input));
+dd('workflow.' . ($exists ? 'update' : 'store') . '.before');
 				if ($type->classController())
 				{
 					$classControllerObject = \App::build($type->classController());
@@ -301,7 +296,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				{
 					$classControllerObject->validate($model, $input);
 				} 
-				
+
 				$model->fill($input->all())->push();
 
 				if (!$exists && $type->treeable)
@@ -314,9 +309,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				if ($type->classController())
 				{
 					$classControllerObject->postProcess($model, $type, $input);
-				} 
+				}
 
-				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.after', (new \Telenok\Core\Workflow\Event())->setResourceCode("object_type.{$type->code}")->setResource($model));
+				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.after', (new \Telenok\Core\Workflow\Event())->setResource($model)->setInput($input));
 			});
 		}
 		catch (\Telenok\Core\Interfaces\Exception\Validate $e)

@@ -20,8 +20,9 @@ class Element extends \Illuminate\Routing\Controller {
     protected $package = '';
 
     protected $process;
+    protected $thread;
     protected $action;
-    protected $param = [];
+    protected $input = [];
 
     protected $stencilConfig = [];
     protected $stencilContainmentRules = [];
@@ -32,6 +33,11 @@ class Element extends \Illuminate\Routing\Controller {
     protected $propertyView = '';
     protected $routerPropertyContent = '';
     protected $routerStoreProperty = 'cmf.workflow.store-property';
+
+    public function __construct()
+    {
+        $this->input = \Illuminate\Support\Collection::make([]);
+    }
 
     public function make()
     {
@@ -156,7 +162,7 @@ class Element extends \Illuminate\Routing\Controller {
 
 
 
-    public function setAction($param = [])
+    public function setStencil($param = [])
     {
         $this->action = $param;
 
@@ -180,21 +186,58 @@ class Element extends \Illuminate\Routing\Controller {
         return $this->process;
     }
 
-    public function setParam($param)
+    public function setThread(\Telenok\Core\Interfaces\Workflow\Thread $param)
     {
-        $this->param = $param;
-
+        $this->thread = $param;
+        
         return $this;
     }
 
-    public function getParam()
+    public function getThread()
     {
-        return $this->param;
+        return $this->thread;
+    }
+
+    public function setInput(\Illuminate\Support\Collection $param = null)
+    {
+        $this->input = $param;
+        
+        return $this;
+    }
+    
+    public function getInput()
+    {
+        return $this->input;
     }
 
     public function process()
     {
+        $this->setNext();
+        
         return $this;
+    }
+
+    protected function setNext()
+    {
+        $next = [];
+        
+        foreach($this->getLinkOut() as $out)
+        {
+            $this->getThread()->addProcessingStencil($out);
+            $this->getThread()->removeProcessingStencil($out);
+        }
+
+        return $next;
+    }
+    
+    public function isProcessSleeping()
+    {
+        return false;
+    }
+    
+    public function isProcessFinished()
+    {
+        return true;
     }
 
     public function getId()

@@ -17,17 +17,15 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 });
 
 \Event::listen('telenok.workflow.event.add', function($list) 
-{/*
+{
     $list->push('auth.attempt');
     $list->push('auth.login');
     $list->push('auth.logout');
-    $list->push('workflow.create.before');
-    $list->push('workflow.create.after');
     $list->push('workflow.update.before');
     $list->push('workflow.update.after');
-    $list->push('workflow.save.before');
-    $list->push('workflow.save.after');
-*/});
+    $list->push('workflow.store.before');
+    $list->push('workflow.store.after');
+});
 
 \Event::listen('telenok.acl.filter.resource.add', function($list)
 {
@@ -72,8 +70,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 \Event::listen('telenok.workflow.action.add', function($list) 
 {
-    $list->push('Telenok\Core\Workflow\Point\Start\BeforeSave');
-    $list->push('Telenok\Core\Workflow\Point\Start\AfterSave');
+    $list->push('Telenok\Core\Workflow\Point\Start\Model');
 	$list->push('Telenok\Core\Workflow\Point\End\End');
     $list->push('Telenok\Core\Workflow\Flow\Standart');
 	$list->push('Telenok\Core\Workflow\Activity\FormElementHide');
@@ -147,9 +144,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time) {
     
 	if (\Config::get('querylog'))
 	{
-		// Uncomment this if you want to include bindings to queries
-		$sql = str_replace(array('%', '?'), array('%%', '"%s"'), $sql);
-		$sql = vsprintf($sql, $bindings);
+		$sql = vsprintf(str_replace(array('%', '?'), array('%%', '"%s"'), $sql), $bindings);
 
 		var_dump($sql);
 	}

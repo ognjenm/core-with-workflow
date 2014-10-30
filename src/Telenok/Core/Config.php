@@ -367,15 +367,16 @@ class Config {
 			\Event::listen($eventCode, function($event) use ($eventCode)
 			{
 				if ($event instanceof \Telenok\Core\Interfaces\Workflow\Event)
-				{
-					$event->setEventCode($eventCode);
-
-					return (new \Telenok\Core\Workflow\Runtime())->setEvent($event)->fire();
+				{ 
+					$runtime = \Telenok\Core\Workflow\Runtime::make();
+					
+					$event->setEventCode($eventCode)->setRuntime($runtime);
+					
+					return $runtime->processEvent($event);
 				}
 			});
 		}
 	}
-
 }
 
 ?>

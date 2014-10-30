@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Workflow\Point\Start;
 
-class BeforeSave extends \Telenok\Core\Interfaces\Workflow\Point {
+class Model extends \Telenok\Core\Interfaces\Workflow\Point {
  
     protected $minIn = 0;
     protected $minOut = 1;
@@ -12,9 +12,21 @@ class BeforeSave extends \Telenok\Core\Interfaces\Workflow\Point {
     
     protected $total = 1;
     
-    protected $key = 'point-start-before-save';
-    protected $propertyView = 'core::workflow.point-start-before-save.property';
-    protected $routerPropertyContent = 'cmf.workflow.point-start-after-save.property';
+    protected $key = 'point-model';
+    protected $propertyView = 'core::workflow.point-model.property';
+    protected $routerPropertyContent = 'cmf.workflow.point-model.property';
+
+	public function isEventForMe(\Telenok\Core\Workflow\Event $event)
+    {
+		$eventList = $this->getInput()->get('eventList', []);
+		
+        return in_array($event->getEventCode(), $eventList);
+    }
+	
+    public function getStartEventObject($id, $resourceId, $property, $process)
+    {
+        return ['workflow.update.before' => [1128,2,3]];
+    }
 	
     protected $stencilCardinalityRules = [
         [
@@ -30,18 +42,19 @@ class BeforeSave extends \Telenok\Core\Interfaces\Workflow\Point {
             ]
         ]
     ];
-
+	
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))
         {
             $this->stencilConfig = [
                         'type' => 'node',
-                        'id' => 'node',
+                        'id' => $this->getKey(),
                         'title' => $this->LL('title'),
                         'groups' => [$this->LL('title.groups')],
                         'description' => $this->LL('description'),
                         'urlPropertyContent' => $this->getRouterPropertyContent(),
+                        'urlStoreProperty' => $this->getRouterStoreProperty(),
                         'view' => '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 										<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -59,34 +72,32 @@ class BeforeSave extends \Telenok\Core\Interfaces\Workflow\Point {
 												<defs>
 													<radialGradient id="background" cx="10%" cy="10%" r="100%" fx="10%" fy="10%">
 														<stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
-														<stop id="fill_el" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+														<stop id="fill_el_1" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
 													</radialGradient>
 												</defs>
 
 												<circle 
-													id="bg_frame" 
+													id="border_el_1" 
 													cx="16" 
 													cy="16" 
 													r="15" 
 													stroke="black" 
 													fill="url(#background) white" 
-													stroke-width="1" 
-													stroke-dasharray="2,2,2"/>
+													stroke-width="1" />
 
 												<circle 
-													id="frame2_non_interrupting" 
+													id="border_el_2" 
 													cx="16" 
 													cy="16" 
 													r="12" 
 													stroke="black" 
 													fill="none" 
-													stroke-width="1" 
-													stroke-dasharray="2,2,2"/>
+													stroke-width="1" />
 
 												<path
 												   d="M 6.75,13 L6.75,19 L13,19 L13,25.75 L19,25.75 L19,19 L25.75,19 L25.75,13 L19,13 L19,6.75 L13,6.75 L13,13z"
-												   id="path9"
-												   style="fill:none;stroke:#000000;stroke-width:1" stroke-dasharray="2,2,2"/>
+												   id="border_el_3"
+												   style="fill:none;stroke-width:1" stroke="#000000" />
 
 												<text font-size="11" 
 													id="title" 

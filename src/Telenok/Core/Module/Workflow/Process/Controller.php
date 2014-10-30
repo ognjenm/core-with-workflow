@@ -14,16 +14,51 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $diagramStensilSet = 'core::module.workflow-process.stensilset'; 
     protected $diagramBody = 'core::module.workflow-process.diagram'; 
 
+    public function getStartEventObject($process)
+    {	
+		$properties = array_get($process, 'stencil', false);
+		$shapes = array_get($process, 'diagram.childShapes', false);
+
+		$startEventObject = [];
+		
+		if ($shapes)
+		{
+			$elements = $this->getElements();
+			
+			foreach($shapes as $shape)
+			{
+				$id = array_get($shape, 'stencil.id', false);
+				$resourceId = array_get($shape, 'resourceId', false);
+				$property = array_get($properties, $resourceId, false);
+				
+				$e = $elements->get($id);
+				
+				if ($e instanceof \Telenok\Core\Interfaces\Workflow\Point)
+				{
+					$r = $e->getStartEventObject($id, $resourceId, $property, $process);
+
+					if ($r !== false)
+					{
+						$startEventObject[] = $r;
+					}
+				}
+			}
+		}
+
+		return $startEventObject;
+	}
+	
     public function preProcess($model, $type, $input)
     {
-        $processConfig = json_decode($input->get('process', ""), true);
+        $process = json_decode($input->get('process', "[]"), true);
 
-		$input->put('process', $processConfig);
+		$input->put('process', $process);
+		 
+        //$this->validate($process);
 
-        if (array_get($processConfig, 'stencil', false))
-        {
-        //    \Telenok\Core\Workflow\Process::validate($processConfig);
-        }
+		$eventObject = $this->getStartEventObject($process);
+
+		$input->put('event_object', $eventObject);
 
         return $this;
     }

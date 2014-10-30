@@ -154,6 +154,22 @@ class SeedWorkflowProcessTable extends Migration {
 						'field_order' => 6,
 					]
 			);
+
+			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+					[
+						'title' => ['ru' => 'Событие-Oбъект', 'en' => 'Event-Object'],
+						'title_list' => ['ru' => 'Процесс', 'en' => 'Process'],
+						'key' => 'complex-array',
+						'code' => 'event_object',
+						'active' => 1,
+						'field_object_type' => $modelId,
+						'field_object_tab' => $tabMainId,
+						'show_in_form' => 0,
+						'show_in_list' => 0,
+						'allow_search' => 0,
+						'field_order' => 6,
+					]
+			);
 		}
 	}
 } 
