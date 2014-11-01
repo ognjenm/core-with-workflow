@@ -71,16 +71,16 @@ ORYX.Plugins.PropertyWindow = {
         {
             var $uniqueId = Math.floor(Math.random() * (1000000 - 1) + 1);
 
-            if (!jQuery('#modal-' + $uniqueId).size())
+            if (!jQuery('#modal-' + $uniqueId, window.parent.document).size())
             {
-                jQuery('body').append('<div id="modal-' + $uniqueId + '" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                jQuery('body', window.parent.document).append('<div id="modal-' + $uniqueId + '" class="modal fade" role="dialog" aria-labelledby="label"></div>');
             }
 
-            var $modal = jQuery('#modal-' + $uniqueId);
+            var $modal = jQuery('#modal-' + $uniqueId, window.parent.document);
 
             $modal.data('model-data', function($form)
             {
-                //$modal.modal('hide');
+                $modal.modal('hide');
                 
                 jQuery.ajax({
                     url: shape.getStencil().urlStoreProperty(),
@@ -101,9 +101,10 @@ ORYX.Plugins.PropertyWindow = {
 
             $modal.html(data.tabContent);
 
-            $modal.modal('show').on('hidden', function()
+            $modal.modal('show').on('hidden.bs.modal', function()
             {
-                jQuery(this).html("");
+                jQuery(this).data('bs.modal', null);
+                jQuery(this).remove();
             });
         });
     },

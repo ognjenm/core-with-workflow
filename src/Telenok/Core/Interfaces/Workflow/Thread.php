@@ -14,20 +14,18 @@ class Thread {
 
     public function initActions()
     {
-        if ($this->modelThread)
+        if ($this->getModelThread())
         {
             $elements = \App::make('telenok.config')->getWorkflowElement();
-            
-            $childShapes = 'diagram.childShapes';
-            
-            foreach ($this->modelThread->original_process->get($childShapes, []) as $key => $action)
+            $this->actions = \Illuminate\Support\Collection::make([]);
+
+            foreach($this->getModelThread()->original_process->getDot('diagram.childShapes', []) as $key => $action)
             {
-                $this->actions[$action['resourceId']] = $elements->get($action['stencil']['id'])
+                $this->actions->put($action['resourceId'], $elements->get($action['stencil']['id'])
                                                             ->make()
-                                                            ->setProcess($this->modelThread->original_process)
                                                             ->setThread($this)
-                                                            ->setInput($this->modelThread->original_process->get('stencil.' . $action['resourceId'], []))
-                                                            ->setStencil($action); 
+                                                            ->setInput($this->getModelThread()->original_process->get('stencil.' . $action['resourceId'], []))
+                                                            ->setStencil($action));
             }
         }
         else
@@ -38,7 +36,7 @@ class Thread {
     
     public function getActionByResourceId($resourceId = '')
     {
-        return array_get($this->actions, $resourceId, false);
+        return $this->actions->get($resourceId);
     }
     
     public function getActions()
@@ -48,120 +46,155 @@ class Thread {
     
     public function getActiveElements()
     {
-        $activeElements = \Illuminate\Support\Collection::make([]);
-        
-        foreach($this->getActions() as $action)
+        $activeElements = \Illuminate\Support\Collection::make([]); 
+
+        foreach($this->getActions() as $resourceId => $action)
         {
-			if ($this->modelThread->processing_stage == 'started')
+			if ($this->getModelThread()->processing_stage == 'started')
 			{
                 if ($action instanceof \Telenok\Core\Interfaces\Workflow\Point && $action->isEventForMe($this->getEvent()))
                 {
-                    $activeElements->put($action->getId(), $action);
+                    $activeElements->push($action->getId());
                 }
 			}
-			else if ($this->modelThread->processing_stage == 'processing')
+			else if ($this->getModelThread()->processing_stage == 'processing')
 			{
-                
+                $activeElements = $this->getModelThread()->processing_stencil;
+			} 
+			else if ($this->getModelThread()->processing_stage == 'finished')
+			{
 			} 
         }
-        
+
         return $activeElements;
     }
-    
-    public function run(\Telenok\Core\Interfaces\Workflow\Runtime $runtime)
+
+    public function setProcessingStageFinished()
     {
-        if (!$this->modelThread && !$this->modelProcess)
+        $this->setProcessingStage('finished');
+    }
+
+    public function isProcessingStageFinished()
+    {
+        return $this->getModelThread()->processing_stage == 'finished';
+    }
+
+    public function run(\Telenok\Core\Interfaces\Workflow\Runtime $runtime)
+    { 
+        if (!$this->getModelThread() && !$this->modelProcess)
         {
             throw new \Exception('Please, set modelProcess');
         }
-        
-        if (!$this->modelThread && $this->modelProcess)
+
+        if (!$this->getModelThread() && $this->modelProcess)
         {
-            $this->modelThread = \Telenok\Workflow\Thread::storeOrUpdate([
+            $this->modelThread = (new \Telenok\Workflow\Thread())->storeOrUpdate([
 				'title' => $this->modelProcess->title,
 				'original_process' => $this->modelProcess->process,
+				'active' => 1,
 				'thread_workflow_process' => $this->modelProcess->getKey(),
 				'processing_stage' => 'started',
-			]);
+			], false, false);
         }
-        
+
         $this->initActions();
-        
-        if ($this->modelThread->processing_stencil->isEmpty())
+
+        $activeElements = $this->getActiveElements();
+
+        if (!$activeElements->isEmpty())
         {
-            $this->modelThread->storeOrUpdate([
-                    'processing_stencil' => $this->getActiveElements()->keys(),
+            $this->getModelThread()->storeOrUpdate([
+                    'processing_stencil' => $activeElements,
                     'processing_stage' => 'processing',
-                ]);
+                ], false, false);
         }
-            
+
         $i = 10;
         $sleepAll = [];
         $diff = ['some-value'];
-        
-        while(($activeElements = $this->getActiveElements()) && !empty($diff) && $i--)
-        {
-            $diff = array_diff($sleepAll, $activeElements->keys());
-            
-            foreach($activeElements as $id => $el)
+
+        while(!$this->isProcessingStageFinished() && !empty($diff) && $i--)
+        { 
+            foreach($activeElements as $id)
             {
+                $el = $this->getActionByResourceId($id);
+                
                 $el->process();
 
                 if ($el->isProcessSleeping())
                 {
                     $sleepAll[] = $id;
                 }
-                else if ($el->isProcessFinished())
-                {
-                    $el->setNext();
-                }
             }
-        }
-        
-        return $this;
 
-        
-        
-        
-        
-        $i = 100000;
+            // all actions sleeping
+            $diff = array_diff($activeElements->toArray(), $sleepAll);
 
-        while($elements = $this->process->getNext($elements)) 
-        {
-            if (--$i == 0) break;
-            
-            foreach($elements as $element)
-            {
-                $this->result[$element->getId()] = $element->process();
-            }
+            $activeElements = $this->getActiveElements();
         }
 
         return $this;
     } 
 
+    public function addLog($action, $data = [])
+    {
+        $log = $this->getModelThread()->processing_stencil_log;
+
+        $logStencil = $log->get($action->getId(), []);
+
+        if (!isset($data['time']))
+        {
+            $data['time'] = \Carbon\Carbon::now();
+        }
+
+        if (!isset($data['key']))
+        {
+            $data['key'] = $action->getKey();
+        }
+        
+        $logStencil[] = $data;
+
+        $log->put($action->getId(), $logStencil);
+
+        $this->getModelThread()->processing_stencil_log = $log;
+
+        $this->getModelThread()->save();
+
+        return $this;
+    }
+
     public function addProcessingStencil($resourceId = '')
     {
-        $list = $this->modelThread->processing_stencil;
-        
+        $list = $this->getModelThread()->processing_stencil;
+
         $list->push($resourceId);
-        
-        $this->modelThread->processing_stencil = $list;
-        
-        $this->modelThread->save();
-        
+
+        $this->getModelThread()->processing_stencil = $list;
+
+        $this->getModelThread()->save();
+
         return $this;
     }    
 
     public function removeProcessingStencil($resourceId = '')
     {
-        $list = $this->modelThread->processing_stencil->reject(function($item) use ($resourceId) { return $item == $resourceId;});
-        
-        $this->modelThread->processing_stencil = $list;
-        
-        $this->modelThread->save();
-        
+        $list = $this->getModelThread()->processing_stencil->reject(function($item) use ($resourceId) { return $item == $resourceId;});
+
+        $this->getModelThread()->processing_stencil = $list;
+
+        $this->getModelThread()->save();
+
         return $this;
     }    
+
+    public function setProcessingStage($param)
+    {
+        $this->getModelThread()->processing_stage = $param;
+
+        $this->getModelThread()->save();
+
+        return $this;
+    }
     
     public function setModelThread(\Telenok\Core\Model\Workflow\Thread $param)
     {
@@ -197,31 +230,12 @@ class Thread {
     public function getEvent()
     {
         return $this->event;
-    }
-    
-    public function continuance()
-    {
-        $elements = $this->getLastExecutedElement();
+    }  
 
-        $i = 100000;
-
-        while($elements = $this->process->getNext($elements)) 
-        {
-            if (--$i == 0) break;
-
-            foreach($elements as $element)
-            {
-                $this->result[$element->getId()] = $element->process();
-            }
-        }
-
-        return $this;
-    }
-
-    public function getLastExecutedElement()
-    {
-        return $this;
-    }
+	public static function make() 
+	{
+		return new static;
+	}
 }
 
 ?>

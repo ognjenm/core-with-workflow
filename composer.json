@@ -1,38 +1,34 @@
 {
-	"name": "telenok/core",
-	"description": "Telenok CMS Core engine",
-	"keywords": ["cms", "telenok", "core"],
-	"homepage": "http://telenok.com",
-	"minimum-stability": "dev",
-	"license": [
-		"Freeware for personal (non-commercial non-company) using",
-		"Commercialware for any type of companies and commercial using"
-	],
-	"support": {
-		"email": "support@telenok.com",
-		"issues": "https://github.com/telenok/telenok/issues"
-	},
-	"authors": [
-		{
-			"name": "Telenok Company",
-			"email": "support@telenok.com"
-		}
-	],
-	"require": {
-		"php": ">=5.4.0",
-		"laravel/framework": "4.2.*"
-	},
-	"autoload": {
-		"classmap": [
-			"src/migrations"
-		],
-		"psr-0": {
-			"Telenok\\Core": "src/"
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "1.1-dev"
-		}
-	}
+    "name": "telenok/core",
+    "description": "Telenok CMS Core engine",
+    "version": "0.0.2",
+    "keywords": ["cms", "telenok", "core"],
+    "homepage": "http://telenok.com",
+    "minimum-stability": "dev",
+    "license": [
+        "Freeware for personal (non-commercial non-company) using",
+        "Commercialware for any type of companies and commercial using"
+    ],
+    "support": {
+        "email": "support@telenok.com",
+        "issues": "https://github.com/telenok/telenok/issues"
+    },
+    "authors": [
+        {
+            "name": "Telenok Company",
+            "email": "support@telenok.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "laravel/framework": "4.2.*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Telenok\\Core": "src/"
+        }
+    }
 }

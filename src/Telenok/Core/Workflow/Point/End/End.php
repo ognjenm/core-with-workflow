@@ -30,6 +30,14 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
             ]
     ];
 	
+    public function setNext()
+    {
+        $this->getThread()->setProcessingStageFinished();
+        $this->getThread()->removeProcessingStencil($this->getId());
+
+        return $this;
+    }
+    
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))

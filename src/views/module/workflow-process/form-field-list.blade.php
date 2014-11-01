@@ -73,7 +73,9 @@
 				var modal = jQuery('#modal-business-{{$uniqueId}}').appendTo(document.body);
 					modal
 						.modal('show')
-						.on('hide.bs.modal', function() {})
+						.on('hide.bs.modal', function() {
+                            jQuery('div.modal-body', this).html("");
+                        })
 						.css({
 							'width': function () { 
 								return (jQuery(window).width() * .9) + 'px';  

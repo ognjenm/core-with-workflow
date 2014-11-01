@@ -4,7 +4,6 @@ namespace Telenok\Core\Interfaces\Workflow;
 
 class Element extends \Illuminate\Routing\Controller {
 
-    protected $linkIn = [];
     protected $linkOut = [];
 
     protected $minIn = 0;
@@ -19,7 +18,6 @@ class Element extends \Illuminate\Routing\Controller {
     protected $key = '';
     protected $package = '';
 
-    protected $process;
     protected $thread;
     protected $action;
     protected $input = [];
@@ -156,40 +154,22 @@ class Element extends \Illuminate\Routing\Controller {
 		\Session::put('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, $stencilData);
 
 		return $stencilData;
-	}
-
-
-
-
+	} 
 
     public function setStencil($param = [])
     {
-        $this->action = $param;
+        $this->action = $param;  
+         
+        $this->setId($param['resourceId'])
+            ->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
 
-        $this->setId(array_get($param, 'id'))
-            ->setLinkIn((array)array_get($param, 'link-in'))
-            ->setLinkOut((array)array_get($param, 'link-out'))
-            ->setParam((array)array_get($param, 'param'));
-        
         return $this;
-    }
-
-    public function setProcess(\Telenok\Core\Interfaces\Workflow\Process $param)
-    {
-        $this->process = $param;
-        
-        return $this;
-    }
-
-    public function getProcess()
-    {
-        return $this->process;
     }
 
     public function setThread(\Telenok\Core\Interfaces\Workflow\Thread $param)
     {
         $this->thread = $param;
-        
+
         return $this;
     }
 
@@ -198,13 +178,13 @@ class Element extends \Illuminate\Routing\Controller {
         return $this->thread;
     }
 
-    public function setInput(\Illuminate\Support\Collection $param = null)
+    public function setInput($param = [])
     {
-        $this->input = $param;
-        
+        $this->input = is_array($param) ? \Illuminate\Support\Collection::make($param) : $param;
+
         return $this;
     }
-    
+
     public function getInput()
     {
         return $this->input;
@@ -212,24 +192,37 @@ class Element extends \Illuminate\Routing\Controller {
 
     public function process()
     {
+        $this->log();
         $this->setNext();
-        
+
         return $this;
     }
 
     protected function setNext()
     {
-        $next = [];
-        
         foreach($this->getLinkOut() as $out)
         {
-            $this->getThread()->addProcessingStencil($out);
-            $this->getThread()->removeProcessingStencil($out);
+            // through flows aka connectors to activities --->
+            foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $f)
+            {
+                $this->getThread()->addProcessingStencil($f);
+            } 
         }
 
-        return $next;
+        $this->getThread()->removeProcessingStencil($this->getId());
     }
-    
+
+    public function log($data = [])
+    {
+        $this->getThread()->addLog($this, [
+                'data' => array_get($data, 'data', []), 
+                'result' => array_get($data, 'result', 'done'), 
+                'log' => array_get($data, 'log', 'success')]
+            );
+
+        return $this;
+    }
+
     public function isProcessSleeping()
     {
         return false;
@@ -260,18 +253,6 @@ class Element extends \Illuminate\Routing\Controller {
     public function setKey($key)
     {
         $this->key = $key;
-
-        return $this;
-    }
-    
-    public function getLinkIn()
-    {
-        return $this->linkIn;
-    }
-    
-    public function setLinkIn($link)
-    {
-        $this->linkIn = $link;
 
         return $this;
     }

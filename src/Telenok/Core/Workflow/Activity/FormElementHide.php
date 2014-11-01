@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Workflow\Activity;
 
-class FormElementHide extends \Telenok\Core\Interfaces\Workflow\Point {
+class FormElementHide extends \Telenok\Core\Interfaces\Workflow\Activity {
  
     protected $minIn = 1;
     protected $minOut = 0;
@@ -35,7 +35,16 @@ class FormElementHide extends \Telenok\Core\Interfaces\Workflow\Point {
                 ]
             ]
     ];
-	
+
+    public function process()
+    {
+        \Log::info('Business Process: Event: xxxxxx. Process action with code "action-log"');
+        
+        //$paramProcess = $process->getParam();
+        
+        return parent::process();
+    }
+
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))

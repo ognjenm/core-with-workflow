@@ -9,7 +9,6 @@ class Edge extends \Telenok\Core\Interfaces\Workflow\Element{
     protected $linkFrom;
     protected $linkTo;
     
-
 }
 
 ?>

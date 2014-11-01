@@ -18,8 +18,14 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
 
 	public function isEventForMe(\Telenok\Core\Workflow\Event $event)
     {
+        
+        return true;
+        
+        
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        
 		$eventList = $this->getInput()->get('eventList', []);
-		
+
         return in_array($event->getEventCode(), $eventList);
     }
 	

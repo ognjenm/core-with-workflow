@@ -207,7 +207,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return parent::fillableFromArray($attributes);
 	}
 
-	public function storeOrUpdate($input = [], $withPermission = false)
+	public function storeOrUpdate($input = [], $withPermission = false, $withEvent = true)
 	{
 		if ($this instanceof \Telenok\Core\Model\Object\Sequence)
 		{
@@ -268,15 +268,18 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		try
 		{
-			\DB::transaction(function() use ($type, $input, $model)
+			\DB::transaction(function() use ($type, $input, $model, $withEvent)
 			{  
 				$classControllerObject = null;
 
 				$exists = $model->exists;
 
-				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.before', (new \Telenok\Core\Workflow\Event())->setResource($model)->setInput($input));
-dd('workflow.' . ($exists ? 'update' : 'store') . '.before');
-				if ($type->classController())
+                if ($withEvent)
+                {
+                    \Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.before', (new \Telenok\Core\Workflow\Event())->setResource($model)->setInput($input));
+                }
+
+                if ($type->classController())
 				{
 					$classControllerObject = \App::build($type->classController());
 
@@ -310,8 +313,11 @@ dd('workflow.' . ($exists ? 'update' : 'store') . '.before');
 				{
 					$classControllerObject->postProcess($model, $type, $input);
 				}
-
-				\Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.after', (new \Telenok\Core\Workflow\Event())->setResource($model)->setInput($input));
+                
+                if ($withEvent)
+                {
+                    \Event::fire('workflow.' . ($exists ? 'update' : 'store') . '.after', (new \Telenok\Core\Workflow\Event())->setResource($model)->setInput($input));
+                }
 			});
 		}
 		catch (\Telenok\Core\Interfaces\Exception\Validate $e)

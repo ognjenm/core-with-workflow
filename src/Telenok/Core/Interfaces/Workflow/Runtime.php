@@ -14,11 +14,13 @@ class Runtime {
 			{
 				foreach($processes as $p)
 				{
+                    //$this->runExistingThread($p);
+                    
 					foreach($p->event_object as $eventCode => $points)
 					{
-						if (array_get($points, $this->eventCode))
+						if (array_get($points, $event->getEventCode()))
 						{
-							$this->runtime->createAndRunThread($p, $this);
+							$this->threadCreateAndRun($p, $event);
 
 							break;
 						}
@@ -27,22 +29,22 @@ class Runtime {
 			}
 		}
 	}
-	
+
     public function canProcessing()
     {
         return (bool)\Config::get('app.workflow.enabled');
     }
-    
-    public function createAndRunThread(\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
+
+    public function threadCreateAndRun(\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
     { 
         if ($this->canProcessing())
         {
-            (new \Telenok\Core\Workflow\Thread())->setEvent($event)->setModelProcess($process)->run($this); 
+            \Telenok\Core\Workflow\Thread::make()->setEvent($event)->setModelProcess($process)->run($this); 
         }
-        
+
         return $this;
     }
-	
+
 	public static function make() 
 	{
 		return new static;

@@ -30,7 +30,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		
 		if (is_array($v))
 		{
-			return \Illuminate\Support\Collection::make($v);
+			return \Telenok\Core\Support\Collection::make($v);
 		}
 		else
 		{
