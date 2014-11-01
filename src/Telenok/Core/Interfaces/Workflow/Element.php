@@ -217,7 +217,7 @@ class Element extends \Illuminate\Routing\Controller {
         $this->getThread()->addLog($this, [
                 'data' => array_get($data, 'data', []), 
                 'result' => array_get($data, 'result', 'done'), 
-                'log' => array_get($data, 'log', 'success')]
+                'log' => array_get($data, 'description', 'success')]
             );
 
         return $this;
