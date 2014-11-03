@@ -27,6 +27,7 @@ return [
     'btn.restore' => 'Restore',
     'btn.choose' => 'Choose',
     'btn.apply' => 'Apply',
+    'btn.apply.close' => 'Apply and close',
     'btn.prev' => 'Back',
     'btn.next' => 'Next',
     'btn.filter' => 'Filter',

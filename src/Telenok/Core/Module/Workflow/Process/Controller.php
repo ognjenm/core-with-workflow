@@ -67,7 +67,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     { 
 		$clear = \Input::get('clear', false);
 		$clearOnly = \Input::get('clearOnly', false);
-		$diagramData = json_decode(\Input::get('diagram', ""), true);
+		$diagramData = json_decode(\Input::get('diagram', ''), true);
 		$sessionDiagramId = \Input::get('sessionDiagramId');
 
 		if ($clear || $clearOnly)
@@ -80,38 +80,40 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			}
 		}
 
-		
 		if (!$clearOnly)
 		{
-			$stencilTemporaryListData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary', []);
-			$stencilListData = \Session::get('diagram.' . $sessionDiagramId . '.stencil', []);
-
-			if (!empty($stencilTemporaryListData))
+			$stencilTemporaryData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary', []);
+             
+			$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stencil', []);
+            
+			if (!empty($stencilTemporaryData))
 			{
-				foreach($stencilTemporaryListData as $key => $stencil)
+				foreach($stencilTemporaryData as $key => $stencil)
 				{
-					$stencilListData[$key] = $stencil;
+					$stencilData[$key] = $stencil;
 				}
-			} 
+			}
 
-			\Session::put('diagram.' . $sessionDiagramId . '.stencil', $stencilListData);
+			\Session::put('diagram.' . $sessionDiagramId . '.stencil', $stencilData);
 			\Session::put('diagram.' . $sessionDiagramId . '.diagram', $diagramData);
 		}
-		
-		return ['stencil' => $stencilListData, 'diagram' => $diagramData];
+
+		return ['stencil' => $stencilData, 'diagram' => $diagramData];
     }
 
     public function getAdditionalViewParam()
     {
 		$p = parent::getAdditionalViewParam();
-		
+
 		$p['sessionDiagramId'] = str_random();
-		
+
         return $p;
     }    
 
-    public function diagramShow($id = 0)
+    public function diagramShow()
     { 
+        $id = \Input::get('diagramId');
+        
 		$model = \Telenok\Workflow\Process::find($id);
 		
         return \View::make($this->diagramBody, [
@@ -127,7 +129,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     {            
         $data = [
             'title' => $this->LL('diagram.title'),
-            "namespace" => "http://b3mn.org/stencilset/telenok#",
+            'namespace' => "http://b3mn.org/stencilset/telenok#",
             'description' => $this->LL('diagram.description'),
             'stencils' => [
                 [

@@ -47,12 +47,7 @@ ORYX.Plugins.PropertyWindow = {
     }, 
     actOnDBLClick: function(evt, shape) 
     {
-        if (!(shape instanceof ORYX.Core.Shape)) 
-        {
-            return;
-        } 
-        
-        if (!shape.getStencil().urlPropertyContent())
+        if (!(shape instanceof ORYX.Core.Shape) || !shape.getStencil().urlPropertyContent()) 
         {
             return;
         }
@@ -65,8 +60,9 @@ ORYX.Plugins.PropertyWindow = {
             dataType: 'json',
             data: {
                     'sessionDiagramId': ORYX.Utils.getParamFromUrl('sessionDiagramId'),
-                    'stencilId': shape.getId()
-                }
+                    'diagramId': ORYX.Utils.getParamFromUrl('diagramId'),
+                    'stencilId': shape.getPermanentId()
+            }
         }).done(function(data) 
         {
             var $uniqueId = Math.floor(Math.random() * (1000000 - 1) + 1);
@@ -76,7 +72,7 @@ ORYX.Plugins.PropertyWindow = {
                 jQuery('body', window.parent.document).append('<div id="modal-' + $uniqueId + '" class="modal fade" role="dialog" aria-labelledby="label"></div>');
             }
 
-            var $modal = jQuery('#modal-' + $uniqueId, window.parent.document);
+            var $modal = parent.jQuery('#modal-' + $uniqueId);
 
             $modal.data('model-data', function($form)
             {

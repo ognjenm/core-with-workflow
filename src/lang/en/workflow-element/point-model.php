@@ -2,12 +2,12 @@
 
 return [
 
-    'title' => 'After saving',
+    'title' => 'Model',
     'title.groups' => 'Start point',
-    'description' => 'Catch event immediately after object saved',
+    'description' => 'Processing model event',
 
     'property.title.title' => 'Title',
-    'property.title.value' => 'After saving',
+    'property.title.value' => 'Model',
 ];
 
 

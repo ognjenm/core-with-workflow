@@ -5,52 +5,90 @@
 
 		<div class="modal-header table-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>Setting After save point</h4>
+			<h4>Model event</h4>
 		</div>
-		
-		<form action="#" onsubmit="return false;">
-		
-			{{Form::hidden('sessionDiagramId', $sessionDiagramId)}}
-			{{Form::hidden('stencilId', $stencilId)}}
 			
-			<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
-				<div class="widget-main">
+        <div class="modal-body" style="max-height: none; padding: 15px;">
+            <div class="widget-main">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <form action="#" onsubmit="return false;" class="form-horizontal">
 
-					<select name="stencil[el][]" multiple="multiple">
-						<option value="1" selected="selected">Type</option>
-						<option value="2" selected="selected">Field</option>
-					</select>
+                            {{Form::hidden('sessionDiagramId', $sessionDiagramId)}}
+                            {{Form::hidden('stencilId', $stencilId)}}
 
-					<input type="text" name="stencil[title]" value="{{{array_get($property, 'title.value')}}}" />
-					<input type="text" name="stencil[bgcolor]" value="{{{array_get($property, 'bgcolor.value')}}}" />
-					<input type="text" name="stencil[bordercolor]" value="{{{array_get($property, 'bordercolor.value')}}}" />
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="stencil[title]">Title</label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="stencil[title]" value="{{{array_get($property, 'title.value')}}}" />
+                                </div>
+                            </div>
 
-				</div>
-			</div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="stencil[bgcolor]">Background color</label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="stencil[bgcolor]" value="{{{array_get($property, 'bgcolor.value')}}}" />
+                                </div>
+                            </div>
 
-			<div class="modal-footer">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="stencil[bordercolor]">Border color</label>
+                                <div class="col-sm-3">
+                                    <input type="text" name="stencil[bordercolor]" value="{{{array_get($property, 'bordercolor.value')}}}" />
+                                </div>
+                            </div>
 
-				<div class="center no-margin">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="stencil[eventList]">Events</label>
+                                <div class="col-sm-3">
+                                    <select class="chosen-select" multiple data-placeholder="Choose events" id="input{{$uniqueId}}" name="stencil[event_list][]">
+                                        <option value="workflow.store.before" @if (in_array('workflow.store.before', array_get($property, 'event_list.value', []))) selected @endif>Before creating new model</option>
+                                        <option value="workflow.store.after" @if (in_array('workflow.store.after', array_get($property, 'event_list.value', []))) selected @endif>After creating new model</option>
+                                        <option value="workflow.update.before" @if (in_array('workflow.update.before', array_get($property, 'event_list.value', []))) selected @endif>Before updating model</option>
+                                        <option value="workflow.update.after" @if (in_array('workflow.update.after', array_get($property, 'event_list.value', []))) selected @endif>After updating model</option>
+                                    </select> 
+                                </div>
+                            </div>
 
-					<button class="btn btn-success" onclick="
-						var $modal = jQuery(this).closest('.modal');
-						var $form = jQuery(this).closest('form');
-						$modal.data('model-data')($form);
-						return false;">
-						<i class="fa fa-bullseye"></i>
-						{{{ $controller->LL('btn.apply') }}}
-					</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-					<button class="btn btn-success">
-						<i class="fa fa-bullseye"></i>
-						{{{ $controller->LL('btn.close') }}}
-					</button>
+        <script type="text/javascript">
+            jQuery("#input{{$uniqueId}}").chosen({width: "300px"});
+        </script>
 
-				</div>
+        <div class="modal-footer">
 
-			</div>
+            <div class="center no-margin">
 
-		</form>
+                <button class="btn btn-success" onclick="
+                    var $modal = jQuery(this).closest('div.modal');
+                    var $form = jQuery('form', $modal);
+                    $modal.data('model-data')($form);
+                    return false;">
+                    <i class="fa fa-bullseye"></i>
+                    {{{ $controller->LL('btn.apply') }}}
+                </button>
+
+                <button class="btn btn-success" data-dismiss="modal" onclick="
+                    var $modal = jQuery(this).closest('div.modal');
+                    var $form = jQuery('form', $modal);
+                    $modal.data('model-data')($form);">
+                    <i class="fa fa-bullseye"></i>
+                    {{{ $controller->LL('btn.apply.close') }}}
+                </button>
+
+                <button class="btn btn-danger" data-dismiss="modal">
+                    <i class="fa fa-bullseye"></i>
+                    {{{ $controller->LL('btn.close') }}}
+                </button>
+
+            </div>
+
+        </div>
 
 	</div>
 </div>

@@ -134,6 +134,7 @@
         {{ HTML::script('packages/telenok/core/js/oryx/Plugins/shapeHighlighting.js') }}
         {{ HTML::script('packages/telenok/core/js/oryx/Plugins/dragDocker.js') }}
         {{ HTML::script('packages/telenok/core/js/oryx/Plugins/propertywindow.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/Plugins/edit.js') }}
 
 
         <script type="text/javascript">
@@ -166,6 +167,11 @@
 					"core" : false,
 					"name" : "ORYX.Plugins.PropertyWindow",
 					"properties" : []
+				},
+				{ 
+					"core" : true,
+					"name" : "ORYX.Plugins.Edit",
+					"properties" : []
 				}
 			].each(function(p) {
 				allPlugins[p.name] = p;
@@ -178,6 +184,7 @@
 				"ORYX.Plugins.ShapeHighlighting",
 				"ORYX.Plugins.DragDocker",
 				"ORYX.Plugins.DragDropResize",
+				"ORYX.Plugins.Edit",
 				"ORYX.Plugins.PropertyWindow"
 			].each(function(pluginName)
 			{
@@ -210,7 +217,7 @@
 
 				if (importJSONFromTop())
 				{
-					setTimeout(function() { oryxEditor.importJSON(importJSONFromTop()); }, 1000);
+					setTimeout(function() { oryxEditor.importJSON(importJSONFromTop(), true); }, 1000);
 					
 				}
 			}

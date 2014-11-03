@@ -90,7 +90,7 @@
 					jQuery('div.modal-body', modal)
 						.html(  '<iframe name="frame-process-{{$uniqueId}}" id="frame-process-{{$uniqueId}}" ' +
 								' style="width: 100%; border: none;"' + 
-								' src="{{ URL::route("cmf.module.workflow-process.diagram.show", ['id' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) }}" />')
+								' src="{{ URL::route("cmf.module.workflow-process.diagram.show", ['diagramId' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) }}" />')
 				}
 
 				var frame = jQuery('#frame-process-{{$uniqueId}}');

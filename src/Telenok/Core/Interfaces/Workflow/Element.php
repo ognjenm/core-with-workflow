@@ -91,25 +91,45 @@ class Element extends \Illuminate\Routing\Controller {
         return $this;
     } 
 
-    public function getPropertyValue($data = [])
+    public function getStencilData($data = [])
     {
 		$sessionDiagramId = array_get($data, 'sessionDiagramId');
 		$stencilId = array_get($data, 'stencilId');
-		
+		$diagramId = array_get($data, 'diagramId');
+
 		$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, []);
-		
+
 		if (empty($stencilData))
 		{
 			$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stencil.' . $stencilId, []);
 		}
-		
+
+		if (empty($stencilData))
+		{
+            $model = \Telenok\Workflow\Process::find($diagramId);
+            
+            if ($model)
+            {
+                $stencil = $model->process->get('stencil');
+                
+                $stencilData = array_get($stencil, $stencilId, []);
+            }
+		}
+        
+        return $stencilData;
+    }
+
+    public function getPropertyValue($data = [])
+    { 
+        $stencilData = $this->getStencilData($data);
+         
 		return [
 			'title' => ['title' => $this->LL('property.title.title'), 'value' => array_get($stencilData, 'title', $this->LL('property.title.value'))],
 			'bgcolor' => ['title' => $this->LL('property.bgcolor.title'), 'value' => array_get($stencilData, 'bgcolor', '#ffffff')],
 			'bordercolor' => ['title' => $this->LL('property.bordercolor.title'), 'value' => array_get($stencilData, 'bordercolor', '#000000')],
 		];
 	}
-	
+
     public function getPropertyContent()
     {
 		if (!($sessionDiagramId = \Input::get('sessionDiagramId')) || !($stencilId = \Input::get('stencilId')))
@@ -125,7 +145,7 @@ class Element extends \Illuminate\Routing\Controller {
 				'property' => $this->getPropertyValue(\Input::all()),
 			])->render()];
 	}
-	
+
     public function getRouterPropertyContent($param = [])
     {
 		if ($this->routerPropertyContent)
@@ -133,7 +153,7 @@ class Element extends \Illuminate\Routing\Controller {
 			return \URL::route($this->routerPropertyContent, $param);
 		}
 	}
-	
+
     public function getRouterStoreProperty($param = [])
     {
 		if ($this->routerStoreProperty)
@@ -160,8 +180,7 @@ class Element extends \Illuminate\Routing\Controller {
     {
         $this->action = $param;  
          
-        $this->setId($param['resourceId'])
-            ->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
+        $this->setId($param['resourceId'])->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
 
         return $this;
     }

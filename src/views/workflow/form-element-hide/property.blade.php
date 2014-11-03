@@ -7,50 +7,57 @@
 			<button data-dismiss="modal" class="close" type="button">×</button>
 			<h4>Setting After save point</h4>
 		</div>
-		
-		<form action="#" onsubmit="return false;">
-		
-			{{Form::hidden('sessionDiagramId', $sessionDiagramId)}}
-			{{Form::hidden('stencilId', $stencilId)}}
 			
-			<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
-				<div class="widget-main">
+        <div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
+            <div class="widget-main">
 
-					<select name="stencil[el][]" multiple="multiple">
-						<option value="1" selected="selected">Type</option>
-						<option value="2" selected="selected">Field</option>
-					</select>
+                <form action="#" onsubmit="return false;">
 
-					<input type="text" name="stencil[title]" value="{{{array_get($property, 'title.value')}}}" />
-					<input type="text" name="stencil[bgcolor]" value="{{{array_get($property, 'bgcolor.value')}}}" />
-					<input type="text" name="stencil[bordercolor]" value="{{{array_get($property, 'bordercolor.value')}}}" />
+                    {{Form::hidden('sessionDiagramId', $sessionDiagramId)}}
+                    {{Form::hidden('stencilId', $stencilId)}}
 
-				</div>
-			</div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="stencil[title]">Title</label>
+                        <div class="col-sm-3">
+                            <input type="text" name="stencil[title]" value="{{{array_get($property, 'title.value')}}}" />
+                        </div>
+                    </div>
 
-			<div class="modal-footer">
+                    <!--
+                        <select name="stencil[el][]" multiple="multiple">
+                            <option value="1" selected="selected">Type</option>
+                            <option value="2" selected="selected">Field</option>
+                        </select>
 
-				<div class="center no-margin">
+                        <input type="text" name="stencil[bgcolor]" value="{{{array_get($property, 'bgcolor.value')}}}" />
+                        <input type="text" name="stencil[bordercolor]" value="{{{array_get($property, 'bordercolor.value')}}}" />
+                    -->
+                </form>
+            </div>
+        </div>
 
-					<button class="btn btn-success" onclick="
-						var $modal = jQuery(this).closest('.modal');
-						var $form = jQuery(this).closest('form');
-						$modal.data('model-data')($form);
-						return false;">
-						<i class="fa fa-bullseye"></i>
-						{{{ $controller->LL('btn.apply') }}}
-					</button>
+        <div class="modal-footer">
 
-					<button class="btn btn-success">
-						<i class="fa fa-bullseye"></i>
-						{{{ $controller->LL('btn.close') }}}
-					</button>
+            <div class="center no-margin">
 
-				</div>
+                <button class="btn btn-success" onclick="
+                    var $modal = jQuery(this).closest('.modal');
+                    var $form = jQuery(this).closest('form');
+                    $modal.data('model-data')($form);
+                    return false;">
+                    <i class="fa fa-bullseye"></i>
+                    {{{ $controller->LL('btn.apply') }}}
+                </button>
 
-			</div>
+                <button class="btn btn-success">
+                    <i class="fa fa-bullseye"></i>
+                    {{{ $controller->LL('btn.close') }}}
+                </button>
 
-		</form>
+            </div>
+
+        </div>
+
 
 	</div>
 </div>

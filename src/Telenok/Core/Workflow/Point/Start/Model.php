@@ -18,17 +18,22 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
 
 	public function isEventForMe(\Telenok\Core\Workflow\Event $event)
     {
-        
-        return true;
-        
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
-		$eventList = $this->getInput()->get('eventList', []);
+		$eventList = $this->getInput()->get('event_list', []);
 
         return in_array($event->getEventCode(), $eventList);
     }
-	
+
+    public function getPropertyValue($data = [])
+    {
+        $stencilData = $this->getStencilData($data);
+        
+		$commonProperty = parent::getPropertyValue($data); 
+        
+        $commonProperty['event_list'] = ['title' => $this->LL('property.bgcolor.title'), 'value' => array_get($stencilData, 'event_list', [])];
+        
+        return $commonProperty;
+	}
+    
     public function getStartEventObject($id, $resourceId, $property, $process)
     {
         return ['workflow.update.before' => [1128,2,3]];
