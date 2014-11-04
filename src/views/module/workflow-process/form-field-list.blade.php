@@ -42,7 +42,7 @@
 				{
 					jQuery.ajax({
 						url: '{{ URL::route("cmf.workflow.apply-diagram", ['sessionDiagramId' => $sessionDiagramId]) }}',
-						method: 'get',
+						method: 'post',
 						dataType: 'json',
 						data: {
 							'diagram': window.frames['frame-process-{{$uniqueId}}'].oryxEditor.getSerializedJSON(),

@@ -101,7 +101,7 @@ ORYX.Plugins.ShapeRepository = {
             var typeTitle = sset.title();
             var extensions = sset.extensions();
 
-            stencilSetNode = jQuery('<li><a href="#" class="dropdown-toggle"><span class="menu-text">' + typeTitle + '</span><b class="arrow fa fa-angle-down"></b></a><ul class="submenu second-level"></ul></li>');
+            stencilSetNode = jQuery('<li class="active open"><a href="#" class="dropdown-toggle"><span class="menu-text">' + typeTitle + '</span><b class="arrow fa fa-angle-down"></b></a><ul class="submenu second-level"></ul></li>');
             this.shapeList.append(stencilSetNode);
 
             /*

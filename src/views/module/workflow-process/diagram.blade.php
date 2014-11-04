@@ -5,17 +5,7 @@
 		<meta http-equiv="Content-type" content="text/html;charset=UTF-8"></meta>
 		<title>Process Designer</title>
 
-        {{-- HTML::style('packages/telenok/core/js/ext-2.0.2/resources/css/ext-all.css') --}}
-        {{-- HTML::style('packages/telenok/core/js/ext-2.0.2/resources/css/xtheme-gray.css') --}}
-        {{-- HTML::style('packages/telenok/core/js/oryx/css/theme_norm.css') --}}
-
-
-
-
-
-
-
-
+        {{ HTML::style('packages/telenok/core/js/oryx/css/theme_norm.css') }}
 
 		<!--[if lt IE 9]> 
 		<script src="packages/telenok/core/js/html5shiv/html5shiv.js">
@@ -135,7 +125,12 @@
         {{ HTML::script('packages/telenok/core/js/oryx/Plugins/dragDocker.js') }}
         {{ HTML::script('packages/telenok/core/js/oryx/Plugins/propertywindow.js') }}
         {{ HTML::script('packages/telenok/core/js/oryx/Plugins/edit.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/Plugins/shapemenu.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/Plugins/undo.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/Plugins/dockerCreation.js') }}
 
+        {{ HTML::script('packages/telenok/core/js/oryx/Plugins/canvasResize.js') }}
+        {{ HTML::script('packages/telenok/core/js/oryx/Plugins/selectionframe.js') }}
 
         <script type="text/javascript">
 
@@ -172,6 +167,31 @@
 					"core" : true,
 					"name" : "ORYX.Plugins.Edit",
 					"properties" : []
+				},
+				{ 
+					"core" : false,
+					"name" : "ORYX.Plugins.DockerCreation",
+					"properties" : []
+				},
+				{ 
+					"core" : false,
+					"name" : "ORYX.Plugins.Undo",
+					"properties" : []
+				},
+				{ 
+					"core" : false,
+					"name" : "ORYX.Plugins.ShapeMenuPlugin",
+					"properties" : []
+				},
+				{ 
+					"core" : true,
+					"name" : "ORYX.Plugins.CanvasResize",
+					"properties" : []
+				},
+				{ 
+					"core" : true,
+					"name" : "ORYX.Plugins.SelectionFrame",
+					"properties" : []
 				}
 			].each(function(p) {
 				allPlugins[p.name] = p;
@@ -185,7 +205,12 @@
 				"ORYX.Plugins.DragDocker",
 				"ORYX.Plugins.DragDropResize",
 				"ORYX.Plugins.Edit",
-				"ORYX.Plugins.PropertyWindow"
+				"ORYX.Plugins.PropertyWindow",
+				"ORYX.Plugins.Undo",
+				"ORYX.Plugins.DockerCreation",
+				"ORYX.Plugins.CanvasResize",
+				"ORYX.Plugins.SelectionFrame",
+				"ORYX.Plugins.ShapeMenuPlugin"
 			].each(function(pluginName)
 			{
 				p = allPlugins[pluginName];
@@ -202,7 +227,7 @@
 
 			function init()
 			{
-				ORYX_LOGLEVEL = 3;
+				ORYX_LOGLEVEL = 0;
 				ORYX.PATH = "{{ \Config::get('app.url') }}/packages/telenok/core/js/oryx/";
 				Ext.BLANK_IMAGE_URL = "{{ \Config::get('app.url') }}/packages/telenok/core/js/ext-2.0.2/resources/images/default/s.gif";
 
@@ -221,7 +246,9 @@
 					
 				}
 			}
-		</script>
+            
+            jQuery(document.documentElement).focus().blur();
+		</script> 
 
 	</head>
 	<body class="no-skin">
@@ -229,7 +256,7 @@
 			<div class="sidebar responsive" id="sidebar">
 				<ul class="nav nav-list telenok-sidebar"></ul>
 			</div>
-			<div class="main-content" id="processdata" style="float: left; text-align: left; margin: 0;"></div>
+			<div class="main-content" id="processdata"></div>
 		</div>
 	</body>
 </html>
