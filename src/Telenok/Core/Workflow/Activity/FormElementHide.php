@@ -121,7 +121,7 @@ class FormElementHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                             [
                                 "id" => "title",
                                 "type" => "string",
-                                "value" => $this->LL('property.title.value'),
+                                "value" => $this->LL('title'),
                                 "refToView" => "title",
                             ],
                         ],

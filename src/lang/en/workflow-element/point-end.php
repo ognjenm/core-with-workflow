@@ -1,11 +1,9 @@
 <?php
 
 return [
-    'title' => 'End poing',
+    'title' => 'Standart end',
     'title.groups' => 'End point',
     'description' => 'End point',
-
-    'property.title.value' => 'Finish',
 ];
 
 

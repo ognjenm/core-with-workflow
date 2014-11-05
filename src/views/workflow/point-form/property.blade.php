@@ -5,7 +5,7 @@
 
 		<div class="modal-header table-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>End point</h4>
+			<h4>{{{$controller->LL('modal.title')}}}</h4>
 		</div>
 			
         <div class="modal-body" style="max-height: none; padding: 15px;">
@@ -41,18 +41,16 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[description]">{{{$controller->LL('property.description')}}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[description]" value="{{{array_get($property, 'description')}}}" />
+                                    <textarea style="width: 300px;" name="stencil[description]">{{{array_get($property, 'description')}}}</textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[eventList]">{{{$controller->LL('property.eventList')}}}</label>
+                                <label class="col-sm-3 control-label" for="stencil[model_list]">{{{$controller->LL('property.event.list')}}}</label>
                                 <div class="col-sm-3">
-                                    <select class="chosen-select" multiple data-placeholder="{{{$controller->LL('notice.choose')}}}" id="input{{$uniqueId}}" name="stencil[event_list][]">
-                                        <option value="workflow.store.before" @if (in_array('workflow.store.before', array_get($property, 'event_list', []))) selected @endif>Before creating new model</option>
-                                        <option value="workflow.store.after" @if (in_array('workflow.store.after', array_get($property, 'event_list', []))) selected @endif>After creating new model</option>
-                                        <option value="workflow.update.before" @if (in_array('workflow.update.before', array_get($property, 'event_list', []))) selected @endif>Before updating model</option>
-                                        <option value="workflow.update.after" @if (in_array('workflow.update.after', array_get($property, 'event_list', []))) selected @endif>After updating model</option>
+                                    <select class="chosen-select" multiple data-placeholder="{{{$controller->LL('notice.choose')}}}" id="input{{$uniqueId}}" name="stencil[model_list][]">
+                                        <option value="workflow.form.create" @if (in_array('workflow.form.create', array_get($property, 'event_list', []))) selected @endif>{{{$controller->LL('property.event.list.1')}}}</option>
+                                        <option value="workflow.form.edit" @if (in_array('workflow.form.edit', array_get($property, 'event_list', []))) selected @endif>{{{$controller->LL('property.event.list.2')}}}</option>
                                     </select> 
                                 </div>
                             </div>

@@ -430,7 +430,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 						->reject(function($i) { return !trim($i); })
 						->each(function($i) use ($query, $model)
 				{
-					$query->where($model->getTable().'.title', 'like', '%'.trim($i).'%');
+					$query->orWhere($model->getTable().'.title', 'like', '%'.trim($i).'%');
+					$query->orWhere($model->getTable().'.id', $i);
 				});
 			});
 			

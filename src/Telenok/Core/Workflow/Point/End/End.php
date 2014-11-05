@@ -87,7 +87,7 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
                             [
                                 "id" => "title",
                                 "type" => "string",
-                                "value" => $this->LL('property.title.value'),
+                                "value" => $this->LL('title'),
                                 "refToView" => "title",
                             ],
                         ],

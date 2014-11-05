@@ -239,7 +239,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
         
-        \Event::fire('form.create.object', [$params]);
+        \Event::fire('workflow.form.create', [$params]);
 
         return [
             'tabKey' => $this->getTabKey() . '-new-' . str_random(),
@@ -266,7 +266,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('form.edit.object', [$params]);
+        \Event::fire('workflow.form.edit', [$params]);
 		
 		$model->lock();
 
@@ -310,7 +310,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('form.edit.object', [$params]);
+        \Event::fire('workflow.form.edit', [$params]);
 
         $return = [];
 
@@ -354,7 +354,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('form.edit.object', [$params]);
+        \Event::fire('workflow.form.edit', [$params]);
 
         $return = [];
 
@@ -412,7 +412,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         {
             $params = ['model' => $model::find($id), 'type' => $type, 'fields' => $fields];
 
-            \Event::fire('form.edit.object', [$params]);
+            \Event::fire('workflow.form.edit', [$params]);
             
             $content[] = \View::make($this->getPresentationModelView(), array_merge(array( 
                 'controller' => $this,

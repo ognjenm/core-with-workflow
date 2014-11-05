@@ -72,9 +72,10 @@ return [
 
     'property.default' => "Default value",
     'property.required' => "Required",
-
-    'property.title.title' => 'Title',
-    'property.bgcolor.title' => 'Background color',
+    'property.title' => 'Title',
+    'property.description' => 'Description',
+    'property.bordercolor' => 'Border color',
+    'property.bgcolor' => 'Background color',
     
     'error.table.nonexists' => 'Table ":table" doesnt exist in database',
     'error.field.create' => 'Cant create field ":key" in table ":table"',

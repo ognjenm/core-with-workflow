@@ -21,10 +21,14 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('auth.attempt');
     $list->push('auth.login');
     $list->push('auth.logout');
+    
     $list->push('workflow.update.before');
     $list->push('workflow.update.after');
     $list->push('workflow.store.before');
     $list->push('workflow.store.after');
+    
+    $list->push('workflow.form.create');
+    $list->push('workflow.form.edit');
 });
 
 \Event::listen('telenok.acl.filter.resource.add', function($list)
@@ -71,6 +75,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 \Event::listen('telenok.workflow.action.add', function($list) 
 {
     $list->push('Telenok\Core\Workflow\Point\Start\Model');
+    $list->push('Telenok\Core\Workflow\Point\Start\Form');
 	$list->push('Telenok\Core\Workflow\Point\End\End');
     $list->push('Telenok\Core\Workflow\Flow\Standart');
 	$list->push('Telenok\Core\Workflow\Activity\FormElementHide');

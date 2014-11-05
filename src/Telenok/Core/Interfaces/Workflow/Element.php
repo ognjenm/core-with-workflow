@@ -116,18 +116,19 @@ class Element extends \Illuminate\Routing\Controller {
             }
 		}
         
-        return $stencilData;
+        return \Illuminate\Support\Collection::make($stencilData);
     }
 
     public function getPropertyValue($data = [])
     { 
         $stencilData = $this->getStencilData($data);
-         
-		return [
-			'title' => ['title' => $this->LL('property.title.title'), 'value' => array_get($stencilData, 'title', $this->LL('property.title.value'))],
-			'bgcolor' => ['title' => $this->LL('property.bgcolor.title'), 'value' => array_get($stencilData, 'bgcolor', '#ffffff')],
-			'bordercolor' => ['title' => $this->LL('property.bordercolor.title'), 'value' => array_get($stencilData, 'bordercolor', '#000000')],
-		];
+
+		return \Illuminate\Support\Collection::make([
+			'title' => $stencilData->get('title', $this->LL('title')),
+			'description' => $stencilData->get('description'),
+			'bgcolor' => $stencilData->get('bgcolor', '#ffffff'),
+			'bordercolor' => $stencilData->get('bordercolor', '#000000'),
+		]);
 	}
 
     public function getPropertyContent()

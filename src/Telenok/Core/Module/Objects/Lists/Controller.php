@@ -171,6 +171,36 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
+    public function getListJson()
+    {
+        $content = [];
+        
+        $fields = \Input::get('fields', ['id', 'title']);
+        $type = $this->getType(\Input::get('treePid', 0));
+        $model = $this->modelByType(\Input::get('treePid', 0));
+        
+        $items = $this->getListItem($model)->get();
+
+        $config = \App::make('telenok.config')->getObjectFieldController();
+
+        $fieldsIterate = $type->field()->active()->get()->filter(function($item) use ($fields)
+				{
+					return in_array($item->code, $fields);
+				});
+        
+        foreach ($items as $item)
+        {
+            foreach ($fieldsIterate as $field)
+            { 
+                $put[$field->code] = $config->get($field->key)->getListFieldContent($field, $item, $type);
+            }
+
+            $content[] = $put;
+        }
+        
+        return json_encode($content);
+    }
+    
     public function getList()
     {
         $content = [];
@@ -275,8 +305,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('form.create.object', [$params]);
-		
+        \Event::fire('workflow.form.create', [$params]);
+
 		try
 		{
 			return [
@@ -323,7 +353,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 		$model->lock();
 		
-        \Event::fire('form.edit.object', [$params]); 
+        \Event::fire('workflow.form.edit', [$params]); 
 		
 		try
 		{
@@ -416,7 +446,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             {
                 $params = ['model' => $model::find($id_), 'type' => $type, 'fields' => $fields];
 
-                \Event::fire('form.edit.object', [$params]);
+                \Event::fire('workflow.form.edit', [$params]);
                 
                 $content[] = \View::make($this->getPresentationModelView(), array_merge(array( 
                     'controller' => $this,
@@ -515,7 +545,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		
         $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('form.edit.object', [$params]);
+        \Event::fire('workflow.form.edit', [$params]);
 
         $return = [];
         
@@ -563,7 +593,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 		$params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('form.edit.object', [$params]);
+        \Event::fire('workflow.form.edit', [$params]);
         
         $return = [];
         

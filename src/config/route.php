@@ -94,6 +94,7 @@
 \Route::any('telenok/module/objects-lists/update/type/{id}', array('as' => 'cmf.module.objects-lists.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@update"));
 \Route::any('telenok/module/objects-lists/delete/{id}', array('as' => 'cmf.module.objects-lists.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@delete"));
 \Route::any('telenok/module/objects-lists/list', array('as' => 'cmf.module.objects-lists.list', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getList"));
+\Route::any('telenok/module/objects-lists/list/json', array('as' => 'cmf.module.objects-lists.list.json', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getListJson"));
 \Route::any('telenok/module/objects-lists/list/edit/type/{id}', array('as' => 'cmf.module.objects-lists.list.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@editList"));
 \Route::any('telenok/module/objects-lists/list/delete', array('as' => 'cmf.module.objects-lists.list.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@deleteList"));
 \Route::any('telenok/module/objects-lists/list/lock', array('as' => 'cmf.module.objects-lists.list.lock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@lockList"));
@@ -187,6 +188,7 @@
 \Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@applyDiagram"));
 
 \Route::any('telenok/module/workflow/element/start/point-model/property', array('as' => 'cmf.workflow.point-model.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Model@getPropertyContent"));
+\Route::any('telenok/module/workflow/element/start/point-form/property', array('as' => 'cmf.workflow.point-form.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Form@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/end/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/form-element-hide/property', array('as' => 'cmf.workflow.form-element-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormElementHide@getPropertyContent"));
 

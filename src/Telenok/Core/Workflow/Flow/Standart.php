@@ -76,7 +76,7 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
 					[
 						"id" => "title",
 						"type" => "string",
-						"value" => $this->LL('property.title.value'),
+                        "value" => $this->LL('title'),
 						"refToView" => "title",
 					]
 				]

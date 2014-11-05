@@ -6,12 +6,12 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
  
     protected $minIn = 0;
     protected $minOut = 1;
- 
+
     protected $maxIn = 0;
     protected $maxOut = 1;
-    
+
     protected $total = 1;
-    
+
     protected $key = 'point-model';
     protected $propertyView = 'core::workflow.point-model.property';
     protected $routerPropertyContent = 'cmf.workflow.point-model.property';
@@ -26,14 +26,16 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
     public function getPropertyValue($data = [])
     {
         $stencilData = $this->getStencilData($data);
-        
+
 		$commonProperty = parent::getPropertyValue($data); 
-        
-        $commonProperty['event_list'] = ['title' => $this->LL('property.bgcolor.title'), 'value' => array_get($stencilData, 'event_list', [])];
-        
+
+        $commonProperty->put('event_list', $stencilData->get('event_list', []));
+        $commonProperty->put('model_type', $stencilData->get('model_type', 0));
+        $commonProperty->put('model_list', $stencilData->get('model_list', []));
+
         return $commonProperty;
 	}
-    
+
     public function getStartEventObject($id, $resourceId, $property, $process)
     {
         return ['workflow.update.before' => [1128,2,3]];
@@ -125,7 +127,7 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
                             [
                                 "id" => "title",
                                 "type" => "string",
-                                "value" => $this->LL('property.title.value'),
+                                "value" => $this->LL('title'),
                                 "refToView" => "title",
                             ],
                         ],
