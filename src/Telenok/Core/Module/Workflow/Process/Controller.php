@@ -154,7 +154,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 											<text font-size="22" id="diagramtext" x="400" y="25" oryx:align="top center" stroke="black"></text>
 										</g>
 									</svg>',
-                    'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/scripts/stencilsets/telenok/icons/diagram.png",
+                    'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/diagram.png",
                     "mayBeRoot" => true,
                     "hide" => true,
                     "roles" => ["canContainArtifacts"]

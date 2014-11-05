@@ -113,7 +113,7 @@ class FormElementHide extends \Telenok\Core\Interfaces\Workflow\Activity {
 
 										  </g>
 										</svg>',
-						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/pointend/" . $this->getKey() . ".png",
+						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/activity/" . $this->getKey() . ".png",
 						'defaultAlign' => "south",
 						'roles' => ["activity"],
 						'propertyPackages' => ["bgcolor", "bordercolor"],
