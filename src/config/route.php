@@ -190,7 +190,7 @@
 \Route::any('telenok/module/workflow/element/start/point-model/property', array('as' => 'cmf.workflow.point-model.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Model@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/start/point-form/property', array('as' => 'cmf.workflow.point-form.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Form@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/end/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
-\Route::any('telenok/module/workflow/element/form-element-hide/property', array('as' => 'cmf.workflow.form-element-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormElementHide@getPropertyContent"));
+\Route::any('telenok/module/workflow/element/form-field-hide/property', array('as' => 'cmf.workflow.form-field-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormFieldHide@getPropertyContent"));
 
 
 

@@ -121,7 +121,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     public function isParentAndSingle()
     {
-        $list = \App::make('telenok.config')->getModule()->toArray();
+        $list = \App::make('telenok.config')->getModule()->all();
+        
         $key = $this->getKey();
 
         $arr = array_filter($list, function($item) use ($key) {

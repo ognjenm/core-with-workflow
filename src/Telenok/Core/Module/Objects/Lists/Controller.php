@@ -303,9 +303,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             return $this->typeForm($type)->create();
         }
 
-        $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
+        $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
+        $eventInput = \Illuminate\Support\Collection::make([]);
 
-        \Event::fire('workflow.form.create', [$params]);
+        \Event::fire('workflow.form.create', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));
 
 		try
 		{
@@ -314,12 +315,12 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				'tabLabel' => $type->translate('title'),
 				'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
 					'controller' => $this,
-					'model' => $params['model'], 
-					'type' => $params['type'], 
-					'fields' => $params['fields'], 
+					'model' => $eventResource->get('model'), 
+					'type' => $eventResource->get('type'), 
+					'fields' => $eventResource->get('fields'), 
 					'uniqueId' => str_random(), 
-					'routerParam' => $this->getRouterParam('create', $params['type'], $params['model']),
-					'canCreate' => \Auth::can('create', "object_type.{$params['type']->code}"),
+					'routerParam' => $this->getRouterParam('create', $eventResource->get('type'), $eventResource->get('model')),
+					'canCreate' => \Auth::can('create', "object_type.{$eventResource->get('type')->code}"),
 				), $this->getAdditionalViewParam()))->render()
 			];
 		} 
@@ -347,28 +348,29 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         if ($type->classController())
         {
             return $this->typeForm($type)->edit($id);
-        }
+        } 
 
-        $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
+        $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
+        $eventInput = \Illuminate\Support\Collection::make([]);
 
-		$model->lock();
-		
-        \Event::fire('workflow.form.edit', [$params]); 
-		
+        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));
+
+        $model->lock();
+
 		try
 		{
 			return [
-				'tabKey' => $this->getTabKey() . '-edit-' . md5($id),
+				'tabKey' => $this->getTabKey() . '-edit-' . str_random(),
 				'tabLabel' => $type->translate('title'),
 				'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
 					'controller' => $this,
-					'model' => $params['model'], 
-					'type' => $params['type'], 
-					'fields' => $params['fields'], 
+					'model' => $eventResource->get('model'), 
+					'type' => $eventResource->get('type'), 
+					'fields' => $eventResource->get('fields'), 
 					'uniqueId' => str_random(), 
-					'routerParam' => $this->getRouterParam('edit', $params['type'], $params['model']),
-					'canUpdate' => \Auth::can('update', $params['model']),
-					'canDelete' => \Auth::can('delete', $params['model']),
+					'routerParam' => $this->getRouterParam('edit', $eventResource->get('type'), $eventResource->get('model')),
+					'canUpdate' => \Auth::can('update', $eventResource->get('model')),
+					'canDelete' => \Auth::can('delete', $eventResource->get('model')),
 				), $this->getAdditionalViewParam()))->render()
 			];
 		} 
@@ -444,19 +446,20 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             }
             else
             {
-                $params = ['model' => $model::find($id_), 'type' => $type, 'fields' => $fields];
+                $eventResource = \Illuminate\Support\Collection::make(['model' => $model::find($id_), 'type' => $type, 'fields' => $fields]);
+                $eventInput = \Illuminate\Support\Collection::make([]);
 
-                \Event::fire('workflow.form.edit', [$params]);
+                \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));
                 
                 $content[] = \View::make($this->getPresentationModelView(), array_merge(array( 
                     'controller' => $this,
-                    'model' => $params['model'], 
-                    'type' => $params['type'], 
-                    'fields' => $params['fields'], 
-					'routerParam' => $this->getRouterParam('edit', $type, $model),
+                    'model' => $eventResource->get('model'), 
+                    'type' => $eventResource->get('type'), 
+                    'fields' => $eventResource->get('fields'), 
+					'routerParam' => $this->getRouterParam('edit', $eventResource->get('type'), $eventResource->get('model')),
                     'uniqueId' => str_random(), 
-					'canUpdate' => \Auth::can('update', $params['model']),
-					'canDelete' => \Auth::can('delete', $params['model']),
+					'canUpdate' => \Auth::can('update', $eventResource->get('model')),
+					'canDelete' => \Auth::can('delete', $eventResource->get('model')),
                 ), $this->getAdditionalViewParam()))->render();
             }
         }
@@ -542,24 +545,25 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         } 
         
 		$fields = $model->getFieldForm();
-		
-        $params = ['model' => $model, 'type' => $type, 'fields' => $fields];
 
-        \Event::fire('workflow.form.edit', [$params]);
+        $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
+        $eventInput = \Illuminate\Support\Collection::make([]);
+
+        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));
 
         $return = [];
         
         $return['tabContent'] = \View::make($this->getPresentationModelView(), array_merge(array(
                     'controller' => $this,
-                    'model' => $params['model'], 
-                    'type' => $params['type'], 
-                    'fields' => $params['fields'], 
+                    'model' => $eventResource->get('model'), 
+                    'type' => $eventResource->get('type'), 
+                    'fields' => $eventResource->get('fields'), 
                     'uniqueId' => str_random(), 
                     'success' => true,
                     'warning' => \Session::get('warning'),
-					'routerParam' => $this->getRouterParam('store', $type, $model),
-					'canUpdate' => \Auth::can('update', $params['model']),
-					'canDelete' => \Auth::can('delete', $params['model']),
+					'routerParam' => $this->getRouterParam('store', $eventResource->get('type'), $eventResource->get('model')),
+					'canUpdate' => \Auth::can('update', $eventResource->get('model')),
+					'canDelete' => \Auth::can('delete', $eventResource->get('model')),
                ), $this->getAdditionalViewParam()))->render();
 
         return $return;
@@ -591,23 +595,24 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         
 		$fields = $model->getFieldForm();
 
-		$params = ['model' => $model, 'type' => $type, 'fields' => $fields];
+        $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
+        $eventInput = \Illuminate\Support\Collection::make([]);
 
-        \Event::fire('workflow.form.edit', [$params]);
+        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));
         
         $return = [];
         
         $return['tabContent'] = \View::make($this->getPresentationModelView(), array_merge(array(
                     'controller' => $this,
-                    'model' => $params['model'], 
-                    'type' => $params['type'], 
-                    'fields' => $params['fields'], 
+                    'model' => $eventResource->get('model'), 
+                    'type' => $eventResource->get('type'), 
+                    'fields' => $eventResource->get('fields'), 
                     'uniqueId' => str_random(),
                     'success' => true,
                     'warning' => \Session::get('warning'),
-					'routerParam' => $this->getRouterParam('update', $type, $model),
-					'canUpdate' => \Auth::can('update', $params['model']),
-					'canDelete' => \Auth::can('delete', $params['model']),
+					'routerParam' => $this->getRouterParam('update', $eventResource->get('type'), $eventResource->get('model')),
+					'canUpdate' => \Auth::can('update', $eventResource->get('model')),
+					'canDelete' => \Auth::can('delete', $eventResource->get('model')),
                 ), $this->getAdditionalViewParam()))->render();
 
         return $return;

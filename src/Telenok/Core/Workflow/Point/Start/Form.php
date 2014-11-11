@@ -3,24 +3,76 @@
 namespace Telenok\Core\Workflow\Point\Start;
 
 class Form extends \Telenok\Core\Interfaces\Workflow\Point {
- 
+
     protected $minIn = 0;
     protected $minOut = 1;
- 
+
     protected $maxIn = 0;
     protected $maxOut = 1;
-    
+
     protected $total = 1;
-    
+
     protected $key = 'point-form';
     protected $propertyView = 'core::workflow.point-form.property';
     protected $routerPropertyContent = 'cmf.workflow.point-form.property';
 
 	public function isEventForMe(\Telenok\Core\Workflow\Event $event)
-    {
+    { 
 		$eventList = $this->getInput()->get('event_list', []);
+		$typeId = $this->getInput()->get('model_type', 0);
+		$modelIds = $this->getInput()->get('model_list', []);
 
-        return in_array($event->getEventCode(), $eventList);
+        return in_array($event->getEventCode(), $eventList) 
+                && $event->getResource()->get('type')->getKey() == $typeId 
+                && (empty($modelIds) || (!empty($modelIds) && in_array($event->getResource()->get('model')->getKey(), $modelIds)));
+    }
+
+    public function log($data = [])
+    {
+        $eventResource = $this->getThread()->getEvent()->getResource();
+        
+        if ($eventResource->get('type', false))
+        {
+            $data['data']['type'] = $eventResource->get('type')->getKey();
+        }
+        
+        if ($eventResource->get('model', false))
+        {
+            $data['data']['model'] = $eventResource->get('model')->getKey();
+        }
+        
+        if ($eventResource->get('fields', false))
+        {
+            $data['data']['fields'] = $eventResource->get('fields')->modelKeys();
+        }
+
+        return parent::log($data);
+    }
+
+    public function getResourceFromLog($log = [])
+    {
+        $data = [];
+
+        if (isset($log['type']))
+        {
+            $data['type'] = \Telenok\Object\Type::find($log['type']);
+        }
+
+        if (isset($log['model']))
+        {
+            try
+            {
+                $data['model'] = \Telenok\Object\Sequence::getModel($log['model']);
+            } 
+            catch (\Exception $ex) {}
+        }
+
+        if (isset($log['fields']) && !empty($log['fields']))
+        {
+            $data['fields'] = \Telenok\Object\Field::whereIn('id', $log['fields'])->get();
+        }
+
+        return \Illuminate\Support\Collection::make($data);
     }
 
     public function getPropertyValue($data = [])
@@ -28,15 +80,17 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
         $stencilData = $this->getStencilData($data);
         
 		$commonProperty = parent::getPropertyValue($data); 
-        
+
         $commonProperty->put('event_list', $stencilData->get('event_list', []));
-        
+        $commonProperty->put('model_type', $stencilData->get('model_type', 0));
+        $commonProperty->put('model_list', $stencilData->get('model_list', []));
+
         return $commonProperty;
 	}
     
-    public function getStartEventObject($id, $resourceId, $property, $process)
+    public function getStartEventObject($id, $permanentId, $property, $process)
     {
-        return ['workflow.update.before' => [1128,2,3]];
+        return [$permanentId];
     }
 	
     protected $stencilCardinalityRules = [

@@ -69,7 +69,8 @@ abstract class Controller {
 
 	public function parent()
 	{
-		$list = \App::make('telenok.config')->getWidget()->toArray();
+		$list = \App::make('telenok.config')->getWidget()->all();
+        
 		$key = $this->getKey();
 
 		return array_filter($list, function($item) use ($key)

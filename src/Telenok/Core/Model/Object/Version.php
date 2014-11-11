@@ -51,7 +51,8 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			$model = new $class();
 		}
 		
-		$model->setRawAttributes($versionData->object_data->toArray());
+		$model->setRawAttributes($versionData->object_data->all());
+        
 		$model->save();
 
 		return $model;
@@ -64,7 +65,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			$this_ = new static;
 
 			$this_->fill([
-				'title' => ($model->title instanceof \Illuminate\Support\Collection ? $model->title->toArray() : $model->title),
+				'title' => ($model->title instanceof \Illuminate\Support\Collection ? $model->title->all() : $model->title),
 				'object_id' => $model->getKey(),
 				'object_type_id' => $model->type()->getKey(),
 				'object_data' => $model->getAttributes(),

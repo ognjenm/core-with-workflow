@@ -18,7 +18,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 	{
 		$resCode = 'object_type.'.$model->code;
 
-		$title = $model->title->toArray();
+		$title = $model->title->all();
 		$toAdd = ['ru' => 'Тип объекта', 'en' => 'Type of object'];
 
 		foreach($title as $language => $value)
@@ -38,7 +38,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		$resCodeOwn = 'object_type.'.$model->code.'.own';
 		
-		$title = $model->title->toArray();
+		$title = $model->title->all();
 		$toAdd = ['ru' => 'Тип объекта', 'en' => 'Type of object'];
 		$toAddAfter = ['ru' => 'Собственные записи', 'en' => 'Own records'];
 
@@ -74,7 +74,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			return ucfirst($item);
 		});
 
-		$input->put('class_model', '\\' . implode($classNameCollection->toArray(), '\\'));
+		$input->put('class_model', '\\' . implode($classNameCollection->all(), '\\'));
 
 		if (class_exists($input->get('class_model')))
 		{
@@ -108,7 +108,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			return ucfirst($item);
 		});
 
-		$input->put('class_controller', '\\' . implode($classNameCollection->toArray(), '\\'));
+		$input->put('class_controller', '\\' . implode($classNameCollection->all(), '\\'));
 
 		if (class_exists($input->get('class_controller')))
 		{

@@ -5,10 +5,11 @@ namespace Telenok\Core\Interfaces\Workflow;
 class Element extends \Illuminate\Routing\Controller {
 
     protected $linkOut = [];
+    protected $linkIn = [];
 
     protected $minIn = 0;
     protected $minOut = 0;
- 
+
     protected $maxIn = 0;
     protected $maxOut = 0;
 
@@ -90,6 +91,11 @@ class Element extends \Illuminate\Routing\Controller {
 
         return $this;
     } 
+
+    public function getResourceFromLog($logData = [])
+    {
+        return \Illuminate\Support\Collection::make([]);
+    }
 
     public function getStencilData($data = [])
     {
@@ -210,9 +216,9 @@ class Element extends \Illuminate\Routing\Controller {
         return $this->input;
     }
 
-    public function process()
+    public function process($log = [])
     {
-        $this->log();
+        $this->log($log);
         $this->setNext();
 
         return $this;
@@ -234,11 +240,11 @@ class Element extends \Illuminate\Routing\Controller {
 
     public function log($data = [])
     {
-        $this->getThread()->addLog($this, [
-                'data' => array_get($data, 'data', []), 
-                'result' => array_get($data, 'result', 'done'), 
-                'log' => array_get($data, 'description', 'success')]
-            );
+        $data['data'] = array_get($data, 'data', []); 
+        $data['result'] = array_get($data, 'result', 'done'); 
+        $data['log'] = array_get($data, 'log', 'success'); 
+        
+        $this->getThread()->addLog($this, $data);
 
         return $this;
     }
@@ -285,6 +291,18 @@ class Element extends \Illuminate\Routing\Controller {
     public function setLinkOut($link)
     {
         $this->linkOut = $link;
+
+        return $this;
+    }
+
+    public function getLinkIn()
+    {
+        return $this->linkIn;
+    }
+
+    public function setLinkIn($link)
+    {
+        $this->linkIn = $link;
 
         return $this;
     }
@@ -336,8 +354,27 @@ class Element extends \Illuminate\Routing\Controller {
 
         return $this;
     }
-    
-    
+
+    public function validate($process, $actions, $diagramData = [], $stencilData = [])
+    {
+        if ($this->getLinkIn()->isEmpty() && $this->getLinkOut()->isEmpty())
+        {
+            throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" havnt any connections.');
+        }
+        
+        if (!$this instanceof \Telenok\Core\Interfaces\Workflow\Edge)
+        {
+            foreach($this->getLinkOut()->all() as $out)
+            {
+                if ($actions->get($out)->getLinkOut()->contains($this->getId()))
+                {
+                    throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" fixated on himself.');
+                }
+            }
+        }
+
+        return true;
+    }
 
     public function getPackage()
     {

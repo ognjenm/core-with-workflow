@@ -9,7 +9,7 @@
 			<?php
 			$localeDefault = \Config::get('app.localeDefault');
 
-			$languages = \Telenok\System\Language::whereIn('locale', (array) \Config::get('app.locales'))
+			$languages = \Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
 							->get()->sortBy(function($item) use ($localeDefault)
 			{
 				return $item->locale == $localeDefault ? 0 : 1;

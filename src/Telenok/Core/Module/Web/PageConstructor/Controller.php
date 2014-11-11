@@ -124,7 +124,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 		$buffer = \Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $widget->getKey(), 'web-page', $key);
 
-		return ['widget' => $widget->toArray(), 'buffer' => $buffer->toArray()];
+		return ['widget' => $widget->all(), 'buffer' => $buffer->all()];
 	}
 
 	public function deleteBufferWidget($id = 0)

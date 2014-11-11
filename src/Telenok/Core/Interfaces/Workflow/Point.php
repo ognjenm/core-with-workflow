@@ -9,10 +9,10 @@ class Point extends \Telenok\Core\Interfaces\Workflow\Element {
         return false;
     }
   
-    public function getStartEventObject($id, $resourceId, $property, $process)
+    public function getStartEventObject($id, $permanentId, $property, $process)
     {
         return false;
-    }
+    } 
 }
 
 ?>

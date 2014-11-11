@@ -106,7 +106,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			foreach ($this->getMultilanguage() as $fieldCode)
 			{
-				$value = $this->$fieldCode->toArray();
+				$value = $this->$fieldCode->all();
 
 				foreach ($value as $language => $string)
 				{
@@ -122,7 +122,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$type = $this->type();
 			
 			$this->sequence->fill([
-				'title' => ($this->title instanceof \Illuminate\Support\Collection ? $this->title->toArray() : $this->title),
+				'title' => ($this->title instanceof \Illuminate\Support\Collection ? $this->title->all() : $this->title),
 				'created_at' => $this->created_at,
 				'updated_at' => $this->updated_at,
 				'deleted_at' => $this->deleted_at,
@@ -476,7 +476,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 			else
 			{
-				foreach ($objectField->toArray() as $key_ => $field_)
+				foreach ($objectField->all() as $key_ => $field_)
 				{
 					$fieldController = $f_->get($field_->key);
 
@@ -509,7 +509,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 		else
 		{  
-			foreach ($objectField->toArray() as $key_ => $field_)
+			foreach ($objectField->all() as $key_ => $field_)
 			{
 				if ($fieldController = $f_->get($field_->key))
 				{
@@ -585,7 +585,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			
 			$fields = \App::make('telenok.config')->getObjectFieldController();
 						
-			foreach ($this->getObjectField()->toArray() as $key => $field)
+			foreach ($this->getObjectField()->all() as $key => $field)
 			{
 				$fieldController = $fields->get($field->key);
 
@@ -638,7 +638,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			$fields = \App::make('telenok.config')->getObjectFieldController();
 
-			foreach ($this->getObjectField()->toArray() as $key => $field)
+			foreach ($this->getObjectField()->all() as $key => $field)
 			{ 
 				if ($fieldController = $fields->get($field->key))
 				{
@@ -662,7 +662,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			$fields = \App::make('telenok.config')->getObjectFieldController();
 
-			foreach ($this->getObjectField()->toArray() as $key => $field)
+			foreach ($this->getObjectField()->all() as $key => $field)
 			{
 				$fieldController = $fields->get($field->key);
 
@@ -700,7 +700,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			{ 
 				if ($field->rule instanceof \Illuminate\Support\Collection)
 				{ 
-					foreach ($field->rule->toArray() as $key => $value)
+					foreach ($field->rule->all() as $key => $value)
 					{
 						$rule[$class][$field->code][head(explode(':', $value))] = $value;
 					}
@@ -1014,7 +1014,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			$children = $sequence->children()->get();
 
-			foreach ($children->toArray() as $child)
+			foreach ($children->all() as $child)
 			{
 				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
 				[
@@ -1051,7 +1051,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			$children = $sequence->children()->get();
 
-			foreach ($children->toArray() as $child)
+			foreach ($children->all() as $child)
 			{
 				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
 				[

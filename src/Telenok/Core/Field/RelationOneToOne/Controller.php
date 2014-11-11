@@ -193,12 +193,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				$title = $input->get('title_belong', []);
 				$title_list = $input->get('title_list_belong', []);
 
-				foreach($relatedTypeOfModelField->title->toArray() as $language => $val)
+				foreach($relatedTypeOfModelField->title->all() as $language => $val)
 				{
 					$title[$language] = array_get($title, $language, $val . '/' . $model->translate('title', $language));
 				}
 
-				foreach($relatedTypeOfModelField->title_list->toArray() as $language => $val)
+				foreach($relatedTypeOfModelField->title_list->all() as $language => $val)
 				{
 					$title_list[$language] = array_get($title_list, $language, $val . '/' . $model->translate('title_list', $language));
 				}

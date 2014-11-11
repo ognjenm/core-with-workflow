@@ -158,7 +158,7 @@ class SeedWorkflowProcessTable extends Migration {
 			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
 					[
 						'title' => ['ru' => 'Событие-Oбъект', 'en' => 'Event-Object'],
-						'title_list' => ['ru' => 'Процесс', 'en' => 'Process'],
+						'title_list' => ['ru' => 'Событие-Oбъект', 'en' => 'Event-Object'],
 						'key' => 'complex-array',
 						'code' => 'event_object',
 						'active' => 1,
@@ -170,6 +170,25 @@ class SeedWorkflowProcessTable extends Migration {
 						'field_order' => 6,
 					]
 			);
+            
+			(new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+					[
+						'title' => ['ru' => "Схема без ошибок?", 'en' => "Scheme without errors?"],
+						'title_list' => ['ru' => "Схема без ошибок?", 'en' => "Scheme without errors?"],
+						'key' => 'checkbox',
+						'code' => 'is_valid',
+						'active' => 1,
+						'field_object_type' => $modelId,
+						'field_object_tab' => $tabMainId,
+						'show_in_form' => 1,
+						'show_in_list' => 1,
+						'allow_search' => 1,
+						'allow_create' => 0,
+						'allow_update' => 0,
+						'field_order' => 7,
+					]
+			);
+
 		}
 	}
 } 

@@ -19,12 +19,12 @@ class Thread {
             $elements = \App::make('telenok.config')->getWorkflowElement();
             $this->actions = \Illuminate\Support\Collection::make([]);
 
-            foreach($this->getModelThread()->original_process->getDot('diagram.childShapes', []) as $key => $action)
+            foreach($this->getModelThread()->original_process->getDot('diagram.childShapes', []) as $action)
             {
                 $this->actions->put($action['resourceId'], $elements->get($action['stencil']['id'])
                                                             ->make()
                                                             ->setThread($this)
-                                                            ->setInput($this->getModelThread()->original_process->get('stencil.' . $action['resourceId'], []))
+                                                            ->setInput($this->getModelThread()->original_process->getDot('stencil.' . $action['permanentId'], []))
                                                             ->setStencil($action));
             }
         }
@@ -48,7 +48,7 @@ class Thread {
     {
         $activeElements = \Illuminate\Support\Collection::make([]); 
 
-        foreach($this->getActions() as $resourceId => $action)
+        foreach($this->getActions() as $action)
         {
 			if ($this->getModelThread()->processing_stage == 'started')
 			{
@@ -128,13 +128,30 @@ class Thread {
             }
 
             // all actions sleeping
-            $diff = array_diff($activeElements->toArray(), $sleepAll);
+            $diff = array_diff($activeElements->all(), $sleepAll);
 
             $activeElements = $this->getActiveElements();
         }
 
         return $this;
-    } 
+    }
+    
+    public function getEventResource()
+    {
+        if ($this->getEvent())
+        {
+            return $this->getEvent()->getResource();
+        }
+        else
+        {
+            $firstEventLog = $this->getModelThread()->processing_stencil_log->first();
+
+            if (!empty($firstEventLog))
+            {
+                return $this->actions->get($firstEventLog['resourceId'])->getResourceFromLog($firstEventLog);
+            }
+        }
+    }
 
     public function addLog($action, $data = [])
     {
@@ -150,6 +167,11 @@ class Thread {
         if (!isset($data['key']))
         {
             $data['key'] = $action->getKey();
+        }
+
+        if (!isset($data['resourceId']))
+        {
+            $data['resourceId'] = $action->getId();
         }
         
         $logStencil[] = $data;

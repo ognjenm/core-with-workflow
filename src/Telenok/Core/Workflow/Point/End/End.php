@@ -63,14 +63,15 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
 											</oryx:magnets>
 											<g pointer-events="fill">
 
-												<defs>
-													<radialGradient id="background" cx="10%" cy="10%" r="100%" fx="10%" fy="10%">
-														<stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
-														<stop id="fill_el" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
-													</radialGradient>
-												</defs>
+                                                <defs>
+                                                    <radialGradient id="background" cx="10%" cy="10%" r="100%" fx="10%" fy="10%">
+                                                        <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+                                                        <stop id="fill_el_1" offset="100%" stop-color="#ffffff" stop-opacity="1"/>
+                                                    </radialGradient>
+                                                </defs>
 
-												<circle id="bg_frame" cx="16" cy="16" r="14" stroke="black" fill="url(#background) black" stroke-width="3"/>
+												<circle id="border_el_1" cx="16" cy="16" r="14" stroke="black" fill="url(#background) black" stroke-width="3"/>
+
 												<text font-size="11" 
 													id="title" 
 													x="16" y="32" 
@@ -91,10 +92,9 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
                                 "refToView" => "title",
                             ],
                         ],
-
                     ];
         }
-        
+
         return $this->stencilConfig;
     }
 

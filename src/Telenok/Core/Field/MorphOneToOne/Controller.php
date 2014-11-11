@@ -13,7 +13,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 	public function getChooseTypeId($field, $linkedField)
 	{
-		return $field->morph_one_to_one_has ? $field->{$linkedField} : $field->morph_one_to_one_belong_to_type_list->toArray();
+		return $field->morph_one_to_one_has ? $field->{$linkedField} : $field->morph_one_to_one_belong_to_type_list->all();
 	}
 
 	public function getLinkedModelType($field)
@@ -136,7 +136,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				});
 
 				$query->whereIn($alias.'.id', (array)$value);
-				$query->whereIn($alias.'.sequences_object_type', $field->morph_one_to_one_belong_to_type_list->toArray());
+				$query->whereIn($alias.'.sequences_object_type', $field->morph_one_to_one_belong_to_type_list->all());
 			}
 		}
     }
@@ -156,7 +156,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 		
 		if ($field->morph_one_to_one_belong_to)
 		{
-			$query->whereIn($model->getTable() . '.sequences_object_type', $field->morph_one_to_one_belong_to_type_list->toArray());
+			$query->whereIn($model->getTable() . '.sequences_object_type', $field->morph_one_to_one_belong_to_type_list->all());
 		}
 		
 		$query->get()->each(function($item) use (&$option)
@@ -212,7 +212,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			{
 				$objectModel = \Telenok\Object\Sequence::find($id)->model()->first();
 
-				if (in_array($objectModel->type()->getKey(), $field->morph_one_to_one_belong_to_type_list->toArray()))
+				if (in_array($objectModel->type()->getKey(), $field->morph_one_to_one_belong_to_type_list->all()))
 				{
 					$model->fill([$field->code . '_type' => get_class($objectModel), $field->code . '_id' => $objectModel->getKey()])->save();
 				}
@@ -343,12 +343,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				$title = $input->get('title_belong', []);
 				$title_list = $input->get('title_list_belong', []);
 
-				foreach($relatedTypeOfModelField->title->toArray() as $language => $val)
+				foreach($relatedTypeOfModelField->title->all() as $language => $val)
 				{
 					$title[$language] = array_get($title, $language, $model->translate('title', $language) . ' [morphTo]');
 				}
 
-				foreach($relatedTypeOfModelField->title_list->toArray() as $language => $val)
+				foreach($relatedTypeOfModelField->title_list->all() as $language => $val)
 				{
 					$title_list[$language] = array_get($title_list, $language, $model->translate('title_list', $language) . ' [morphTo]');
 				}

@@ -20,28 +20,28 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[title]">{{{$controller->LL('property.title')}}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[title]" value="{{{array_get($property, 'title')}}}" />
+                                    <input type="text" name="stencil[title]" value="{{{$property->get('title')}}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[bgcolor]">{{{$controller->LL('property.bgcolor')}}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[bgcolor]" value="{{{array_get($property, 'bgcolor')}}}" />
+                                    <input type="text" name="stencil[bgcolor]" value="{{{$property->get('bgcolor')}}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[bordercolor]">{{{$controller->LL('property.bordercolor')}}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[bordercolor]" value="{{{array_get($property, 'bordercolor')}}}" />
+                                    <input type="text" name="stencil[bordercolor]" value="{{{$property->get('bordercolor')}}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[description]">{{{$controller->LL('property.description')}}}</label>
                                 <div class="col-sm-3">
-                                    <textarea style="width: 300px;" name="stencil[description]">{{{array_get($property, 'description')}}}</textarea>
+                                    <textarea style="width: 300px;" name="stencil[description]">{{{$property->get('description')}}}</textarea>
                                 </div>
                             </div>
 

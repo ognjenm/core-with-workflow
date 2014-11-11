@@ -98,12 +98,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				$fileName = \Str::random(20) . '.' . $extension;
 				$destinationPath = $directoryPath . $fileName; 
 
-				if ($field->upload_allow_mime->count() && !in_array($mimeType, $field->upload_allow_mime->toArray()))
+				if ($field->upload_allow_mime->count() && !in_array($mimeType, $field->upload_allow_mime->all()))
 				{
 					throw new \Exception($this->LL('error.mime-type', ['attribute' => $mimeType]));
 				}
 
-				if ($field->upload_allow_ext->count() && !in_array($extension, $field->upload_allow_ext->toArray()))
+				if ($field->upload_allow_ext->count() && !in_array($extension, $field->upload_allow_ext->all()))
 				{
 					throw new \Exception($this->LL('error.extension', ['attribute' => $extension]));
 				}
@@ -119,7 +119,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					$validator = \Validator::make(
 						array('file' => $file),
-						array('file' => implode('|', $rule->toArray()))
+						array('file' => implode('|', $rule->all()))
 					);
 
 					if ($validator->fails()) 
@@ -246,8 +246,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			(new \Telenok\Object\Field())->storeOrUpdate(
 				[
-					'title' => $model->title->toArray(),
-					'title_list' => $model->title_list->toArray(),
+					'title' => $model->title->all(),
+					'title_list' => $model->title_list->all(),
 					'key' => 'relation-one-to-many',
 					'code' => $fieldName . '_' . $typeModel->code,
 					'active' => 1,
@@ -269,8 +269,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{ 
 			(new \Telenok\Object\Field())->storeOrUpdate(
 				[
-					'title' => $model->title->toArray(),
-					'title_list' => $model->title_list->toArray(),
+					'title' => $model->title->all(),
+					'title_list' => $model->title_list->all(),
 					'key' => 'relation-one-to-many',
 					'code' => $fieldName . '_' . $typeModel->code,
 					'active' => 1,

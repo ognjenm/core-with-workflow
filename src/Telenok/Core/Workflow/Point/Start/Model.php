@@ -36,9 +36,9 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
         return $commonProperty;
 	}
 
-    public function getStartEventObject($id, $resourceId, $property, $process)
+    public function getStartEventObject($id, $permanentId, $property, $process)
     {
-        return ['workflow.update.before' => [1128,2,3]];
+        return [$permanentId];
     }
 	
     protected $stencilCardinalityRules = [

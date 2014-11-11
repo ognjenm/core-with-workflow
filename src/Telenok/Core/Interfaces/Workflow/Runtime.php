@@ -5,10 +5,11 @@ namespace Telenok\Core\Interfaces\Workflow;
 class Runtime {
 
 	public function processEvent(\Telenok\Core\Interfaces\Workflow\Event $event = null)
-	{
+	{       
         if ($this->canProcessing())
         {
 			$processes = \Telenok\Workflow\Process::active()->get();
+            $elements = \App::make('telenok.config')->getWorkflowElement();
 
 			if (!$processes->isEmpty())
 			{
@@ -16,14 +17,25 @@ class Runtime {
 				{
                     //$this->runExistingThread($p);
                     
-					foreach($p->event_object as $eventCode => $points)
-					{
-						if (array_get($points, $event->getEventCode()))
-						{
-							$this->threadCreateAndRun($p, $event);
+					foreach($p->event_object as $permanentId)
+					{ 
+                        foreach($p->process->getDot('diagram.childShapes', []) as $action)
+                        { 
+                            if ($permanentId == $action['permanentId'])
+                            {
+                                $a = $elements->get($action['stencil']['id'])
+                                                            ->make()
+                                                            ->setInput($p->process->getDot('stencil.' . $action['permanentId'], []))
+                                                            ->setStencil($action);
 
-							break;
-						}
+                                if ($a->isEventForMe($event))
+                                {
+                                    $this->threadCreateAndRun($p, $event);
+
+                                    break 2;
+                                }
+                            }
+                        }
 					}
 				}
 			}

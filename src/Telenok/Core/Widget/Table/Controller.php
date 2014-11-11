@@ -48,7 +48,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			}
 
 			$structure->put('containerIds', $ids);
-			$widgetOnPage->structure = $structure->toArray();
+			$widgetOnPage->structure = $structure->all();
 			$widgetOnPage->save();
 		}
 
@@ -197,7 +197,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		}
 
 		$structure->put('containerIds', $newContainres);
-		$widgetOnPage->structure = $structure->toArray();
+		$widgetOnPage->structure = $structure->all();
 		$widgetOnPage->save();
 	}
 
@@ -230,7 +230,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			}
 
 			$structure->put('containerIds', $ids);
-			$w->structure = $structure->toArray();
+			$w->structure = $structure->all();
 			$w->save();
 		}
 

@@ -28,18 +28,21 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			foreach($shapes as $shape)
 			{
 				$id = array_get($shape, 'stencil.id', false);
-				$resourceId = array_get($shape, 'resourceId', false);
-				$property = array_get($properties, $resourceId, false);
-				
+				$permanentId = array_get($shape, 'permanentId', false);
+				$property = array_get($properties, $permanentId, false);
+
 				$e = $elements->get($id);
-				
+
 				if ($e instanceof \Telenok\Core\Interfaces\Workflow\Point)
 				{
-					$r = $e->getStartEventObject($id, $resourceId, $property, $process);
+					$r = $e->getStartEventObject($id, $permanentId, $property, $process);
 
 					if ($r !== false)
 					{
-						$startEventObject[] = $r;
+                        foreach ($r as $pId)
+                        {
+                            $startEventObject[] = $pId;
+                        }
 					}
 				}
 			}
@@ -47,24 +50,10 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		return $startEventObject;
 	}
-	
-    public function preProcess($model, $type, $input)
-    {
-        $process = json_decode($input->get('process', "[]"), true);
-
-		$input->put('process', $process);
-		 
-        //$this->validate($process);
-
-		$eventObject = $this->getStartEventObject($process);
-
-		$input->put('event_object', $eventObject);
-
-        return $this;
-    }
 
     public function applyDiagram()
     { 
+		$id = \Input::get('id', 0);
 		$clear = \Input::get('clear', false);
 		$clearOnly = \Input::get('clearOnly', false);
 		$diagramData = json_decode(\Input::get('diagram', ''), true);
@@ -94,6 +83,22 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 				}
 			}
 
+            if ($id)
+            {
+                $process = \Telenok\Workflow\Process::find($id);
+                
+                if ($process && !empty($process->process->get('stencil')))
+                {
+                    foreach($process->process->get('stencil') as $permanentId => $s)
+                    {
+                        if (!isset($stencilData[$permanentId]))
+                        {
+                            $stencilData[$permanentId] = $s;
+                        }
+                    }
+                }
+            }
+            
 			\Session::put('diagram.' . $sessionDiagramId . '.stencil', $stencilData);
 			\Session::put('diagram.' . $sessionDiagramId . '.diagram', $diagramData);
 		}
@@ -245,12 +250,89 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         array_set($data, 'rules.connectionRules', $connectionStencilRules);
         array_set($data, 'rules.cardinalityRules', $cardinalityStencilRules);
         
-        return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        return $data;
     }
 
     public function getElements()
     {
         return \App::make('telenok.config')->getWorkflowElement();
+    }
+	
+    public function preProcess($model, $type, $input)
+    {
+        $process = json_decode($input->get('process', "[]"), true);
+ 
+		$input->put('is_valid', $this->validateBusinessProcessScheme($process));
+		$input->put('process', $process);
+        
+		$eventObject = $this->getStartEventObject($process);
+
+		$input->put('event_object', $eventObject);
+
+        return $this;
+    }
+
+    public function validateBusinessProcessScheme($process = [])
+    {
+        $isValid = true;
+
+        $elements = \App::make('telenok.config')->getWorkflowElement();
+        $processCollection = \Telenok\Core\Support\Collection::make($process);
+        
+        $stencilData = $processCollection->get('stencil', []);
+        $diagramData = $processCollection->getDot('diagram.childShapes', []);
+
+        $actions = \Illuminate\Support\Collection::make([]);
+        
+        foreach($diagramData as $action)
+        {
+            $el = $elements->get($action['stencil']['id']);
+
+            if ($el)
+            {
+                $actions->put($action['resourceId'], 
+                    $el->make()
+                        ->setId($action['resourceId'])
+                        ->setInput(array_get($stencilData, 'stencil.' . $action['permanentId'], []))
+                        ->setLinkOut(\Illuminate\Support\Collection::make(array_get($action, 'outgoing'))->flatten())
+                        ->setLinkIn(\Illuminate\Support\Collection::make([]))); 
+            }
+            else 
+            {
+                \Session::flash('warning.workflow-make-' . $action['resourceId'], 'Cant validate action with key "' . $action['stencil']['id'] . '"');
+
+                return false;      
+            }
+        } 
+        
+        // accumulate actions In
+        foreach($actions->all() as $action)
+        {
+            foreach($action->getLinkOut()->all() as $o)
+            {
+                $in = $actions->get($o)->getLinkIn();
+                
+                $in->push($o);
+                
+                $actions->get($o)->setLinkIn($in);
+            }
+        }
+        
+        foreach($actions->all() as $action)
+        {
+            try
+            {
+                $action->validate($this, $actions, $diagramData, $stencilData);
+            }
+            catch (\Exception $ex)
+            {
+                \Session::flash('warning.workflow-' . $action->getId(), $ex->getMessage());
+
+                $isValid = false;
+            }
+        }
+
+        return $isValid; 
     }
     
 }

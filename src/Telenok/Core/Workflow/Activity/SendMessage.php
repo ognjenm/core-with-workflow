@@ -12,7 +12,7 @@ class SendMessage extends \Telenok\Core\Interfaces\Workflow\Activity {
     
     protected $key = 'activity-send-message';
 
-    public function process()
+    public function process($log = [])
     {
         \Log::info('Business Process: Event:'.$this->getProcess()->getEvent()->getEventCode().'. Business Process: Process action with code "send-message"');
         

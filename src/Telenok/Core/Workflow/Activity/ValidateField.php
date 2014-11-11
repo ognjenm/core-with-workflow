@@ -94,7 +94,7 @@ class ValidateField extends \Telenok\Core\Interfaces\Workflow\Activity {
             ],
     ];
 
-    public function process()
+    public function process($log = [])
     {
         //\Log::info('Business Process: Event:'.$this->getProcess()->getEvent()->getEventCode().'. Process action with code "'.$this->key.'"');
         

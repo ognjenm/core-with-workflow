@@ -14,7 +14,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
 	public function getChooseTypeId($field, $linkedField)
 	{
-		return \Telenok\Object\Type::withPermission()->where('treeable', 1)->get(['id'])->fetch('id')->toArray();
+		return \Telenok\Object\Type::withPermission()->where('treeable', 1)->get(['id'])->fetch('id')->all();
 	}
 
 	public function getLinkedModelType($field)

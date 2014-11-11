@@ -46,19 +46,10 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[event_list]">{{{$controller->LL('property.event.list')}}} <span class="red">*</span></label>
-                                <div class="col-sm-3">
-                                    <select class="chosen-select" multiple data-placeholder="{{{$controller->LL('notice.choose')}}}" id="input-event-list{{$uniqueId}}" name="stencil[event_list][]">
-                                        <option value="workflow.form.create" @if (in_array('workflow.form.create', $property->get('event_list', []))) selected @endif>{{{$controller->LL('property.event.list.1')}}}</option>
-                                        <option value="workflow.form.edit" @if (in_array('workflow.form.edit', $property->get('event_list', []))) selected @endif>{{{$controller->LL('property.event.list.2')}}}</option>
-                                    </select> 
-                                </div>
-                            </div>
-
-                            <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[model_type]">{{{$controller->LL('property.model.type')}}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
                                     <select class="chosen-select-deselect" data-placeholder="{{{$controller->LL('notice.choose')}}}" id="input-model-type{{$uniqueId}}" name="stencil[model_type]">
+                                        <option value=""></option>
                                         @foreach(\Telenok\Object\Type::active()->get() as $type)
                                         
                                         <option value="{{$type->getKey()}}" @if ($type->getKey() == $property->get('model_type', 0)) selected="selected" @endif>[{{$type->getKey()}}] {{{$type->translate('title')}}}</option>
@@ -69,12 +60,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[model_list]">{{{$controller->LL('property.model.list')}}}</label>
+                                <label class="col-sm-3 control-label" for="stencil[field_list]">{{{$controller->LL('property.field.list')}}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
-                                    <select class="chosen-select" multiple data-placeholder="{{{$controller->LL('notice.choose')}}}" id="input-model-list{{$uniqueId}}" name="stencil[model_list][]">
-                                        @foreach(\Telenok\Object\Sequence::active()->whereIn('id', array_merge([0], $property->get('model_list', [])))->get() as $type)
+                                    <select class="chosen-select" multiple data-placeholder="{{{$controller->LL('notice.choose')}}}" id="input-field-list{{$uniqueId}}" name="stencil[field_list][]">
+                                        @foreach(\Telenok\Object\Field::active()->get() as $field)
                                         
-                                        <option value="{{$type->getKey()}}" selected="selected">[{{$type->getKey()}}] {{{$type->translate('title')}}}</option>
+                                        <option value="{{$field->getKey()}}" class="field-{{$field->field_object_type}}" @if (in_array($field->getKey(), $property->get('field_list', []))) selected="selected" @endif>[{{$field->getKey()}}] {{{$field->translate('title')}}}</option>
                                         
                                         @endforeach
                                     </select> 
@@ -88,41 +79,31 @@
         </div>
 
         <script type="text/javascript">
-            jQuery("#input-event-list{{$uniqueId}}").chosen({width: "300px"});
             jQuery("#input-model-type{{$uniqueId}}").chosen({width: "300px"}).on('change', function()
             {
-                jQuery("#input-model-list{{$uniqueId}}").empty().trigger("chosen:updated");
+                console.log('{{$uniqueId}}');
+                
+                jQuery("#input-field-list{{$uniqueId}} option").hide().removeAttr('selected');
+                jQuery("#input-field-list{{$uniqueId}} option.field-" + jQuery(this).val()).show();
+                
+                jQuery("#input-field-list{{$uniqueId}}").trigger("chosen:updated");
             });
-            jQuery("#input-model-list{{$uniqueId}}").ajaxChosen(
-                {
-                    keepTypingMsg: "{{{$controller->LL('notice.typing')}}}",
-                    lookingForMsg: "{{{$controller->LL('notice.looking-for')}}}",
-                    type: "GET",
-                    url: "{{\URL::route("cmf.module.objects-lists.list.json")}}", 
-                    dataCallback: function(data) 
-                    {
-                        data.fields = ['id', 'title'];
-                        data.treePid = jQuery("#input-model-type{{$uniqueId}}").val();
 
-                        return data;
-                    },
-                    dataType: "json",
-                    minTermLength: 1,
-                    afterTypeDelay: 1000,
-                    jsonTermKey: "sSearch"
-                },
-                function (data)
-                {
-                    var results = [];
-                        jQuery.each(data, function (i, val) {
-                            results.push({ value: val.id, text: "[" + val.id + "] " + val.title });
-                        });
-                    return results;
-                },
-                {
-                    width: "300px",
-                    no_results_text: "{{{$controller->LL('notice.not-found')}}}"
-                });       
+            jQuery("#input-field-list{{$uniqueId}}").chosen({width: "300px"});
+
+            if ( !{{ $property->get('model_type', 0) }})
+            {
+                jQuery("#input-field-list{{$uniqueId}} option").hide();
+            }
+            else
+            {
+                jQuery("#input-field-list{{$uniqueId}} option").hide();
+                jQuery("#input-field-list{{$uniqueId}} option.field-" + jQuery("#input-model-type{{$uniqueId}}").val()).show();
+            }
+
+            jQuery("#input-model-type{{$uniqueId}}").trigger("chosen:updated");
+            jQuery("#input-field-list{{$uniqueId}}").trigger("chosen:updated");
+
         </script>
 
         <div class="modal-footer">

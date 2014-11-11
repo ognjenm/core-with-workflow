@@ -78,7 +78,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('Telenok\Core\Workflow\Point\Start\Form');
 	$list->push('Telenok\Core\Workflow\Point\End\End');
     $list->push('Telenok\Core\Workflow\Flow\Standart');
-	$list->push('Telenok\Core\Workflow\Activity\FormElementHide');
+	$list->push('Telenok\Core\Workflow\Activity\FormFieldHide');
     //$list->push('Telenok\Core\Workflow\Activity\ValidateField');
 	//$list->push('Telenok\Core\Workflow\Activity\SendMessage');
     //$list->push('Telenok\Core\Workflow\Activity\Log');

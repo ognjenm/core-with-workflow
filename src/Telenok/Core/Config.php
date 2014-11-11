@@ -355,7 +355,7 @@ class Config {
 		{
 			foreach (\Telenok\System\Setting::all() as $setting)
 			{
-				\Config::set($setting->code, $setting->value instanceof \Illuminate\Support\Collection ? $setting->value->toArray() : $setting->value);
+				\Config::set($setting->code, $setting->value/* instanceof \Illuminate\Support\Collection ? $setting->value->all() : $setting->value*/);
 			}
 		}
 	}
