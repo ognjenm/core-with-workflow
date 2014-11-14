@@ -47,7 +47,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		$listWidget = \App::make('telenok.config')->getWidget();
 		$pageId = intval(str_replace('page_', '', \Route::currentRouteName()));
-
+ 
 		try
 		{
 			$page = \Telenok\Web\Page::findOrFail($pageId);
@@ -62,7 +62,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		}
 		catch (\Exception $e)
 		{
-			\App::abort(404);
+            throw $e;
+            \App::abort(404);
 		}
 
 		return \View::make($this->containerView, [

@@ -8,13 +8,6 @@
 	</head>
 	<body> 
         
-        <?php
-        
-        echo \Telenok\Core\Widget\Html\Controller::make() 
-                ->getContent(\Illuminate\Support\Collection::make(['template' => 'widget.1143']));
-        ?>
-        
-        
         @if (isset($content['center']))
             @foreach($content['center'] as $widget)
                 {{$widget}}

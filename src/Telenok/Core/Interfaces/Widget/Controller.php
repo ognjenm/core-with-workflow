@@ -100,7 +100,7 @@ abstract class Controller {
     
 	public function getTemplateContent()
 	{
-        $template = ($model = $this->getWidgetModel()) && $model->getKey() ? 'widget/' . $model->getKey() : $this->frontendView;
+        $template = ($model = $this->getWidgetModel()) && $model->getKey() ? 'widget.' . $model->getKey() : $this->frontendView;
         
 		return $template ? \File::get(\App::make('view.finder')->find($template)) : "";
 	}

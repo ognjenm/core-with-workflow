@@ -11,13 +11,11 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	{
         if ($structure !== null && ($template = $structure->get('template')))
         {
-            //$this->frontendView = $template;
             return \View::make($template, ['controller' => $this]);
         }
         else if ($m = $this->getWidgetModel())
         {
-            //$this->frontendView = $m->template;
-            return \View::make($m->template, ['controller' => $this]);
+            return \View::make('widget.' . $m->getKey(), ['controller' => $this]);
         }
 	}
 
