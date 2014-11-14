@@ -34,8 +34,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {
         return \App::build($type->classController())
 					->setTabKey($this->key)
-					//->setPresentationModuleKey($this->getPresentationModuleKey())
-					->setAdditionalViewParam($this->additionalViewParam);
+					->setAdditionalViewParam($this->getAdditionalViewParam());
     }    
 
     public function getTreeListItemProcessed($item)
@@ -83,9 +82,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getContent();
-			}
-
-			$fields = $model->getFieldList(); 
+			} 
+            
+            $fields = $model->getFieldList(); 
         }
         catch (\LogicException $e) 
         {
@@ -94,8 +93,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         catch (\Exception $e) 
         {
             return ['message' => 'Empty required'];
-        }
-		
+        } 
+        
         return [
             'tabKey' => "{$this->getTabKey()}-{$model->getTable()}",
             'tabLabel' => $type->translate('title'),
@@ -360,7 +359,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		try
 		{
 			return [
-				'tabKey' => $this->getTabKey() . '-edit-' . str_random(),
+				'tabKey' => $this->getTabKey() . '-edit-' . $id,
 				'tabLabel' => $type->translate('title'),
 				'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
 					'controller' => $this,
@@ -465,7 +464,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
 
         return [
-            'tabKey' => $this->getTabKey() . '-edit-' . md5(implode('', $ids)),
+            'tabKey' => $this->getTabKey() . '-edit-' . implode('', $ids),
             'tabLabel' => $type->translate('title'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];

@@ -2,8 +2,6 @@
 
 namespace Telenok\Core\Interfaces\Widget;
 
-use \Illuminate\Database\Eloquent\ModelNotFoundException as ModelNotFoundException;
-
 abstract class Controller {
 
 	protected $key = '';
@@ -13,6 +11,7 @@ abstract class Controller {
 	protected $package;
 	protected $widgetModel;
 	protected $backendView = '';
+	protected $frontendView = '';
 	protected $structureView = '';
 
 	public function getName()
@@ -78,29 +77,46 @@ abstract class Controller {
 			return $key == $item->getParent();
 		});
 	}
-
+    
+	public static function make()
+	{
+        return new static;
+	}
+    
 	public function getBackendView()
 	{
 		return $this->backendView ? : "core::module.web-page-constructor.widget-backend";
+	}
+
+	public function getFronendView()
+	{
+		return $this->frontendView ? : "core::module.web-page-constructor.widget-frontend";
 	}
 
 	public function getStructureView()
 	{
 		return $this->structureView ? : "core::widget.{$this->getKey()}.structure";
 	}
+    
+	public function getTemplateContent()
+	{
+        $template = ($model = $this->getWidgetModel()) && $model->getKey() ? 'widget/' . $model->getKey() : $this->frontendView;
+        
+		return $template ? \File::get(\App::make('view.finder')->find($template)) : "";
+	}
 
-	public function getInsertContent($id = '')
+	public function getInsertContent($id = 0)
 	{
 		$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
 
 		return \View::make($this->getBackendView(), [
-					'header' => $this->LL('header'),
-					'title' => $widgetOnPage->title,
-					'id' => $widgetOnPage->getKey(),
-					'key' => $this->getKey(),
-					'widgetOnPage' => $widgetOnPage,
-				])->render();
-	}
+                        'header' => $this->LL('header'),
+                        'title' => $widgetOnPage->title,
+                        'id' => $widgetOnPage->getKey(),
+                        'key' => $this->getKey(),
+                        'widgetOnPage' => $widgetOnPage,
+                    ])->render();
+	}   
 	
 	public function insertFromBufferOnPage($languageId = 0, $pageId = 0, $key = '', $id = 0, $container = '', $order = 0, $bufferId = 0)
 	{
@@ -229,6 +245,8 @@ abstract class Controller {
 
 	public function getStructureContent($model = null, $uniqueId = null)
 	{
+        $this->setWidgetModel($model);
+        
 		return \View::make($this->getStructureView(), [
 					'controller' => $this,
 					'model' => $model,

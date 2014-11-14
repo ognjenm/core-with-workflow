@@ -55,6 +55,7 @@ input[type="tel"], input[type="color"], .uneditable-input {
 
 
 div.frontend-container {   }
+div.frontend-container div.widget-header { cursor: move; }
 div.frontend-widget-list { width: 200px; display: table; }
 div.dragabble, div.dragabble-clone { padding: 5px; margin: 5px; cursor: pointer; background: greenyellow; }
 div.frontend-container div.dragabble { display: table !important; }

@@ -9,11 +9,16 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function getContent(\Illuminate\Support\Collection $structure = null)
 	{
-		$structure = $this->widgetModel ? $this->widgetModel->structure : $structure;
-		
-		$htmlCode = $structure->get('html_code');
-		
-		return array_get($htmlCode, \Config::get('app.locale'), \Config::get('app.localeDefault'));
+        if ($structure !== null && ($template = $structure->get('template')))
+        {
+            //$this->frontendView = $template;
+            return \View::make($template, ['controller' => $this]);
+        }
+        else if ($m = $this->getWidgetModel())
+        {
+            //$this->frontendView = $m->template;
+            return \View::make($m->template, ['controller' => $this]);
+        }
 	}
 
 }

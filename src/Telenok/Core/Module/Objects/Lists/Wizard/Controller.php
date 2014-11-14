@@ -38,8 +38,18 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         return $this->presentationListWizardView;
     }
 
-	public function typeForm($type)
+    public function getAdditionalViewParam()
     {
+        $this->additionalViewParam = parent::getAdditionalViewParam();
+		$this->additionalViewParam['presentation'] = $this->getPresentation();
+        $this->additionalViewParam['presentationModuleKey'] = $this->getPresentationModuleKey();
+        $this->additionalViewParam['iDisplayLength'] = $this->displayLength;
+
+        return $this->additionalViewParam;
+    }
+    
+	public function typeForm($type)
+    { 
 		return parent::typeForm($type)
 				->setPresentationModelView($this->getPresentationModelView())
 				->setRouterStore("cmf.module.{$this->getKey()}.wizard.create")
@@ -55,15 +65,11 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			return $this->chooseType($id);
 		}
 
-		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
-
         return parent::create($id);
     }
 	
-    public function chooseType($id)
+    public function chooseType($id = [])
     { 
-		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
-
 		$id = (array)$id;
 		
 		return [
@@ -75,27 +81,6 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 					])->render()
 			];
     }
-	
-    public function edit($id = null)
-    { 
-		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
-		
-        return parent::edit($id);
-    } 
-
-    public function store($id = null, $input = [])
-    { 
-		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
-		
-        return parent::store($id, $input);
-    } 
-
-    public function update($id = null, $input = [])
-    { 
-		$this->additionalViewParam = ['presentation' => $this->getPresentation()];
-		
-        return parent::update($id, $input);
-    } 
     
     public function choose()
     {

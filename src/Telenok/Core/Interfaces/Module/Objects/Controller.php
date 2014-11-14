@@ -273,7 +273,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		$model->lock();
         
         return [
-            'tabKey' => $this->getTabKey() . '-edit-' . str_random(),
+            'tabKey' => $this->getTabKey() . '-edit-' . $id,
             'tabLabel' => $type->translate('title'),
             'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
 				'controller' => $this,
@@ -433,7 +433,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         }
 
         return [
-            'tabKey' => $this->getTabKey() . '-edit-' . md5(implode('', $ids)),
+            'tabKey' => $this->getTabKey() . '-edit-' . implode('', $ids),
             'tabLabel' => $type->translate('title'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];

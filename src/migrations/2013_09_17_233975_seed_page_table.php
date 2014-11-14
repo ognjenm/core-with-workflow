@@ -106,6 +106,25 @@ class SeedPageTable extends Migration {
 			DB::table('object_field')->insertGetId(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(['ru' => "Ключевые слова в теге <meta>", 'en' => "Keywords in <meta> tag"], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['ru' => "Ключевые слова в теге <meta>", 'en' => "Keywords in <meta> tag"], JSON_UNESCAPED_UNICODE),
+						'key' => 'string',
+						'code' => 'keywords_ceo',
+						'active' => 1,
+						'field_object_type' => $modelId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 1,
+						'show_in_form' => 1,
+						'show_in_list' => 0,
+						'allow_search' => 1,
+						'required' => 0,
+						'field_order' => 4,
+					]
+			);
+
+			DB::table('object_field')->insertGetId(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(['ru' => "Описание in <meta> tag", 'en' => "Description in <meta> tag"], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => "Описание in <meta> tag", 'en' => "Description in <meta> tag"], JSON_UNESCAPED_UNICODE),
 						'key' => 'text',
@@ -118,7 +137,7 @@ class SeedPageTable extends Migration {
 						'show_in_list' => 0,
 						'allow_search' => 1,
 						'required' => 0,
-						'field_order' => 4,
+						'field_order' => 5,
 					]
 			);
 
@@ -137,7 +156,7 @@ class SeedPageTable extends Migration {
 						'show_in_list' => 1,
 						'allow_search' => 1,
 						'required' => 1,
-						'field_order' => 5,
+						'field_order' => 6,
 					]
 			);
 

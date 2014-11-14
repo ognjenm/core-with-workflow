@@ -101,6 +101,7 @@ var telenokJS = Clazzzz.extend(
         });
     },
     getModule: function(moduleKey) { return this.module[moduleKey]; },
+    setModuleParam: function(moduleKey, param) { this.module[moduleKey] = param; },
     getPresentation: function(presentationModuleKey) { return this.presentation[presentationModuleKey]; },
     addPresentation: function(presentationModuleKey, obj) { this.presentation[presentationModuleKey] = obj; },
     hasPresentation: function(presentationModuleKey) { if (this.presentation[presentationModuleKey]) { return true; } else { return false; } },
@@ -141,9 +142,18 @@ var telenokJS = Clazzzz.extend(
     },
     processModuleContent: function(moduleKey) 
     { 
-        this.preCallingPresentation(moduleKey);
+        var param = this.getModule(moduleKey) || {};
 
-        var param = this.getModule(moduleKey);
+        if (!param.preCallingPresentation)
+        {
+            this.preCallingPresentation(moduleKey);
+        }
+        
+        param = this.getModule(moduleKey);
+
+        param.preCallingPresentation = true;
+
+        this.setModuleParam(moduleKey, param);
 
         if (this.hasPresentation(param.presentationModuleKey))
         {

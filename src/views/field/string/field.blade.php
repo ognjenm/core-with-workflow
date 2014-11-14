@@ -34,7 +34,7 @@
 	{{ Form::label("string_password", $controller->LL('property.string_password'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
 		{{ Form::hidden("string_password", 0) }}
-		{{ Form::checkbox("string_password", 1, $model->required, array('class'=>'ace ace-switch ace-switch-3')) }}
+		{{ Form::checkbox("string_password", 1, $model->string_password, array('class'=>'ace ace-switch ace-switch-3')) }}
 		<span class="lbl"></span>
 	</div>
 </div>

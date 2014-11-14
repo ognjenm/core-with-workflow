@@ -23,7 +23,7 @@
 				<i class="ace-icon fa fa-cog"></i>
 			</a>
 
-			<a data-action="close" href="#">
+            <a data-action="close" href="#">
 				<i class="ace-icon fa fa-times"></i>
 			</a>
 		</div>

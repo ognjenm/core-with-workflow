@@ -46,6 +46,18 @@
 	</style>
 
 
+    <div>
+        <div class="page-header position-relativee"></div>
+        <div>
+            <div class="col-xs-12 telenok-presentation-tabs"> 
+                <div class="tabbable">
+                    <ul class="nav nav-tabs" id="nav-tabs-{{$presentation}}"></ul>
+                    <div class="tab-content module-web-page-view-container" id="tab-content-{{$presentation}}"></div>
+                </div>
+            </div>	
+        </div>
+    </div>
+
 	<div id="module-web-page-widget-list" class="dropdown dropdown-preview">
 
 		<h3 class="header smaller lighter blue">
@@ -76,6 +88,9 @@
 				}
 				?>    
 			</select>
+            <button type="button" class="btn btn-xs btn-info" onclick="reloadWebPageContainer();">
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
 		</div>
 
 		<hr class="sep-1" />
@@ -221,7 +236,7 @@
 	</div>
 	
 	
-	<script>
+	<script type="text/javascript">
 
 		jQuery("div#module-web-page-widget-list").draggable({
 			appendTo: "body",
@@ -298,7 +313,16 @@
 								jQuery(ui.item).replaceWith(data);
 
 								updateContainer();
-							});
+							})
+                            .fail(function(jqXHR, textStatus, errorThrown)
+                            {
+                                jQuery.gritter.add({
+                                    title: 'Error',
+                                    text: jqXHR.responseText,
+                                    class_name: 'gritter-error gritter-light',
+                                    time: 3000,
+                                });
+                            });
 					}
 				})
 				.droppable({
@@ -313,6 +337,11 @@
 				{
 					event.preventDefault();
 					event.stopPropagation();
+
+                    if (!confirm('Are you sure ?')) 
+                    {
+                        return false;
+                    }
 
 					var this_ = this;
 
@@ -331,7 +360,16 @@
 								jQuery(this_).remove();
 							});
 						}
-					});
+					})
+                    .fail(function(jqXHR, textStatus, errorThrown)
+                    {
+                        jQuery.gritter.add({
+                            title: 'Error',
+                            text: jqXHR.responseText,
+                            class_name: 'gritter-error gritter-light',
+                            time: 3000,
+                        });
+                    });
 				});
 
 			jQuery('.telenok-widget-box .widget-toolbar a[data-action="settings"]:not(.settings-me)')
@@ -352,13 +390,22 @@
 						}
 
 						jQuery('div#widget-setting-{{{$uniqueId}}}').data('model-data', function(data) {})
-						.html(data.tabContent)
-						.modal('show')
-						.on('hidden', function() 
-						{ 
-							jQuery(this).html(""); 
-						});
-					});
+                            .html(data.tabContent)
+                            .modal('show')
+                            .on('hidden', function() 
+                            { 
+                                jQuery(this).html(""); 
+                            });
+					})
+                    .fail(function(jqXHR, textStatus, errorThrown)
+                    {
+                        jQuery.gritter.add({
+                            title: 'Error',
+                            text: jqXHR.responseText,
+                            class_name: 'gritter-error gritter-light',
+                            time: 3000,
+                        });
+                    });
 				});
 
 			jQuery(
@@ -379,7 +426,7 @@
 							.replace(/:key:/gi, jQuery(this).data('action')),
 						context: document.body
 					})
-					.success(function(data)
+					.done(function(data)
 					{
 						var $buffer = jQuery("ul#widget-menu-buffer"); 
 						var $el = $buffer.find("li a[data-widget-id='" + data.widget.id + "']");
@@ -401,7 +448,16 @@
 						} 
 
 						updateContainer();
-					});
+					})
+                    .fail(function(jqXHR, textStatus, errorThrown)
+                    {
+                        jQuery.gritter.add({
+                            title: 'Error',
+                            text: jqXHR.responseText,
+                            class_name: 'gritter-error gritter-light',
+                            time: 3000,
+                        });
+                    });
 				});
 
 			jQuery("a.dragabble:not(.dragabble-me)", "div#module-web-page-widget-list")
@@ -434,7 +490,16 @@
 					{ 
 						jQuery(this_).closest('li').remove();
 						updateContainer();
-					});
+					})
+                    .fail(function(jqXHR, textStatus, errorThrown)
+                    {
+                        jQuery.gritter.add({
+                            title: 'Error',
+                            text: jqXHR.responseText,
+                            class_name: 'gritter-error gritter-light',
+                            time: 3000,
+                        });
+                    });
 				});
 
 			var size = jQuery('li', "ul#widget-menu-buffer").size();
@@ -489,7 +554,7 @@
 		{
 			if (!param.tabKey) return this;
 
-			var id = _this.presentationDomId + '-tab-' + param.tabKey;
+			var id = this.presentationDomId + '-tab-' + param.tabKey;
 			var $el = jQuery('#' + id);
 
 			if ($el.size())
@@ -553,7 +618,7 @@
 					data: param.data || {},
 
 				})
-				.success(function(data)
+				.done(function(data)
 				{
 					if (reload)
 					{
@@ -575,7 +640,7 @@
 						title: 'Error',
 						text: jqXHR.responseText,
 						class_name: 'gritter-error gritter-light',
-						time: 2000,
+						time: 3000,
 					});
 				});
 				

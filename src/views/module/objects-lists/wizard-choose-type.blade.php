@@ -41,7 +41,6 @@
 
 			<div class="center no-margin">
 				<button class="btn btn-success" onclick="createWizard{{$uniqueId}}(this, '{{$controller->getRouterCreate(['id' => '_id_', 'saveBtn' => \Input::get('saveBtn'), 'chooseBtn' => \Input::get('chooseBtn'), 'chooseSequence' => 1])}}');">
-					<i class="fa fa-floppy-o"></i>
 					{{{ $controller->LL('btn.continue') }}}
 				</button>
 			</div>
@@ -51,7 +50,7 @@
 </div>
 
 
-<script>
+<script type="text/javascript">
 	jQuery("#input{{$uniqueId}}").chosen({ 
 		keepTypingMsg: "{{$controller->LL('notice.typing')}}",
 		lookingForMsg: "{{$controller->LL('notice.looking-for')}}",

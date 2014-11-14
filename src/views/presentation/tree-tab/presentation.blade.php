@@ -82,7 +82,7 @@
 						method: 'get',
 						dataType: 'json',
 					}, param))
-				.success(function(data)
+				.done(function(data)
 				{
 					if (data.exception)
 					{
@@ -90,7 +90,7 @@
 							title: 'Error',
 							text: data.exception,
 							class_name: 'gritter-error gritter-light',
-							time: 2000,
+							time: 3000,
 						});
 					}
 					else
@@ -109,7 +109,7 @@
 						title: 'Error',
 						text: xhr.responseText,
 						class_name: 'gritter-error gritter-light',
-						time: 2000,
+						time: 3000,
 					});
 				});
 

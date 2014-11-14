@@ -26,7 +26,6 @@
 			{{ Form::label('process', $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 			<div class="col-sm-3">
 				<button type="button" class="btn" onclick="showProcessModal{{$uniqueId}}(); return false;">
-					<i class="fa fa-floppy-o"></i>
 					{{{ $controller->LL('btn.open-process-editor') }}}
 				</button>
 			</div>
@@ -73,7 +72,7 @@
 			{
 				var modal = jQuery('#modal-business-{{$uniqueId}}').appendTo(document.body);
 					modal
-						.modal('show')
+						.modal('show') 
 						.on('hide.bs.modal', function() {
                             jQuery('div.modal-body', this).html("");
                         })
@@ -84,7 +83,7 @@
 							'margin-left': function () { 
 								return (jQuery(window).width() - $(this).outerWidth()) / 2;
 							}
-						});
+						}); 
 
 				if (!jQuery("#frame-process-{{$uniqueId}}").size())
 				{
@@ -99,9 +98,13 @@
 						'height' : jQuery(window).height() - 200
 					});
 
-				frame.load(function(){
+				frame.load(function()
+                {
+                    document.activeElement.blur();
+                    frame.focus();
+                    
 					window.frames['frame-process-{{$uniqueId}}'].importJSONFromTop = function() 
-					{
+					{ 
 						return diagramData{{$uniqueId}};
 					}
 				});

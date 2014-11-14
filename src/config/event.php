@@ -111,6 +111,16 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 });
 
 
+
+/*
+\Event::listen('telenok.controller.frontend', function($list)
+{
+    $list->push(\Illuminate\Support\Collection::make([
+        '\Telenok\Core\Controller\Frontend\Controller'
+    ]));
+});
+*/
+
 /*
 \Event::listen('telenok.module.profile.add', function($param){
     \App::make('telenok.config')->addModule($param);

@@ -52,9 +52,9 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 		{
             return [];
 		}
-		catch (\Exception $ex)
-		{
-            return \Response::json('Define Page Controller first', 417 /* Expectation Failed */);
+		catch (\Exception $e)
+		{           
+            return \Response::json($e->getMessage(), 417 /* Expectation Failed */);
 		}
 	}
 
@@ -110,11 +110,11 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 		}
 		catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e)
 		{
-			return \Response::json($this->LL('notice.error.undefined'), 403);
+			return \Response::json($this->LL('notice.error.undefined'), 417);
 		}
 		catch (\Exception $e)
-		{
-			return \Response::json($e->getMessage(), 403);
+		{ 
+            return \Response::json($e->getMessage(), 417);
 		}
 	}
 
@@ -124,7 +124,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 		$buffer = \Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $widget->getKey(), 'web-page', $key);
 
-		return ['widget' => $widget->all(), 'buffer' => $buffer->all()];
+		return ['widget' => $widget, 'buffer' => $buffer];
 	}
 
 	public function deleteBufferWidget($id = 0)

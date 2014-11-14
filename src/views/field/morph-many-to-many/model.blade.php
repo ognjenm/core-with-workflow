@@ -232,51 +232,57 @@
             });
         }
         
-        function editTableRow{{$jsUnique}}(obj, url) 
+        if (typeof editTableRow{{$jsUnique}} == "undefined")
         {
-            jQuery.ajax({
-                url: url,
-                method: 'get',
-                dataType: 'json'
-            }).done(function(data) {
-				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
-                {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
-                }
+            function editTableRow{{$jsUnique}}(obj, url) 
+            {
+                jQuery.ajax({
+                    url: url,
+                    method: 'get',
+                    dataType: 'json'
+                }).done(function(data) {
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+                    if (!jQuery('#modal-{{$uniqueId}}').size())
+                    {
+                        jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    }
 
-                $modal.data('model-data', function(data)
-                {  
-                    var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
-                    var $dt = $table.dataTable();
-                    var $tr = jQuery(obj).closest('tr');
-                        $dt.fnUpdate({title: data.title}, $tr[0], 1);
-                    
-                })
-						
-				$modal.html(data.tabContent);
-						
-				$modal.modal('show').on('hidden', function() 
-                { 
-                    jQuery(this).html(""); 
+                    var $modal = jQuery('#modal-{{$uniqueId}}');
+
+                    $modal.data('model-data', function(data)
+                    {  
+                        var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
+                        var $dt = $table.dataTable();
+                        var $tr = jQuery(obj).closest('tr');
+                            $dt.fnUpdate({title: data.title}, $tr[0], 1);
+
+                    })
+
+                    $modal.html(data.tabContent);
+
+                    $modal.modal('show').on('hidden', function() 
+                    { 
+                        jQuery(this).html(""); 
+                    });
                 });
-            });
+            }
         }
 
-        function deleteTableRow{{$jsUnique}}(obj) 
+        if (typeof deleteTableRow{{$jsUnique}} == "undefined")
         {
-            var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
-            var $tr = jQuery(obj).closest("tr");
-            
-            var data = $dt.fnGetData($tr[0]);
-            
-            $tr.toggleClass('line-through red');
-            jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
-            jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
-            
-            removeMorphM2M{{$jsUnique}}(data.id);
+            function deleteTableRow{{$jsUnique}}(obj) 
+            {
+                var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
+                var $tr = jQuery(obj).closest("tr");
+
+                var data = $dt.fnGetData($tr[0]);
+
+                $tr.toggleClass('line-through red');
+                jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
+                jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
+
+                removeMorphM2M{{$jsUnique}}(data.id);
+            }
         }
 
         function deleteMorphM2MAddition{{$jsUnique}}(obj) 

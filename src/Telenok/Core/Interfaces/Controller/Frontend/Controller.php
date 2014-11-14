@@ -12,7 +12,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	protected $cssFilePath = array();
 	protected $cssCode = array();
 	protected $jsCode = array();
-	
+
 	protected $containerView = 'core::controller.frontend';
 	protected $containerSkeleton = 'core::controller.frontend-container';
 
@@ -20,36 +20,41 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	{
 		$content = ['controller' => $this];
 
-		$wOP = \Telenok\Web\WidgetOnPage::where('widget_page', $pageId)->whereHas('widgetLanguageLanguage', function($query) use ($languageId)
+		$wop = \Telenok\Web\WidgetOnPage::where('widget_page', $pageId)->whereHas('widgetLanguageLanguage', function($query) use ($languageId)
 			{
 				$query->where('id', $languageId);
 			})
-			->orderBy('order')->get();
+			->orderBy('order')->get(); 
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 
-		$wOP->each(function($w) use (&$content, $widgetConfig)
+		$wop->each(function($w) use (&$content, $widgetConfig)
 		{
-			$content[$w->container][] = $widgetConfig->get($w->key)->getInsertContent($w->id);
+            $content[$w->container][] = $widgetConfig->get($w->key)->getInsertContent($w->getKey());
 		});
 
 		return \View::make($this->containerSkeleton, $content)->render();
 	}
 
+	public function getContiner()
+	{
+        return $this->container;
+    }
+    
 	public function getContent()
 	{ 
 		$content = [];
 
 		$listWidget = \App::make('telenok.config')->getWidget();
 		$pageId = intval(str_replace('page_', '', \Route::currentRouteName()));
-		
+
 		try
 		{
 			$page = \Telenok\Web\Page::findOrFail($pageId);
 			
 			foreach($this->container as $containerId)
 			{
-				$page->widget()->active()->get()->each(function($item) use (&$content, $containerId, $listWidget)
+                $page->widget()->active()->get()->filter(function($item) use ($containerId) { return $item->container === $containerId; })->each(function($item) use (&$content, $containerId, $listWidget)
 				{
 					$content[$containerId][] = $listWidget->get($item->key)->setWidgetModel($item)->getContent();
 				});
@@ -116,7 +121,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		foreach ($this->jsCode as $code)
 		{
-			$header .= "<script>{$code}</script>";
+			$header .= "<script type='text/javascript'>{$code}</script>";
 		}
 
 		return $header;

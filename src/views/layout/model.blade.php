@@ -54,7 +54,7 @@
 					title: '{{{$controller->LL('notice.saved')}}}! {{{$controller->LL('notice.saved.description')}}}',
 					text: '{{{$controller->LL('notice.saved.thank.you')}}}!',
 					class_name: 'gritter-success gritter-light',
-					time: 2000,
+					time: 3000,
 				});
 				
 				$el.closest('div.container-model-{{$uniqueId}}').html(data.tabContent); 
@@ -162,15 +162,12 @@
 	@section('formBtn')
     <div class='form-actions center no-margin'>
         <button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">
-            <i class="fa fa-floppy-o"></i>
             {{{ $controller->LL('btn.save') }}}
         </button>
         <button type="submit" class="btn btn-info" onclick="jQuery(this).closest('form').data('btn-clicked', 'save.close');">
-            <i class="fa fa-floppy-o"></i>
             {{{ $controller->LL('btn.save.close') }}}
         </button>
         <button type="submit" class="btn" onclick="jQuery(this).closest('form').data('btn-clicked', 'close');">
-            <i class="fa fa-floppy-o"></i>
             {{{ $controller->LL('btn.close') }}}
         </button>
     </div>

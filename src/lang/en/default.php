@@ -85,6 +85,8 @@ return [
 	'error.file.upload.require' => 'Please, upload required file in field ":attribute"',
 	'error.access' => 'Sorry, access denied',
 	
+    'title.template' => 'Template',
+    
     'error' => [
         'undefined' => 'Sorry, an error occurred',
         'required' => 'Field ":attribute" required',

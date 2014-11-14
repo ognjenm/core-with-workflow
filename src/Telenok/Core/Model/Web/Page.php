@@ -20,7 +20,7 @@ class Page extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     public function pageDomain()
     {
         return $this->belongsTo('\Telenok\Web\Domain', 'page_domain');
-    }
+    } 
 }
 
 ?>

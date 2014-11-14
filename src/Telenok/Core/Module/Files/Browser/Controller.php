@@ -184,7 +184,6 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function edit($id = null)
 	{
 		$id = $id ?: \Input::get('id');
-		$tabKey = str_random();
 
 		try
 		{
@@ -204,6 +203,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				$modelType = 'directory';
 			}
 			
+            $tabKey = md5($id);
+            
 			return [
 				'tabKey' => $this->getTabKey() . '-edit-' . $tabKey,
 				'tabLabel' => $this->LL('list.edit.' . $modelType),

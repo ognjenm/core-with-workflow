@@ -196,7 +196,7 @@ class Config {
 
 		return $list;
 	}
-
+/*
 	public function getController($flush = false)
 	{
 		static $list = null;
@@ -205,14 +205,16 @@ class Config {
 		{
 			try
 			{
+				$listControllers = \Illuminate\Support\Collection::make([]);
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Web\PageController::active()->get()->each(function($item) use ($list)
-				{
-					$object = \App::build($item->controller_class);
-					$object->setControllerModel($item);
+                \Event::fire('telenok.controller.frontend', $listControllers);
+
+                $listControllers->each(function($item) use ($list)
+                {
+					$object = \App::build($item);
 					$list->put($object->getKey(), $object);
-				});
+                });
 			}
 			catch (\Exception $e)
 			{
@@ -222,7 +224,7 @@ class Config {
 
 		return $list;
 	}
-
+*/
 	public function getWidgetGroup($flush = false)
 	{
 		static $list = null;
@@ -262,7 +264,7 @@ class Config {
 				\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
-					$object->setWidgetModel($item);
+					//$object->setWidgetModel($item);
 					$list->put($object->getKey(), $object);
 				});
 			}
@@ -300,9 +302,11 @@ class Config {
 					->where('end_at', '>=', $now);
 		})->active()->where(function($query) use ($domains)
 		{
+            $domains = $domains->modelKeys();
+            
 			$query->whereNull('page_domain') 
 					->orWhere('page_domain', 0)
-					->orWhereIn('page_domain', $domains->modelKeys());
+					->orWhereIn('page_domain', $domains?:[0]);
 		})->get();
 
 		foreach ($domains->all() as $domain)

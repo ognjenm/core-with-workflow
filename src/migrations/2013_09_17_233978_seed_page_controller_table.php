@@ -166,6 +166,26 @@ class SeedPageControllerTable extends Migration {
 
 			(new \Telenok\Object\Field())->storeOrUpdate(
 					[
+						'title' => ['en' => 'Controller\'s container template', 'ru' => 'Шаблон контейнера контроллера'],
+						'title_list' => ['en' => 'Controller\'s container template', 'ru' => 'Шаблон контейнера контроллера'],
+						'key' => 'string',
+						'code' => 'controller_template_container',
+						'active' => 1,
+						'string_default' => 'core::controller.frontend-container',
+						'field_object_type' => $modelId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 1,
+						'allow_search' => 1,
+						'allow_create' => 1,
+						'allow_update' => 1,
+						'field_order' => 6,
+					]
+			);
+
+			(new \Telenok\Object\Field())->storeOrUpdate(
+					[
 						'title' => ['en' => 'Page'],
 						'title_list' => ['en' => 'Page'],
 						'key' => 'relation-one-to-many',

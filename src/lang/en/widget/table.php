@@ -7,7 +7,5 @@ return array(
 	
 	'title.col' => 'Total columns',
 	'title.row' => 'Total rows',
-
-	
-	
+	'title.template' => 'Template',
 );

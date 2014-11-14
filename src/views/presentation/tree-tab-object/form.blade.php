@@ -19,7 +19,7 @@
 					@endforeach
 				</ul>
 
-				<script>
+				<script type="text/javascript">
 					@section('scriptForm')
 				
 					jQuery("ul#form-nav-{{{$uniqueId}}} li:first a").click();

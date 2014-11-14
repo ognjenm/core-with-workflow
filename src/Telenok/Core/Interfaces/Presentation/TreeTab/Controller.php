@@ -723,7 +723,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 		$id = $id ?: \Input::get('id');
 		
         return [
-            'tabKey' => $this->getTabKey() . '-edit-' . md5($id),
+            'tabKey' => $this->getTabKey() . '-edit-' . $id,
             'tabLabel' => $this->LL('list.edit'),
             'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
@@ -756,7 +756,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         }
 
         return [
-            'tabKey' => $this->getTabKey() . '-edit-' . md5(implode('', $ids)),
+            'tabKey' => $this->getTabKey() . '-edit-' . implode('', $ids),
             'tabLabel' => $this->LL('list.edit'),
             'tabContent' => implode('<div class="hr hr-double hr-dotted hr18"></div>', $content)
         ];

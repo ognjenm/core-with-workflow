@@ -74,7 +74,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
             <select class="chosen" multiple data-placeholder="'.$this->LL('notice.choose').'" id="input'.$uniqueId.'" name="filter['.$field->code.'][]">
             ' . implode('', $option) . ' 
             </select>
-            <script>
+            <script type="text/javascript">
                 jQuery("#input'.$uniqueId.'").ajaxChosen({ 
                     keepTypingMsg: "'.$this->LL('notice.typing').'",
                     lookingForMsg: "'.$this->LL('notice.looking-for').'",
