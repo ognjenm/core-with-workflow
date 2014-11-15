@@ -14,12 +14,12 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	protected $jsCode = array();
 	protected $cacheTime = 3600;
 
-	protected $containerView = 'core::controller.frontend';
-	protected $containerSkeleton = 'core::controller.frontend-container';
+	protected $frontendView = 'core::controller.frontend';
+	protected $backendView = 'core::controller.frontend-container';
 
 	public function setCacheTime($param = 0)
 	{
-		$this->cacheTime = min($this->cacheTime, $param);
+		$this->cacheTime = min($this->getCacheTime(), $param);
         
 		return $this;
 	}
@@ -46,12 +46,36 @@ abstract class Controller extends \Illuminate\Routing\Controller {
             $content[$w->container][] = $widgetConfig->get($w->key)->getInsertContent($w->getKey());
 		});
 
-		return \View::make($this->containerSkeleton, $content)->render();
+		return \View::make($this->backendView, $content)->render();
 	}
 
 	public function getContiner()
 	{
         return $this->container;
+    }
+
+	public function getBackendView()
+	{
+        return $this->backendView;
+    }
+
+	public function setBackendView($param = '')
+	{
+        $this->backendView = $param;
+        
+        return $this;
+    }
+
+	public function getFrontendView()
+	{
+        return $this->frontendView;
+    }
+
+	public function setFrontendView($param = '')
+	{
+        $this->frontendView = $param;
+        
+        return $this;
     }
     
 	public function getContent()
@@ -60,27 +84,33 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		$listWidget = \App::make('telenok.config')->getWidget();
 		$pageId = intval(str_replace('page_', '', \Route::currentRouteName()));
- 
+
 		try
 		{
 			$page = \Telenok\Web\Page::findOrFail($pageId);
-			
+
             $this->setCacheTime($page->cache_time);
-            
+
+            if ($t = $page->translate('template_view'))
+            {
+                $this->setFrontendView($t);
+            }
+
 			foreach($this->container as $containerId)
 			{
                 $page->widget()->active()->get()->filter(function($item) use ($containerId) { return $item->container === $containerId; })->each(function($item) use (&$content, $containerId, $listWidget)
 				{
-					$content[$containerId][] = $listWidget->get($item->key)->setWidgetModel($item)->setFrontEndController($this)->getContent();
+					$content[$containerId][] = $listWidget->get($item->key)->setWidgetModel($item)->setFrontendController($this)->getContent();
 				});
 			}
 		}
 		catch (\Exception $e)
 		{
+            throw $e;
             \App::abort(404);
 		}
 
-		return \View::make($this->containerView, [
+		return \View::make($this->getFrontendView(), [
 			'page' => $page,
 			'controller' => $this,
 			'content' => $content,

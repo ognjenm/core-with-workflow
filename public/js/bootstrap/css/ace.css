@@ -8007,7 +8007,7 @@ fieldset[disabled] .btn-white.btn-grey.active {
     display: inline-block;
     height: 22px;
     width: 22px;
-    line-height: 22px;
+    line-height: 20px;
     text-align: center;
     padding: 0;
     background-color: #65bcda;
@@ -8016,6 +8016,7 @@ fieldset[disabled] .btn-white.btn-grey.active {
     font-weight: bold;
     cursor: default;
     margin-left: 4px;
+    margin-top: 5px;
     border-radius: 100%;
     border-color: #FFF;
     border: 2px solid #FFF;

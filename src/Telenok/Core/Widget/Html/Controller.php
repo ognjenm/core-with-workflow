@@ -9,19 +9,30 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function getContent(\Illuminate\Support\Collection $structure = null)
 	{
-        if ($structure->has('cache_time'))
+        $content = '';
+
+        if ($structure !== null && $structure->has('cache_time'))
         {
             $this->setCacheTime($structure->get('cache_time'));
         }
         
+        if (($content = $this->getCachedContent()) !== false)
+        {
+            return $content;
+        }
+
         if ($structure !== null && ($template = $structure->get('template')))
         {
-            return \View::make($template, ['controller' => $this]);
+            $content = \View::make($template, ['controller' => $this])->render();
         }
         else if ($m = $this->getWidgetModel())
         {
-            return \View::make('widget.' . $m->getKey(), ['controller' => $this, 'frontEndController' => $this->getFrontEndController()]);
+            $content = \View::make('widget.' . $m->getKey(), ['controller' => $this, 'frontendController' => $this->getFrontendController()])->render();
         }
+
+        $this->setCachedContent($content);
+
+        return $content;
 	}
 
 }

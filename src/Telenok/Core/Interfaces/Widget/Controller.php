@@ -13,7 +13,7 @@ abstract class Controller {
 	protected $backendView = '';
 	protected $frontendView = '';
 	protected $structureView = '';
-	protected $frontEndController;
+	protected $frontendController;
 	protected $cacheTime = 3600;
 
 	public function getName()
@@ -60,7 +60,7 @@ abstract class Controller {
 	{
 		$this->cacheTime = $param;
 
-        if ($c = $this->getFrontEndController())
+        if ($c = $this->getFrontendController())
         {
             $c->setCacheTime($param);
         }
@@ -73,6 +73,36 @@ abstract class Controller {
 		return $this->cacheTime;
 	}
 
+	public function getCacheKey()
+	{
+        if ($m = $this->getWidgetModel())
+        {
+            return $m->getKey() . \Config::get('app.locale', \Config::get('app.localeDefault'));
+        }
+        
+		return false;
+	}
+
+	public function getCachedContent()
+	{
+        if (($k = $this->getCacheKey()) !== false)
+        {
+            return \Cache::get($k, false);
+        }
+        
+		return false;
+	}
+
+	public function setCachedContent($param = '')
+	{
+        if (($k = $this->getCacheKey()) !== false && ($t = $this->getCacheTime()))
+        {
+            \Cache::put($k, $param, $t);
+        }
+        
+		return $this;
+	}
+    
 	public function getContent(\Illuminate\Support\Collection $structure = null)
 	{
 		return '';
@@ -108,7 +138,7 @@ abstract class Controller {
 		return $this->backendView ? : "core::module.web-page-constructor.widget-backend";
 	}
 
-	public function getFronendView()
+	public function getFrontendView()
 	{
 		return $this->frontendView ? : "core::module.web-page-constructor.widget-frontend";
 	}
@@ -118,21 +148,21 @@ abstract class Controller {
 		return $this->structureView ? : "core::widget.{$this->getKey()}.structure";
 	}
     
-    public function setFrontEndController(\Telenok\Core\Interfaces\Controller\Frontend\Controller $param = null)
+    public function setFrontendController(\Telenok\Core\Interfaces\Controller\Frontend\Controller $param = null)
     {
-        $this->frontEndController = $param;
+        $this->frontendController = $param;
         
         return $this;
     }
     
-    public function getFrontEndController()
+    public function getFrontendController()
     {
-        return $this->frontEndController;
+        return $this->frontendController;
     }
     
 	public function getTemplateContent()
 	{
-        $template = ($model = $this->getWidgetModel()) && $model->getKey() ? 'widget.' . $model->getKey() : $this->frontendView;
+        $template = ($model = $this->getWidgetModel()) && $model->getKey() ? 'widget.' . $model->getKey() : $this->getFrontendView();
         
 		return $template ? \File::get(\App::make('view.finder')->find($template)) : "";
 	}

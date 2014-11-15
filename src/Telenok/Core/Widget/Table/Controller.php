@@ -27,12 +27,17 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
             {
                 return;
             }
-        }
-
-        if ($structure->has('cache_time'))
+        } 
+        
+        if ($structure !== null && $structure->has('cache_time'))
         {
             $this->setCacheTime($structure->get('cache_time'));
         }
+
+        if (($content = $this->getCachedContent()) !== false)
+        {
+            return $coтtent; 
+        }  
 
         $containerIds = $structure->get('containerIds', []);
 
@@ -57,15 +62,19 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
                 $rows[$r][$c] = ['container_id' => $containerIds["$r:$c"], 'content' => $this->getContainerContent($container_id)];
             }
         }
-        
-		return \View::make($this->getFronendView(), [
+
+        $content = \View::make($this->getFrontendView(), [
                             'widget' => $this->getWidgetModel(),
                             'id' => $this->getWidgetModel()->getKey(),
                             'key' => $this->getKey(),
                             'rows' => $rows,
                             'controller' => $this,
-                            'frontEndController' => $this->getFrontEndController(),
+                            'frontendController' => $this->getFrontendController(),
                         ])->render();
+        
+        $this->setCachedContent($content);
+        
+		return $content;
 	}
 
 	public function getContainerContent($container_id = "")
@@ -78,7 +87,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 		$wop->each(function($w) use (&$content, $widgetConfig)
 		{
-            $content[] = $widgetConfig->get($w->key)->setWidgetModel($w)->setFrontEndController($this->getFrontEndController())->getContent();
+            $content[] = $widgetConfig->get($w->key)->setWidgetModel($w)->setFrontendController($this)->getContent();
 		});
 
 		return $content;
@@ -162,8 +171,15 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 		return $content;
 	}
-
-	public function insertFromBufferOnPage($languageId = 0, $pageId = 0, $key = '', $id = 0, $container = '', $order = 0, $bufferId = 0)
+    
+	public function setCacheTime($param = 0)
+	{
+		$this->cacheTime = min($this->getCacheTime(), $param);
+        
+		return $this;
+	}
+	
+    public function insertFromBufferOnPage($languageId = 0, $pageId = 0, $key = '', $id = 0, $container = '', $order = 0, $bufferId = 0)
 	{
 		$widgetOnPage = null;
 		

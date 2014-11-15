@@ -19,7 +19,6 @@ class CreatePageTable extends Migration {
 				$table->text('description_ceo')->nullable();
 				$table->string('keywords_ceo')->nullable();
 				$table->string('template_view')->nullable();
-				$table->text('template_code')->nullable();
 				$table->string('url_pattern')->nullable();
 				$table->string('url_redirect')->nullable();
 				$table->integer('page_page_controller')->unsigned()->nullable();
