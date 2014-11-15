@@ -28,7 +28,12 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
                 return;
             }
         }
-        
+
+        if ($structure->has('cache_time'))
+        {
+            $this->setCacheTime($structure->get('cache_time'));
+        }
+
         $containerIds = $structure->get('containerIds', []);
 
         if (!$structure->has('row'))
@@ -90,9 +95,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			return parent::getInsertContent($id);
 		}
 
-		$structure = $widgetOnPage->structure;
-
-		$containerIds = $structure->get('containerIds');
+		$structure = $widgetOnPage->structure; 
 
 		if (!$structure->has('row'))
 		{
@@ -122,6 +125,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		}
 
 		$rows = [];
+		$containerIds = $structure->get('containerIds');
 
 		for ($r = 0; $r < $structure->get('row'); $r++)
 		{

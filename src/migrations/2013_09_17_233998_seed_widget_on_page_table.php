@@ -146,21 +146,24 @@ class SeedWidgetOnPageTable extends Migration {
 					]
 			);
 
-			DB::table('object_field')->insert(
+			(new \Telenok\Object\Field())->storeOrUpdate(
 					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
-						'title' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
-						'key' => 'active',
-						'code' => 'active',
+						'title' => ['ru' => "Период кэширования", 'en' => "Cache time"],
+						'title_list' => ['ru' => "Период кэширования", 'en' => "Cache time"],
+						'description' => ['ru' => "Период кэширования задается в секундах от 0 (без кэширования)", 'en' => "Cache time defined in seconds from 0 (no cache)"],
+						'key' => 'integer-unsigned',
+						'code' => 'cache_time',
 						'active' => 1,
+                        'integer_unsigned_default' => 3600,
 						'field_object_type' => $modelId,
-						'field_object_tab' => $tabVisibleId,
+						'field_object_tab' => $tabMainId,
 						'multilanguage' => 0,
 						'show_in_form' => 1,
-						'show_in_list' => 0,
+						'show_in_list' => 1,
 						'allow_search' => 1,
-						'field_order' => 6,
+						'allow_create' => 1,
+						'allow_update' => 1,
+						'field_order' => 7,
 					]
 			);
 
@@ -221,6 +224,24 @@ class SeedWidgetOnPageTable extends Migration {
 						'allow_create' => 0,
 						'allow_update' => 0,
 						'field_order' => 13,
+					]
+			);
+
+			DB::table('object_field')->insert(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['en' => 'Active'], JSON_UNESCAPED_UNICODE),
+						'key' => 'active',
+						'code' => 'active',
+						'active' => 1,
+						'field_object_type' => $modelId,
+						'field_object_tab' => $tabVisibleId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 0,
+						'allow_search' => 1,
+						'field_order' => 6,
 					]
 			);
 

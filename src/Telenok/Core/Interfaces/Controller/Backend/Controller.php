@@ -7,8 +7,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     protected $key = '';
     protected $package = '';
 
-     
-
     public function getName()
     {
         return $this->LL('name');

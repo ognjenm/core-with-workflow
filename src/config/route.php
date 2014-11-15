@@ -10,7 +10,11 @@
   | and give it the Closure to execute when that URI is requested.
   |
  */
- 
+
+if (!\Request::is('telenok', 'telenok/*'))
+{
+    return;
+}
 
 \Route::filter('csrf', 'Telenok\Core\Filter\Router\Controller@csrf');
 \Route::filter('auth', 'Telenok\Core\Filter\Router\Backend\Controller@auth');

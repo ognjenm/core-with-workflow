@@ -22,27 +22,35 @@ class CoreServiceProvider extends ServiceProvider {
     {
         $this->package('telenok/core');
   
-        include __DIR__.'/../../config/route.php';
+        if (\Request::is('telenok', 'telenok/*'))
+        {
+            include __DIR__.'/../../config/route.php';
+        }
         
 		$this->commands('command.telenok.install');
 		$this->commands('command.telenok.migration');
 		
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
 
         include __DIR__.'/../../config/event.php'; 
 
         \Event::fire('telenok.compile.setting');
         
-        $routersPath = storage_path().'/route/route.php';
-
-        if (!file_exists($routersPath)) 
+  
+        if (!\Request::is('telenok', 'telenok/*'))
         {
-            \Event::fire('telenok.compile.route');
+            $routersPath = storage_path().'/route/route.php';
+
+            if (!file_exists($routersPath)) 
+            {
+                \Event::fire('telenok.compile.route');
+            }
+
+            include $routersPath;
         }
-        
-        include $routersPath;
+
 
         \Auth::extend('custom', function()
         { 

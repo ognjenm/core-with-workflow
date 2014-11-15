@@ -14,6 +14,7 @@ abstract class Controller {
 	protected $frontendView = '';
 	protected $structureView = '';
 	protected $frontEndController;
+	protected $cacheTime = 3600;
 
 	public function getName()
 	{
@@ -42,9 +43,10 @@ abstract class Controller {
 		return strtolower(array_get($list, 1));
 	}
 
-	public function setWidgetModel($model)
+	public function setWidgetModel($param)
 	{
-		$this->widgetModel = $model;
+		$this->widgetModel = $param;
+		$this->setCacheTime($param->cache_time);
 
 		return $this;
 	}
@@ -52,6 +54,23 @@ abstract class Controller {
 	public function getWidgetModel()
 	{
 		return $this->widgetModel;
+	}
+
+	public function setCacheTime($param = 0)
+	{
+		$this->cacheTime = $param;
+
+        if ($c = $this->getFrontEndController())
+        {
+            $c->setCacheTime($param);
+        }
+
+		return $this;
+	}
+
+	public function getCacheTime()
+	{
+		return $this->cacheTime;
 	}
 
 	public function getContent(\Illuminate\Support\Collection $structure = null)

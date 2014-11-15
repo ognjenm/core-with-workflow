@@ -39,13 +39,8 @@
 						@foreach($rows as $r)
 						<tr>
 							@foreach($r as $c)
-							<td data-container-id="{{{$c['container_id']}}}" class="frontend-container" style="vertical-align: top; padding: 2px; margin: 0; ">
-
-								@foreach($c['content'] as $content)
-								{{$content}}
-								@endforeach
-
-							</td>
+							<td data-container-id="{{{$c['container_id']}}}" class="frontend-container" 
+                                style="vertical-align: top; padding: 2px; margin: 0;">@foreach($c['content'] as $content){{$content}}@endforeach</td>
 							@endforeach
 						</tr>
 						@endforeach

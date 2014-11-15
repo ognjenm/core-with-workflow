@@ -12,9 +12,22 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	protected $cssFilePath = array();
 	protected $cssCode = array();
 	protected $jsCode = array();
+	protected $cacheTime = 3600;
 
 	protected $containerView = 'core::controller.frontend';
 	protected $containerSkeleton = 'core::controller.frontend-container';
+
+	public function setCacheTime($param = 0)
+	{
+		$this->cacheTime = min($this->cacheTime, $param);
+        
+		return $this;
+	}
+
+	public function getCacheTime()
+	{
+		return $this->cacheTime;
+	}
 
 	public function getContainerContent($pageId = 0, $languageId = 0)
 	{
@@ -52,6 +65,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		{
 			$page = \Telenok\Web\Page::findOrFail($pageId);
 			
+            $this->setCacheTime($page->cache_time);
+            
 			foreach($this->container as $containerId)
 			{
                 $page->widget()->active()->get()->filter(function($item) use ($containerId) { return $item->container === $containerId; })->each(function($item) use (&$content, $containerId, $listWidget)
