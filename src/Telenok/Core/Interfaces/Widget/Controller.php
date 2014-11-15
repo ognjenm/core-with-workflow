@@ -269,8 +269,22 @@ abstract class Controller {
 			return $widget;
 		}
 	} 
+    
+	public function validate($model = null, $input = null)
+	{
+	}
 	
-	public function LL($key = '', $param = [])
+    public function preProcess($model, $type, $input)
+    { 
+        return $this;
+    }
+	
+    public function postProcess($model, $type, $input)
+    { 
+        return $this;
+    }
+    
+    public function LL($key = '', $param = [])
 	{
 		$key_ = "{$this->getPackage()}::widget/{$this->getKey()}.$key";
 		$key_default_ = "{$this->getPackage()}::default.$key";

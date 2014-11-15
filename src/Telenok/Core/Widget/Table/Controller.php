@@ -72,7 +72,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 		$wop->each(function($w) use (&$content, $widgetConfig)
 		{
-            $content[] = $widgetConfig->get($w->key)->getContent($w->getKey());
+            $content[] = $widgetConfig->get($w->key)->setWidgetModel($w)->getContent();
 		});
 
 		return $content;
@@ -318,6 +318,69 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			return parent::removeFromPage($id);
 		}
 	}
+
+	public function validate($model = null, $input = null)
+	{
+        if (!$model->exists)
+        {
+            return;
+        }
+
+        $row = $model->structure->get('row');
+        $col = $model->structure->get('col');
+
+        $structure = $input->get('structure');
+        
+        $inputRow = array_get($structure, 'row', 0);
+        $inputCol = array_get($structure, 'col', 0);
+        
+        if ($row > $inputRow || $col > $inputCol)
+        {
+            for($x = $inputCol; $x < $col; $x++)
+            {
+                for($y = 0; $y < $row; $y++)
+                {
+                    if (\Telenok\Web\WidgetOnPage::where('container', 'container-' . $model->id . '-' . $x . '-' . $y)->count())
+                    {
+                        throw new \Exception($this->LL('widget.has.child'));
+                    }
+                }               
+            }
+            
+            for($x = 0; $x < $inputCol; $x++)
+            {
+                for($y = $inputRow; $y < $row; $y++)
+                {
+                    if (\Telenok\Web\WidgetOnPage::where('container', 'container-' . $model->id . '-' . $x . '-' . $y)->count())
+                    {
+                        throw new \Exception($this->LL('widget.has.child'));
+                    }
+                }               
+            }
+        }
+	}
+    
+    public function postProcess($model, $type, $input)
+    { 
+        $ids = [];
+
+        $structure = $model->structure;
+        
+        for ($row = 0; $row < $structure->get('row'); $row++)
+        {
+            for ($col = 0; $col < $structure->get('col'); $col++)
+            {
+                $ids["$row:$col"] = isset($ids["$row:$col"]) ? $ids["$row:$col"] : 'container-' . $model->id . '-' . $row . '-' . $col;
+            }
+        }
+
+        $structure->put('containerIds', $ids);
+        $model->structure = $structure->all();
+        $model->save();
+
+        return parent::postProcess($model, $type, $input);
+    }
+
 }
 
 ?>

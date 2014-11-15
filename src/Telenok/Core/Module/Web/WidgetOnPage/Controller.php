@@ -14,6 +14,16 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     {
         return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
     }  
+        
+    public function preProcess($model, $type, $input)
+    { 
+        if ($input->get('key'))
+        {
+            \App::make('telenok.config')->getWidget()->get($input->get('key'))->preProcess($model, $type, $input);
+        }
+        
+        return parent::postProcess($model, $type, $input);
+    }
 	
     public function postProcess($model, $type, $input)
     { 
@@ -33,6 +43,8 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
             }
              
             \File::put($templateFile, $templateContent);
+            
+            \App::make('telenok.config')->getWidget()->get($input->get('key'))->postProcess($model, $type, $input);
         }
         
         return parent::postProcess($model, $type, $input);

@@ -31,5 +31,12 @@ class WidgetOnPage extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     {
         return $this->belongsTo('\Telenok\System\Language', 'widget_language_language');
     }
+     
+    public function preProcess($type, $input)
+    {
+        \App::make('telenok.config')->getWidget()->get($input->get('key'))->validate($this, $input);
+        
+        return parent::preProcess($type, $input);
+    }
 }
 ?>
