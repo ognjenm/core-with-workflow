@@ -56,13 +56,12 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 			{
                 $page->widget()->active()->get()->filter(function($item) use ($containerId) { return $item->container === $containerId; })->each(function($item) use (&$content, $containerId, $listWidget)
 				{
-					$content[$containerId][] = $listWidget->get($item->key)->setWidgetModel($item)->getContent();
+					$content[$containerId][] = $listWidget->get($item->key)->setWidgetModel($item)->setFrontEndController($this)->getContent();
 				});
 			}
 		}
 		catch (\Exception $e)
 		{
-            throw $e;
             \App::abort(404);
 		}
 

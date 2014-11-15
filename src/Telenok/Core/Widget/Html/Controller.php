@@ -15,7 +15,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
         }
         else if ($m = $this->getWidgetModel())
         {
-            return \View::make('widget.' . $m->getKey(), ['controller' => $this]);
+            return \View::make('widget.' . $m->getKey(), ['controller' => $this, 'frontEndController' => $this->getFrontEndController()]);
         }
 	}
 

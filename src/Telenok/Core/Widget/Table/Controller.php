@@ -59,6 +59,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
                             'key' => $this->getKey(),
                             'rows' => $rows,
                             'controller' => $this,
+                            'frontEndController' => $this->getFrontEndController(),
                         ])->render();
 	}
 
@@ -72,7 +73,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 		$wop->each(function($w) use (&$content, $widgetConfig)
 		{
-            $content[] = $widgetConfig->get($w->key)->setWidgetModel($w)->getContent();
+            $content[] = $widgetConfig->get($w->key)->setWidgetModel($w)->setFrontEndController($this->getFrontEndController())->getContent();
 		});
 
 		return $content;

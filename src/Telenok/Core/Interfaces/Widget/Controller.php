@@ -13,6 +13,7 @@ abstract class Controller {
 	protected $backendView = '';
 	protected $frontendView = '';
 	protected $structureView = '';
+	protected $frontEndController;
 
 	public function getName()
 	{
@@ -97,6 +98,18 @@ abstract class Controller {
 	{
 		return $this->structureView ? : "core::widget.{$this->getKey()}.structure";
 	}
+    
+    public function setFrontEndController(\Telenok\Core\Interfaces\Controller\Frontend\Controller $param = null)
+    {
+        $this->frontEndController = $param;
+        
+        return $this;
+    }
+    
+    public function getFrontEndController()
+    {
+        return $this->frontEndController;
+    }
     
 	public function getTemplateContent()
 	{

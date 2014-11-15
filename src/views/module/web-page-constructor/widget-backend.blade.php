@@ -4,7 +4,7 @@
 	 data-widget-buffer-id="0"
 	 data-widget-buffer-key="0">
     <div class="widget-header widget-header-small">
-		<h5 class="widget-title bigger lighter">{{{$header}}}</h5>
+		<h5 class="widget-title lighter">{{{$header}}}. {{{$widgetOnPage->translate('title')}}}</h5>
 
 		<div class="widget-toolbar no-border">
 			<a data-action="cut" href="#">
