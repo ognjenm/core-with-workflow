@@ -32,17 +32,17 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getModelList()
     {
-        return \App::build(\Telenok\Object\Type::where('code', $this->typeList)->firstOrFail()->class_model);
+        return \App::build(\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeList)->orWhere('code', $this->typeList); })->active()->firstOrFail()->class_model);
     }
 
     public function getModelTree()
     {
-        return \App::build(\Telenok\Object\Type::where('code', $this->typeTree)->firstOrFail()->class_model);
+        return \App::build(\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeTree)->orWhere('code', $this->typeTree); })->active()->firstOrFail()->class_model);
     }
 
     public function getTypeList()
     {
-        return \Telenok\Object\Type::where('code', $this->typeList)->firstOrFail();
+        return \Telenok\Object\Type::where(function($query) { $query->whereId($this->typeList)->orWhere('code', $this->typeList); })->active()->firstOrFail();
     } 
 	
     public function getGridId($key = 'gridId')

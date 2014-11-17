@@ -356,8 +356,9 @@
 						{ 
 							jQuery('div#menu-buffer-{{$uniqueId}} ul li a[data-widget-id="' + jQuery(this_).closest(".telenok-widget-box").data('widget-id') + '"] i').click();
 
-							jQuery(this_).closest('.telenok-widget-box').fadeOut(function() {
-								jQuery(this_).remove();
+							jQuery(this_).closest('.telenok-widget-box').fadeOut(function() 
+                            {
+								jQuery(this).remove();
 							});
 						}
 					})

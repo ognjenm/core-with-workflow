@@ -148,7 +148,7 @@ abstract class Controller {
 		return $this->structureView ? : "core::widget.{$this->getKey()}.structure";
 	}
     
-    public function setFrontendController(\Telenok\Core\Interfaces\Controller\Frontend\Controller $param = null)
+    public function setFrontendController($param = null)
     {
         $this->frontendController = $param;
         

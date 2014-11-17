@@ -911,7 +911,6 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
 			$model = null;
 
-
             \DB::transaction(function() use (&$model, $input)
             { 
                 $model = $this->save($input); 

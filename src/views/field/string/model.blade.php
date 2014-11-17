@@ -70,7 +70,7 @@
 					@endif
 
 					<?php
-						$domAttr['placeholder'] = $field->translate('string_default', $language->locale);
+						$domAttr['placeholder'] = ($placeholder = $field->translate('string_default', $language->locale)) ? $placeholder : $field->translate('title', $language->locale);
 					?>
 
 					@if ($field->string_password)
@@ -103,15 +103,15 @@
 	<?php
 	
 		$domAttr['class'] = $field->css_class?: 'col-xs-5 col-sm-5';
-		$domAttr['placeholder'] = $field->string_default;
+		$domAttr['placeholder'] = ($placeholder = $field->string_default) ? $placeholder : $field->translate('title');
 		
 	?>
 	<div class="col-sm-9">
 
 		@if ($field->string_password)
-			{{ Form::password($field->code, $domAttr ) }}
+			{{ Form::password($field->code, $domAttr) }}
 		@else
-			{{ Form::text($field->code, $model->translate($field->code), $domAttr ) }}
+			{{ Form::text($field->code, $model->translate($field->code), $domAttr) }}
 		@endif
 		
 		@if ($field->translate('description'))

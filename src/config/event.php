@@ -60,7 +60,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->put('files-browser', 5);
 	
     $list->put('users', 1);
-    $list->put('users-profile', 2);
+    $list->put('users-profile-edit', 2);
 
     $list->put('workflow-process', 2);
     $list->put('workflow-thread', 3);
@@ -68,8 +68,8 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 \Event::listen('telenok.module.menu.top', function($list)
 {
-    $list->push('users-profile@topMenuMain');
-    $list->push('users-profile@topMenuLogout');
+    $list->push('users-profile-edit@topMenuMain');
+    $list->push('users-profile-edit@topMenuLogout');
 });
 
 \Event::listen('telenok.workflow.action.add', function($list) 
@@ -130,7 +130,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 //\Event::fire('telenok.module.add', 'Telenok\Core\Module\Dashboard\Controller');
 //\Event::fire('telenok.module.add', 'Telenok\Core\Module\Web\Controller');
 //\Event::fire('telenok.module.add', 'Telenok\Core\Module\Page\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Users\Profile\Controller');
+//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Users\ProfileEdit\Controller');
 
 
 

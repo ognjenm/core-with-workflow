@@ -70,11 +70,13 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/dashboard', array('as' => 'cmf.module.dashboard', 'uses' => "Telenok\Core\Module\Dashboard\Controller@getContent"));
 
 // Module Profile
-\Route::any('telenok/module/users-profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
-\Route::any('telenok/module/users-profile', array('as' => 'cmf.module.users-profile', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getContent"));
+\Route::any('telenok/module/users-profile-edit/action-param', array('as' => 'cmf.module.users-profile-edit.action.param', 'uses' => "Telenok\Core\Module\Users\ProfileEdit\Controller@getActionParam"));
+\Route::any('telenok/module/users-profile-edit', array('as' => 'cmf.module.users-profile-edit', 'uses' => "Telenok\Core\Module\Users\ProfileEdit\Controller@getContent"));
+\Route::any('telenok/module/users-profile-edit/update', array('as' => 'cmf.module.users-profile-edit.update', 'uses' => "Telenok\Core\Module\Users\ProfileEdit\Controller@update"));
+
 // Module Users
 //\Route::any('telenok/module/users/action-param', array('as' => 'cmf.module.users.action.param', 'uses' => "Telenok\Core\Module\Users\Controller@getActionParam"));
-//\Route::any('telenok/module/users/profile/action-param', array('as' => 'cmf.module.users-profile.action.param', 'uses' => "Telenok\Core\Module\Users\Profile\Controller@getActionParam"));
+//\Route::any('telenok/module/users/profile/action-param', array('as' => 'cmf.module.users-profile-edit.action.param', 'uses' => "Telenok\Core\Module\Users\ProfileEdit\Controller@getActionParam"));
 
 
 // Module Objects\Type

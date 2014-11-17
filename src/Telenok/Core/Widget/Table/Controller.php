@@ -36,7 +36,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
         if (($content = $this->getCachedContent()) !== false)
         {
-            return $coтtent; 
+            return $content; 
         }  
 
         $containerIds = $structure->get('containerIds', []);

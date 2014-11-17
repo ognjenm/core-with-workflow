@@ -1,30 +1,18 @@
 <?php
 
-namespace Telenok\Core\Module\Users\Profile; 
+namespace Telenok\Core\Module\Users\ProfileEdit; 
 
-class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controller {
+class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     
-    protected $key = 'users-profile';
+    protected $key = 'users-profile-edit';
     protected $parent = 'users';
-    protected $presentation = 'tree-tab-users-profile';
-    protected $presentationContentView = 'core::module.users-profile.content';
-
-    public function getTreeContent()
-    {
-        return false;
-    }
-
-    public function getContent()
-    {
-        return array(
-            'tabKey' => $this->getTabKey(),
-            'tabLabel' => $this->LL('tab.name'),
-            'tabContent' => \View::make($this->getPresentationContentView(), array(
-                'controller' => $this, 
-                'uniqueId' => str_random(),
-            ))->render()
-        );
-    }
+    protected $typeList = 'user';
+    protected $presentation = 'tree-tab-users-profile-edit';
+    protected $presentationContentView = 'core::module.users-profile-edit.content'; 
+    protected $presentationView = 'core::module.users-profile-edit.presentation';
+    protected $presentationModelView = 'core::module.users-profile-edit.model';
+    protected $presentationFormModelView = 'core::module.users-profile-edit.form';
+    protected $presentationFormFieldListView = 'core::module.users-profile-edit.form-field-list';
 
     public function topMenuMain()
     {

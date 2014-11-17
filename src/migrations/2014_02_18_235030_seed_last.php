@@ -453,7 +453,10 @@ class SeedLast extends Migration {
 			'active' => 1,
 			'field_object_type' => 'user',
 			'show_in_form' => 1,
-			'field_order' => 8,
+            'allow_create' => 1,
+            'allow_update' => 1, 			
+            'field_order' => 8,
+            'allow_search' => 1,
 			'field_object_tab' => 'main',
 		]);   
 		
@@ -700,7 +703,7 @@ class SeedLast extends Migration {
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Profile', 'ru' => 'Профиль'],
 			'active' => 1,
-			'controller_class' => 'Telenok\Core\Module\Users\Profile\Controller',
+			'controller_class' => 'Telenok\Core\Module\Users\ProfileEdit\Controller',
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
@@ -767,12 +770,6 @@ class SeedLast extends Migration {
 			'title' => ['en' => 'Browser', 'ru' => 'Менеджер'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Files\Browser\Controller',
-		]);
-
-		(new \Telenok\Web\Module())->storeOrUpdate([
-			'title' => ['en' => 'Profile', 'ru' => 'Профиль'],
-			'active' => 1,
-			'controller_class' => 'Telenok\Core\Module\Users\Profile\Controller',
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
