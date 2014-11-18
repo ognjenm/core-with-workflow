@@ -19,12 +19,12 @@ class Thread {
             $elements = \App::make('telenok.config')->getWorkflowElement();
             $this->actions = \Illuminate\Support\Collection::make([]);
 
-            foreach($this->getModelThread()->original_process->getDot('diagram.childShapes', []) as $action)
+            foreach(array_get($this->getModelThread()->original_process->all(), 'diagram.childShapes', []) as $action)
             {
                 $this->actions->put($action['resourceId'], $elements->get($action['stencil']['id'])
                                                             ->make()
                                                             ->setThread($this)
-                                                            ->setInput($this->getModelThread()->original_process->getDot('stencil.' . $action['permanentId'], []))
+                                                            ->setInput(array_get($this->getModelThread()->original_process->all(), 'stencil.' . $action['permanentId'], []))
                                                             ->setStencil($action));
             }
         }

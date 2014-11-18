@@ -8,17 +8,19 @@ use Illuminate\Database\Migrations\Migration;
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     protected $key = 'upload';
-    protected $specialField = ['upload_allow_ext', 'upload_allow_mime'];
+    protected $specialField = ['upload_allow_ext', 'upload_allow_mime', 'upload_allow_size'];
 
     protected $imageExtension = ['jpg', 'png', 'jpeg', 'gif'];
     protected $imageMimeType = ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/png'];
+    protected $maxSiteDefault = 200000;
 
+    
     public function isImage($field, $item)
     {
 		$typeModel = $field->fieldObjectType()->first();
 		$mime = $item->{camel_case($field->code . '_' . $typeModel->code) . 'FileMimeType'}()->pluck('mime_type');
 		$ext = $item->{camel_case($field->code . '_' . $typeModel->code) . 'FileExtension'}()->pluck('extension');
-		
+
 		if (empty($mime))
 		{
 			return in_array($ext, $this->imageExtension);
@@ -47,7 +49,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		}
 		else
 		{
-			return '<a href="' . \URL::asset($item->{$field->code . '_path'}) .'">' . $this->LL('download') . '</a>';
+			return '<a href="' . \URL::asset($item->{$field->code . '_path'}) .'" target="_blank">' . $this->LL('download') . '</a>';
 		}
     }
     public function processDeleting($model)
@@ -77,6 +79,24 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	{ 
 		$file = \Input::file($field->code); 
 		
+        if ($file === null)
+        {
+            $file = $input->get($field->code);
+            
+            if ($file && file_exists($file))
+            {
+                $fileData = pathinfo($file);
+                $basename = $fileData['basename'];
+                $size = filesize($path);
+
+                $finfo = finfo_open(FILEINFO_MIME_TYPE); 
+                $mime = finfo_file($finfo, $file);
+                finfo_close($finfo); 
+
+                $file = new \Symfony\Component\HttpFoundation\File\UploadedFile($file, $basename, $mime, $size, UPLOAD_ERR_OK);
+            }
+        }
+
 		if ($file === null && $field->required)
 		{
 			throw new \Exception($this->LL('error.file.upload.require', ['attribute' => $field->translate('title')]));
@@ -107,7 +127,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				{
 					throw new \Exception($this->LL('error.extension', ['attribute' => $extension]));
 				}
-				
+
 				$rule = $field->rule;
 
 				if ($field->upload_allow_ext->isEmpty() && $field->upload_allow_mime->isEmpty())
@@ -131,7 +151,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				\File::makeDirectory($directoryPath, 0777, true, true);
 
 				$file->move($directoryPath, $fileName);
-				
+
 				try
 				{
 					if (!empty($mimeType))
@@ -233,6 +253,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0); 
+        
+        if (!$input->get('upload_allow_size', 0))
+        {
+            $input->put('upload_allow_size', $this->maxSiteDefault); 
+        }
 		
         return parent::preProcess($model, $type, $input);
     } 

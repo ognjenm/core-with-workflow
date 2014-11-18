@@ -36,7 +36,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		
 		if ($file)
 		{
-			return $file->isImage() ? "<img src='" . \URL::asset($file->path) . "' alt='' width='140' />" : "<a href='" . \URL::asset($file->path) . "'>" . e($file->translate('title')) . '</a>';
+			return $file->isImage() ? "<img src='" . \URL::asset($file->path) . "' alt='' width='140' />" : "<a href='" . \URL::asset($file->path) . "' target='_blank'>" . e($file->translate('title')) . '</a>';
 		}
     }
 

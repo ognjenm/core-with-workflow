@@ -7,7 +7,6 @@
         $domAttr['disabled'] = 'disabled';
         $disabled = true; 
     }
-
 ?>
 
 <div class="form-group">
@@ -24,12 +23,13 @@
 	?>
 	<div class="col-sm-9">
 
-		{{ Form::file($field->code, $domAttr ) }}
-		<br><br>
 		@if (!empty($model->{$field->code . '_path'}) && $controller->isImage($field, $model))
 		<img src="{{URL::asset($model->{$field->code . '_path'})}}" alt="" width="140" />
+		<br><br>
 		@endif
 		
+		{{ Form::file($field->code, $domAttr ) }}
+
 		@if ($field->translate('description'))
 		<span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
 			  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>

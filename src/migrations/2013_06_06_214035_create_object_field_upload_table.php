@@ -20,6 +20,11 @@ class CreateObjectFieldUploadTable extends Migration {
 				{
 					$table->text('upload_allow_mime')->nullable();
 				}
+
+				if (!\Schema::hasColumn('object_field', 'upload_allow_size'))
+				{
+					$table->integer('upload_allow_size')->nullable();
+				}
 			});
 		}
 	}

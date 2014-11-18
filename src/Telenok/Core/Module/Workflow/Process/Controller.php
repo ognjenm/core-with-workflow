@@ -277,10 +277,10 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         $isValid = true;
 
         $elements = \App::make('telenok.config')->getWorkflowElement();
-        $processCollection = \Telenok\Core\Support\Collection::make($process);
+        $processCollection = \Illuminate\Support\Collection::make($process);
         
         $stencilData = $processCollection->get('stencil', []);
-        $diagramData = $processCollection->getDot('diagram.childShapes', []);
+        $diagramData = array_get($processCollection->all(), 'diagram.childShapes', []);
 
         $actions = \Illuminate\Support\Collection::make([]);
         
@@ -304,20 +304,20 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
                 return false;      
             }
         } 
-        
+
         // accumulate actions In
         foreach($actions->all() as $action)
         {
             foreach($action->getLinkOut()->all() as $o)
             {
                 $in = $actions->get($o)->getLinkIn();
-                
+
                 $in->push($o);
-                
+
                 $actions->get($o)->setLinkIn($in);
             }
         }
-        
+
         foreach($actions->all() as $action)
         {
             try

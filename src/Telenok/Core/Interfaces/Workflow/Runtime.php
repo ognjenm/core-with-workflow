@@ -19,13 +19,13 @@ class Runtime {
                     
 					foreach($p->event_object as $permanentId)
 					{ 
-                        foreach($p->process->getDot('diagram.childShapes', []) as $action)
+                        foreach(array_get($p->process->all(), 'diagram.childShapes', []) as $action)
                         { 
                             if ($permanentId == $action['permanentId'])
                             {
                                 $a = $elements->get($action['stencil']['id'])
                                                             ->make()
-                                                            ->setInput($p->process->getDot('stencil.' . $action['permanentId'], []))
+                                                            ->setInput(array_get($p->process->all(), 'stencil.' . $action['permanentId'], []))
                                                             ->setStencil($action);
 
                                 if ($a->isEventForMe($event))

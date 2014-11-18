@@ -11,18 +11,34 @@ class Tab extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		$this->attributes['code'] = str_replace(' ', '', strtolower((string) $value));
 	}
- 
+
 	public function tabObjectType()
 	{
 		return $this->belongsTo('\Telenok\Object\Type', 'tab_object_type');
 	}
-	
+
 	public function field()
 	{
 		return $this->hasMany('\Telenok\Object\Field', 'field_object_tab');
 	}
 
-	
+    public function preProcess($type, $input)
+    {
+        $id = $input->get('tab_object_type');
+ 
+        if ($id)
+        {
+            $tabType = \Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->first();
+
+            if ($tabType)
+            {
+                $input->put('tab_object_type', $tabType->getKey()); 
+            }
+        }
+
+        return parent::preProcess($type, $input);
+    }
+
 }
 
 ?>

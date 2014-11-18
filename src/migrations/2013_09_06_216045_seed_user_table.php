@@ -139,6 +139,7 @@ class SeedUserTable extends Migration {
 					'allow_create' => 1,
 					'allow_update' => 1,
 					'field_order' => 5,
+                    'icon_class' => 'ace-icon fa fa-envelope',
 				]
 		);
 
@@ -200,6 +201,7 @@ class SeedUserTable extends Migration {
 					'field_order' => 8,
 				]
 		);
+
 /*
 		DB::table('object_field')->insertGetId(
 				[

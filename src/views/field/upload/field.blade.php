@@ -8,6 +8,12 @@
 	</div>
 </div>
 <div class="form-group">
+	{{ Form::label("upload_allow_size", $controller->LL('property.upload_allow_size'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+	<div class="col-sm-9"> 
+		{{ Form::checkbox("upload_allow_size", $model->upload_allow_size, array('class'=>'ace ace-switch ace-switch-3')) }}
+	</div>
+</div>
+<div class="form-group">
 	{{ Form::label('upload_allow_ext', $controller->LL('property.upload_allow_ext'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
 		<select multiple="multiple" class="form-control" data-placeholder="{{{$controller->LL('property.upload_allow_ext')}}}" id="upload_allow_ext{{$uniqueId}}" name="upload_allow_ext[]">

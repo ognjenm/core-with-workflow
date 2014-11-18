@@ -18,7 +18,7 @@ class SeedLast extends Migration {
 				'end_at' => \DB::raw('NOW() + INTERVAL 15 YEAR'),
 			]);
 		});   
-		
+
 		//User superadmin
 		$user = (new \Telenok\User\User())->storeOrUpdate([
 			'title' => 'Super Administrator',
@@ -28,7 +28,7 @@ class SeedLast extends Migration {
 			'password' => '11111',
 			'active' => 1,
 		]);
-		
+
 		\Telenok\Object\Type::all()->each(function($type) use ($user)
 		{
 			$class = $type->class_model;
@@ -817,8 +817,141 @@ class SeedLast extends Migration {
 			'controller_class' => 'Telenok\Core\Widget\Table\Controller',
 		]);
 
+        
+        // User fields
+        (new \Telenok\Object\Tab())->storeOrUpdate(
+            [
+                'title' => ['en' => 'Contact', 'ru' => 'Контакт'],
+                'code' => 'contact',
+                'active' => 1,
+                'tab_object_type' => 'user',
+                'tab_order' => 2
+            ]
+        );
+        
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+            [
+                'title' => ['en' => 'Avatar', 'ru' => 'Аватар'],
+                'title_list' => ['en' => 'Avatar', 'ru' => 'Аватар'],
+                'key' => 'upload',
+                'code' => 'avatar',
+                'active' => 1,
+                'field_object_type' => 'user',
+                'field_object_tab' => 'main',
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'multilanguage' => 0,
+                'allow_create' => 1,
+                'allow_update' => 1, 
+                'field_order' => 33,
+                'upload_allow_ext' => ['jpg', 'jpeg', 'png', 'txt', 'doc', 'gif'],
+                'upload_allow_mime' => ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'text/plain'],
+                'upload_allow_size' => 200000,
+            ]
+        );
+        
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+            [
+                'title' => ['en' => 'Website', 'ru' => 'Веб-сайт'],
+                'title_list' => ['en' => 'Website', 'ru' => 'Веб-сайт'],
+                'key' => 'string',
+                'code' => 'web_site',
+                'active' => 1,
+                'field_object_type' => 'user',
+                'field_object_tab' => 'contact',
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'multilanguage' => 0,
+                'allow_create' => 1,
+                'allow_update' => 1, 
+                'field_order' => 1,
+                'icon_class' => 'ace-icon fa fa-globe',
+            ]
+        );
+        
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+            [
+                'title' => ['en' => 'VKontakte', 'ru' => 'ВКонтакте'],
+                'title_list' => ['en' => 'VKontakte', 'ru' => 'ВКонтакте'],
+                'key' => 'string',
+                'code' => 'vkontakte',
+                'active' => 1,
+                'field_object_type' => 'user',
+                'field_object_tab' => 'contact',
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'multilanguage' => 0,
+                'allow_create' => 1,
+                'allow_update' => 1, 
+                'field_order' => 2,
+                'icon_class' => 'ace-icon fa fa-vk blue',
+            ]
+        );
+        
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+            [
+                'title' => ['en' => 'Facebook', 'ru' => 'Facebook'],
+                'title_list' => ['en' => 'Facebook', 'ru' => 'Facebook'],
+                'key' => 'string',
+                'code' => 'facebook',
+                'active' => 1,
+                'field_object_type' => 'user',
+                'field_object_tab' => 'contact',
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'multilanguage' => 0,
+                'allow_create' => 1,
+                'allow_update' => 1, 
+                'field_order' => 3,
+                'icon_class' => 'ace-icon fa fa-facebook blue',
+            ]
+        );
+        
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+            [
+                'title' => ['en' => 'Twitter', 'ru' => 'Твиттер'],
+                'title_list' => ['en' => 'Twitter', 'ru' => 'Твиттер'],
+                'key' => 'string',
+                'code' => 'twitter',
+                'active' => 1,
+                'field_object_type' => 'user',
+                'field_object_tab' => 'contact',
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'multilanguage' => 0,
+                'allow_create' => 1,
+                'allow_update' => 1, 
+                'field_order' => 4,
+                'icon_class' => 'ace-icon fa fa-twitter light-blue',
+            ]
+        ); 
 
-		 
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+            [
+                'title' => ['en' => 'Google+', 'ru' => 'Google+'],
+                'title_list' => ['en' => 'Google+', 'ru' => 'Google+'],
+                'key' => 'string',
+                'code' => 'google_plus',
+                'active' => 1,
+                'field_object_type' => 'user',
+                'field_object_tab' => 'contact',
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'multilanguage' => 0,
+                'allow_create' => 1,
+                'allow_update' => 1, 
+                'field_order' => 5,
+                'icon_class' => 'ace-icon fa fa-google-plus red',
+            ]
+        );
+
+
 
 
 		/*

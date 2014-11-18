@@ -94,31 +94,43 @@
 @else
 
 <div class="form-group">
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
-	@if ($field->icon_class)
-	<span class="input-group-addon">
-		<i class="{{$field->icon_class}}"></i>
-	</span>
-	@endif
-	<?php
-	
-		$domAttr['class'] = $field->css_class?: 'col-xs-5 col-sm-5';
-		$domAttr['placeholder'] = ($placeholder = $field->string_default) ? $placeholder : $field->translate('title');
-		
-	?>
-	<div class="col-sm-9">
 
-		@if ($field->string_password)
-			{{ Form::password($field->code, $domAttr) }}
-		@else
-			{{ Form::text($field->code, $model->translate($field->code), $domAttr) }}
-		@endif
-		
-		@if ($field->translate('description'))
-		<span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-			  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
-		@endif
-	</div>
+	{{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+
+	<?php
+
+		$domAttr['class'] = $field->css_class ?: 'form-control';
+		$domAttr['placeholder'] = ($placeholder = $field->string_default) ? $placeholder : $field->translate('title');
+
+	?>
+
+	<div class="col-sm-5">
+
+            @if ($field->icon_class)
+		<div class="input-group">
+            <span class="input-group-addon">
+                <i class="{{$field->icon_class}}"></i>
+            </span>
+            @else
+		<div>
+            @endif	
+            
+            @if ($field->string_password)
+                <?php 
+                    $domAttr['autocomplete'] = "off";
+                ?>
+                {{ Form::password($field->code, $domAttr) }}
+            @else
+                {{ Form::text($field->code, $model->translate($field->code), $domAttr) }}
+            @endif 
+
+            @if ($field->translate('description'))
+            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            @endif
+            
+		</div>
+	</div> 
 </div>
 @endif
 
