@@ -17,6 +17,7 @@ class CreateModuleTable extends Migration {
 				$table->text('title')->nullable();
 				$table->string('controller_class')->nullable();
 				$table->integer('active')->unsigned()->nullable();
+				$table->integer('module_order')->unsigned()->nullable();
 				$table->timestamp('start_at');
 				$table->timestamp('end_at');
 				$table->integer('created_by_user')->unsigned()->nullable();

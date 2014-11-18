@@ -81,7 +81,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	{
 		$content = [];
 
-		$wop = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('order')->get();
+		$wop = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('widget_order')->get();
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 
@@ -160,7 +160,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	{
 		$content = [];
 
-		$wop = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('order')->get();
+		$wop = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('widget_order')->get();
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 
@@ -193,7 +193,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			{
 				$widgetOnPage->storeOrUpdate([
 					"container" => $container,
-					"order" => $order,
+					"widget_order" => $order,
 					"key" => $key,
 				]);
 
@@ -210,7 +210,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 				$widgetOnPage->push();
 				$widgetOnPage->storeOrUpdate([
 						"container" => $container,
-						"order" => $order,
+						"widget_order" => $order,
 					]); 
 			}
 			else if ($buffer->key == 'copy-link')
@@ -233,16 +233,16 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 				$widgetOnPage->push();
 				$widgetOnPage->storeOrUpdate([
 						"container" => $container,
-						"order" => $order,
+						"widget_order" => $order,
 					]);
 
 				$originalWidget->widgetLink()->save($widgetOnPage);
 			}
 
-			\Telenok\Web\WidgetOnPage::where("order", ">=", $order)
+			\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 					->where("container", $container)->get()->each(function($item)
 			{
-				$item->storeOrUpdate(["order" => $item->order + 1]);
+				$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 			});
 
 			$widgetOnPage->widgetPage()->associate(\Telenok\Web\Page::findOrFail($pageId))->save(); 
@@ -280,7 +280,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 						$item->key, 
 						$item->getKey(), 
 						$newContainres[$key], 
-						$item->order, 
+						$item->widget_order, 
 						$buffer->getKey());
 			});
 		}

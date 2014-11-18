@@ -12,7 +12,7 @@
 				<a class="navbar-brand" href="telenok/"><small>{{{\Config::get('app.backend.brand')}}}</small></a>
 				<ul class="nav ace-nav pull-right">
 
-					@foreach($ListModuleMenuTop as $itemFirstLevel)
+					@foreach($listModuleMenuTop as $itemFirstLevel)
 
 					@if (!$itemFirstLevel->get('parent'))
 
@@ -25,7 +25,7 @@
 						{{$itemFirstLevel->get('content')}}
 
 							<ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer" id="user_menu">
-								@foreach($ListModuleMenuTop as $itemSecondLevel)
+								@foreach($listModuleMenuTop as $itemSecondLevel)
 
 								@if ($itemFirstLevel->get('key') == $itemSecondLevel->get('parent'))
 

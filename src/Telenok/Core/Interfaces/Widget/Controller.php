@@ -232,10 +232,10 @@ abstract class Controller {
 				$originalWidget->widgetLink()->save($widgetOnPage);
 			}
 
-			\Telenok\Web\WidgetOnPage::where("order", ">=", $order)
+			\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 					->where("container", $container)->get()->each(function($item)
 			{
-				$item->storeOrUpdate(["order" => $item->order + 1]);
+				$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 			});
 
 			$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId));
@@ -258,14 +258,14 @@ abstract class Controller {
 						->storeOrUpdate([
 					"title" => $this->LL('header'),
 					"container" => $container,
-					"order" => $order,
+					"widget_order" => $order,
 					"key" => $key,
 				]);
 
-				\Telenok\Web\WidgetOnPage::where("order", ">=", $order)
+				\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 						->where("container", $container)->get()->each(function($item)
 				{
-					$item->storeOrUpdate(["order" => $item->order + 1]);
+					$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 				});
 
 				$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId));
@@ -281,14 +281,14 @@ abstract class Controller {
 						->storeOrUpdate([
 					"title" => $this->LL('header'),
 					"container" => $container,
-					"order" => $order,
+					"widget_order" => $order,
 					"key" => $key,
 				]); 
 
-				\Telenok\Web\WidgetOnPage::where("order", ">=", $order)
+				\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 						->where("container", $container)->get()->each(function($item)
 				{
-					$item->storeOrUpdate(["order" => $item->order + 1]);
+					$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 				});
 
 				$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId));

@@ -1,15 +1,13 @@
 if( !('ace' in window) ) window['ace'] = {}
-if( !('vars' in window['ace']) ) {
-  window['ace'].vars = {
-	 'icon'	: ' ace-icon ',
-	'.icon'	: '.ace-icon'
-  }
-}
 
 ace.config = {
  cookie_expiry : 604800, //1 week duration for saved settings
+ cookie_path: '',
  storage_method: 2 //2 means use cookies, 1 means localStorage, 0 means localStorage if available otherwise cookies
 }
+if( !('vars' in window['ace']) ) window['ace'].vars = {}
+ace.vars['very_old_ie']	= !('querySelector' in document.documentElement);
+
 
 ace.settings = {
 	is : function(item, status) {
@@ -29,13 +27,16 @@ ace.settings = {
 		ace.data.remove('settings', item+'-'+status)
 	},
 
-	navbar_fixed : function(fix , save, chain) {
-		var navbar = document.getElementById('navbar');
+	navbar_fixed : function(navbar, fix , save, chain) {
+		if(ace.vars['very_old_ie']) return false;
+		
+		var navbar = navbar || '#navbar';
+		if(typeof navbar === 'string') navbar = document.querySelector(navbar);
 		if(!navbar) return false;
 	
 		fix = fix || false;
 		save = save && true;
-		
+	
 		if(!fix && chain !== false) {
 			//unfix sidebar as well
 			var sidebar = null;
@@ -45,7 +46,7 @@ ace.settings = {
 				((sidebar = document.getElementById('sidebar')) && ace.hasClass(sidebar , 'sidebar-fixed'))
 			 )
 			{
-				ace.settings.sidebar_fixed(false, save);
+				ace.settings.sidebar_fixed(sidebar, false, save);
 			}
 		}
 		
@@ -62,12 +63,15 @@ ace.settings = {
 			document.getElementById('ace-settings-navbar').checked = fix;
 		} catch(e) {}
 		
-		if(window.jQuery) jQuery(document).trigger('settings.ace', ['navbar_fixed' , fix]);
+		if(window.jQuery) jQuery(document).trigger('settings.ace', ['navbar_fixed' , fix , navbar]);
 	},
 
 
-	sidebar_fixed : function(fix , save, chain) {
-		var sidebar = document.getElementById('sidebar');
+	sidebar_fixed : function(sidebar, fix , save, chain) {
+		if(ace.vars['very_old_ie']) return false;
+		
+		var sidebar = sidebar || '#sidebar';
+		if(typeof sidebar === 'string') sidebar = document.querySelector(sidebar);
 		if(!sidebar) return false;
 	
 		fix = fix || false;
@@ -82,12 +86,12 @@ ace.settings = {
 				((breadcrumbs = document.getElementById('breadcrumbs')) && ace.hasClass(breadcrumbs , 'breadcrumbs-fixed'))
 			 )
 			{
-				ace.settings.breadcrumbs_fixed(false, save);
+				ace.settings.breadcrumbs_fixed(breadcrumbs, false, save);
 			}
 		}
 
 		if( fix && chain !== false && !ace.settings.is('navbar', 'fixed') ) {
-			ace.settings.navbar_fixed(true, save);
+			ace.settings.navbar_fixed(null, true, save);
 		}
 
 		if(fix) {
@@ -109,19 +113,22 @@ ace.settings = {
 			document.getElementById('ace-settings-sidebar').checked = fix;
 		} catch(e) {}
 		
-		if(window.jQuery) jQuery(document).trigger('settings.ace', ['sidebar_fixed' , fix]);
+		if(window.jQuery) jQuery(document).trigger('settings.ace', ['sidebar_fixed' , fix , sidebar]);
 	},
 	
 	//fixed position
-	breadcrumbs_fixed : function(fix , save, chain) {
-		var breadcrumbs = document.getElementById('breadcrumbs');
+	breadcrumbs_fixed : function(breadcrumbs, fix , save, chain) {
+		if(ace.vars['very_old_ie']) return false;
+		
+		var breadcrumbs = breadcrumbs || '#breadcrumbs';
+		if(typeof breadcrumbs === 'string') breadcrumbs = document.querySelector(breadcrumbs);
 		if(!breadcrumbs) return false;
 	
 		fix = fix || false;
 		save = save && true;
 		
 		if(fix && chain !== false && !ace.settings.is('sidebar', 'fixed')) {
-			ace.settings.sidebar_fixed(true, save);
+			ace.settings.sidebar_fixed(null, true, save);
 		}
 
 		if(fix) {
@@ -135,25 +142,28 @@ ace.settings = {
 			document.getElementById('ace-settings-breadcrumbs').checked = fix;
 		} catch(e) {}
 		
-		if(window.jQuery) jQuery(document).trigger('settings.ace', ['breadcrumbs_fixed' , fix]);
+		if(window.jQuery) jQuery(document).trigger('settings.ace', ['breadcrumbs_fixed' , fix , breadcrumbs]);
 	},
 
 	//fixed size
-	main_container_fixed : function(inside , save) {
+	main_container_fixed : function(main_container, inside , save) {
+		if(ace.vars['very_old_ie']) return false;
+		
 		inside = inside || false;
 		save = save && true;
-
-		var main_container = document.getElementById('main-container');
+		
+		var main_container = main_container || '#main-container';
+		if(typeof main_container === 'string') main_container = document.querySelector(main_container);
 		if(!main_container) return false;
 		
 		var navbar_container = document.getElementById('navbar-container');
 		if(inside) {
 			if( !ace.hasClass(main_container , 'container') )  ace.addClass(main_container , 'container');
-			if( !ace.hasClass(navbar_container , 'container') )  ace.addClass(navbar_container , 'container');
+			if( navbar_container && !ace.hasClass(navbar_container , 'container') )  ace.addClass(navbar_container , 'container');
 			if( save !== false ) ace.settings.set('main-container', 'fixed');
 		} else {
 			ace.removeClass(main_container , 'container');
-			ace.removeClass(navbar_container , 'container');
+			if(navbar_container) ace.removeClass(navbar_container , 'container');
 			if(save !== false) ace.settings.unset('main-container', 'fixed');
 		}
 		try {
@@ -170,49 +180,49 @@ ace.settings = {
 			setTimeout(function() {	ace.toggleClass(sidebar , 'menu-min') } , 0)
 		}
 		
-		if(window.jQuery) jQuery(document).trigger('settings.ace', ['main_container_fixed' , inside]);
+		if(window.jQuery) jQuery(document).trigger('settings.ace', ['main_container_fixed', inside, main_container]);
 	},
 
-	sidebar_collapsed : function(collpase , save) {
-		var sidebar = document.getElementById('sidebar');
+	sidebar_collapsed : function(sidebar, collapse , save) {
+		if(ace.vars['very_old_ie']) return false;
+
+		var sidebar = sidebar || '#sidebar';
+		if(typeof sidebar === 'string') sidebar = document.querySelector(sidebar);
 		if(!sidebar) return false;
 
-		collpase = collpase || false;
+		collapse = collapse || false;
 
-		var src = ace.isHTTMlElement(this) ? this : sidebar.querySelector('.sidebar-collapse');
-		var icon = src ? src.querySelector(ace.vars['.icon']) : null, icon1, icon2;
-		/**
-		if(!icon) {
-			//for example sidebar-collapse button can be inside navbar without an icon
-			src = sidebar.querySelector('.sidebar-collapse');
-			icon = src ? src.querySelector(ace.vars['.icon']) : null;
-		}
-		*/
-
-		if(icon) {
-			icon1 = icon.getAttribute('data-icon1');//the icon for expanded state
-			icon2 = icon.getAttribute('data-icon2');//the icon for collapsed state
-		}
-
-		if(collpase) {
+		if(collapse) {
 			ace.addClass(sidebar , 'menu-min');
-			if(icon) {
-				ace.removeClass(icon , icon1);
-				ace.addClass(icon , icon2);
-			}
-
 			if(save !== false) ace.settings.set('sidebar', 'collapsed');
 		} else {
 			ace.removeClass(sidebar , 'menu-min');
-			if(icon) {
-				ace.removeClass(icon , icon2);
-				ace.addClass(icon , icon1);
-			}
-
 			if(save !== false) ace.settings.unset('sidebar', 'collapsed');
 		}
+		
+		if(window.jQuery) jQuery(document).trigger('settings.ace', ['sidebar_collapsed' , collapse, sidebar]);
+		
+		if(!window.jQuery) {
+			var toggle_btn = document.querySelector('.sidebar-collapse[data-target="#'+(sidebar.getAttribute('id')||'')+'"]');
+			if(!toggle_btn) toggle_btn = sidebar.querySelector('.sidebar-collapse');
+			if(!toggle_btn) return;
 
-		if(window.jQuery) jQuery(document).trigger('settings.ace', ['sidebar_collapsed' , collpase]);
+	
+			var icon = toggle_btn.querySelector('[data-icon1][data-icon2]'), icon1, icon2;	
+			if(!icon) return;
+
+			icon1 = icon.getAttribute('data-icon1');//the icon for expanded state
+			icon2 = icon.getAttribute('data-icon2');//the icon for collapsed state
+
+			if(collapse) {
+				ace.removeClass(icon, icon1);
+				ace.addClass(icon, icon2);
+			}
+			else {
+				ace.removeClass(icon, icon2);
+				ace.addClass(icon, icon1);
+			}
+		}		
 	}
 	/**
 	,
@@ -243,7 +253,7 @@ ace.settings.check = function(item, val) {
 	
 	var target = document.getElementById(item);//#navbar, #sidebar, #breadcrumbs
 	if(status != ace.hasClass(target , mustHaveClass[item+'-'+val])) {
-		ace.settings[item.replace('-','_')+'_'+val](status);//call the relevant function to make the changes
+		ace.settings[item.replace('-','_')+'_'+val](null, status);//call the relevant function to make the changes
 	}
 }
 
@@ -272,7 +282,7 @@ ace.data_storage = function(method, undefined) {
 	}
 
 	//var data = {}
-	this.set = function(namespace, key, value, undefined) {
+	this.set = function(namespace, key, value, path, undefined) {
 		if(!storage) return;
 		
 		if(value === undefined) {//no namespace here?
@@ -284,7 +294,7 @@ ace.data_storage = function(method, undefined) {
 				if(type == 1)
 					storage.set(prefix+key, value)
 				else if(type == 2)
-					storage.set(prefix+key, value, ace.config.cookie_expiry)
+					storage.set(prefix+key, value, ace.config.cookie_expiry, path || ace.config.cookie_path)
 			}
 		}
 		else {
@@ -308,7 +318,7 @@ ace.data_storage = function(method, undefined) {
 					tmp[key] = value;
 				}
 
-				storage.set(prefix+namespace , JSON.stringify(tmp), ace.config.cookie_expiry)
+				storage.set(prefix+namespace , JSON.stringify(tmp), ace.config.cookie_expiry, path || ace.config.cookie_path)
 			}
 		}
 	}

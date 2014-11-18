@@ -37,7 +37,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 			{
 				$query->where('id', $languageId);
 			})
-			->orderBy('order')->get(); 
+			->orderBy('widget_order')->get(); 
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 

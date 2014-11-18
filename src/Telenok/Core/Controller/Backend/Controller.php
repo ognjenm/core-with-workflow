@@ -59,30 +59,30 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 	public function getContent()
 	{
-		$ListModuleMenuLeft = \Illuminate\Support\Collection::make([]);
-		\Event::fire('telenok.module.menu.left', $ListModuleMenuLeft);
+		$listModuleMenuLeft = \Illuminate\Support\Collection::make([]);
+		\Event::fire('telenok.module.menu.left', $listModuleMenuLeft);
 
 		$config = \App::make('telenok.config');
 
 		$setArray = [];
 
 		$listModule = $config->getModule()
-				->filter(function($item) use ($ListModuleMenuLeft)
+				->filter(function($item) use ($listModuleMenuLeft)
 				{
-					if (!$item->getParent() && $ListModuleMenuLeft->has($item->getKey()))
+					if (!$item->getParent() && $listModuleMenuLeft->has($item->getKey()))
 					{
 						return true;
 					}
 
-					if ($item->getParent() && \Auth::can('read', 'module.' . $item->getKey()) && $ListModuleMenuLeft->has($item->getKey()))
+					if ($item->getParent() && \Auth::can('read', 'module.' . $item->getKey()) && $listModuleMenuLeft->has($item->getKey()))
 					{
 						return true;
 					}
 				})
-				->sortBy(function($item) use ($ListModuleMenuLeft)
-		{
-			return $ListModuleMenuLeft->get($item->getKey());
-		});
+				->sortBy(function($item) use ($listModuleMenuLeft)
+                {
+                    return $listModuleMenuLeft->get($item->getKey());
+                });
 
 
 		$listModule = $listModule->filter(function($item) use ($listModule)
@@ -115,28 +115,28 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$setArray['listModuleGroup'] = $listModuleGroup;
 
 
-		$ListModuleMenuTop = \Illuminate\Support\Collection::make([]);
+		$listModuleMenuTop = \Illuminate\Support\Collection::make([]);
 
-		$ListModuleMenuTopCollection = \Illuminate\Support\Collection::make([]);
+		$listModuleMenuTopCollection = \Illuminate\Support\Collection::make([]);
 		
-		\Event::fire('telenok.module.menu.top', $ListModuleMenuTopCollection);
+		\Event::fire('telenok.module.menu.top', $listModuleMenuTopCollection);
 
-		$ListModuleMenuTopCollection->each(function($item) use ($ListModuleMenuTop, $config)
+		$listModuleMenuTopCollection->each(function($item) use ($listModuleMenuTop, $config)
 		{
 			$moduleMethod = explode('@', $item);
 
 			$method = $moduleMethod[1];
 
-			$ListModuleMenuTop->push($config->getModule()->get($moduleMethod[0])->$method());
+			$listModuleMenuTop->push($config->getModule()->get($moduleMethod[0])->$method());
 		});
 
-		$ListModuleMenuTop->sortBy(function($item)
+		$listModuleMenuTop->sortBy(function($item)
 		{
 			return $item->get('order');
 		});
 
 
-		$setArray['ListModuleMenuTop'] = $ListModuleMenuTop;
+		$setArray['listModuleMenuTop'] = $listModuleMenuTop;
 		$setArray['controller'] = $this;
 
 		return \View::make('core::controller.backend', $setArray);

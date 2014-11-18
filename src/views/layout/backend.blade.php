@@ -13,9 +13,6 @@
         {{ HTML::style('packages/telenok/core/css/jquery.gritter.css') }}
         {{ HTML::style('packages/telenok/core/js/bootstrap/css/bootstrap.min.css') }}
         {{ HTML::style('packages/telenok/core/js/bootstrap/css/font-awesome.css') }}
-        <!--[if lt IE 7]>
-        {{ HTML::style('packages/telenok/core/js/bootstrap/css/font-awesome-ie7.min.css') }}
-        <![endif]-->
         {{ HTML::style('packages/telenok/core/js/bootstrap/css/ace-fonts.css') }}
         {{ HTML::style('packages/telenok/core/js/bootstrap/css/ace.css') }}
         {{ HTML::style('packages/telenok/core/js/bootstrap/css/ace-skins.min.css') }}

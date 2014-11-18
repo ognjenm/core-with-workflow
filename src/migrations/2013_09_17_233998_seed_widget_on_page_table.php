@@ -132,7 +132,7 @@ class SeedWidgetOnPageTable extends Migration {
 						'title' => json_encode(['ru' => "Порядок", 'en' => "Order"], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => "Порядок", 'en' => "Order"], JSON_UNESCAPED_UNICODE),
 						'key' => 'integer-unsigned',
-						'code' => 'order',
+						'code' => 'widget_order',
 						'active' => 1,
 						'field_object_type' => $modelId,
 						'field_object_tab' => $tabAdditionallyId,
