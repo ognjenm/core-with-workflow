@@ -145,6 +145,38 @@ class Config {
 		return $list;
 	}
 
+	public function getObjectFieldViewModel($flush = false)
+	{
+		static $list = null;
+
+		if ($list === null || $flush)
+		{
+			try
+			{
+				$collection = \Illuminate\Support\Collection::make([]);
+
+				\Event::fire('telenok.objects-field.view.model.add', $collection);
+
+                $l = [];
+                
+				foreach ($collection as $view)
+				{
+                    list($fieldKey, $viewModel) = explode('###', $view);
+                    
+                    $l[$fieldKey][] = $viewModel;
+				}
+                
+                $list = new \Illuminate\Support\Collection($l);
+			}
+			catch (\Exception $e)
+			{
+				throw new \RuntimeException('Failed to get view model of field. Error: ' . $e->getMessage());
+			}
+		}
+
+		return $list;
+	}
+
 	public function getModuleGroup($flush = false)
 	{
 		static $list = null;

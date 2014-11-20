@@ -8,7 +8,7 @@ use Illuminate\Database\Migrations\Migration;
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	protected $key = 'permission';
-    protected $allowMultilanguage = false;
+    protected $allowMultilanguage = false; 
 	
 	public function getTitleList($id = null)
 	{
@@ -95,8 +95,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
 	{
 		$permissions = \Telenok\Security\Permission::all();
+        $this->setViewModel($field);
 
-		return \View::make("core::field.{$this->getKey()}.model", array(
+		return \View::make($this->getViewModel(), array(
 					'parentController' => $controller,
 					'controller' => $this,
 					'model' => $model,

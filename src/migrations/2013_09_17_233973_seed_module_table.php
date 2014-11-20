@@ -121,7 +121,27 @@ class SeedModuleTable extends Migration {
 						'field_order' => 4,
 					]
 			);
-
+            
+			DB::table('object_field')->insertGetId(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(['ru' => "Порядок", 'en' => "Order"], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['ru' => "Порядок", 'en' => "Order"], JSON_UNESCAPED_UNICODE),
+						'key' => 'integer-unsigned',
+						'code' => 'module_order',
+						'active' => 1,
+						'field_object_type' => $modelId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 1,
+						'allow_search' => 1,
+						'allow_create' => 0,
+						'allow_update' => 0,
+						'field_order' => 5,
+					]
+			);
+            
 			DB::table('object_field')->insert(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),

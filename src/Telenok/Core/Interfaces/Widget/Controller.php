@@ -160,7 +160,7 @@ abstract class Controller {
         return $this->frontendController;
     }
     
-	public function getTemplateContent()
+	public function getViewContent()
 	{
         $template = ($model = $this->getWidgetModel()) && $model->getKey() ? 'widget.' . $model->getKey() : $this->getFrontendView();
         

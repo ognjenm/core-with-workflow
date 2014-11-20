@@ -81,7 +81,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 				})
 				->sortBy(function($item) use ($listModuleMenuLeft)
                 {
-                    return $listModuleMenuLeft->get($item->getKey());
+                    return $item->getModuleModel()->module_order;
                 });
 
 

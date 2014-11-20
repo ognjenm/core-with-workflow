@@ -108,9 +108,15 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('Telenok\Core\Field\FileManyToMany\Controller');
     $list->push('Telenok\Core\Field\System\WorkflowStatus\Controller');
     $list->push('Telenok\Core\Field\Upload\Controller');
+    $list->push('Telenok\Core\Field\SelectOne\Controller');
 });
 
-
+\Event::listen('telenok.objects-field.view.model.add', function($list) 
+{ 
+    $list->push('select-one###core::field.select-one.model-radio-button');
+    $list->push('select-one###core::field.select-one.model-toggle-button');
+    $list->push('select-one###core::field.select-one.model-select-box');
+});
 
 /*
 \Event::listen('telenok.controller.frontend', function($list)

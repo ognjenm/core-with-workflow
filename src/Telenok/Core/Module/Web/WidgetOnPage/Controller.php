@@ -35,14 +35,14 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
             if ($t = trim($input->get('template_content')))
             {
-                $templateContent = $t;
+                $viewContent = $t;
             }
             else
             {
-                $templateContent = \App::make('telenok.config')->getWidget()->get($input->get('key'))->getTemplateContent();
+                $viewContent = \App::make('telenok.config')->getWidget()->get($input->get('key'))->getViewContent();
             }
              
-            \File::put($templateFile, $templateContent);
+            \File::put($templateFile, $viewContent);
             
             \App::make('telenok.config')->getWidget()->get($input->get('key'))->postProcess($model, $type, $input);
         }

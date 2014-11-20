@@ -119,7 +119,7 @@ class SeedObjectFieldTable extends Migration {
 						'show_in_list' => 0,
 						'allow_search' => 1,
 						'required' => 0,
-						'field_order' => 3,
+						'field_order' => 5,
 					]
 			);
 
@@ -146,6 +146,24 @@ class SeedObjectFieldTable extends Migration {
 			DB::table('object_field')->insert(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.field_view'), JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.field_view'), JSON_UNESCAPED_UNICODE),
+						'key' => 'string',
+						'code' => 'field_view',
+						'active' => 1,
+						'field_object_type' => $modelFieldId,
+						'field_object_tab' => $tabMainId,
+						'multilanguage' => 0,
+						'show_in_form' => 1,
+						'show_in_list' => 0,
+						'allow_search' => 1,
+						'required' => 1,
+						'field_order' => 7,
+					]
+			);
+			DB::table('object_field')->insert(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
 						'title' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.field_object_type'), JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(SeedObjectFieldTableTranslation::get('objects-field.field.field_object_type'), JSON_UNESCAPED_UNICODE),
 						'key' => 'relation-one-to-many',
@@ -160,7 +178,7 @@ class SeedObjectFieldTable extends Migration {
 						'allow_search' => 1,
 						'allow_create' => 1,
 						'allow_update' => 0,
-						'field_order' => 5,
+						'field_order' => 6,
 					]
 			);
 
@@ -220,7 +238,7 @@ class SeedObjectFieldTable extends Migration {
 						'allow_search' => 0,
 						'allow_create' => 1,
 						'allow_update' => 0,
-						'field_order' => 7,
+						'field_order' => 5,
 					]
 			);
 
@@ -240,7 +258,7 @@ class SeedObjectFieldTable extends Migration {
 						'allow_search' => 0,
 						'allow_create' => 1,
 						'allow_update' => 1,
-						'field_order' => 8,
+						'field_order' => 10,
 					]
 			);
 
@@ -531,6 +549,11 @@ class SeedObjectFieldTableTranslation extends \Telenok\Core\Interfaces\Translati
 				'multilanguage' => [
 					'ru' => "Мультиязычное",
 					'en' => "Multilanguage",
+				],
+				
+				'field_view' => [
+					'ru' => "Шаблон поля",
+					'en' => "View of field",
 				],
 				
 				'rule' => [

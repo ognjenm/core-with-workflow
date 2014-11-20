@@ -28,6 +28,7 @@ class CreateObjectFieldTable extends Migration {
 				$table->timestamp('end_at');
 				$table->string('key')->nullable();
 				$table->string('rule')->nullable();
+				$table->string('field_view')->nullable();
 				$table->integer('field_object_type')->unsigned()->nullable();
 				$table->integer('field_object_tab')->unsigned()->nullable();
 				$table->integer('required')->unsigned()->nullable();

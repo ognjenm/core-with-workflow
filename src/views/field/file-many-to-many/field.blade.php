@@ -2,11 +2,18 @@
 <div class="form-group">
 	{{ Form::label("required", $controller->LL('property.required'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
-		{{ Form::hidden("required", 0) }}
-		{{ Form::checkbox("required", 1, $model->required, array('class'=>'ace ace-switch ace-switch-3')) }}
-		<span class="lbl"></span>
-	</div>
+        <div data-toggle="buttons" class="btn-group">
+            <label class="btn btn-white btn-sm btn-primary @if (!$model->required) active @endif">
+                <input type="radio" value="1" name="required" @if (!$model->required) checked="checked" @endif> {{{$controller->LL('btn.no')}}}
+            </label>
+
+            <label class="btn btn-white btn-sm btn-primary @if ($model->required) active @endif">
+                <input type="radio" value="1" name="required" @if ($model->required) checked="checked" @endif> {{{$controller->LL('btn.yes')}}}
+            </label>
+        </div>
+    </div>
 </div>
+
 <div class="form-group">
 	{{ Form::label('file_many_to_many_allow_ext', $controller->LL('property.file_many_to_many_allow_ext'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">

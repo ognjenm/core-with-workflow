@@ -21,9 +21,9 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
             return $content;
         }
 
-        if ($structure !== null && ($template = $structure->get('template')))
+        if ($structure !== null && ($view = $structure->get('view')))
         {
-            $content = \View::make($template, ['controller' => $this])->render();
+            $content = \View::make($view, ['controller' => $this])->render();
         }
         else if ($m = $this->getWidgetModel())
         {

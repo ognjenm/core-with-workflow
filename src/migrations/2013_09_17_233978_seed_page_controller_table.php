@@ -149,7 +149,7 @@ class SeedPageControllerTable extends Migration {
 						'title' => ['en' => 'Controller template', 'ru' => 'Шаблон контроллера'],
 						'title_list' => ['en' => 'Controller template', 'ru' => 'Шаблон контроллера'],
 						'key' => 'string',
-						'code' => 'controller_template',
+						'code' => 'template_view',
 						'active' => 1,
 						'string_default' => 'core::controller.frontend',
 						'field_object_type' => $modelId,

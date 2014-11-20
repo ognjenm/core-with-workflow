@@ -698,102 +698,119 @@ class SeedLast extends Migration {
 			'title' => ['en' => 'Users', 'ru' => 'Пользователи'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Users\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Profile', 'ru' => 'Профиль'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Users\ProfileEdit\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Objects', 'ru' => 'Объекты'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Type', 'ru' => 'Типы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Type\Controller',
+			'module_order' => 3,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Field', 'ru' => 'Поле'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Field\Controller',
+			'module_order' => 2,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Lists', 'ru' => 'Список'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Lists\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Version', 'ru' => 'Версии'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Version\Controller',
+			'module_order' => 4,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Workflow', 'ru' => 'Workflow'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Workflow\Controller',
+			'module_order' => 2,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Process', 'ru' => 'Process'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Workflow\Process\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Thread', 'ru' => 'Thread'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Workflow\Thread\Controller',
+			'module_order' => 2,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Web', 'ru' => 'Веб'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Files', 'ru' => 'Файлы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Files\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Browser', 'ru' => 'Менеджер'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Files\Browser\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Page', 'ru' => 'Страница'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Page\Controller',
+			'module_order' => 2,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Page Constructor', 'ru' => 'Конструктор страницы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\PageConstructor\Controller',
+			'module_order' => 1,
 		]);
 
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Domain', 'ru' => 'Домен'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Domain\Controller',
+			'module_order' => 4,
 		]); 
 		
 		(new \Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Page Controller', 'ru' => 'Контроллер страницы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\PageController\Controller',
+			'module_order' => 3,
 		]);
 		
 		

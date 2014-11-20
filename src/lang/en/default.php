@@ -33,6 +33,8 @@ return [
     'btn.filter' => 'Filter',
     'btn.lock' => 'Lock',
     'btn.unlock' => 'Unlock',
+    'btn.yes' => 'Yes',
+    'btn.no' => 'No',
 
     'notice.title' => 'Notice',
     'notice.saved' => 'Saved',
@@ -85,7 +87,7 @@ return [
 	'error.file.upload.require' => 'Please, upload required file in field ":attribute"',
 	'error.access' => 'Sorry, access denied',
 	
-    'title.template' => 'Template',
+    'title.view' => 'View',
     
     'error' => [
         'undefined' => 'Sorry, an error occurred',

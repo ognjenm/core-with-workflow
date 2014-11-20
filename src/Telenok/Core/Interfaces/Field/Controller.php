@@ -36,6 +36,18 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this->viewModel ?: "core::field.{$this->getKey()}.model";
     }
 
+    public function setViewModel($field = null)
+    {
+        if ($field && $field->field_view)
+        {
+            $this->viewModel = $field->field_view;
+        }
+        else
+        {
+            $this->viewModel = $this->viewModel ?: "core::field.{$this->getKey()}.model";
+        }
+    }
+
     public function getViewField()
     {
         return $this->viewField ?: "core::field.{$this->getKey()}.field";
@@ -124,6 +136,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	
     public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
     { 
+        $this->setViewModel($field);
+        
         return \View::make($this->getViewModel(), array(
                 'parentController' => $controller,
                 'controller' => $this,
