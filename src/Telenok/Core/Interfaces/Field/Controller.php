@@ -113,6 +113,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     public function setModelAttribute($model, $key, $value, $field)
     {
 		$model->setAttribute($key, $value);
+        
+        return $this;
     }
 	
     public function getModelSpecialAttribute($model, $key, $value)

@@ -257,7 +257,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			{
 				//$this->__set($fillable, null);
 				//$input->put($fillable, null);
-				//$this->$fillable = null;
+				$this->$fillable = null;
 				$input->put($fillable, null);
 			}
 			else

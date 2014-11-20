@@ -57,7 +57,7 @@
                         <div class="tab-content">
                             @foreach($languages as $language)
                             <div class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>" id="{{$uniqueId}}-language-{{$language->locale}}-{{{$model->code}}}">
-                                <input type="text" value="" name="select_one_data[title][{{{$language->locale}}}][]" class="col-xs-12 col-sm-12">
+                                <input type="text" value="" name="select_one_data[title][{{{$language->locale}}}][]" class="title-{{{$language->locale}}} col-xs-12 col-sm-12">
                             </div>
                             @endforeach
                         </div> 
@@ -67,11 +67,10 @@
                 <div class="row">
                     <div class="form-group">
                         <label class="col-sm-3 control-label no-padding-right" for="select_one_data[key][]">{{{$controller->LL('row.title.key')}}}</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="select_one_data[key][]" value="" placeholder="Key value" class="key-value input-large" />
+                        <div class="col-sm-9 select-one-group">
+                            <input type="text" name="select_one_data[key][]" value="" placeholder="Key value" class="input-large key-value" />
                             <label class="inline">
-                                <input type="hidden" name="select_one_data[default][]" value="0" class="key-default" />
-                                <input type="checkbox" class="ace key-default" class="ace" />
+                                <input type="checkbox" class="ace key-default" />
                                 <span class="lbl"> {{{$controller->LL('row.title.key.default')}}}</span>
                             </label>
                         </div>
@@ -96,6 +95,8 @@
     <div class="widget-body"> 
         <div class="widget-main form-group">
 
+            <input type="hidden" id="key-default-{{$uniqueId}}" name="select_one_data[default]" value="" />
+
             <div class="col-sm-12 select-one-container"> 
                 
             </div>
@@ -105,21 +106,18 @@
 
 <script type="text/javascript">
 
-    var data = []; 
-
     <?php
-
         $selectOneData = $model->select_one_data->all();
         $allKeys = array_keys($model->select_one_data->get('key', []));
-
     ?>
+
+    var data{{$uniqueId}} = {'title-key':[], 'default': "{{{ array_get($selectOneData, 'default') }}}" }; 
 
     @foreach($allKeys as $key)
 
         var insert = {
             'title': {},
             'key': "{{{array_get($selectOneData, 'key.'.$key)}}}",
-            'default': {{{intval(array_get($selectOneData, 'default.'.$key))}}}
         };
 
         @foreach($languages as $l)
@@ -128,12 +126,11 @@
 
         @endforeach
 
-        data.push(insert);
+        data{{$uniqueId}}['title-key'].push(insert);
 
     @endforeach
 
     var $template = jQuery("#template-select-one-{{$uniqueId}}");
-
 
     function addSelectOneRow{{$uniqueId}}($obj)
     {
@@ -161,19 +158,32 @@
                 v.id += randId;
             }
         });
-        
-        jQuery("input[type='checkbox'].key-default", $templateClone).on('click', function()
+
+        jQuery("input.key-default", $templateClone).on('click', function()
         {
+            if (this.checked)
+            {
+                var v = jQuery("input.key-value", $templateClone).val();
+                jQuery("#key-default-{{$uniqueId}}").val(v);
+            }
+            else
+            {
+                jQuery("#key-default-{{$uniqueId}}").val("");
+            }
+
             jQuery("div.field-select-one-{{$uniqueId}} input.key-default").not(this).removeAttr('checked').val(0);
-            jQuery("input[type='hidden'].key-default", $templateClone).val(this.checked ? 1 : 0);
         });
-        
-        jQuery("input[name='select_one_data\[key\]\[\]']", $templateClone).on('keyup', function()
+
+        jQuery("input.key-value", $templateClone).on('keyup', function()
         {
             jQuery("h4.widget-title", $templateClone).text("{{{$controller->LL('row.title')}}}" + this.value);
-        });
-        
-        
+            
+            if (jQuery("input.key-default", $templateClone).prop('checked'))
+            {
+                jQuery("#key-default-{{$uniqueId}}").val(this.value);
+            }
+        }); 
+
         jQuery('div.widget-header a[data-action="close"]', $templateClone).on('click', function()
         {
             if (jQuery('div.field-select-one-{{$uniqueId}} div.container-select-one').size() == 1)
@@ -181,13 +191,13 @@
                 addSelectOneRow{{$uniqueId}}();
             }
         })
-        
+
         return $templateClone;
     }
 
-    if (data.length)
+    if (data{{$uniqueId}}['title-key'].length)
     {
-        data.forEach(function(o) 
+        data{{$uniqueId}}['title-key'].forEach(function(o) 
         {
             $templateClone = addSelectOneRow{{$uniqueId}}();
 
@@ -198,10 +208,9 @@
 
             jQuery("h4.widget-title", $templateClone).text("{{{$controller->LL('row.title')}}}" + o.key); 
 
-            jQuery("input[name='select_one_data\[default\]\[\]']", $templateClone).val(o.default);
-            jQuery("input[name='select_one_data\[key\]\[\]']", $templateClone).val(o.key);
+            jQuery("input.key-value", $templateClone).val(o.key);
 
-            if (o.default == 1)
+            if (data{{$uniqueId}}.default == o.key)
             {
                 jQuery("input.key-default", $templateClone).attr('checked', 'checked');
             }

@@ -31,7 +31,6 @@
  
         $title = $field->select_one_data->get('title', []);
         $keys = $field->select_one_data->get('key', []);
-        $default = $field->select_one_data->get('default');
         $titleLocale = array_get($title, $locale, []);
 
         if (empty($titleLocale))
@@ -53,7 +52,7 @@
 		<div>
             @endif	
             
-            {{ Form::select($field->code, $values, $model->exists ? $model->{$field->code} : $default, $domAttr) }}
+            {{ Form::select($field->code, $values, $model->{$field->code}, $domAttr) }}
 
             @if ($field->translate('description'))
             <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 

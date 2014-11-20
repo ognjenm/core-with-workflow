@@ -15,11 +15,6 @@ class CreateObjectFieldSelectOneTable extends Migration {
 				{
 					$table->text('select_one_data')->nullable();
 				}
-
-				if (!\Schema::hasColumn('object_field', 'select_one_default'))
-				{
-					$table->string('select_one_default', 20)->nullable();
-				}
 			});
 		}
 	}

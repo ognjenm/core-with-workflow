@@ -9,7 +9,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     protected $key = 'select-one'; 
     protected $allowMultilanguage = false;
-    protected $specialField = ['select_one_data', 'select_one_default'];
+    protected $specialField = ['select_one_data'];
     protected $viewModel = "core::field.select-one.model-select-box";
 
 
@@ -84,7 +84,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
         return true;
     }
-
+     
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

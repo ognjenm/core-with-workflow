@@ -177,6 +177,17 @@ class SeedWorkflowProcessTable extends Migration {
 						'title_list' => ['ru' => "Схема без ошибок?", 'en' => "Scheme without errors?"],
 						'key' => 'select-one',
 						'code' => 'is_valid',
+						'select_one_data' => [
+                            'title' => [
+                                ['No', 'Нет'],
+                                ['Yes', 'Да'],
+                            ],
+                            'key' => [
+                                0,
+                                1,
+                            ],
+                            'default' => 0
+                        ],
 						'active' => 1,
 						'field_object_type' => $modelId,
 						'field_object_tab' => $tabMainId,
