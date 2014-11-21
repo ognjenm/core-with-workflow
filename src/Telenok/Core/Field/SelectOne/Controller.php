@@ -84,7 +84,24 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
         return true;
     }
-     
+    
+    public function getListFieldContent($field, $item, $type = null)
+    {  
+        $value = $item->{$field->code};
+
+        if (!empty($value))
+        {
+            $config = $field->select_one_data->toArray();
+            $locale = \Config::get('app.locale');
+            $title = array_get($config, 'title.' . $locale, []);
+            $key = array_get($config, 'key', []);
+
+            $val = array_get(array_combine($key, $title), $value);
+
+            return \Str::limit($val, 30);
+        }
+    }
+    
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;
