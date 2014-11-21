@@ -1,6 +1,6 @@
 <?php 
     
-    $domAttr = ['class' => $field->css_class?: ''];
+    $domAttr = ['class' => $field->css_class?: '', 'multiple' => 'multiple'];
     $disabled = false;
 
     if (!$model->exists) 
@@ -21,9 +21,9 @@
     $localeDefault = \Config::get('app.localeDefault');
     $locale = \Config::get('app.locale');
 
-    $title = $field->select_one_data->get('title', []);
-    $keys = $field->select_one_data->get('key', []);
-    $default = $field->select_one_data->get('default');
+    $title = $field->select_many_data->get('title', []);
+    $keys = $field->select_many_data->get('key', []);
+    $default = $field->select_many_data->get('default', []);
     $titleLocale = array_get($title, $locale, []);
 
     if (empty($titleLocale))

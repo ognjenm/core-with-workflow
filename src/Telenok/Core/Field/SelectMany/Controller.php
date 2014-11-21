@@ -1,23 +1,63 @@
 <?php
 
-namespace Telenok\Core\Field\SelectOne;
+namespace Telenok\Core\Field\SelectMany;
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration; 
 
 class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
-    protected $key = 'select-one'; 
+    protected $key = 'select-many'; 
     protected $allowMultilanguage = false;
-    protected $specialField = ['select_one_data'];
-    protected $viewModel = "core::field.select-one.model-select-box";
+    protected $specialField = ['select_many_data'];
+    protected $viewModel = "core::field.select-many.model-select-box";
 
+    public function getModelAttribute($model, $key, $value, $field)
+    { 
+		$value = $value === null ? '[]' : $value;
+		
+		$v = json_decode($value, true);
+		
+		if (is_array($v))
+		{
+			return \Illuminate\Support\Collection::make($v);
+		}
+		else
+		{
+			return $v;
+		}
+    }
 
+    public function setModelAttribute($model, $key, $value, $field)
+    {
+		if ($value instanceof \Illuminate\Support\Collection) 
+		{
+			$value_ = $value->toArray();
+		}
+		else if (is_array($value))
+		{
+			$value_ = $model->{$key};
+
+			foreach($value as $k => $v)
+			{
+				$value_->put($k, $v);
+			}
+			
+			$value_ = $value_->toArray();
+		}
+		else
+		{
+			$value_ = $value;
+		}
+
+		$model->setAttribute($key, is_null($value_) ? null : json_encode($value_, JSON_UNESCAPED_UNICODE));
+    }
+    
     public function getModelSpecialAttribute($model, $key, $value)
     {
         try
         {
-			if (in_array($key, ['select_one_data']))
+			if (in_array($key, ['select_many_data']))
 			{ 
 				return \Illuminate\Support\Collection::make(json_decode($value, true));
 			}
@@ -34,7 +74,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {  
-		if (in_array($key, ['select_one_data']))
+		if (in_array($key, ['select_many_data']))
 		{ 
 			$default = [];
 
@@ -54,7 +94,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				$value = $value ? : $default;
 			} 
 
-            if ($key == 'select_one_data')
+            if ($key == 'select_many_data')
             {
                 $localeDefault = \Config::get('app.localeDefault');
 
@@ -94,7 +134,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->string($fieldName, 20)->nullable();
+				$table->string($fieldName)->nullable();
 			});
 		}
         

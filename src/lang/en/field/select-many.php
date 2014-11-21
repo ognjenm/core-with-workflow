@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'name' => 'Select one',
+    'name' => 'Select many',
 
     'block.title' => 'Rows to select and key-value', 
     'row.title' => 'Key #',

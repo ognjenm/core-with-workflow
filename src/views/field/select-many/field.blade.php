@@ -14,7 +14,7 @@
     </div>
 </div>
 
-<template id='template-select-one-{{$uniqueId}}'>
+<template id='template-select-many-{{$uniqueId}}'>
     <?php
         $localeDefault = \Config::get('app.localeDefault');
 
@@ -24,7 +24,7 @@
             return $item->locale == $localeDefault ? 0 : 1;
         });
     ?>
-    <div class="widget-box container-select-one collapsed">
+    <div class="widget-box container-select-many collapsed">
         <div class="widget-header widget-header-flat" style="cursor: move;">
             <h4 class="widget-title">{{{$controller->LL('row.title')}}}</h4>
 
@@ -57,7 +57,7 @@
                         <div class="tab-content">
                             @foreach($languages as $language)
                             <div class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>" id="{{$uniqueId}}-language-{{$language->locale}}-{{{$model->code}}}">
-                                <input type="text" value="" name="select_one_data[title][{{{$language->locale}}}][]" class="title-{{{$language->locale}}} col-xs-12 col-sm-12">
+                                <input type="text" value="" name="select_many_data[title][{{{$language->locale}}}][]" class="title-{{{$language->locale}}} col-xs-12 col-sm-12">
                             </div>
                             @endforeach
                         </div> 
@@ -66,10 +66,11 @@
                 <hr/>
                 <div class="row">
                     <div class="form-group">
-                        <label class="col-sm-3 control-label no-padding-right" for="select_one_data[key][]">{{{$controller->LL('row.title.key')}}}</label>
-                        <div class="col-sm-9 select-one-group">
-                            <input type="text" name="select_one_data[key][]" value="" placeholder="Key value" class="input-large key-value" />
+                        <label class="col-sm-3 control-label no-padding-right" for="select_many_data[key][]">{{{$controller->LL('row.title.key')}}}</label>
+                        <div class="col-sm-9 select-many-group">
+                            <input type="text" name="select_many_data[key][]" value="" placeholder="Key value" class="input-large key-value" />
                             <label class="inline">
+                                <input type="hidden" class="key-default-hidden" name="select_many_data[default][]" value="" />
                                 <input type="checkbox" class="ace key-default" />
                                 <span class="lbl"> {{{$controller->LL('row.title.key.default')}}}</span>
                             </label>
@@ -83,7 +84,7 @@
 </template>
 
 
-<div class="widget-box transparent field-select-one-{{$uniqueId}}">
+<div class="widget-box transparent field-select-many-{{$uniqueId}}">
     <div class="widget-header widget-header-small">
         <h4 class="row">
             <span class="col-sm-12">
@@ -92,12 +93,9 @@
             </span>
         </h4>
     </div>
-    <div class="widget-body"> 
-        <div class="widget-main form-group">
-
-            <input type="hidden" id="key-default-{{$uniqueId}}" name="select_one_data[default]" value="" />
-
-            <div class="col-sm-12 select-one-container"> 
+    <div class="widget-body">
+        <div class="widget-main form-group"> 
+            <div class="col-sm-12 select-many-container"> 
                 
             </div>
         </div>
@@ -107,32 +105,33 @@
 <script type="text/javascript">
 
     <?php
-        $selectOneData = $model->select_one_data->all();
-        $allKeys = array_keys($model->select_one_data->get('key', []));
+        $selectManyData = $model->select_many_data->all();
+        $allKeys = array_keys($model->select_many_data->get('key', []));
     ?>
 
-    var data{{$uniqueId}} = {'title-key':[], 'default': "{{{ array_get($selectOneData, 'default') }}}" }; 
+    var data{{$uniqueId}} = []; 
 
     @foreach($allKeys as $key)
 
         var insert = {
             'title': {},
-            'key': "{{{array_get($selectOneData, 'key.'.$key)}}}",
+            'key': "{{{array_get($selectManyData, 'key.'.$key)}}}",
+            'default': "{{{array_get($selectManyData, 'default.'.$key)}}}",
         };
 
         @foreach($languages as $l)
 
-            insert['title']["{{{$l->locale}}}"] = "{{{array_get($selectOneData, 'title.'.$l->locale.'.'.$key)}}}";
+            insert['title']["{{{$l->locale}}}"] = "{{{array_get($selectManyData, 'title.'.$l->locale.'.'.$key)}}}";
 
         @endforeach
 
-        data{{$uniqueId}}['title-key'].push(insert);
+        data{{$uniqueId}}.push(insert);
 
     @endforeach
 
-    var $template = jQuery("#template-select-one-{{$uniqueId}}");
+    var $template = jQuery("#template-select-many-{{$uniqueId}}");
 
-    function addSelectOneRow{{$uniqueId}}($obj)
+    function addSelectManyRow{{$uniqueId}}($obj)
     {
         var $templateClone = jQuery($template.html().trim());
 
@@ -142,7 +141,7 @@
         }
         else
         {
-            jQuery('div.field-select-one-{{$uniqueId}} div.select-one-container').append($templateClone);
+            jQuery('div.field-select-many-{{$uniqueId}} div.select-many-container').append($templateClone);
         }
 
         var randId = Math.floor(Math.random()*1000000000);
@@ -164,79 +163,79 @@
             if (this.checked)
             {
                 var v = jQuery("input.key-value", $templateClone).val();
-                jQuery("#key-default-{{$uniqueId}}").val(v);
+                jQuery("input.key-default-hidden", $templateClone).val(v);
             }
             else
             {
-                jQuery("#key-default-{{$uniqueId}}").val("");
+                jQuery("input.key-default-hidden", $templateClone).val("");
             }
-
-            jQuery("div.field-select-one-{{$uniqueId}} input.key-default").not(this).removeAttr('checked').val(0);
+            
             jQuery("div.widget-header .widget-title", $templateClone).toggleClass('green'); 
         });
 
         jQuery("input.key-value", $templateClone).on('keyup', function()
         {
-            jQuery("h4.widget-title", $templateClone).text("{{{$controller->LL('row.title')}}}" + this.value);
-            
+            jQuery(".widget-title", $templateClone).text("{{{$controller->LL('row.title')}}}" + this.value);
+              
             if (jQuery("input.key-default", $templateClone).prop('checked'))
             {
-                jQuery("#key-default-{{$uniqueId}}").val(this.value);
+                jQuery("input.key-default-hidden", $templateClone).val(this.value);
             }
         }); 
 
         jQuery('div.widget-header a[data-action="close"]', $templateClone).on('click', function()
         {
-            if (jQuery('div.field-select-one-{{$uniqueId}} div.container-select-one').size() == 1)
+            if (jQuery('div.field-select-many-{{$uniqueId}} div.container-select-many').size() == 1)
             {
-                addSelectOneRow{{$uniqueId}}();
+                addSelectManyRow{{$uniqueId}}();
             }
         })
 
         return $templateClone;
     }
 
-    if (data{{$uniqueId}}['title-key'].length)
+    if (data{{$uniqueId}}.length)
     {
-        data{{$uniqueId}}['title-key'].forEach(function(o) 
+        data{{$uniqueId}}.forEach(function(o) 
         {
-            $templateClone = addSelectOneRow{{$uniqueId}}();
+            $templateClone = addSelectManyRow{{$uniqueId}}();
 
             for(var key in o.title)
             {
-                 jQuery("input[name='select_one_data\[title\]\[" + key + "\]\[\]']", $templateClone).val(o.title[key]);
+                 jQuery("input[name='select_many_data\[title\]\[" + key + "\]\[\]']", $templateClone).val(o.title[key]);
             }
 
-            jQuery("h4.widget-title", $templateClone).text("{{{$controller->LL('row.title')}}}" + o.key); 
+            jQuery(".widget-title", $templateClone).text("{{{$controller->LL('row.title')}}}" + o.key); 
 
             jQuery("input.key-value", $templateClone).val(o.key);
 
-            if (data{{$uniqueId}}.default == o.key)
+            if (o.default == o.key)
             {
                 jQuery("input.key-default", $templateClone).attr('checked', 'checked');
+                jQuery("input.key-default-hidden", $templateClone).val(o.key);
                 jQuery("div.widget-header .widget-title", $templateClone).addClass('green'); 
             }
         });
     }
     else
     {
-        addSelectOneRow{{$uniqueId}}();
+        addSelectManyRow{{$uniqueId}}();
     }
 
-    jQuery('div.field-select-one-{{$uniqueId}} div.select-one-container').sortable({ 
+    jQuery('div.field-select-many-{{$uniqueId}} div.select-many-container').sortable({ 
         axis: "y",
-        items: "div.container-select-one",
+        items: "div.container-select-many",
         containment: "parent",
         delay: 150,
         cursor: "move",
         handle: ".widget-header"
     }); 
 
-    jQuery('div.field-select-one-{{$uniqueId}}').on('click', 'a[data-action="clone-row"]', function()
+    jQuery('div.field-select-many-{{$uniqueId}}').on('click', 'a[data-action="clone-row"]', function()
     {
-        var $widgetThis = jQuery(this).closest('div.container-select-one');
+        var $widgetThis = jQuery(this).closest('div.container-select-many');
 
-        addSelectOneRow{{$uniqueId}}($widgetThis);
+        addSelectManyRow{{$uniqueId}}($widgetThis);
     });
 
 </script>

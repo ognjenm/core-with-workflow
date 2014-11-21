@@ -161,7 +161,7 @@ class Config {
                 
 				foreach ($collection as $view)
 				{
-                    list($fieldKey, $viewModel) = explode('###', $view);
+                    list($fieldKey, $viewModel) = explode('#', $view, 2);
                     
                     $l[$fieldKey][] = $viewModel;
 				}

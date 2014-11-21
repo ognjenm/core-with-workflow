@@ -55,7 +55,7 @@ input[type="tel"], input[type="color"], .uneditable-input {
 
 
 div.frontend-container {   }
-div.frontend-container div.widget-header { cursor: move; }
+div.frontend-container div.widget-header { cursor: move; } 
 div.frontend-container div.widget-box { border-width: 2px; }
 div.frontend-container td.frontend-container:empty { height: 50px; }
 div.frontend-container td.frontend-container div.widget-box { margin: 1px; }
@@ -94,7 +94,8 @@ div.hover { border: 2px solid blue; }
     color: #D3E4ED;
 }
 
-
+div.widget-header.widget-header-blue { background: linear-gradient(to bottom, #ffffff 0%, #d9edf7 100%) repeat-x scroll 0 0 #f7f7f7; }
+div.widget-header.widget-header-green { background: linear-gradient(to bottom, #ffffff 0%, #dff0d8 100%) repeat-x scroll 0 0 #f7f7f7; }
 
 
 /*

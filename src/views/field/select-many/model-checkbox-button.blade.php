@@ -21,9 +21,9 @@
     $localeDefault = \Config::get('app.localeDefault');
     $locale = \Config::get('app.locale');
 
-    $title = $field->select_one_data->get('title', []);
-    $keys = $field->select_one_data->get('key', []);
-    $default = $field->select_one_data->get('default');
+    $title = $field->select_many_data->get('title', []);
+    $keys = $field->select_many_data->get('key', []);
+    $default = $field->select_many_data->get('default', []);
     $titleLocale = array_get($title, $locale, []);
 
     if (empty($titleLocale))
@@ -35,29 +35,27 @@
 ?>
 
 <div class="form-group">
-
 	{{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
-
-	<div class="col-sm-5">
-
-            @if ($field->icon_class)
-		<div class="input-group">
-            <span class="input-group-addon">
-                <i class="{{$field->icon_class}}"></i>
-            </span>
-            @else
-		<div>
-            @endif	
-            
-            {{ Form::select($field->code, $values, $model->exists ? $model->{$field->code} : $default, $domAttr) }}
-
+	<div class="col-sm-9">
+        <div>
+            <div class="control-group">
+                @foreach($values as $k => $v)
+                <?php
+                    $checked = ($model->exists && $model->{$field->code}->search($k) !== false) || (!$model->exists && in_array($k, $default)) ? 1 : 0;
+                ?>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="ace" name="{{{$field->code}}}[]" value="{{{$k}}}" @if ($checked) checked="checked" @endif @if ($disabled) disabled="disabled" @endif  />
+                        <span class="lbl"> {{{$v}}}</span>
+                    </label>
+                </div>
+                @endforeach
+            </div>
             @if ($field->translate('description'))
             <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
                   class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
             @endif
-            
-		</div>
-	</div> 
+        </div>
+    </div>
 </div>
-
 
