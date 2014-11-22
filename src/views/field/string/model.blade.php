@@ -1,16 +1,7 @@
 <?php 
-    $disabled = false;
     
     $domAttr = ['class' => $field->css_class?: ''];
-	
-    if (!$model->exists) 
-    {
-        $value = $field->translate('string_default');
-    }
-    else
-    {
-        $value = $model->{$field->code};
-    }
+    $disabled = false;
 
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
     {

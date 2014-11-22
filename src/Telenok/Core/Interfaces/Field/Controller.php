@@ -92,7 +92,12 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     {
 		return [];
     } 
-    
+
+    public function getDateSpecialField($model)
+    {
+		return [];
+    } 
+
     public function getRule($field = null)
     {
         return $this->ruleList;

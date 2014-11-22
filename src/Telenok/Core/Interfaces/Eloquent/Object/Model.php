@@ -622,7 +622,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			return parent::isFillable($key);
 		}
 	}
-	
+
 	public function getDates()
 	{
 		return array_merge(parent::getDates(), $this->dates);
@@ -641,12 +641,22 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			foreach ($this->getObjectField()->all() as $key => $field)
 			{ 
 				if ($fieldController = $fields->get($field->key))
-				{
-					static::$staticListFieldDate[$class] = array_merge(static::$staticListFieldDate[$class], (array) $fieldController->getDateField($this, $field)); 
+				{ 
+                    static::$staticListFieldDate[$class] = array_merge(static::$staticListFieldDate[$class], (array) $fieldController->getDateField($this, $field)); 
 				}
 			} 
+            
+            if ($this instanceof \Telenok\Core\Model\Object\Field)
+            {
+                foreach($fields as $f)
+                {
+                    static::$staticListFieldDate[$class] = array_merge(static::$staticListFieldDate[$class], (array) $f->getDateSpecialField($this)); 
+                }
+            }
+
+            static::$staticListFieldDate[$class] = array_unique(static::$staticListFieldDate[$class]);
 		} 
- 
+
 		$this->dates = array_merge($this->getDates(), (array)static::$staticListFieldDate[$class], (array)$dateField);
 
 		return $this;

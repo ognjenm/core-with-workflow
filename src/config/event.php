@@ -110,6 +110,8 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('Telenok\Core\Field\Upload\Controller');
     $list->push('Telenok\Core\Field\SelectOne\Controller');
     $list->push('Telenok\Core\Field\SelectMany\Controller');
+    $list->push('Telenok\Core\Field\Time\Controller');
+    $list->push('Telenok\Core\Field\DateTime\Controller');
 });
 
 \Event::listen('telenok.objects-field.view.model.add', function($list) 

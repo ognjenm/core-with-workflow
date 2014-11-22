@@ -1,13 +1,5 @@
 
 <div class="form-group">
-    {{ Form::label("integer_default", $controller->LL('property.default'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
-    <div class="col-sm-9">
-        {{ Form::text("integer_default", $model->integer_default) }}
-    </div>
-</div>
-
-
-<div class="form-group">
 	{{ Form::label("required", $controller->LL('property.required'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-9">
         <div data-toggle="buttons" class="btn-group btn-overlap">
@@ -20,17 +12,31 @@
             </label>
         </div>
     </div>
-</div> 
+</div>
+ 
 
 <div class="form-group">
-	{{ Form::label('integer_min', $controller->LL('property.integer_min'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
-	<div class="col-sm-9">
-		{{ Form::text('integer_min', $model->integer_min) }}
+    {{ Form::label("time_default", $controller->LL('property.time_default'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+	<div class="col-sm-3">
+        <div class="input-group" id="datetime-picker-time-{{$uniqueId}}">
+			<span class="input-group-addon datepickerbutton">
+				<i class="fa fa-clock-o bigger-110"></i>
+			</span>
+			{{ Form::text("time_default", $model->time_default ? $model->time_default->toTimeString() : '') }}
+		</div>
 	</div>
 </div>
-<div class="form-group">
-	{{ Form::label('integer_max', $controller->LL('property.integer_max'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
-	<div class="col-sm-9">
-		{{ Form::text('integer_max', $model->integer_max) }}
-	</div>
-</div>
+
+<script type="text/javascript">
+	jQuery("#datetime-picker-time-{{$uniqueId}}").not('.datetime-picker-added').addClass('datetime-picker-added').datetimepicker(
+	{
+        direction: 'up',
+        format: 'HH:mm:ss',
+        useSeconds: true,
+		pick12HourFormat: false,
+		autoclose: true,
+		minuteStep: 1,
+        pickDate: false,
+        useCurrent: true
+	});
+</script>
