@@ -30,7 +30,6 @@
 <script type="text/javascript">
 	jQuery("#datetime-picker-time-{{$uniqueId}}").not('.datetime-picker-added').addClass('datetime-picker-added').datetimepicker(
 	{
-        direction: 'up',
         format: 'HH:mm:ss',
         useSeconds: true,
 		pick12HourFormat: false,

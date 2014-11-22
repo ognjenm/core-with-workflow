@@ -20,6 +20,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     { 
 		return ['time_default'];
     }
+	
+    public function getListFieldContent($field, $item, $type = null)
+    {  
+        $value = $item->{$field->code};
+        
+        return $value ? $value->toTimeString() : "";
+    } 
 
     public function setModelAttribute($model, $key, $value, $field)
     {   

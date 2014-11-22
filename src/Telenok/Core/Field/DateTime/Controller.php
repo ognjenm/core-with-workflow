@@ -20,6 +20,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     { 
 		return ['datetime_default'];
     }
+	
+    public function getListFieldContent($field, $item, $type = null)
+    {  
+        return (string)$item->{$field->code};
+    } 
 
     public function setModelAttribute($model, $key, $value, $field)
     {  
