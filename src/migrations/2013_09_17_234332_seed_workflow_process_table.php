@@ -179,8 +179,8 @@ class SeedWorkflowProcessTable extends Migration {
 						'code' => 'is_valid',
 						'select_one_data' => [
                             'title' => [
-                                ['No', 'Нет'],
-                                ['Yes', 'Да'],
+                                'en' => ['No', 'Yes'],
+                                'ru' => ['Нет', 'Да'],
                             ],
                             'key' => [
                                 0,

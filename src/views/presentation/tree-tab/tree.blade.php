@@ -87,7 +87,7 @@
 </script>
 
 <div class="widget-box span">
-    <div class="widget-header ">
+    <div class="widget-header widget-header-flat">
         <h4 class="lighter widget-title smaller">{{{$treeChoose}}}</h4>
         <span class="widget-toolbar">
 

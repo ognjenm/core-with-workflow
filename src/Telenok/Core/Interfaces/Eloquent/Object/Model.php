@@ -14,10 +14,10 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	protected $multilanguageList = []; 
 	protected $dates = [];
 
-	protected static $staticListField = [];
-	protected static $staticListFillable = [];
-	protected static $staticListMultilanguage = [];
-	protected static $staticListFieldDate = [];
+	protected static $listField = [];
+	protected static $listFieldController = [];
+	protected static $listMultilanguage = [];
+	protected static $listFieldDate = [];
 
 	public static function boot()
 	{
@@ -167,9 +167,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		$class = get_class($model);
 		
-		static::$staticListField[$class] = null; 
-		static::$staticListFillable[$class] = null;
-		static::$staticListMultilanguage[$class] = null;
+		static::$listField[$class] = null; 
+		static::$listFieldController[$class] = null;
+		static::$listMultilanguage[$class] = null;
 		
 		$model->getObjectField();
 		$model->getFillable();
@@ -187,8 +187,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				$this->__set($key, $value);
 			}
 		}
-
-		$this->addDateField();
 
 		return $this;
 	}
@@ -336,7 +334,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		static $attr = null;
 		
-		if (empty($attr))
+		if (!isset($attr))
 		{
 			$attr = [];
 			
@@ -389,7 +387,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			
 			else
 			{
-				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField())
+				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField($this))
 						&&
 					( 
 						(!$this->exists && !\Auth::can('create', 'object_type.object_field')) 
@@ -406,7 +404,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 					{
 						$fieldController = $f_->get($field_->key);
 
-						if ($fieldController && in_array($key, $fieldController->getModelField($this, $field_))
+						if ($fieldController && (in_array($key, $fieldController->getModelField($this, $field_)) || in_array($key, $fieldController->getDateField($this, $field_)))
 								&&
 							( 
 								(!$this->exists && !\Auth::can('create', 'object_field.' . $type->code . '.' . $key_)) 
@@ -447,96 +445,60 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function __get($key)
 	{
-		try
-		{
-			$value = parent::__get($key);
-		}
-		catch (\Exception $e)
-		{
-			$value = null;
-		}
+        try
+        {
+            $value = parent::__get($key);
+        } 
+        catch (\Exception $e)
+        {
+            $value = null;
+        }
 		
-		$objectField = $this->getObjectField();
-
-		$f = $objectField->get($key);
-
-		$f_ = \App::make('telenok.config')->getObjectFieldController();
-
-		if ($f)
-		{
-			$field = $f_->get($f->key);
-			
-			return $field->getModelAttribute($this, $key, $value, $f);
-		} 
-		else
-		{
-			if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField()))
-			{
-				return $fieldController->getModelSpecialAttribute($this, $key, $value);
-			}
-			else
-			{
-				foreach ($objectField->all() as $key_ => $field_)
-				{
-					$fieldController = $f_->get($field_->key);
-
-					if ($fieldController && in_array($key, $fieldController->getModelField($this, $field_)))
-					{
-						return $fieldController->getModelAttribute($this, $key, $value, $field_);
-					}
-				}
-			}
-		}
-		
-		return $value;
+		return $this->getModelAttributeController($key, $value);
 	}
 
 	public function __set($key, $value)
 	{  
-		$objectField = $this->getObjectField();
-		
-		$f = $objectField->get($key);
+        $class = get_class($this);
 
-		$f_ = \App::make('telenok.config')->getObjectFieldController();
-
-		if ($f)
-		{
-			$f_->get($f->key)->setModelAttribute($this, $key, $value, $f);
-		}
-		else if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField()))
-		{ 
-			$fieldController->setModelSpecialAttribute($this, $key, $value);
-		}
-		else
-		{  
-			foreach ($objectField->all() as $key_ => $field_)
-			{
-				if ($fieldController = $f_->get($field_->key))
-				{
-					if ($this instanceof \Telenok\Core\Model\Object\Field && in_array($key, $fieldController->getSpecialField()))
-					{
-						$fieldController->setModelSpecialAttribute($this, $key, $value);
-						
-						return;
-					}
-					else if (in_array($key, $fieldController->getModelField($this, $field_)))
-					{
-						$fieldController->setModelAttribute($this, $key, $value, $field_);
-						
-						return;
-					}
-				}
-			}
-
-			parent::__set($key, $value);
-		}
+        if (isset(static::$listFieldController[$class][$key]))
+        {
+            $this->setModelAttributeController($key, $value);
+        }
+        else
+        {
+            parent::__set($key, $value);
+        }
 	}
+    
+    public function getModelAttributeController($key, $value)
+    {
+        $class = get_class($this);
 
+        if (isset(static::$listFieldController[$class][$key]))
+        {
+            return static::$listFieldController[$class][$key]->getModelAttribute($this, $key, $value, $this->getObjectField()->get($key));
+        }
+        else
+        {
+            return $value;
+        }
+    }
+    
+    public function setModelAttributeController($key, $value)
+    {
+        $class = get_class($this);
+
+        $f = static::$listFieldController[$class][$key];
+
+        $f->setModelAttribute($this, $key, $value, $this->getObjectField()->get($key));
+    }
+    
 	protected function getObjectField()
 	{   
 		$class = get_class($this);
  
-		if (!isset(static::$staticListField[$class]))
+		if (!isset(static::$listField[$class]))
 		{
 			$now = \Carbon\Carbon::now();
 			
@@ -549,10 +511,10 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 					->where('end_at', '>=', $now)
 					->get();
 
-			static::$staticListField[$class] = new \Illuminate\Support\Collection(array_combine(array_pluck($f, 'code'), $f));
+			static::$listField[$class] = new \Illuminate\Support\Collection(array_combine(array_pluck($f, 'code'), $f));
 		}
 
-		return static::$staticListField[$class];
+		return static::$listField[$class];
 	}
 
 	public function getFieldList()
@@ -579,9 +541,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{ 
 		$class = get_class($this);
 
-		if (!isset(static::$staticListMultilanguage[$class]))
+		if (!isset(static::$listMultilanguage[$class]))
 		{
-			static::$staticListMultilanguage[$class] = (array)$this->multilanguageList;
+			static::$listMultilanguage[$class] = (array)$this->multilanguageList;
 			
 			$fields = \App::make('telenok.config')->getObjectFieldController();
 						
@@ -591,21 +553,21 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 				if ($fieldController)
 				{
-					static::$staticListMultilanguage[$class] = array_merge(static::$staticListMultilanguage[$class], (array) $fieldController->getMultilanguage($this, $field));
+					static::$listMultilanguage[$class] = array_merge(static::$listMultilanguage[$class], (array) $fieldController->getMultilanguage($this, $field));
 				}
 			}
 		}
 		
-		return static::$staticListMultilanguage[$class];
+		return static::$listMultilanguage[$class];
 	}
 	
 	public function addMultilanguage($fieldCode)
 	{ 
 		$class = get_class($this);
 	
-		static::$staticListMultilanguage[$class][] = $fieldCode;
+		static::$listMultilanguage[$class][] = $fieldCode;
 		
-		static::$staticListMultilanguage[$class] = array_unique(static::$staticListMultilanguage[$class]);
+		static::$listMultilanguage[$class] = array_unique(static::$listMultilanguage[$class]);
 		
 		return $this; 
 	}
@@ -628,64 +590,36 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return array_merge(parent::getDates(), $this->dates);
 	}
 
-	public function addDateField($dateField = [])
-	{  
-		$class = get_class($this); 
-
-		if (!isset(static::$staticListFieldDate[$class]))
-		{
-			static::$staticListFieldDate[$class] = [];
-
-			$fields = \App::make('telenok.config')->getObjectFieldController();
-
-			foreach ($this->getObjectField()->all() as $key => $field)
-			{ 
-				if ($fieldController = $fields->get($field->key))
-				{ 
-                    static::$staticListFieldDate[$class] = array_merge(static::$staticListFieldDate[$class], (array) $fieldController->getDateField($this, $field)); 
-				}
-			} 
-            
-            if ($this instanceof \Telenok\Core\Model\Object\Field)
-            {
-                foreach($fields as $f)
-                {
-                    static::$staticListFieldDate[$class] = array_merge(static::$staticListFieldDate[$class], (array) $f->getDateSpecialField($this)); 
-                }
-            }
-
-            static::$staticListFieldDate[$class] = array_unique(static::$staticListFieldDate[$class]);
-		} 
-
-		$this->dates = array_merge($this->getDates(), (array)static::$staticListFieldDate[$class], (array)$dateField);
-
-		return $this;
-	}
-
 	public function getFillable()
 	{ 
 		$class = get_class($this); 
 		
-		if (!isset(static::$staticListFillable[$class]))
+		if (!isset(static::$listFieldController[$class]))
 		{
-			static::$staticListFillable[$class] = [];
+			static::$listFieldController[$class] = [];
+            static::$listFieldDate[$class] = [];
 
-			$fields = \App::make('telenok.config')->getObjectFieldController();
+			$controllers = \App::make('telenok.config')->getObjectFieldController();
 
 			foreach ($this->getObjectField()->all() as $key => $field)
 			{
-				$fieldController = $fields->get($field->key);
-
-				if ($fieldController)
+				if ($controller = $controllers->get($field->key))
 				{
-					static::$staticListFillable[$class] = array_merge(static::$staticListFillable[$class], (array) $fieldController->getModelField($this, $field)); 
+                    $dateField = (array) $controller->getDateField($this, $field);
+                    static::$listFieldDate[$class] = array_merge(static::$listFieldDate[$class], $dateField); 
+                    
+                    foreach(array_merge((array) $controller->getModelField($this, $field), $dateField) as $f_)
+                    {
+                        static::$listFieldController[$class][$f_] = $controller;
+                        static::$listField[$class][$f_] = $field; 
+                    }
 				}
 			} 
-			
-			static::$staticListFillable[$class] = array_unique(static::$staticListFillable[$class]);
 		}
+        
+		$this->dates = array_merge($this->getDates(), (array) static::$listFieldDate[$class]);
 
-		return static::$staticListFillable[$class];
+		return array_keys((array)static::$listFieldController[$class]);
 	}
 
 	public function getRule()

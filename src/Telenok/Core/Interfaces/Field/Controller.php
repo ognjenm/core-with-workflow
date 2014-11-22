@@ -6,6 +6,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     protected $ruleList = [];
     protected $specialField = [];
+    protected $specialDateField = [];
     protected $allowMultilanguage = true; 
 
     protected $key = '';
@@ -78,7 +79,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		return $this->routeWizardChoose ?: 'cmf.module.objects-lists.wizard.choose';
 	}	
 	
-    public function getSpecialField()
+    public function getSpecialField($model)
     {
         return $this->specialField;
     }
@@ -93,9 +94,9 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		return [];
     } 
 
-    public function getDateSpecialField($model)
+    public function getSpecialDateField($model)
     {
-		return [];
+		return $this->specialDateField;
     } 
 
     public function getRule($field = null)

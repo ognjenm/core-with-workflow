@@ -9,18 +9,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     protected $key = 'datetime'; 
     protected $allowMultilanguage = false;
-	protected $specialField = ['datetime_default'];
+	protected $specialDateField = ['datetime_default'];
 
     public function getDateField($model, $field)
     { 
 		return [$field->code];
     } 
     
-    public function getDateSpecialField($model)
-    { 
-		return ['datetime_default'];
-    }
-	
     public function getListFieldContent($field, $item, $type = null)
     {  
         return (string)$item->{$field->code};

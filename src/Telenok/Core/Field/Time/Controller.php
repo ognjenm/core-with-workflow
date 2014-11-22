@@ -9,18 +9,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     protected $key = 'time'; 
     protected $allowMultilanguage = false;
-	protected $specialField = ['time_default'];
+	protected $specialDateField = ['time_default'];
 
     public function getDateField($model, $field)
     { 
 		return [$field->code];
     } 
     
-    public function getDateSpecialField($model)
-    { 
-		return ['time_default'];
-    }
-	
     public function getListFieldContent($field, $item, $type = null)
     {  
         $value = $item->{$field->code};
@@ -34,7 +29,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         {
             $value = $field->time_default ?: null;
         }
-        else if (is_string($value))
+        else if (is_scalar($value) && $value)
         {
             $value = \Carbon\Carbon::createFromFormat('H:i:s', $value);
         }

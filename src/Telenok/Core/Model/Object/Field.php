@@ -7,6 +7,8 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	protected $ruleList = ['title' => ['required', 'min:1'], 'title_list' => ['required', 'min:1'], 'code' => ['required', 'unique:object_field,code,:id:,id,field_object_type,:field_object_type:', 'regex:/^[A-Za-z][A-Za-z0-9_]*$/']];
 	protected $table = 'object_field';
 	
+	protected static $listSpecialFieldController = [];  
+    
 	public static function boot()
 	{
 		parent::boot();
@@ -50,23 +52,73 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{ 
 		$class = get_class($this);
 
-		if (!isset(static::$staticListFillable[$class]))
+		if (!isset(static::$listFieldController[$class]))
 		{
-			$parent = parent::getFillable();
+			parent::getFillable();
 
-			static::$staticListFillable[$class] = [];
-
-			\App::make('telenok.config')->getObjectFieldController()->each(function($item) use ($class)
+			foreach(\App::make('telenok.config')->getObjectFieldController()->all() as $controller)
 			{
-				static::$staticListFillable[$class] = array_merge(static::$staticListFillable[$class], (array) $item->getSpecialField());
-			});
+                $dateField = (array) $controller->getSpecialDateField($this);
 
-			static::$staticListFillable[$class] = array_merge(static::$staticListFillable[$class], $parent);
-		} 
+                static::$listFieldDate[$class] = array_merge(static::$listFieldDate[$class], $dateField); 
 
-		return static::$staticListFillable[$class];
+				foreach(array_merge((array) $controller->getSpecialField($this), $dateField) as $f_)
+                {
+                    static::$listFieldController[$class][$f_] = $controller;
+                    static::$listSpecialFieldController[$class][$f_] = $controller;
+
+                    if ($this->exists)
+                    {
+                        static::$listField[$class][$f_] = static::$listField[$class][$this->code];
+                    }
+                }
+			}
+		}
+        
+		$this->dates = array_merge($this->getDates(), (array) static::$listFieldDate[$class]);
+
+		return array_keys((array)static::$listFieldController[$class]);
 	} 
-	
+
+	public static function eraseStatic($model)
+	{
+		$class = get_class($model);
+
+		static::$listSpecialFieldController[$class] = null; 
+
+        parent::eraseStatic($model);
+	}
+
+    public function getModelAttributeController($key, $value)
+    {
+        $class = get_class($this);
+
+        if (isset(static::$listSpecialFieldController[$class][$key]))
+        {
+            return static::$listSpecialFieldController[$class][$key]->getModelSpecialAttribute($this, $key, $value);
+        }
+        else
+        {
+            return parent::getModelAttributeController($key, $value);
+        }
+    }
+    
+    public function setModelAttributeController($key, $value)
+    {
+        $class = get_class($this);
+
+        if (isset(static::$listSpecialFieldController[$class][$key]))
+        {
+            static::$listSpecialFieldController[$class][$key]->setModelSpecialAttribute($this, $key, $value);
+        }
+        else
+        {
+            $f = static::$listFieldController[$class][$key];
+
+            $f->setModelAttribute($this, $key, $value, $this->getObjectField()->get($key));      
+        }
+    }
+    
 	public function setCodeAttribute($value)
 	{
 		$this->attributes['code'] = str_replace(' ', '', strtolower((string) $value));
