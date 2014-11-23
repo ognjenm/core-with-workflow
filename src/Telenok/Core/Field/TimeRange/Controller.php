@@ -114,14 +114,14 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		}
 
         $fields = []; 
-        
+
         if ($input->get('required'))
         {
             $fields['rule'][] = 'required';
         }
-		
+
         $model->fill($fields)->save();
-        
+
         return parent::postProcess($model, $type, $input);
     }
 }

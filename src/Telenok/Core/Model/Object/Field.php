@@ -27,9 +27,9 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		
 		static::deleting(function($model)
 		{
-			if ($fieldController = \App::make('telenok.config')->getObjectFieldController()->get($model->key))
+			if ($controllers = \App::make('telenok.config')->getObjectFieldController()->get($model->key))
 			{
-				return $fieldController->processDeleting($model);
+				return $controllers->processDeleting($model);
 			}
 		});
 	}
@@ -74,8 +74,8 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
                 }
 			}
 		}
-        
-		$this->dates = array_merge($this->getDates(), (array) static::$listFieldDate[$class]);
+
+		$this->dates = array_merge($this->dates, (array) static::$listFieldDate[$class]);
 
 		return array_keys((array)static::$listFieldController[$class]);
 	} 

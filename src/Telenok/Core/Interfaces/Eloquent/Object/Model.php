@@ -387,7 +387,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			
 			else
 			{
-				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && in_array($key, $fieldController->getSpecialField($this))
+				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && (in_array($key, $fieldController->getSpecialField($this)) || in_array($key, $fieldController->getSpecialDateField($this)))
 						&&
 					( 
 						(!$this->exists && !\Auth::can('create', 'object_type.object_field')) 
@@ -570,19 +570,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		static::$listMultilanguage[$class] = array_unique(static::$listMultilanguage[$class]);
 		
 		return $this; 
-	}
-	
-
-	public function isFillable($key)
-	{
-		if (in_array($key, $this->getFillable()))
-		{
-			return true;
-		}
-		else
-		{
-			return parent::isFillable($key);
-		}
 	}
 
 	public function getDates()

@@ -10,27 +10,27 @@
         $disabled = true; 
     }
     
-    if (!$model->exists && $field->time_range_default_start)
+    if (!$model->exists && $field->datetime_range_default_start)
     {
-        $valueStart = $field->time_range_default_start;
+        $valueStart = $field->datetime_range_default_start;
     }
     else 
     {
         $valueStart = $model->{$field->code . '_start'};
     }
     
-    if (!$model->exists && $field->time_range_default_end)
+    if (!$model->exists && $field->datetime_range_default_end)
     {
-        $valueEnd = $field->time_range_default_end;
+        $valueEnd = $field->datetime_range_default_end;
     }
     else 
     {
         $valueEnd = $model->{$field->code . '_end'};
     }
 
-    $domAttrStart['placeholder'] = ($placeholder = $field->time_range_default_start->toTimeString()) ? $placeholder : $field->translate('title');
+    $domAttrStart['placeholder'] = ($placeholder = $field->datetime_range_default_start) ? $placeholder : $field->translate('title');
     $domAttrEnd = $domAttrStart;
-    $domAttrEnd['placeholder'] = ($placeholder = $field->time_range_default_end->toTimeString()) ? $placeholder : $field->translate('title');
+    $domAttrEnd['placeholder'] = ($placeholder = $field->datetime_range_default_end) ? $placeholder : $field->translate('title');
 
     $random = str_random();
 ?>
@@ -38,7 +38,7 @@
 
 
 <div class="row">
-	{{ Form::label("{$field->code}_start", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+	{{ Form::label("{$field->code}_start" , $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-3">
         <div class="input-daterange input-group">
             <div class="input-group" id="datetime-picker-time-start-{{$random}}">
@@ -51,13 +51,13 @@
                     <i class="fa fa-clock-o bigger-110"></i>
                 </span>
                 @endif
-                {{ Form::text($field->code . '_start', $valueStart ? $valueStart->toTimeString() : '', $domAttrStart) }}
+                {{ Form::text($field->code . '_start', $valueStart, $domAttrStart) }}
             </div>           
             <span class="input-group-addon">
                 <i class="fa fa-arrow-right"></i>
             </span>
             <div class="input-group" id="datetime-picker-time-end-{{$random}}">
-                {{ Form::text($field->code . '_end', $valueEnd ? $valueEnd->toTimeString() : '', $domAttrEnd) }}
+                {{ Form::text($field->code . '_end', $valueEnd, $domAttrEnd) }}
                 @if ($field->icon_class)
                 <span class="input-group-addon datepickerbutton">
                     <i class="{{$field->icon_class}}"></i>
@@ -81,13 +81,20 @@
     .not('.datetime-picker-added').addClass('datetime-picker-added')
     .datetimepicker(
 	{
-        format: 'HH:mm:ss',
+        format: 'YYYY-MM-DD HH:mm:ss',
         useSeconds: true,
 		pick12HourFormat: false,
 		autoclose: true,
 		minuteStep: 1,
-        pickDate: false,
         useCurrent: true
 	});
+    
+    jQuery("#datetime-picker-time-start-{{$random}}").on("dp.change",function (e) {
+        jQuery('#datetime-picker-time-end-{{$random}}').data("DateTimePicker").setMinDate(e.date);
+    });
+    
+    jQuery("#datetime-picker-time-end-{{$random}}").on("dp.change",function (e) {
+        jQuery('#datetime-picker-time-start-{{$random}}').data("DateTimePicker").setMaxDate(e.date);
+    });
 </script>
  
