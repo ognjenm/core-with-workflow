@@ -24,8 +24,8 @@ class CreateObjectFieldTable extends Migration {
 				$table->integer('locked_by_user')->unsigned()->nullable()->default(null);
 				$table->timestamp('locked_at');
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 				$table->string('key')->nullable();
 				$table->string('rule')->nullable();
 				$table->string('field_view')->nullable();
@@ -43,6 +43,8 @@ class CreateObjectFieldTable extends Migration {
 				$table->string('css_class')->nullable();
 				$table->string('icon_class')->nullable();
 				$table->text('description')->nullable();
+				$table->timestamp('active_at_range_default_start')->nullable();
+				$table->timestamp('active_at_range_default_end')->nullable();
 
 				$table->index('field_object_type');
 			});

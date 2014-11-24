@@ -36,14 +36,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         {
             if ($value === null)
             {
-                if ($key == $field->code . '_start')
-                {
-                    $value = $field->time_range_default_start ?: null;
-                }
-                else if ($key == $field->code . '_end')
-                {
-                    $value = $field->time_range_default_end ?: null;
-                }
+                $value = $field->$key ?: null;
             }
             else if (is_scalar($value) && $value)
             {

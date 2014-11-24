@@ -14,11 +14,11 @@ class CreateLanguageTable extends Migration
                 $table->increments('id');
                 $table->timestamps();
                 $table->softDeletes();
-                $table->string('title')->nullable();
+                $table->text('title')->nullable();
                 $table->string('locale')->unique('locale');
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
                 $table->integer('created_by_user')->unsigned()->nullable();
                 $table->integer('updated_by_user')->unsigned()->nullable(); 
 				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);

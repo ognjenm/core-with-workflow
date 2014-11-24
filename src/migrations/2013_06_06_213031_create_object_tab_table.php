@@ -17,8 +17,8 @@ class CreateObjectTabTable extends Migration {
 				$table->text('title')->nullable();
 				$table->string('code')->nullable();
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 				$table->integer('tab_order')->unsigned()->nullable();
 				$table->integer('tab_object_type')->unsigned()->nullable();
 				$table->string('icon_class')->nullable();

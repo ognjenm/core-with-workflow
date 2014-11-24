@@ -22,11 +22,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     }
 
     public function setModelAttribute($model, $key, $value, $field)
-    {
-        $default = $field->checkbox_default; 
-		
+    { 
         if ($value === null)
         {
+            $default = $field->checkbox_default; 
+
             $model->setAttribute($key, $default);
         }
         else

@@ -85,8 +85,8 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			$this_->created_by_user = $model->created_by_user;
 			$this_->updated_at = $model->updated_at;
 			$this_->updated_by_user = $model->updated_by_user;
-			$this_->start_at = $model->start_at;
-			$this_->end_at = $model->end_at;
+			$this_->active_at_start = $model->active_at_start;
+			$this_->active_at_end = $model->active_at_end;
 			$this_->active = $model->active;
 
 			$this_->save();

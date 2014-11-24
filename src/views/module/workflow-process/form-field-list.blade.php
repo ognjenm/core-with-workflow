@@ -75,15 +75,7 @@
 						.modal('show') 
 						.on('hide.bs.modal', function() {
                             jQuery('div.modal-body', this).html("");
-                        })
-						.css({
-							'width': function () { 
-								return (jQuery(window).width() * .9) + 'px';  
-							},
-							'margin-left': function () { 
-								return (jQuery(window).width() - $(this).outerWidth()) / 2;
-							}
-						}); 
+                        }); 
 
 				if (!jQuery("#frame-process-{{$uniqueId}}").size())
 				{
@@ -91,7 +83,8 @@
 						.html(  '<iframe name="frame-process-{{$uniqueId}}" id="frame-process-{{$uniqueId}}" ' +
 								' style="width: 100%; border: none;"' + 
 								' src="{{ URL::route("cmf.module.workflow-process.diagram.show", ['diagramId' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) }}" />')
-				}
+				
+                }
 
 				var frame = jQuery('#frame-process-{{$uniqueId}}');
 					frame.css({

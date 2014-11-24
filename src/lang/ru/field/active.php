@@ -3,8 +3,8 @@
 return array(
     'name' => 'Видимость',
 	
-    'start_at' => 'Начало',
-    'end_at' => 'Окончание',
+    'active_at_start' => 'Начало',
+    'active_at_end' => 'Окончание',
 	
     'btn.empty' => 'Не важно',
     'btn.yes' => 'Да',

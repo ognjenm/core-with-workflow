@@ -17,8 +17,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->on(\DB::raw('CONCAT("object_type.", otype.code)'), '=', 'resource_type_permission_user_filter_object_type.code');
 			$join->on('resource_type_permission_user_filter_object_type.' . $resourceType->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('resource_type_permission_user_filter_object_type.active', '=', 1);
-			$join->where('resource_type_permission_user_filter_object_type.start_at', '<=', $now);
-			$join->where('resource_type_permission_user_filter_object_type.end_at', '>=', $now);
+			$join->where('resource_type_permission_user_filter_object_type.active_at_start', '<=', $now);
+			$join->where('resource_type_permission_user_filter_object_type.active_at_end', '>=', $now);
 		}); 
 
 		// verify user's right via SubjectPermissionResource on resource with code like "object.some_object_type_code" eg "object.object_type"
@@ -33,8 +33,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->where('spr_permission_user_filter_object_type.acl_permission_object_sequence', '=', $permission->getKey());
 				$join->on('spr_permission_user_filter_object_type.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('spr_permission_user_filter_object_type.active', '=', 1);
-				$join->where('spr_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('spr_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('spr_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('spr_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin($role->getTable() . ' as role_permission_user_filter_object_type', function($join) use ($role, $now)
@@ -42,8 +42,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('spr_permission_user_filter_object_type.acl_subject_object_sequence', '=', 'role_permission_user_filter_object_type.id');
 				$join->on('role_permission_user_filter_object_type.' . $role->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('role_permission_user_filter_object_type.active', '=', 1);
-				$join->where('role_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('role_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('role_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('role_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_role_group as pivot_relation_m2m_role_group_filter_object_type', function($join)
@@ -56,8 +56,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_role_group_filter_object_type.role_group', '=', 'group_permission_user_filter_object_type.id');
 				$join->on('group_permission_user_filter_object_type.' . $group->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('group_permission_user_filter_object_type.active', '=', 1);
-				$join->where('group_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('group_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('group_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('group_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_group_user as pivot_relation_m2m_group_user_filter_object_type', function($join)
@@ -70,8 +70,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_group_user_filter_object_type.group_user', '=', 'user_permission_user_filter_object_type.id');
 				$join->on('user_permission_user_filter_object_type.' . $subject->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('user_permission_user_filter_object_type.active', '=', 1);
-				$join->where('user_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('user_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('user_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('user_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 			  
             $queryWhere->OrWhereNotNull('user_permission_user_filter_object_type.id');
@@ -85,8 +85,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->where('spr_filter_object_type_direct.acl_subject_object_sequence', '=', $subject->getKey());
 			$join->on('spr_filter_object_type_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('spr_filter_object_type_direct.active', '=', 1);
-			$join->where('spr_filter_object_type_direct.start_at', '<=', $now);
-			$join->where('spr_filter_object_type_direct.end_at', '>=', $now);
+			$join->where('spr_filter_object_type_direct.active_at_start', '<=', $now);
+			$join->where('spr_filter_object_type_direct.active_at_end', '>=', $now);
 		});
 
 		$queryWhere->OrWhereNotNull('spr_filter_object_type_direct.id');
@@ -103,8 +103,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->on(\DB::raw('CONCAT("object_type.", otype.code)'), '=', 'resource_type_permission_user_filter_object_type.code');
 			$join->on('resource_type_permission_user_filter_object_type.' . $resourceType->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('resource_type_permission_user_filter_object_type.active', '=', 1);
-			$join->where('resource_type_permission_user_filter_object_type.start_at', '<=', $now);
-			$join->where('resource_type_permission_user_filter_object_type.end_at', '>=', $now);
+			$join->where('resource_type_permission_user_filter_object_type.active_at_start', '<=', $now);
+			$join->where('resource_type_permission_user_filter_object_type.active_at_end', '>=', $now);
 		}); 
 		
 		// verify user's right via SubjectPermissionResource on resource with code like "object.some_object_type_code" eg "object.object_type"
@@ -119,8 +119,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->where('spr_permission_user_filter_object_type.acl_permission_object_sequence', '=', $permission->getKey());
 				$join->on('spr_permission_user_filter_object_type.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('spr_permission_user_filter_object_type.active', '=', 1);
-				$join->where('spr_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('spr_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('spr_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('spr_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin($role->getTable() . ' as role_permission_user_filter_object_type', function($join) use ($role, $now)
@@ -128,8 +128,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('spr_permission_user_filter_object_type.acl_subject_object_sequence', '=', 'role_permission_user_filter_object_type.id');
 				$join->on('role_permission_user_filter_object_type.' . $role->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('role_permission_user_filter_object_type.active', '=', 1);
-				$join->where('role_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('role_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('role_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('role_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_role_group as pivot_relation_m2m_role_group_filter_object_type', function($join)
@@ -142,8 +142,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_role_group_filter_object_type.role_group', '=', 'group_permission_user_filter_object_type.id');
 				$join->on('group_permission_user_filter_object_type.' . $group->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('group_permission_user_filter_object_type.active', '=', 1);
-				$join->where('group_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('group_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('group_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('group_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_group_user as pivot_relation_m2m_group_user_filter_object_type', function($join)
@@ -156,8 +156,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_group_user_filter_object_type.group_user', '=', 'user_permission_user_filter_object_type.id');
 				$join->on('user_permission_user_filter_object_type.' . $subject->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('user_permission_user_filter_object_type.active', '=', 1);
-				$join->where('user_permission_user_filter_object_type.start_at', '<=', $now);
-				$join->where('user_permission_user_filter_object_type.end_at', '>=', $now);
+				$join->where('user_permission_user_filter_object_type.active_at_start', '<=', $now);
+				$join->where('user_permission_user_filter_object_type.active_at_end', '>=', $now);
 			}); 
 			  
             $queryWhere->OrWhereNotNull('user_permission_user_filter_object_type.id');
@@ -171,8 +171,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->where('spr_filter_object_type_direct.acl_subject_object_sequence', '=', $subject->getKey());
 			$join->on('spr_filter_object_type_direct.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('spr_filter_object_type_direct.active', '=', 1);
-			$join->where('spr_filter_object_type_direct.start_at', '<=', $now);
-			$join->where('spr_filter_object_type_direct.end_at', '>=', $now);
+			$join->where('spr_filter_object_type_direct.active_at_start', '<=', $now);
+			$join->where('spr_filter_object_type_direct.active_at_end', '>=', $now);
 		});
 
 		$queryWhere->OrWhereNotNull('spr_filter_object_type_direct.id');

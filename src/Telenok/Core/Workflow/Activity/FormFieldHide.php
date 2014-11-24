@@ -95,7 +95,7 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                                                 xmlns:svg="http://www.w3.org/2000/svg"
                                                 xmlns:oryx="http://www.b3mn.org/oryx"
                                                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                                                width="102" height="82" version="1.0">
+                                                width="152" height="82" version="1.0">
                                             <defs></defs>
                                             <oryx:magnets>
                                                 <oryx:magnet oryx:cx="1" oryx:cy="20" oryx:anchors="left" />
@@ -124,13 +124,13 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                                                     </radialGradient>
                                                 </defs>
 
-                                                <rect id="border_el_1" oryx:anchors="bottom top right left" x="1" y="1" width="94" height="79" rx="10" ry="10" stroke="none" stroke-width="0" fill="none" />
-                                                <rect id="border_el_2" oryx:resize="vertical horizontal" oryx:anchors="bottom top right left" x="0" y="0" width="100" height="80" rx="10" ry="10" stroke="black" stroke-width="4" fill="none" />
-                                                <rect id="border_el_3" oryx:resize="vertical horizontal" x="0" y="0" width="100" height="80" rx="10" ry="10" stroke="black" stroke-width="1" fill="url(#background) #ffffcc" />
+                                                <rect id="border_el_1" oryx:anchors="bottom top right left" x="1" y="1" width="144" height="79" rx="10" ry="10" stroke="none" stroke-width="0" fill="none" />
+                                                <rect id="border_el_2" oryx:resize="vertical horizontal" oryx:anchors="bottom top right left" x="0" y="0" width="150" height="80" rx="10" ry="10" stroke="black" stroke-width="4" fill="none" />
+                                                <rect id="border_el_3" oryx:resize="vertical horizontal" x="0" y="0" width="150" height="80" rx="10" ry="10" stroke="black" stroke-width="1" fill="url(#background) #ffffcc" />
 												<text 
 													font-size="12" 
 													id="title" 
-													x="50" 
+													x="75" 
 													y="40" 
 													oryx:align="middle center"
 													oryx:fittoelem="text_frame"

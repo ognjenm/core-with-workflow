@@ -38,11 +38,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	public function setModelAttribute($model, $key, $value, $field)
 	{
 		if ($field->key == $key)
-		{
-			$default = $field->integer_default?:null;
-
+		{ 
 			if ($value === null)
 			{
+                $default = $field->integer_default?:null;
+
 				$model->setAttribute($key, $default);
 			}
 			else

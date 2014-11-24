@@ -13,8 +13,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     protected $nsDefault = '\\';
 
     protected $presentation = 'tree-tab-object';
-	
-	public function createResource($model)
+    protected $presentationFormFieldListView = 'core::module.objects-type.form-field-list';
+
+	public function createResource($model, $input)
 	{
 		$resCode = 'object_type.'.$model->code;
 
@@ -130,21 +131,21 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		
         parent::postProcess($model, $type, $input); 
 
-		$this->createResource($model);
-		$this->createModelFile($model); 
-		$this->createModelTable($model);
-		$this->createControllerFile($model);
-		$this->createObjectField($model);
+		$this->createResource($model, $input);
+		$this->createModelFile($model, $input); 
+		$this->createModelTable($model, $input);
+		$this->createControllerFile($model, $input);
+		$this->createObjectField($model, $input);
 
 		if ($input->get('class_controller'))
 		{
-			$this->createControllerFile($model); 
+			$this->createControllerFile($model, $input); 
 		}
 		
 		return $this;
 	}
 
-    public function createModelFile($model)
+    public function createModelFile($model, $input)
     {
         $class = class_basename($model->class_model);
 
@@ -181,7 +182,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         } 
     }
 
-    public function createControllerFile($model)
+    public function createControllerFile($model, $input)
     {
         $class = class_basename($model->class_controller);
 
@@ -222,7 +223,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         } 
     }
 
-    public function createModelTable($model)
+    public function createModelTable($model, $input)
     {  
         $table = $model->code;
 
@@ -245,9 +246,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         }
     }
 
-    public function createObjectField($model)
+    public function createObjectField($model, $input)
     {
-		$multilanguage = $model->multilanguage;
+		$multilanguage = $input->get('multilanguage');
 		
 		$tabMain = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
 		$tabVisible = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();

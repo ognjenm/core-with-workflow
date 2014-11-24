@@ -14,10 +14,10 @@ class CreateUserMessageTable extends Migration {
 				$table->increments('id');
 				$table->timestamps();
 				$table->softDeletes();
-				$table->string('title')->nullable();
+				$table->text('title')->nullable();
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 				$table->integer('author_user_message')->unsigned()->nullable();
 				$table->text('content')->nullable();
 				$table->integer('created_by_user')->unsigned()->nullable();

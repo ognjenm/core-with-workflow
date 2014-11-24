@@ -3,8 +3,8 @@
 return array(
     'name' => 'Active',
 	
-    'start_at' => 'Start at',
-    'end_at' => 'End at',
+    'active_at_start' => 'Start at',
+    'active_at_end' => 'End at',
 	
     'btn.empty' => 'Not matter',
     'btn.yes' => 'Yes',

@@ -18,8 +18,8 @@ class CreateObjectSequenceTable extends Migration {
 				$table->integer('sequences_object_type')->unsigned()->nullable()->default(0);
 				$table->integer('treeable')->unsigned()->nullable()->default(0);
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 
 				$table->string('class_model')->nullable();
 				

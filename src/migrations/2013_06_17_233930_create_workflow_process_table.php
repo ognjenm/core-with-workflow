@@ -17,8 +17,8 @@ class CreateWorkflowProcessTable extends Migration {
 				$table->text('title')->nullable();
 				$table->mediumText('process')->nullable();
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 				$table->integer('thread')->unsigned()->nullable();
 				$table->integer('event_resource')->unsigned()->nullable();
 				$table->integer('created_by_user')->unsigned()->nullable();

@@ -24,8 +24,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->where('spr_permission_user_filter_direct_right.acl_permission_object_sequence', '=', $permission->getKey());
 				$join->on('spr_permission_user_filter_direct_right.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('spr_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('spr_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('spr_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('spr_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('spr_permission_user_filter_direct_right.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin($role->getTable() . ' as role_permission_user_filter_direct_right', function($join) use ($role, $now)
@@ -33,8 +33,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('spr_permission_user_filter_direct_right.acl_subject_object_sequence', '=', 'role_permission_user_filter_direct_right.id');
 				$join->on('role_permission_user_filter_direct_right.' . $role->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('role_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('role_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('role_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('role_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('role_permission_user_filter_direct_right.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_role_group as pivot_relation_m2m_role_group_filter_direct_right', function($join)
@@ -47,8 +47,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_role_group_filter_direct_right.role_group', '=', 'group_permission_user_filter_direct_right.id');
 				$join->on('group_permission_user_filter_direct_right.' . $group->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('group_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('group_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('group_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('group_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('group_permission_user_filter_direct_right.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_group_user as pivot_relation_m2m_group_user_filter_direct_right', function($join)
@@ -61,8 +61,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_group_user_filter_direct_right.group_user', '=', 'user_permission_user_filter_direct_right.id');
 				$join->on('user_permission_user_filter_direct_right.' . $subject->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('user_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('user_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('user_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('user_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('user_permission_user_filter_direct_right.active_at_end', '>=', $now);
 				$join->where('user_permission_user_filter_direct_right.id', '=', $subject->getKey());
 			}); 
 			  
@@ -77,8 +77,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->where('spr_filter_direct_right.acl_subject_object_sequence', '=', $subject->getKey());
 			$join->on('spr_filter_direct_right.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('spr_filter_direct_right.active', '=', 1);
-			$join->where('spr_filter_direct_right.start_at', '<=', $now);
-			$join->where('spr_filter_direct_right.end_at', '>=', $now);
+			$join->where('spr_filter_direct_right.active_at_start', '<=', $now);
+			$join->where('spr_filter_direct_right.active_at_end', '>=', $now);
 		}); 
 
 		$queryWhere->OrWhereNotNull('spr_filter_direct_right.id');
@@ -102,8 +102,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->where('spr_permission_user_filter_direct_right.acl_permission_object_sequence', '=', $permission->getKey());
 				$join->on('spr_permission_user_filter_direct_right.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('spr_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('spr_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('spr_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('spr_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('spr_permission_user_filter_direct_right.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin($role->getTable() . ' as role_permission_user_filter_direct_right', function($join) use ($role, $now)
@@ -111,8 +111,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('spr_permission_user_filter_direct_right.acl_subject_object_sequence', '=', 'role_permission_user_filter_direct_right.id');
 				$join->on('role_permission_user_filter_direct_right.' . $role->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('role_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('role_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('role_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('role_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('role_permission_user_filter_direct_right.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_role_group as pivot_relation_m2m_role_group_filter_direct_right', function($join)
@@ -125,8 +125,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_role_group_filter_direct_right.role_group', '=', 'group_permission_user_filter_direct_right.id');
 				$join->on('group_permission_user_filter_direct_right.' . $group->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('group_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('group_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('group_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('group_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('group_permission_user_filter_direct_right.active_at_end', '>=', $now);
 			}); 
 
 			$queryCommon->leftJoin('pivot_relation_m2m_group_user as pivot_relation_m2m_group_user_filter_direct_right', function($join)
@@ -139,8 +139,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 				$join->on('pivot_relation_m2m_group_user_filter_direct_right.group_user', '=', 'user_permission_user_filter_direct_right.id');
 				$join->on('user_permission_user_filter_direct_right.' . $subject->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 				$join->where('user_permission_user_filter_direct_right.active', '=', 1);
-				$join->where('user_permission_user_filter_direct_right.start_at', '<=', $now);
-				$join->where('user_permission_user_filter_direct_right.end_at', '>=', $now);
+				$join->where('user_permission_user_filter_direct_right.active_at_start', '<=', $now);
+				$join->where('user_permission_user_filter_direct_right.active_at_end', '>=', $now);
 				$join->where('user_permission_user_filter_direct_right.id', '=', $subject->getKey());
 			}); 
 			  
@@ -155,8 +155,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 			$join->where('spr_filter_direct_right.acl_subject_object_sequence', '=', $subject->getKey());
 			$join->on('spr_filter_direct_right.' . $spr->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('spr_filter_direct_right.active', '=', 1);
-			$join->where('spr_filter_direct_right.start_at', '<=', $now);
-			$join->where('spr_filter_direct_right.end_at', '>=', $now);
+			$join->where('spr_filter_direct_right.active_at_start', '<=', $now);
+			$join->where('spr_filter_direct_right.active_at_end', '>=', $now);
 		}); 
 
 		$queryWhere->OrWhereNotNull('spr_filter_direct_right.id');

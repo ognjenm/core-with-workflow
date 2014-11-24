@@ -19,8 +19,8 @@ class CreateObjectVersionTable extends Migration {
 				$table->integer('object_id')->nullable();
 				$table->integer('object_type_id')->nullable();
 				$table->integer('active')->unsigned()->nullable()->default(null);
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 				$table->integer('created_by_user')->unsigned()->nullable()->default(null);
 				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
 				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);

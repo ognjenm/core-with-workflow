@@ -37,7 +37,7 @@
 
 
 
-<div class="row">
+<div class="form-group">
 	{{ Form::label("{$field->code}_start", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-3">
         <div class="input-daterange input-group">

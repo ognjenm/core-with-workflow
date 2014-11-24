@@ -32,25 +32,25 @@
 </div>
 
 <div class="form-group">
-	{{ Form::label("start_at", $controller->LL('start_at'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+	{{ Form::label("active_at_start", $controller->LL('active_at_start'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-3">
 		<div class="input-group datetime-picker" data-date-format="DD-MM-YYYY HH:mm:ss">
 			<span class="input-group-addon">
 				<i class="fa fa-calendar bigger-110"></i>
 			</span>
-			{{ Form::text("start_at", $model->start_at->setTimezone(\Config::get('app.timezone')), $inputDomAttr ) }}
+			{{ Form::text("active_at_start", $model->active_at_start->setTimezone(\Config::get('app.timezone')), $inputDomAttr ) }}
 		</div>
 	</div>
 </div>
 
 <div class="form-group">
-	{{ Form::label("end_at", $controller->LL('end_at'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+	{{ Form::label("active_at_end", $controller->LL('active_at_end'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 	<div class="col-sm-3">
 		<div class="input-group datetime-picker" data-date-format="DD-MM-YYYY HH:mm:ss">
 			<span class="input-group-addon">
 				<i class="fa fa-calendar bigger-110"></i>
 			</span>
-			{{ Form::text("end_at", $model->end_at->setTimezone(\Config::get('app.timezone')), $inputDomAttr ) }}
+			{{ Form::text("active_at_end", $model->active_at_end->setTimezone(\Config::get('app.timezone')), $inputDomAttr ) }}
 		</div>
 	</div>
 </div>

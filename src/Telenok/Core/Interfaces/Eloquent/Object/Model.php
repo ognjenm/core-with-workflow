@@ -127,8 +127,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				'updated_at' => $this->updated_at,
 				'deleted_at' => $this->deleted_at,
 				'active' => $this->active,
-				'start_at' => $this->start_at,
-				'end_at' => $this->end_at,
+				'active_at_start' => $this->active_at_start,
+				'active_at_end' => $this->active_at_end,
 				'created_by_user' => $this->created_by_user,
 				'updated_by_user' => $this->updated_by_user,
 				'sequences_object_type' => $type->getKey(),
@@ -174,6 +174,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		$model->getObjectField();
 		$model->getFillable();
 		$model->getMultilanguage();
+        $model->getDates();
 	}
 	
 	public function fill(array $attributes)
@@ -255,7 +256,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			{
 				//$this->__set($fillable, null);
 				//$input->put($fillable, null);
-				$this->$fillable = null;
+				$model->$fillable = null;
 				$input->put($fillable, null);
 			}
 			else
@@ -507,8 +508,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$f = \DB::table('object_field')
 					->where('field_object_type', $type->id)
 					->where('active', '=', 1)
-					->where('start_at', '<=', $now)
-					->where('end_at', '>=', $now)
+					->where('active_at_start', '<=', $now)
+					->where('active_at_end', '>=', $now)
 					->get();
 
 			static::$listField[$class] = new \Illuminate\Support\Collection(array_combine(array_pluck($f, 'code'), $f));
@@ -681,8 +682,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return $query->where(function($query) use ($table, $now)
 		{
 			$query->where($table . '.active', 1)
-				->where($table . '.start_at', '<=', $now)
-				->where($table . '.end_at', '>=', $now);
+				->where($table . '.active_at_start', '<=', $now)
+				->where($table . '.active_at_end', '>=', $now);
 		}); 
 	}
 
@@ -694,8 +695,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return $query->where(function($query) use ($table, $now)
 		{
 			$query->where($table . '.active', 0)
-				->orWhere($table . '.start_at', '>=', $now)
-				->orWhere($table . '.end_at', '<=', $now);
+				->orWhere($table . '.active_at_start', '>=', $now)
+				->orWhere($table . '.active_at_end', '<=', $now);
 		}); 
 	}
 
@@ -757,8 +758,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			$join->on('osequence.sequences_object_type', '=', 'otype.id');
 			$join->on('otype.' . $type->getDeletedAtColumn(), ' is ', \DB::raw("null"));
 			$join->where('otype.active', '=', 1);
-			$join->where('otype.start_at', '<=', $now);
-			$join->where('otype.end_at', '>=', $now);
+			$join->where('otype.active_at_start', '<=', $now);
+			$join->where('otype.active_at_end', '>=', $now);
 		});
 
 		$query->where(function($queryWhere) use ($query, $filterCode, $permission, $subject)

@@ -330,8 +330,8 @@ class Config {
 		{ 
 			$now = \Carbon\Carbon::now();
 			$query->where('active', 1)
-					->where('start_at', '<=', $now)
-					->where('end_at', '>=', $now);
+					->where('active_at_start', '<=', $now)
+					->where('active_at_end', '>=', $now);
 		})->active()->where(function($query) use ($domains)
 		{
             $domains = $domains->modelKeys();

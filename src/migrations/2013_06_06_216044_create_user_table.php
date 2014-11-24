@@ -14,10 +14,10 @@ class CreateUserTable extends Migration {
 				$table->increments('id');
 				$table->timestamps();
 				$table->softDeletes();
-				$table->string('title')->nullable();
+				$table->text('title')->nullable();
 				$table->integer('active')->unsigned()->nullable();
-				$table->timestamp('start_at');
-				$table->timestamp('end_at');
+				$table->timestamp('active_at_start');
+				$table->timestamp('active_at_end');
 				$table->string('username')->nullable();
 				$table->string('usernick')->nullable();
 				$table->string('email')->nullable();

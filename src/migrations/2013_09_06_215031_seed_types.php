@@ -65,7 +65,6 @@ class SeedTypes extends Migration {
 						'code' => 'user',
 						'active' => 1,
 						'class_model' => '\Telenok\User\User',
-						'multilanguage' => 0,
 					]
 			);
 
@@ -101,7 +100,6 @@ class SeedTypes extends Migration {
 						'active' => 1,
 						'class_model' => '\Telenok\System\Setting',
 						'class_controller' => '\Telenok\Core\Module\System\Setting\Controller',
-						'multilanguage' => 1,
 					]
 			);
 
@@ -157,7 +155,6 @@ class SeedTypes extends Migration {
 						'code' => 'user_message',
 						'active' => 1,
 						'class_model' => '\Telenok\User\UserMessage',
-						'multilanguage' => 0,
 					]
 			);
 
@@ -187,46 +184,12 @@ class SeedTypes extends Migration {
 			DB::table('object_type')->insertGetId(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Type']),
-						'title' => json_encode(['ru' => 'Бизнес-процесс: статус', 'en' => 'Business-process: status'], JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(['ru' => 'Бизнес-процесс: статус', 'en' => 'Business-process: status'], JSON_UNESCAPED_UNICODE),
-						'code' => 'workflow_status',
-						'active' => 1,
-						'class_model' => '\Telenok\Workflow\Status',
-					]
-			);
-
-			DB::table('object_type')->insertGetId(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Type']),
 						'title' => json_encode(['ru' => 'Бизнес-процесс', 'en' => 'Business-process'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => 'Бизнес-процесс', 'en' => 'Business-process'], JSON_UNESCAPED_UNICODE),
 						'code' => 'workflow_process',
 						'active' => 1,
 						'class_model' => '\Telenok\Workflow\Process',
 						'class_controller' => '\Telenok\Core\Module\Workflow\Process\Controller',
-					]
-			);
-
-			DB::table('object_type')->insertGetId(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Type']),
-						'title' => json_encode(['ru' => 'Событие бизнес-процесса', 'en' => 'Event of business-process'], JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(['ru' => 'Событие бизнес-процесса', 'en' => 'Event of business-process'], JSON_UNESCAPED_UNICODE),
-						'code' => 'workflow_event',
-						'active' => 1,
-						'class_model' => '\Telenok\Workflow\Event',
-					]
-			);
-
-			DB::table('object_type')->insertGetId(
-					[
-						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Type']),
-						'title' => json_encode(['ru' => 'Бизнес-процесс: события и ресурсы', 'en' => 'Business-process: events and resources'], JSON_UNESCAPED_UNICODE),
-						'title_list' => json_encode(['ru' => 'Бизнес-процесс: события и ресурсы', 'en' => 'Business-process: events and resources'], JSON_UNESCAPED_UNICODE),
-						'code' => 'workflow_event_resource',
-						'active' => 1,
-						'class_model' => '\Telenok\Workflow\EventResource',
-						'multilanguage' => 1,
 					]
 			);
 

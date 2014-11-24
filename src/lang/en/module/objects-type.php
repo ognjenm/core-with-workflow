@@ -13,6 +13,8 @@ return array(
     'list.btn.edit' => 'Edit type',
     'list.btn.delete' => 'Delete type',
 
+    'field.multilanguage' => 'Multilanguage title',
+    
     'error.class_model.name' => 'Wrong model class name. Class name should start from A-Z and only [a-z1-9_\] allowed',
     'error.class_controller.name' => 'Wrong model class controller name. Class name should start from A-Z and only [a-z1-9_\] allowed',
 	

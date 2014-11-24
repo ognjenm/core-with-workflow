@@ -12,6 +12,28 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     protected $specialField = ['select_one_data'];
     protected $viewModel = "core::field.select-one.model-select-box";
 
+	public function getModelAttribute($model, $key, $value, $field)
+	{
+		if ($value === null)
+		{
+            $value = array_get((array)json_decode($field->select_one_data, true), 'default', null);
+		}
+
+		return $value;
+	}
+
+	public function setModelAttribute($model, $key, $value, $field)
+	{
+        if ($value === null)
+        {
+            $default = array_get((array)json_decode($field->select_one_data, true), 'default', null);
+            $model->setAttribute($key, $default);
+        }
+        else
+        {
+            $model->setAttribute($key, $value);
+        }
+	}
 
     public function getModelSpecialAttribute($model, $key, $value)
     {

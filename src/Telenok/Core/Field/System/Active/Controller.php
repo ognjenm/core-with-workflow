@@ -10,33 +10,12 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 	protected $key = 'active';
 	protected $specialField = ['active_default'];
 
-    public function getDateField($model, $field)
-    { 
-		return ['start_at', 'end_at'];
-    } 
-
-    public function getModelField($model, $field)
-    { 
-		return ['active', 'start_at', 'end_at'];
-    } 
-
 	public function getModelAttribute($model, $key, $value, $field)
 	{ 
 		if ($key == 'active' && $value === null)
 		{
 			$value = $field->active_default;
-		}
-		else if (($key == 'start_at' || $key == 'end_at') && ( ($value instanceof \DateTime && $value->year < 0) || $value == null))
-		{
-			if ($key == 'start_at')
-			{
-				$value = \Carbon\Carbon::now()->second(0);
-			}
-			else if ($key == 'end_at')
-			{
-				$value = \Carbon\Carbon::now()->second(0)->addYears(15);
-			}
-		}
+		} 
 		
 		return $value;
 	}
@@ -49,22 +28,8 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 			{
 				$value = $field->active_default;
 			}
-		}
-		elseif (($key == 'start_at' || $key == 'end_at') && !($value instanceof \DateTime))
-		{ 
-			if ($value == null)
-			{
-				if ($key == 'start_at')
-				{
-					$value = \Carbon\Carbon::now();
-				}
-				else if ($key == 'end_at')
-				{
-					$value = \Carbon\Carbon::now()->addYears(15);
-				}
-			}
 		} 
-		
+
 		$model->setAttribute($key, $value);
     }
 
@@ -72,8 +37,8 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 	{
 		$translationSeed = $this->translationSeed();
 
-		$input->put('title', array_get($translationSeed, 'model.active'));
-		$input->put('title_list', array_get($translationSeed, 'model.active')); 
+		$input->put('title', $translationSeed['active']);
+		$input->put('title_list', $translationSeed['active']); 
 		$input->put('code', 'active');
 		$input->put('active', 1);
 		$input->put('multilanguage', 0);
@@ -92,28 +57,6 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 		$tab = $this->getFieldTab($input->get('field_object_type'), $input->get('field_object_tab', 'visibility'));
 
 		$input->put('field_object_tab', $tab->getKey());  
-
-		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
-		
-		$fieldName = 'start_at';
-		
-		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))
-		{
-			\Schema::table($table, function(Blueprint $table) use ($fieldName)
-			{
-				$table->timestamp($fieldName);
-			});
-		}
-
-		$fieldName = 'end_at';
-		
-		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))
-		{
-			\Schema::table($table, function(Blueprint $table) use ($fieldName)
-			{
-				$table->timestamp($fieldName);
-			});
-		}
 		
 		return parent::preProcess($model, $type, $input);
 	}
@@ -121,9 +64,7 @@ class Controller extends \Telenok\Core\Field\Checkbox\Controller {
 	public function translationSeed()
 	{
 		return [
-			'model' => [
-				'active' => ['en' => 'Active', 'ru' => 'Активно'],
-			],
+            'active' => ['en' => 'Active', 'ru' => 'Активно'],
 		];
 	}
 
