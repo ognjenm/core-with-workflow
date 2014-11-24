@@ -102,19 +102,19 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                                                 <oryx:magnet oryx:cx="1" oryx:cy="40" oryx:anchors="left" />
                                                 <oryx:magnet oryx:cx="1" oryx:cy="60" oryx:anchors="left" />
 
-                                                <oryx:magnet oryx:cx="25" oryx:cy="79" oryx:anchors="bottom" />
-                                                <oryx:magnet oryx:cx="50" oryx:cy="79" oryx:anchors="bottom" />
+                                                <oryx:magnet oryx:cx="37" oryx:cy="79" oryx:anchors="bottom" />
                                                 <oryx:magnet oryx:cx="75" oryx:cy="79" oryx:anchors="bottom" />
+                                                <oryx:magnet oryx:cx="112" oryx:cy="79" oryx:anchors="bottom" />
 
-                                                <oryx:magnet oryx:cx="99" oryx:cy="20" oryx:anchors="right" />
-                                                <oryx:magnet oryx:cx="99" oryx:cy="40" oryx:anchors="right" />
-                                                <oryx:magnet oryx:cx="99" oryx:cy="60" oryx:anchors="right" />
+                                                <oryx:magnet oryx:cx="149" oryx:cy="20" oryx:anchors="right" />
+                                                <oryx:magnet oryx:cx="149" oryx:cy="40" oryx:anchors="right" />
+                                                <oryx:magnet oryx:cx="149" oryx:cy="60" oryx:anchors="right" />
 
-                                                <oryx:magnet oryx:cx="25" oryx:cy="1" oryx:anchors="top" />
-                                                <oryx:magnet oryx:cx="50" oryx:cy="1" oryx:anchors="top" />
+                                                <oryx:magnet oryx:cx="37" oryx:cy="1" oryx:anchors="top" />
                                                 <oryx:magnet oryx:cx="75" oryx:cy="1" oryx:anchors="top" />
+                                                <oryx:magnet oryx:cx="112" oryx:cy="1" oryx:anchors="top" />
 
-                                                <oryx:magnet oryx:cx="50" oryx:cy="40" oryx:default="yes" />
+                                                <oryx:magnet oryx:cx="75" oryx:cy="40" oryx:default="yes" />
                                             </oryx:magnets>
                                             <g pointer-events="fill" oryx:minimumSize="50 40">
                                                 <defs>
@@ -141,7 +141,7 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                                             </g>
 										</svg>',
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/activity/" . $this->getKey() . ".png",
-						'defaultAlign' => "south",
+						'defaultAlign' => "east",
 						'roles' => ["activity"],
 						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [

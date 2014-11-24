@@ -174,7 +174,7 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
                                       </g>
                                     </svg>',
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/pointstart/" . $this->getKey() . ".png",
-                        'defaultAlign' => "south",
+                        'defaultAlign' => "east",
                         'roles' => ["sequence_start", "point"],
 						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [

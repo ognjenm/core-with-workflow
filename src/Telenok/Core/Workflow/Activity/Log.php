@@ -69,7 +69,7 @@ class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
   </g>
 </svg>',
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/scripts/stencilsets/telenok/icons/activity/" . $this->getKey() . ".png",
-						'defaultAlign' => "south",
+						'defaultAlign' => "east",
 						'roles' => ["activity"],
                         'properties' => [
                             [

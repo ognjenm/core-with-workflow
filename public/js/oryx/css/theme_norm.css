@@ -56,12 +56,14 @@
     left		: 10px;	
     top			: 50%;
     margin-bottom: 15px;
+    margin-left: 190px;
     background 	: url(../images/arrow-left.png) no-repeat center center;
 }
 .canvas_resize_indicator_shrink.W{
     left		: 10px;	
     top			: 50%;
     margin-top: 15px;
+    margin-left: 190px;
     background 	: url(../images/arrow-right.png) no-repeat center center;
 }
 .canvas_resize_indicator_grow.E{

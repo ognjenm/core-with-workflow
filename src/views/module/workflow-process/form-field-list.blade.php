@@ -93,8 +93,7 @@
 
 				frame.load(function()
                 {
-                    document.activeElement.blur();
-                    frame.focus();
+                    this.contentWindow.focus();
                     
 					window.frames['frame-process-{{$uniqueId}}'].importJSONFromTop = function() 
 					{ 

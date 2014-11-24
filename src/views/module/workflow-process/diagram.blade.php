@@ -46,18 +46,9 @@
         {{ HTML::script('packages/telenok/core/js/bootstrap/js/ace.js') }}
         {{ HTML::script('packages/telenok/core/js/bootstrap/lib/moment.js') }}
         {{ HTML::script('packages/telenok/core/js/bootstrap/lib/datetimepicker/datetimepicker.js') }}
-
-        {{-- HTML::script('packages/telenok/core/js/md5.js') --}}
+ 
         {{ HTML::script('packages/telenok/core/js/dropzone/dropzone.js') }}
-        {{ HTML::script('packages/telenok/core/js/script.js') }}
-
-
-
-
-
-
-
-
+        {{ HTML::script('packages/telenok/core/js/script.js') }} 
 
         {{ HTML::script('packages/telenok/core/js/prototype-1.5.1.js') }} 
         {{ HTML::script('packages/telenok/core/js/oryx/path_parser.js') }}
@@ -223,10 +214,11 @@
 			{
 				ORYX_LOGLEVEL = 0;
 				ORYX.PATH = "{{ \Config::get('app.url') }}/packages/telenok/core/js/oryx/";
-				Ext.BLANK_IMAGE_URL = "{{ \Config::get('app.url') }}/packages/telenok/core/js/ext-2.0.2/resources/images/default/s.gif";
+                //ORYX.CONFIG.CANVAS_WIDTH = "1600";
+                Ext.BLANK_IMAGE_URL = "{{ \Config::get('app.url') }}/packages/telenok/core/js/ext-2.0.2/resources/images/default/s.gif";
 
 				var editor_parameters = {
-					id: "processdata",
+					id: "processdata", 
 					stencilset: {
 						url: "{{ URL::route("cmf.module.workflow-process.diagram.stensilset") }}"
 					}
@@ -253,7 +245,7 @@
 			<div class="sidebar responsive" id="sidebar">
 				<ul class="nav nav-list telenok-sidebar"></ul>
 			</div>
-			<div class="main-content" id="processdata"></div>
+            <div class="main-content" id="processdata" style="overflow-x: scroll; overflow-y: hidden; text-align: left;"></div>
 		</div>
 	</body>
 </html>
