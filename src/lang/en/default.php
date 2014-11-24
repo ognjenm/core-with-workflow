@@ -56,8 +56,6 @@ return [
     'home' => 'Main',
     'action' => 'Action',
 
-    'field' => ':attribute [:locale]',
-
     'entity.title' => 'Title',
     'current' => 'Current',
     'addition' => 'Addition',

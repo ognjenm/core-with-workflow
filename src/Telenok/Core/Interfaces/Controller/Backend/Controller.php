@@ -31,7 +31,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return '';
     }   
 
-    public function LL($key='', $param=[])
+    public function LL($key='', $param = [])
     {
         $key_ = "{$this->getPackage()}::controller/{$this->getKey()}.$key";
         $key_default_ = "{$this->getPackage()}::default.$key";

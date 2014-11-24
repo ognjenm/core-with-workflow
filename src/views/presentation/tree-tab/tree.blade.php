@@ -95,24 +95,24 @@
             <a data-action="settings" href="#" class="dropdown-toggle " data-toggle="dropdown">
                 <i class="fa fa-search"></i>
             </a>
-
-            <div class="dropdown-menu dropdown-yellow dropdown-caret">
-				<div class="input-group">
-					<input type="text" class="input-sm search-query tree-search-query" onclick="event.stopPropagation();" 
-							placeholder="{{{ $controller->LL('btn.search') }}}..." 
-							onchange="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).val());" 
-						/>
-					<span class="input-group-btn">
-						<button class="btn btn-sm btn-info" type="button" onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).prev().val());return false;">
-							<i class="fa fa-search  bigger-110"></i>
-							{{{ $controller->LL('btn.search') }}}
-						</button>
-						<button class="btn btn-sm" type="button" onclick="jQuery('#tree-{{$id}}').jstree('clear_search');return false;">
-							<i class="fa fa-eraser  bigger-110"></i>
-							{{{ $controller->LL('btn.clear') }}}!
-						</button>					</span>
-			   </div>
-            </div>
+            
+            <ul class="dropdown-menu extended notification">
+                <li>
+                    <form>
+                        <div class="form-group"> 
+                            <div class="input-group">
+                                <input type="text" class="form-control" />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-sm" type="button" title="{{{$controller->LL('btn.search')}}}" 
+                                            onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).prev().val());return false;">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </span>
+                            </div> 
+                        </div>
+                    </form>
+                </li>
+            </ul>
 
             <a data-action="reload" href="#" onclick="jQuery('#tree-{{$id}}').jstree('refresh');return false;">
                 <i class="fa fa-refresh"></i>

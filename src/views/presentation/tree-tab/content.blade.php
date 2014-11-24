@@ -48,10 +48,10 @@
                 @foreach((array)$fields as $key => $field)
                     @if ($key==0)
                         aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "№", "sClass": "center", "sWidth": "40px" });
-                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $controller->LL('entity.'.$field->code, \Telenok\Core\Support\LocalizationPlaceholder::get() ) }}}" });
+                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $controller->LL('entity.'.$field->code) }}}" });
                         aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{{ $controller->LL('action') }}}", "bSortable": false });
                     @else
-                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $controller->LL('entity.'.$field->code, \Telenok\Core\Support\LocalizationPlaceholder::get() ) }}}" });
+                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $controller->LL('entity.'.$field->code) }}}" });
                     @endif
                 @endforeach
 

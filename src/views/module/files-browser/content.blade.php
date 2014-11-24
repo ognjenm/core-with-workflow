@@ -49,10 +49,10 @@
 							"bSortable": false});
                 @foreach((array)$fields as $key => $field)
                     @if ($key==0)
-                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "{{{ $controller->LL("field." . $field, \Telenok\Core\Support\LocalizationPlaceholder::get() ) }}}", "bSortable": false });
+                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "{{{ $controller->LL("field." . $field) }}}", "bSortable": false });
                         aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{{ $controller->LL('action') }}}", "bSortable": false });
                     @else
-                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "{{{ $controller->LL("field." . $field, \Telenok\Core\Support\LocalizationPlaceholder::get() ) }}}", "bSortable": false });
+                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "{{{ $controller->LL("field." . $field) }}}", "bSortable": false });
                     @endif
                 @endforeach
 
