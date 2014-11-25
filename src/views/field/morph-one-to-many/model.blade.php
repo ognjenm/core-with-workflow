@@ -26,7 +26,7 @@
 			<h4 class="row">
 				<span class="col-sm-12">
 					<i class="ace-icon fa fa-list-ul"></i>
-					{{{ $field->translate('title_list') }}}
+					##### $field->translate('title_list') $$$$$$$$$$
 				</span>
 			</h4>
         </div>
@@ -39,7 +39,7 @@
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
-                            {{{$controller->LL('current')}}}
+                            #####$controller->LL('current')$$$$$$$$$$
                         </a>
                     </li>
 					@if ( 
@@ -50,7 +50,7 @@
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
-                            {{{$controller->LL('addition')}}}
+                            #####$controller->LL('addition')$$$$$$$$$$
                         </a>
                     </li>
 					@endif
@@ -89,7 +89,7 @@
 
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> ##### $parentController->LL('list.btn.refresh') $$$$$$$$$$",
                                             'sButtonClass': 'btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
@@ -99,7 +99,7 @@
 							@if ($model->exists && $field->allow_update && $permissionUpdate)
 								aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
+                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> ##### $parentController->LL('list.btn.delete.all') $$$$$$$$$$",
                                             'sButtonClass': 'btn-sm btn-danger',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 removeMorphAllO2MHas{{$jsUnique}}();
@@ -131,7 +131,7 @@
 								)
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
+                                            "sButtonText": "<i class='fa fa-plus smaller-90'></i> ##### $parentController->LL('list.btn.create') $$$$$$$$$$",
                                             'sButtonClass': 'btn-success btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 createMorphO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
@@ -141,7 +141,7 @@
 							 
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> ##### $parentController->LL('list.btn.choose') $$$$$$$$$$",
                                             'sButtonClass': 'btn-yellow btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 chooseMorphO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}');
@@ -217,7 +217,7 @@
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="#####$controller->LL('list.btn.delete')$$$$$$$$$$" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 					
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -320,7 +320,7 @@
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="#####$controller->LL('list.btn.delete')$$$$$$$$$$" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 				
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -381,7 +381,7 @@
 				)
             <button onclick="chooseMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
-                {{{ $controller->LL('btn.choose') }}}
+                ##### $controller->LL('btn.choose') $$$$$$$$$$
             </button> 
 			@endif
 
@@ -392,7 +392,7 @@
 				)
             <button onclick="createMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $controller->getChooseTypeId($field, $linkedField), 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
-                {{{ $controller->LL('btn.create') }}}
+                ##### $controller->LL('btn.create') $$$$$$$$$$
             </button>
             @endif
 
@@ -403,7 +403,7 @@
 				)
             <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
-                {{{ $controller->LL('btn.edit') }}}
+                ##### $controller->LL('btn.edit') $$$$$$$$$$
             </button>
 			@endif
 
@@ -414,13 +414,13 @@
 				)
             <button onclick="deleteMorphO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
-                {{{ $controller->LL('btn.delete') }}}
+                ##### $controller->LL('btn.delete') $$$$$$$$$$
             </button>
 			@endif
 
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
             @endif
 
         </div>

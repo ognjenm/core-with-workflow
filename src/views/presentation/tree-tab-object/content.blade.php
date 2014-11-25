@@ -5,7 +5,7 @@
     <div class="filter display-none">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h5 class="widget-title smaller">{{{ $controller->LL('table.filter.header') }}}</h5>
+                <h5 class="widget-title smaller">##### $controller->LL('table.filter.header') $$$$$$$$$$</h5>
                 <span class="widget-toolbar no-border">
                     <a data-action="collapse" href="#">
                         <i class="fa fa-chevron-up"></i>
@@ -17,13 +17,13 @@
                 <div class="widget-main">
                     <form class="form-horizontal telenok-object-field-filter" onsubmit="return false;">
 						
-						<input type="hidden" name="filter_want_search" value="1" />
+						<input type="hidden" name="multifield_search" value="1" />
                         @foreach($fieldsFilter as $key => $field) 
 								
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">{{{ $field->translate('title') }}}</label>
+								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">##### $field->translate('title') $$$$$$$$$$</label>
 								<div class="col-sm-9">
-									{{ \App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFilterContent($field) }} 
+									{!! \App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFilterContent($field) !!} 
 								</div>
 							</div> 
 						
@@ -33,11 +33,11 @@
 							<div class="hr hr-8 dotted"></div>
 							<button class="btn btn-sm btn-info" onclick="presentationTableFilter{{$uniqueId}}(this);">
 								<i class="fa fa-search bigger-110"></i>
-								{{{ $controller->LL('table.filter.btn') }}}
+								##### $controller->LL('btn.search') $$$$$$$$$$
 							</button>
 							<button class="btn btn-sm" type="reset" onclick="presentationTableFilter{{$uniqueId}}(this, true);">
 								<i class="fa fa-eraser bigger-110"></i>
-								{{{ $controller->LL('btn.clear') }}}
+								##### $controller->LL('btn.clear') $$$$$$$$$$
 							</button>
 						</div>
 
@@ -62,24 +62,24 @@
 					"sDefaultContent": '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]"><span class="lbl"></span></label>',
 					"bSortable": false});
 			@foreach($fields as $key => $field)
-					aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $field->translate('title_list') }}}", "bSortable": @if ($field->allow_sort) true @else false @endif });
+					aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "##### $field->translate('title_list') $$$$$$$$$$", "bSortable": @if ($field->allow_sort) true @else false @endif });
 				@if ( ($key==1 && $fields->count() > 1) || ($key==0 && $fields->count() < 2) )
-					aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{{ $controller->LL('action') }}}", "bSortable": false }); 
+					aoColumns.push({ "mData": "tableManageItem", "sTitle": "##### $controller->LL('action') $$$$$$$$$$", "bSortable": false }); 
 				@endif
 			@endforeach
 
 			presentation.addDataTable({
 				aoColumns : aoColumns, 
 				aaSorting: [],
-				sAjaxSource : '{{ $controller->getRouterList(['treePid' => $type->getKey()]) }}',
+				sAjaxSource : '{!! $controller->getRouterList(['treePid' => $type->getKey()]) !!}',
 				domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}",
-				btnCreateUrl : '{{ $controller->getRouterCreate(['id' => $type->getKey()]) }}',
-				btnListEditUrl : '{{ $controller->getRouterListEdit(['id' => $type->getKey()]) }}',
-				btnListDeleteUrl : '{{ $controller->getRouterListDelete(['id' => $type->getKey()]) }}',
-				btnListLockUrl : '{{ $controller->getRouterListLock(['id' => $type->getKey()]) }}',
-				btnListUnlockUrl : '{{ $controller->getRouterListUnlock(['id' => $type->getKey()]) }}',
+				btnCreateUrl : '{!! $controller->getRouterCreate(['id' => $type->getKey()]) !!}',
+				btnListEditUrl : '{!! $controller->getRouterListEdit(['id' => $type->getKey()]) !!}',
+				btnListDeleteUrl : '{!! $controller->getRouterListDelete(['id' => $type->getKey()]) !!}',
+				btnListLockUrl : '{!! $controller->getRouterListLock(['id' => $type->getKey()]) }}',
+				btnListUnlockUrl : '{!! $controller->getRouterListUnlock(['id' => $type->getKey()]) !!}',
 				btnCreateDisabled : '{{ !\Auth::can('create', "object_type.{$type->code}") }}',
-				btnListDeleteDisabled : '{{ !\Auth::can('delete', "object_type.{$type->code}") }}'
+				btnListDeleteDisabled : '{!!  !\Auth::can('delete', "object_type.{$type->code}") !!}'
 			});
 
         function presentationTableFilter{{$uniqueId}}(dom_obj, erase)
@@ -90,16 +90,16 @@
             {
 				jQuery('select option:selected', $form).removeAttr('selected');
                 jQuery('.chosen, .chosen-select', $form).trigger('chosen:updated');
-                jQuery('input[name="filter_want_search"]', $form).val(0);
+                jQuery('input[name="multifield_search"]', $form).val(0);
             }
             else
 			{
-                jQuery('input[name="filter_want_search"]', $form).val(1);
+                jQuery('input[name="multifield_search"]', $form).val(1);
 			}
 
             
             jQuery('#telenok-{{$controller->getPresentation()}}-presentation-grid-{{$gridId}}')
                 .dataTable()
-                .fnReloadAjax('{{ $controller->getRouterList(['treePid' => $type->getKey()]) }}&' + (erase ? '' : jQuery.param($form.serializeArray())));
+                .fnReloadAjax('{!! $controller->getRouterList(['treePid' => $type->getKey()]) !!}&' + (erase ? '' : jQuery.param($form.serializeArray())));
         }
     </script>

@@ -5,7 +5,7 @@
     <div class="filter display-none">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h5 class="widget-title smaller">{{{ $controller->LL('table.filter.header') }}}</h5>
+                <h5 class="widget-title smaller">##### $controller->LL('table.filter.header') $$$$$$$$$$</h5>
                 <span class="widget-toolbar no-border">
                     <a data-action="collapse" href="#">
                         <i class="fa fa-chevron-up"></i>
@@ -19,11 +19,11 @@
                         
                         <button class="btn btn-info btn-sm" onclick="return false;">
                             <i class="fa fa-key bigger-110"></i>
-                            {{{ $controller->LL('table.filter.btn') }}}
+                            ##### $controller->LL('btn.search') $$$$$$$$$$
                         </button>
                         <button class="btn btn-sm" type="reset">
                                 <i class="fa fa-eraser bigger-110"></i>
-                                {{{ $controller->LL('btn.clear') }}}
+                                ##### $controller->LL('btn.clear') $$$$$$$$$$
                         </button>
                     </form>
                 </div>
@@ -48,10 +48,10 @@
                 @foreach((array)$fields as $key => $field)
                     @if ($key==0)
                         aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "№", "sClass": "center", "sWidth": "40px" });
-                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $controller->LL('entity.'.$field->code) }}}" });
-                        aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{{ $controller->LL('action') }}}", "bSortable": false });
+                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "##### $controller->LL('entity.'.$field->code) $$$$$$$$$$" });
+                        aoColumns.push({ "mData": "tableManageItem", "sTitle": "##### $controller->LL('action') $$$$$$$$$$", "bSortable": false });
                     @else
-                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{{ $controller->LL('entity.'.$field->code) }}}" });
+                        aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "##### $controller->LL('entity.'.$field->code) $$$$$$$$$$" });
                     @endif
                 @endforeach
 

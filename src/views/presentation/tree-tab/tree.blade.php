@@ -45,12 +45,12 @@
                     
                     if (!jQuery(node).attr('id')) 
 					{
-                        url = '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}';
+                        url = '{!! URL::route("cmf.module.{$controller->getKey()}.list.tree") !!}';
                     }
                     else
                     {
                         nodeId = jQuery(node).attr('id');
-                        url = '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}?id=' + nodeId;
+                        url = '{!! URL::route("cmf.module.{$controller->getKey()}.list.tree") !!}?id=' + nodeId;
                     }
 
                     return url;
@@ -60,7 +60,7 @@
         "search" : {
             "case_insensitive": true,
             "ajax": {
-                "url": '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}'
+                "url": '{!! URL::route("cmf.module.{$controller->getKey()}.list.tree") !!}'
             }
         },
         "plugins": ["themes", "json_data", "ui", "crrm", "search", "types", "state"]
@@ -73,11 +73,11 @@
 
         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}')
                 .addTabByURL({
-                    url: '{{ URL::route("cmf.module.{$controller->getKey()}") }}?' + jQuery.param({ "treePid": data.rslt.obj.data('id') }),
+                    url: '{!! URL::route("cmf.module.{$controller->getKey()}") !!}?' + jQuery.param({ "treePid": data.rslt.obj.data('id') }),
                     after: function() 
                     {
                         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').reloadDataTableOnClick({
-                            "url": '{{ $controller->getRouterList() }}', 
+                            "url": '{!! $controller->getRouterList() !!}', 
                             "data": { "treePid": data.rslt.obj.data("id") },
                             "gridId": data.rslt.obj.data("gridId")
                         });
@@ -88,29 +88,26 @@
 
 <div class="widget-box span">
     <div class="widget-header widget-header-flat">
-        <h4 class="lighter widget-title smaller">{{{$treeChoose}}}</h4>
+        <h4 class="lighter widget-title smaller">#####$treeChoose$$$$$$$$$$</h4>
         <span class="widget-toolbar">
 
-            
-            <a data-action="settings" href="#" class="dropdown-toggle " data-toggle="dropdown">
+            <a data-action="settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-search"></i>
             </a>
-            
-            <ul class="dropdown-menu extended notification">
+
+            <ul class="dropdown-menu dropdown-caret">
                 <li>
-                    <form>
-                        <div class="form-group"> 
-                            <div class="input-group">
-                                <input type="text" class="form-control" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info btn-sm" type="button" title="{{{$controller->LL('btn.search')}}}" 
-                                            onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).prev().val());return false;">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div> 
-                        </div>
-                    </form>
+                    <div class="input-group" style="margin: 0 6px;">
+                        <input type="text" placeholder="##### $controller->LL('btn.search') $$$$$$$$$$..." onclick="event.stopPropagation();" class="form-control" style="float: none; width: 200px;">
+                        <span class="input-group-btn">
+                            <button onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).closest('div').find('input').val());return false;" title="#####$controller->LL('btn.search')$$$$$$$$$$" type="button" class="btn btn-info btn-sm">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <button onclick="jQuery('#tree-{{$id}}').jstree('clear_search');jQuery(this).closest('div').find('input').val('');return false;" title="#####$controller->LL('btn.clear')$$$$$$$$$$" type="button" class="btn btn-sm">
+                                <i class="fa fa-times"></i>
+                            </button>					
+                        </span>								
+                    </div>
                 </li>
             </ul>
 

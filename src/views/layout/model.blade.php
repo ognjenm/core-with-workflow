@@ -51,8 +51,8 @@
 			else if (button_type=='save')
 			{
 				jQuery.gritter.add({
-					title: '{{{$controller->LL('notice.saved')}}}! {{{$controller->LL('notice.saved.description')}}}',
-					text: '{{{$controller->LL('notice.saved.thank.you')}}}!',
+					title: '#####$controller->LL('notice.saved')$$$$$$$$$$! #####$controller->LL('notice.saved.description')$$$$$$$$$$',
+					text: '#####$controller->LL('notice.saved.thank.you')$$$$$$$$$$!',
 					class_name: 'gritter-success gritter-light',
 					time: 3000,
 				});
@@ -98,7 +98,7 @@
 			}
 
 			jQuery.gritter.add({
-				title: '{{{$controller->LL('notice.error')}}}! {{{$controller->LL('notice.error.undefined')}}}',
+				title: '#####$controller->LL('notice.error')$$$$$$$$$$! #####$controller->LL('notice.error.undefined')$$$$$$$$$$',
 				text: errorGritterText.join("<br>"),
 				class_name: 'gritter-error gritter-light',
 				time: 5000,
@@ -122,9 +122,9 @@
         <p>
             <strong>
                 <i class="fa fa-check"></i>
-                {{{ $controller->LL('notice.saved') }}}!
+                ##### $controller->LL('notice.saved') $$$$$$$$$$!
             </strong>
-            {{{ $controller->LL('notice.saved.description') }}}
+            ##### $controller->LL('notice.saved.description') $$$$$$$$$$
         </p>
     </div>
     @endif
@@ -138,9 +138,9 @@
             <p>
                 <strong>
                     <i class="fa fa-exclamation-triangle"></i>
-                    {{{ $controller->LL('notice.warning') }}}
+                    ##### $controller->LL('notice.warning') $$$$$$$$$$
                 </strong>
-                {{{$w}}}
+                #####$w$$$$$$$$$$
             </p>
         </div>
         @endforeach
@@ -162,13 +162,13 @@
 	@section('formBtn')
     <div class='form-actions center no-margin'>
         <button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">
-            {{{ $controller->LL('btn.save') }}}
+            ##### $controller->LL('btn.save') $$$$$$$$$$
         </button>
         <button type="submit" class="btn btn-info" onclick="jQuery(this).closest('form').data('btn-clicked', 'save.close');">
-            {{{ $controller->LL('btn.save.close') }}}
+            ##### $controller->LL('btn.save.close') $$$$$$$$$$
         </button>
         <button type="submit" class="btn" onclick="jQuery(this).closest('form').data('btn-clicked', 'close');">
-            {{{ $controller->LL('btn.close') }}}
+            ##### $controller->LL('btn.close') $$$$$$$$$$
         </button>
     </div>
 	@show

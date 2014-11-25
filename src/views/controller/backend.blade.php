@@ -9,7 +9,7 @@
     <body class="no-skin telenok-backend">
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="navbar-inner">
-				<a class="navbar-brand" href="telenok/"><small>{{{\Config::get('app.backend.brand')}}}</small></a>
+				<a class="navbar-brand" href="telenok/"><small>#####\Config::get('app.backend.brand')$$$$$$$$$$</small></a>
 				<ul class="nav ace-nav pull-right">
 
 					@foreach($listModuleMenuTop as $itemFirstLevel)
@@ -84,12 +84,12 @@
                 <div class="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <button title='{{{$listModuleGroupItem->getName()}}}' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} {{{ $listModuleGroupItem->getButton() }}}"><i class="{{{ $listModuleGroupItem->getIcon() }}}"></i></button>
+                        <button title='#####$listModuleGroupItem->getName()$$$$$$$$$$' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} ##### $listModuleGroupItem->getButton() $$$$$$$$$$"><i class="##### $listModuleGroupItem->getIcon() $$$$$$$$$$"></i></button>
                         @endforeach
                     </div>
                     <div class="sidebar-shortcuts-mini">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <span class="btn {{{ $listModuleGroupItem->getButton() }}}"></span>
+                        <span class="btn ##### $listModuleGroupItem->getButton() $$$$$$$$$$"></span>
                         @endforeach
                     </div>
                 </div> 
@@ -107,15 +107,15 @@
                                                 telenok.processModuleContent(moduleKey);
                                             }); 
                                             return false;'>
-                                    <i class="menu-icon {{{ $listModuleItem->getIcon() }}}"></i>
-                                    <span class="menu-text">{{{ $listModuleItem->getName() }}}</span>
+                                    <i class="menu-icon ##### $listModuleItem->getIcon() $$$$$$$$$$"></i>
+                                    <span class="menu-text">##### $listModuleItem->getName() $$$$$$$$$$</span>
                                 </a>
                             </li>
                             @elseif (!$listModuleItem->getParent())
                             <li>
                                 <a class="dropdown-toggle" href="#">
-                                    <i class="menu-icon {{{ $listModuleItem->getIcon() }}}"></i>
-                                    <span class="menu-text">{{{ $listModuleItem->getName() }}}</span>
+                                    <i class="menu-icon ##### $listModuleItem->getIcon() $$$$$$$$$$"></i>
+                                    <span class="menu-text">##### $listModuleItem->getName() $$$$$$$$$$</span>
                                     <b class="arrow fa fa-angle-down"></b>
                                 </a>
                                 <ul class="submenu"> 
@@ -129,7 +129,7 @@
                                             });
                                             return false;'>
 											<i class="menu-icon fa fa-caret-right"></i>
-											{{{ $item->getName() }}}
+											##### $item->getName() $$$$$$$$$$
 										</a>
 										<b class="arrow"></b>
 									</li>
@@ -217,12 +217,12 @@
 				<div class="modal-content">
 					<div class="modal-header table-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>{{{$controller->LL("notice.title")}}}</h4>
+						<h4>#####$controller->LL("notice.title")$$$$$$$$$$</h4>
 					</div>
 					<div class="modal-body">
 					</div>
 					<div class="modal-footer">
-						<button class="btn" data-dismiss="modal">{{{$controller->LL("btn.close")}}}</button> 
+						<button class="btn" data-dismiss="modal">#####$controller->LL("btn.close")$$$$$$$$$$</button> 
 					</div>
 				</div>
 			</div>

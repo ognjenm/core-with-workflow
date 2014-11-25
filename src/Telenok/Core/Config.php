@@ -187,7 +187,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
+				App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setModuleGroupModel($item);
@@ -213,7 +213,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
+				App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setModuleModel($item);
@@ -267,7 +267,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
+				App\Model\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					$object->setWidgetGroupModel($item);
@@ -293,7 +293,7 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
+				App\Model\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
 				{
 					$object = \App::build($item->controller_class);
 					//$object->setWidgetModel($item);
@@ -324,9 +324,9 @@ class Config {
 		$routeCommon = [];
 		$routeDomain = []; 
 
-		$domains = \Telenok\Web\Domain::active()->get();
+		$domains = App\Model\Telenok\Web\Domain::active()->get();
 		
-		$pages = \Telenok\Web\Page::whereHas('pagePageController', function($query) 
+		$pages = App\Model\Telenok\Web\Page::whereHas('pagePageController', function($query) 
 		{ 
 			$now = \Carbon\Carbon::now();
 			$query->where('active', 1)
@@ -389,7 +389,7 @@ class Config {
 	{
 		if (\DB::table('setting')->where('active', 1)->count())
 		{
-			foreach (\Telenok\System\Setting::all() as $setting)
+			foreach (\App\Model\Telenok\System\Setting::all() as $setting)
 			{
 				\Config::set($setting->code, $setting->value/* instanceof \Illuminate\Support\Collection ? $setting->value->all() : $setting->value*/);
 			}

@@ -16,14 +16,14 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
     protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
 
-    public function setTypeList($key)
+    public function setTypeListKey($key)
     {
         $this->typeList = $key;
         
         return $this;
     }
 
-    public function setTypeTree($key)
+    public function setTypeTreeKey($key)
     {
         $this->typeTree = $key;
         
@@ -171,6 +171,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     {
         $content = [];
 
+        
         $total = \Input::get('iDisplayLength', 10);
         $sEcho = \Input::get('sEcho');
         $iDisplayStart = \Input::get('iDisplayStart', 0);
@@ -228,7 +229,50 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
     }
+    
+    public function getFilterQueryLike($str, $query, $model, $field)
+    {    
+        $controller->get($field->key)->getFilterQuery($field, $model, $query, $field->code, $input->get($field->code));
 
+        $query->orWhere($model->getTable().'.id', intval($str));
+    }
+    
+    public function getFilterQuery($model, $query)
+    {
+        $translate = new \Telenok\Object\Translation();
+        
+        if ($title = trim(\Input::get('sSearch')))
+        {
+            $this->getFilterQueryLike($title, $query, $model, 'title');
+        } 
+
+		if (\Input::get('multifield_search', false))
+		{
+			$this->getFilterSubQuery(\Input::get('filter', []), $model, $query);
+		}
+        
+        $orderByField = \Input::get('mDataProp_' . \Input::get('iSortCol_0'));
+        
+        if (\Input::get('iSortCol_0', 0))
+        {
+            if (in_array($orderByField, $model->getMultilanguage()))
+            { 
+                $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $orderByField)
+                {
+                    $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
+                            ->on($translate->getTable().'.translation_object_field_code', '=', \DB::raw("'{$orderByField}'"))
+                            ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
+                });
+
+                $query->orderBy($translate->getTable().'.translation_object_string', \Input::get('sSortDir_0'));
+            }
+            else
+            {
+                $query->orderBy($model->getTable() . '.' . $orderByField, \Input::get('sSortDir_0'));
+            }
+        }
+    }
+    
     public function create($id = null)
     { 
 		$id = $id ?: \Input::get('id');

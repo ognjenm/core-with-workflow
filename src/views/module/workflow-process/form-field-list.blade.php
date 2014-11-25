@@ -26,7 +26,7 @@
 			{{ Form::label('process', $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
 			<div class="col-sm-3">
 				<button type="button" class="btn" onclick="showProcessModal{{$uniqueId}}(); return false;">
-					{{{ $controller->LL('btn.open-process-editor') }}}
+					##### $controller->LL('btn.open-process-editor') $$$$$$$$$$
 				</button>
 			</div>
 		</div>

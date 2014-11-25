@@ -83,112 +83,112 @@ class SeedLast extends Migration {
 			'field_order' => 6,
 		]);
 
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'German', 'locale' => 'de', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'French', 'locale' => 'fr', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Dutch', 'locale' => 'nl', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Italian', 'locale' => 'it', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Spanish', 'locale' => 'es', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Polish', 'locale' => 'pl', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Russian', 'locale' => 'ru', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Japanese', 'locale' => 'ja', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Portuguese', 'locale' => 'pt', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Swedish', 'locale' => 'sv', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Chinese', 'locale' => 'zh', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Catalan', 'locale' => 'ca', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Ukrainian', 'locale' => 'uk', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Norwegian (Bokmål)', 'locale' => 'no', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Finnish', 'locale' => 'fi', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Vietnamese', 'locale' => 'vi', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Czech', 'locale' => 'cs', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Hungarian', 'locale' => 'hu', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Korean', 'locale' => 'ko', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Indonesian', 'locale' => 'id', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Turkish', 'locale' => 'tr', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Romanian', 'locale' => 'ro', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Persian', 'locale' => 'fa', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Arabic', 'locale' => 'ar', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Danish', 'locale' => 'da', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Esperanto', 'locale' => 'eo', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Serbian', 'locale' => 'sr', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Lithuanian', 'locale' => 'lt', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Slovak', 'locale' => 'sk', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Malay', 'locale' => 'ms', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Hebrew', 'locale' => 'he', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Bulgarian', 'locale' => 'bg', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Slovenian', 'locale' => 'sl', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Volapük', 'locale' => 'vo', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Kazakh', 'locale' => 'kk', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Waray-Waray', 'locale' => 'war', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Basque', 'locale' => 'eu', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Croatian', 'locale' => 'hr', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Hindi', 'locale' => 'hi', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Estonian', 'locale' => 'et', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Azerbaijani', 'locale' => 'az', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Galician', 'locale' => 'gl', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Simple English', 'locale' => 'simple', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Norwegian (Nynorsk)', 'locale' => 'nn', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Thai', 'locale' => 'th', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Newar / Nepal Bhasa', 'locale' => 'new', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Greek', 'locale' => 'el', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Aromanian', 'locale' => 'roa-rup', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Latin', 'locale' => 'la', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Occitan', 'locale' => 'oc', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Tagalog', 'locale' => 'tl', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Haitian', 'locale' => 'ht', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Macedonian', 'locale' => 'mk', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Georgian', 'locale' => 'ka', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Serbo-Croatian', 'locale' => 'sh', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Telugu', 'locale' => 'te', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Piedmontese', 'locale' => 'pms', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Cebuano', 'locale' => 'ceb', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Tamil', 'locale' => 'ta', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Belarusian (Taraškievica)', 'locale' => 'be-x-old', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Breton', 'locale' => 'br', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Latvian', 'locale' => 'lv', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Javanese', 'locale' => 'jv', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Albanian', 'locale' => 'sq', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Belarusian', 'locale' => 'be', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Marathi', 'locale' => 'mr', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Welsh', 'locale' => 'cy', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Luxembourgish', 'locale' => 'lb', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Icelandic', 'locale' => 'is', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Bosnian', 'locale' => 'bs', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Yoruba', 'locale' => 'yo', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Malagasy', 'locale' => 'mg', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Aragonese', 'locale' => 'an', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Bishnupriya Manipuri', 'locale' => 'bpy', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Lombard', 'locale' => 'lmo', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'West Frisian', 'locale' => 'fy', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Bengali', 'locale' => 'bn', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Ido', 'locale' => 'io', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Swahili', 'locale' => 'sw', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Gujarati', 'locale' => 'gu', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Malayalam', 'locale' => 'ml', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Western Panjabi', 'locale' => 'pnb', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Afrikaans', 'locale' => 'af', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Low Saxon', 'locale' => 'nds', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Sicilian', 'locale' => 'scn', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Urdu', 'locale' => 'ur', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Kurdish', 'locale' => 'ku', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Cantonese', 'locale' => 'zh-yue', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Armenian', 'locale' => 'hy', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Quechua', 'locale' => 'qu', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Sundanese', 'locale' => 'su', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Nepali', 'locale' => 'ne', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Zazaki', 'locale' => 'diq', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Asturian', 'locale' => 'ast', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Tatar', 'locale' => 'tt', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Neapolitan', 'locale' => 'nap', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Irish', 'locale' => 'ga', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Chuvash', 'locale' => 'cv', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Samogitian', 'locale' => 'bat-smg', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Walloon', 'locale' => 'wa', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Amharic', 'locale' => 'am', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Kannada', 'locale' => 'kn', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Alemannic', 'locale' => 'als', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Buginese', 'locale' => 'bug', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Burmese', 'locale' => 'my', 'active' => 1]);
-		(new \Telenok\System\Language())->storeOrUpdate(['title' => 'Interlingua', 'locale' => 'ia', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'German', 'locale' => 'de', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'French', 'locale' => 'fr', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Dutch', 'locale' => 'nl', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Italian', 'locale' => 'it', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Spanish', 'locale' => 'es', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Polish', 'locale' => 'pl', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Russian', 'locale' => 'ru', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Japanese', 'locale' => 'ja', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Portuguese', 'locale' => 'pt', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Swedish', 'locale' => 'sv', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Chinese', 'locale' => 'zh', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Catalan', 'locale' => 'ca', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Ukrainian', 'locale' => 'uk', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Norwegian (Bokmål)', 'locale' => 'no', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Finnish', 'locale' => 'fi', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Vietnamese', 'locale' => 'vi', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Czech', 'locale' => 'cs', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Hungarian', 'locale' => 'hu', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Korean', 'locale' => 'ko', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Indonesian', 'locale' => 'id', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Turkish', 'locale' => 'tr', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Romanian', 'locale' => 'ro', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Persian', 'locale' => 'fa', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Arabic', 'locale' => 'ar', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Danish', 'locale' => 'da', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Esperanto', 'locale' => 'eo', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Serbian', 'locale' => 'sr', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Lithuanian', 'locale' => 'lt', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Slovak', 'locale' => 'sk', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Malay', 'locale' => 'ms', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Hebrew', 'locale' => 'he', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Bulgarian', 'locale' => 'bg', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Slovenian', 'locale' => 'sl', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Volapük', 'locale' => 'vo', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Kazakh', 'locale' => 'kk', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Waray-Waray', 'locale' => 'war', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Basque', 'locale' => 'eu', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Croatian', 'locale' => 'hr', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Hindi', 'locale' => 'hi', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Estonian', 'locale' => 'et', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Azerbaijani', 'locale' => 'az', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Galician', 'locale' => 'gl', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Simple English', 'locale' => 'simple', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Norwegian (Nynorsk)', 'locale' => 'nn', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Thai', 'locale' => 'th', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Newar / Nepal Bhasa', 'locale' => 'new', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Greek', 'locale' => 'el', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Aromanian', 'locale' => 'roa-rup', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Latin', 'locale' => 'la', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Occitan', 'locale' => 'oc', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Tagalog', 'locale' => 'tl', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Haitian', 'locale' => 'ht', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Macedonian', 'locale' => 'mk', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Georgian', 'locale' => 'ka', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Serbo-Croatian', 'locale' => 'sh', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Telugu', 'locale' => 'te', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Piedmontese', 'locale' => 'pms', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Cebuano', 'locale' => 'ceb', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Tamil', 'locale' => 'ta', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Belarusian (Taraškievica)', 'locale' => 'be-x-old', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Breton', 'locale' => 'br', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Latvian', 'locale' => 'lv', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Javanese', 'locale' => 'jv', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Albanian', 'locale' => 'sq', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Belarusian', 'locale' => 'be', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Marathi', 'locale' => 'mr', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Welsh', 'locale' => 'cy', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Luxembourgish', 'locale' => 'lb', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Icelandic', 'locale' => 'is', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Bosnian', 'locale' => 'bs', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Yoruba', 'locale' => 'yo', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Malagasy', 'locale' => 'mg', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Aragonese', 'locale' => 'an', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Bishnupriya Manipuri', 'locale' => 'bpy', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Lombard', 'locale' => 'lmo', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'West Frisian', 'locale' => 'fy', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Bengali', 'locale' => 'bn', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Ido', 'locale' => 'io', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Swahili', 'locale' => 'sw', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Gujarati', 'locale' => 'gu', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Malayalam', 'locale' => 'ml', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Western Panjabi', 'locale' => 'pnb', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Afrikaans', 'locale' => 'af', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Low Saxon', 'locale' => 'nds', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Sicilian', 'locale' => 'scn', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Urdu', 'locale' => 'ur', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Kurdish', 'locale' => 'ku', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Cantonese', 'locale' => 'zh-yue', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Armenian', 'locale' => 'hy', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Quechua', 'locale' => 'qu', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Sundanese', 'locale' => 'su', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Nepali', 'locale' => 'ne', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Zazaki', 'locale' => 'diq', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Asturian', 'locale' => 'ast', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Tatar', 'locale' => 'tt', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Neapolitan', 'locale' => 'nap', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Irish', 'locale' => 'ga', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Chuvash', 'locale' => 'cv', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Samogitian', 'locale' => 'bat-smg', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Walloon', 'locale' => 'wa', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Amharic', 'locale' => 'am', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Kannada', 'locale' => 'kn', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Alemannic', 'locale' => 'als', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Buginese', 'locale' => 'bug', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Burmese', 'locale' => 'my', 'active' => 1]);
+		(new \App\Model\Telenok\System\Language())->storeOrUpdate(['title' => 'Interlingua', 'locale' => 'ia', 'active' => 1]);
 
 		
 		(new \Telenok\File\FileExtension())->storeOrUpdate(['title' => '3D Studio MAX graphics file', 'extension' => '3ds', 'active' => 1]);
@@ -683,37 +683,37 @@ class SeedLast extends Migration {
 
 
 		//Folder
-		$folderSystem = (new \Telenok\System\Folder())->storeOrUpdate([
+		$folderSystem = (new \App\Model\Telenok\System\Folder())->storeOrUpdate([
 					'title' => ['en' => 'System', 'ru' => 'Система'],
 					'active' => 1,
 					'code' => 'system',
 				])->makeRoot();
 
-		$folderUser = (new \Telenok\System\Folder())->storeOrUpdate([
+		$folderUser = (new \App\Model\Telenok\System\Folder())->storeOrUpdate([
 					'title' => ['en' => 'User', 'ru' => 'Пользователь'],
 					'active' => 1,
 					'code' => 'user',
 				])->makeRoot();
 
-		$folderOther = (new \Telenok\System\Folder())->storeOrUpdate([
+		$folderOther = (new \App\Model\Telenok\System\Folder())->storeOrUpdate([
 					'title' => ['en' => 'Other', 'ru' => 'Другое'],
 					'active' => 1,
 					'code' => 'other',
 				])->makeRoot();
 
-		$folderFile = (new \Telenok\System\Folder())->storeOrUpdate([
+		$folderFile = (new \App\Model\Telenok\System\Folder())->storeOrUpdate([
 					'title' => ['en' => 'File', 'ru' => 'Файл'],
 					'active' => 1,
 					'code' => 'file',
 				])->makeRoot();
 
-		$folderBusinessProcess = (new \Telenok\System\Folder())->storeOrUpdate([
+		$folderBusinessProcess = (new \App\Model\Telenok\System\Folder())->storeOrUpdate([
 					'title' => ['en' => 'Business process', 'ru' => 'Бизнес-процесс'],
 					'active' => 1,
 					'code' => 'business_process',
 				])->makeRoot();
 
-		$folderWeb = (new \Telenok\System\Folder())->storeOrUpdate([
+		$folderWeb = (new \App\Model\Telenok\System\Folder())->storeOrUpdate([
 					'title' => ['en' => 'Web', 'ru' => 'Веб'],
 					'active' => 1,
 					'code' => 'web',
@@ -758,144 +758,144 @@ class SeedLast extends Migration {
 		\Telenok\Object\Type::where('code', 'workflow_thread')->first()->makeLastChildOf($folderBusinessProcess);
 
 		//Module group
-		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
+		(new App\Model\Telenok\Web\ModuleGroup())->storeOrUpdate([
 			'title' => ['en' => 'Content', 'ru' => 'Содержание'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\ModuleGroup\Content\Controller',
 		]);
 
-		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
+		(new App\Model\Telenok\Web\ModuleGroup())->storeOrUpdate([
 			'title' => ['en' => 'User', 'ru' => 'Пользователь'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\ModuleGroup\User\Controller',
 		]);
 
-		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
+		(new App\Model\Telenok\Web\ModuleGroup())->storeOrUpdate([
 			'title' => ['en' => 'Веб', 'ru' => 'Web'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\ModuleGroup\Web\Controller',
 		]);
 
-		(new \Telenok\Web\ModuleGroup())->storeOrUpdate([
+		(new App\Model\Telenok\Web\ModuleGroup())->storeOrUpdate([
 			'title' => ['en' => 'Setting', 'ru' => 'Настройки'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\ModuleGroup\Setting\Controller',
 		]);
 
 		//Module
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Users', 'ru' => 'Пользователи'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Users\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Profile', 'ru' => 'Профиль'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Users\ProfileEdit\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Objects', 'ru' => 'Объекты'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Type', 'ru' => 'Типы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Type\Controller',
 			'module_order' => 3,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Field', 'ru' => 'Поле'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Field\Controller',
 			'module_order' => 2,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Lists', 'ru' => 'Список'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Lists\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Version', 'ru' => 'Версии'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Objects\Version\Controller',
 			'module_order' => 4,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Workflow', 'ru' => 'Workflow'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Workflow\Controller',
 			'module_order' => 2,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Process', 'ru' => 'Process'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Workflow\Process\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Thread', 'ru' => 'Thread'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Workflow\Thread\Controller',
 			'module_order' => 2,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Web', 'ru' => 'Веб'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Files', 'ru' => 'Файлы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Files\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Browser', 'ru' => 'Менеджер'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Files\Browser\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Page', 'ru' => 'Страница'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Page\Controller',
 			'module_order' => 2,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Page Constructor', 'ru' => 'Конструктор страницы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\PageConstructor\Controller',
 			'module_order' => 1,
 		]);
 
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Domain', 'ru' => 'Домен'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\Domain\Controller',
 			'module_order' => 4,
 		]); 
 		
-		(new \Telenok\Web\Module())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Module())->storeOrUpdate([
 			'title' => ['en' => 'Page Controller', 'ru' => 'Контроллер страницы'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Module\Web\PageController\Controller',
@@ -904,20 +904,20 @@ class SeedLast extends Migration {
 		
 		
 		// Widget group
-		(new \Telenok\Web\WidgetGroup())->storeOrUpdate([
+		(new App\Model\Telenok\Web\WidgetGroup())->storeOrUpdate([
 			'title' => ['en' => 'Standart', 'ru' => 'Стандартные'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\WidgetGroup\Standart\Controller',
 		]);
 
 		// Widget
-		(new \Telenok\Web\Widget())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Widget())->storeOrUpdate([
 			'title' => ['en' => 'HTML', 'ru' => 'HTML'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Widget\Html\Controller',
 		]);
 
-		(new \Telenok\Web\Widget())->storeOrUpdate([
+		(new App\Model\Telenok\Web\Widget())->storeOrUpdate([
 			'title' => ['en' => 'Table', 'ru' => 'Таблица'],
 			'active' => 1,
 			'controller_class' => 'Telenok\Core\Widget\Table\Controller',
@@ -946,28 +946,28 @@ class SeedLast extends Migration {
 		});
 
 		//Setting
-		(new \Telenok\System\Setting())->storeOrUpdate([
+		(new \App\Model\Telenok\System\Setting())->storeOrUpdate([
 			'title' => ['en' => 'ACL enabled', 'ru' => 'ACL разрешено'],
 			'active' => 1,
 			'value' => 0,
 			'code' => 'app.acl.enabled',
 		]);
 
-		(new \Telenok\System\Setting())->storeOrUpdate([
+		(new \App\Model\Telenok\System\Setting())->storeOrUpdate([
 			'title' => ['en' => 'Workflow enabled', 'ru' => 'Workflow разрешено'],
 			'active' => 1,
 			'value' => 0,
 			'code' => 'app.workflow.enabled',
 		]);
 
-		(new \Telenok\System\Setting())->storeOrUpdate([
+		(new \App\Model\Telenok\System\Setting())->storeOrUpdate([
 			'title' => ['en' => 'Version enabled', 'ru' => 'Version разрешено'],
 			'active' => 1,
 			'value' => 0,
 			'code' => 'app.version.enabled',
 		]);
 
-		(new \Telenok\System\Setting())->storeOrUpdate([
+		(new \App\Model\Telenok\System\Setting())->storeOrUpdate([
 			'title' => ['en' => 'Backend brand', 'ru' => 'Backend brand'],
 			'active' => 1,
 			'value' => 'Company Co.',

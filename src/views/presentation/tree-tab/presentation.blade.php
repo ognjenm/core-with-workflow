@@ -159,7 +159,7 @@
 					{
 						aButtons.push({
 							"sExtends": "text",
-							"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
+							"sButtonText": "<i class='fa fa-plus smaller-90'></i> ##### $controller->LL('list.btn.create') $$$$$$$$$$",
 							'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
 							"fnClick": function(nButton, oConfig, oFlash) {
 								if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
@@ -178,7 +178,7 @@
 					{
 						aButtons.push({
 								"sExtends": "text",
-								"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
+								"sButtonText": "<i class='fa fa-refresh smaller-90'></i> ##### $controller->LL('list.btn.refresh') $$$$$$$$$$",
 								'sButtonClass': 'btn-sm',
 								"fnClick": function(nButton, oConfig, oFlash) {
 									jQuery('#' + param.domId).dataTable().fnReloadAjax();
@@ -197,11 +197,11 @@
 						aButtons.push({
 							"sExtends": "collection",
 							'sButtonClass': 'btn btn-sm btn-light',
-							"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
+							"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> ##### $controller->LL('list.btn.select') $$$$$$$$$$",
 							"aButtons": [ 
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
+									"sButtonText": "<i class='fa fa-pencil-square-o'></i> ##### $controller->LL('btn.edit') $$$$$$$$$$",
 									"fnClick": function(nButton, oConfig, oFlash) 
 										{
 											if (param.btnListEditUrl)
@@ -215,7 +215,7 @@
 								},
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-lock'></i> {{{ $controller->LL('btn.lock') }}}",
+									"sButtonText": "<i class='fa fa-lock'></i> ##### $controller->LL('btn.lock') $$$$$$$$$$",
 									"fnClick": function(nButton, oConfig, oFlash) 
 										{
 											if (param.btnListLockUrl)
@@ -229,7 +229,7 @@
 								},
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-unlock'></i> {{{ $controller->LL('btn.unlock') }}}",
+									"sButtonText": "<i class='fa fa-unlock'></i> ##### $controller->LL('btn.unlock') $$$$$$$$$$",
 									"fnClick": function(nButton, oConfig, oFlash) 
 										{
 											if (param.btnListUnlockUrl)
@@ -244,7 +244,7 @@
 								{
 									"sExtends": "text",
 									'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
-									"sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
+									"sButtonText": "<i class='fa fa-trash-o'></i> ##### $controller->LL('btn.delete') $$$$$$$$$$",
 									"fnClick": function(nButton, oConfig, oFlash) {
 										if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
 										else {
@@ -280,7 +280,7 @@
 						aButtons.push({
 								"sExtends": "text",
 								'sButtonClass': 'btn btn-sm btn-light',
-								"sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
+								"sButtonText": "<i class='fa fa-search'></i> ##### $controller->LL('btn.filter') $$$$$$$$$$",
 								"fnClick": function(nButton, oConfig, oFlash) {
 									jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
 								}
@@ -305,14 +305,14 @@
 					},
 					"oLanguage": {
 						"oPaginate": {
-							"sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
-							"sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}", 
+							"sNext": "##### \Lang::get('core::default.btn.next') $$$$$$$$$$",
+							"sPrevious": "##### \Lang::get('core::default.btn.prev') $$$$$$$$$$", 
 						},
-						"sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
-						"sSearch": "{{{ \Lang::get('core::default.table.search') }}} ",
-						"sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
-						"sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
-						"sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
+						"sEmptyTable": "##### \Lang::get('core::default.table.empty') $$$$$$$$$$",
+						"sSearch": "##### \Lang::get('core::default.btn.search') $$$$$$$$$$ ",
+						"sInfo": "##### \Lang::get('core::default.table.showed') $$$$$$$$$$",
+						"sInfoEmpty": "##### \Lang::get('core::default.table.empty.showed') $$$$$$$$$$",
+						"sZeroRecords": "##### \Lang::get('core::default.table.empty.filtered') $$$$$$$$$$",
 						"sInfoFiltered": "",
 					}
 				}, param);

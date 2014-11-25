@@ -46,15 +46,15 @@
                 ?>
                 <div class="radio">
                     <label>
-                        <input type="radio" class="ace" name="{{{$field->code}}}" value="{{{$k}}}" @if ($checked) checked="checked" @endif @if ($disabled) disabled="disabled" @endif  />
-                        <span class="lbl"> {{{$v}}}</span>
+                        <input type="radio" class="ace" name="#####$field->code$$$$$$$$$$" value="#####$k$$$$$$$$$$" @if ($checked) checked="checked" @endif @if ($disabled) disabled="disabled" @endif  />
+                        <span class="lbl"> #####$v$$$$$$$$$$</span>
                     </label>
                 </div>
                 @endforeach
             </div>
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
             @endif
         </div>
     </div>

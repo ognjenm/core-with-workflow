@@ -169,7 +169,7 @@ abstract class Controller {
 
 	public function getInsertContent($id = 0)
 	{
-		$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
+		$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 
 		return \View::make($this->getBackendView(), [
                         'header' => $this->LL('header'),
@@ -186,8 +186,8 @@ abstract class Controller {
 		
 		\DB::transaction(function() use ($languageId, $pageId, $key, $id, $container, $order, &$widgetOnPage, $bufferId)
 		{
-			$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
-			$buffer = \Telenok\System\Buffer::findOrFail($bufferId);
+			$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
+			$buffer = \App\Model\Telenok\System\Buffer::findOrFail($bufferId);
 
 			if ($buffer->key == 'cut')
 			{
@@ -197,7 +197,7 @@ abstract class Controller {
 					"key" => $key,
 				]);
 				
-				$bufferWidget = \Telenok\System\Buffer::find($bufferId);
+				$bufferWidget = \App\Model\Telenok\System\Buffer::find($bufferId);
 				
 				if ($bufferWidget)
 				{
@@ -206,7 +206,7 @@ abstract class Controller {
 			}
 			else if ($buffer->key == 'copy')
 			{
-				$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id)->replicate();
+				$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id)->replicate();
 				$widgetOnPage->push();
 				$widgetOnPage->storeOrUpdate([
 						"container" => $container,
@@ -232,14 +232,14 @@ abstract class Controller {
 				$originalWidget->widgetLink()->save($widgetOnPage);
 			}
 
-			\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
+			App\Model\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 					->where("container", $container)->get()->each(function($item)
 			{
 				$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 			});
 
-			$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId));
-			$widgetOnPage->widgetPage()->associate(\Telenok\Web\Page::findOrFail($pageId));
+			$widgetOnPage->widgetLanguageLanguage()->associate(\App\Model\Telenok\System\Language::findOrFail($languageId));
+			$widgetOnPage->widgetPage()->associate(App\Model\Telenok\Web\Page::findOrFail($pageId));
 			$widgetOnPage->save(); 
 		});
 
@@ -254,7 +254,7 @@ abstract class Controller {
 		{
 			\DB::transaction(function() use ($languageId, $pageId, $key, $id, $container, $order, &$widgetOnPage)
 			{
-				$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id)
+				$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id)
 						->storeOrUpdate([
 					"title" => $this->LL('header'),
 					"container" => $container,
@@ -262,14 +262,14 @@ abstract class Controller {
 					"key" => $key,
 				]);
 
-				\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
+				App\Model\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 						->where("container", $container)->get()->each(function($item)
 				{
 					$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 				});
 
-				$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId));
-				$widgetOnPage->widgetPage()->associate(\Telenok\Web\Page::findOrFail($pageId));
+				$widgetOnPage->widgetLanguageLanguage()->associate(\App\Model\Telenok\System\Language::findOrFail($languageId));
+				$widgetOnPage->widgetPage()->associate(App\Model\Telenok\Web\Page::findOrFail($pageId));
 				$widgetOnPage->save();
 			});
 		}
@@ -277,7 +277,7 @@ abstract class Controller {
 		{
 			\DB::transaction(function() use ($languageId, $pageId, $key, $container, $order, &$widgetOnPage)
 			{
-				$widgetOnPage = (new \Telenok\Web\WidgetOnPage())
+				$widgetOnPage = (new App\Model\Telenok\Web\WidgetOnPage())
 						->storeOrUpdate([
 					"title" => $this->LL('header'),
 					"container" => $container,
@@ -285,14 +285,14 @@ abstract class Controller {
 					"key" => $key,
 				]); 
 
-				\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
+				App\Model\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 						->where("container", $container)->get()->each(function($item)
 				{
 					$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 				});
 
-				$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId));
-				$widgetOnPage->widgetPage()->associate(\Telenok\Web\Page::findOrFail($pageId));
+				$widgetOnPage->widgetLanguageLanguage()->associate(\App\Model\Telenok\System\Language::findOrFail($languageId));
+				$widgetOnPage->widgetPage()->associate(App\Model\Telenok\Web\Page::findOrFail($pageId));
 				$widgetOnPage->save();
 			});
 		}
@@ -302,7 +302,7 @@ abstract class Controller {
 
 	public function removeFromPage($id = 0)
 	{
-		\Telenok\Web\WidgetOnPage::destroy($id);
+		App\Model\Telenok\Web\WidgetOnPage::destroy($id);
 	}
 
 	public function getStructureContent($model = null, $uniqueId = null)
@@ -318,7 +318,7 @@ abstract class Controller {
 
 	public function findOriginalWidget($id = 0)
 	{
-		$widget = \Telenok\Web\WidgetOnPage::findOrFail($id);
+		$widget = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 		
 		$widgetLink = $widget->widgetLinkWidgetOnPage()->first();
 		

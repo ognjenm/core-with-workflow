@@ -52,8 +52,8 @@
             {{ Form::select($field->code, $values, $model->exists ? $model->{$field->code} : $default, $domAttr) }}
 
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
             @endif
             
 		</div>

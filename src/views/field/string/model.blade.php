@@ -17,7 +17,7 @@
 		<h4 class="row">
 			<span class="col-sm-12">
 				<i class="ace-icon fa fa-list-ul"></i>
-				{{{ $field->translate('title_list') }}}
+				##### $field->translate('title_list') $$$$$$$$$$
 			</span>
 		</h4>
 	</div>
@@ -28,7 +28,7 @@
 
 				$localeDefault = \Config::get('app.localeDefault');
 
-				$languages = \Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
+				$languages = \App\Model\Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
 								->get()->sortBy(function($item) use ($localeDefault)
 				{
 					return $item->locale == $localeDefault ? 0 : 1;
@@ -37,8 +37,8 @@
 
 				@foreach($languages as $language)
 				<li class="<?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-{{{$field->code}}}">
-						{{{$language->translate('title')}}}
+					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$">
+						#####$language->translate('title')$$$$$$$$$$
 					</a>
 				</li>
 				@endforeach
@@ -52,7 +52,7 @@
 				?>
 				
 				@foreach($languages as $language)
-				<div id="{{$uniqueId}}-language-{{$language->locale}}-{{{$field->code}}}" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
+				<div id="{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
 
 					@if ($field->icon_class)
 					<span class="input-group-addon">
@@ -71,8 +71,8 @@
 					@endif
 
 					@if ($field->translate('description'))
-					<span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-						  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+					<span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
+						  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
 					@endif
 
 				</div>
@@ -116,8 +116,8 @@
             @endif 
 
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
             @endif
             
 		</div>

@@ -63,10 +63,8 @@ return [
     'table.empty' => 'Отсутствуют доступные данные для таблицы',
     'table.empty.showed' => 'Отсутствуют данные для показа',
     'table.empty.filtered' => 'Отсутствуют данные под условиями поиска',
-    'table.search' => 'Search',
     'table.showed' => 'Показаны записи с _START_ до _END_',
     'table.filter.header' => 'Search filter',
-    'table.filter.btn' => 'Search',
 
     'tooltip.description' => "Field description",
 

@@ -19,7 +19,7 @@
 		<h4 class="row">
 			<span class="col-sm-12">
 				<i class="ace-icon fa fa-list-ul"></i>
-				{{{ $field->translate('title_list') }}}
+				##### $field->translate('title_list') $$$$$$$$$$
 			</span>
 		</h4>
 	</div>
@@ -29,7 +29,7 @@
 				<?php
 				$localeDefault = \Config::get('app.localeDefault');
 
-				$languages = \Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
+				$languages = \App\Model\Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
 								->get()->sortBy(function($item) use ($localeDefault)
 				{
 					return $item->locale == $localeDefault ? 0 : 1;
@@ -38,8 +38,8 @@
 
 				@foreach($languages as $language)
 				<li class="<?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-{{{$field->code}}}">
-						{{{$language->translate('title')}}}
+					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$">
+						#####$language->translate('title')$$$$$$$$$$
 					</a>
 				</li>
 				@endforeach
@@ -47,7 +47,7 @@
 			</ul>
 			<div class="tab-content">
 				@foreach($languages as $language)
-				<div id="{{$uniqueId}}-language-{{$language->locale}}-{{{$field->code}}}" class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>">
+				<div id="{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$" class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>">
 					{{ Form::textarea("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) }}
 				</div>
 				@endforeach

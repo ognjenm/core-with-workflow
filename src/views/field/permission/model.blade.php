@@ -24,23 +24,23 @@
 	<div class="widget-header widget-header-small">
 		<h4>
 			<i class="fa fa-list-ul"></i>
-			{{{ $field->translate('title_list') }}}
+			##### $field->translate('title_list') $$$$$$$$$$
 		</h4> 
 	</div>
 	<div class="widget-body"> 
 		<div class="widget-main">
 
-			<ul class="nav nav-tabs" id="field-{{{ $model->{$field->code} . $uniqueId }}}-permission">
+			<ul class="nav nav-tabs" id="field-##### $model->{$field->code} . $uniqueId $$$$$$$$$$-permission">
 				@foreach($permissions as $permission) 
-				<li><a href="#{{{$permission->code . $uniqueId}}}" data-toggle="tab">{{{$permission->translate('title')}}}</a></li>
+				<li><a href="######$permission->code . $uniqueId$$$$$$$$$$" data-toggle="tab">#####$permission->translate('title')$$$$$$$$$$</a></li>
 				@endforeach
 			</ul>
 
 			<div class="tab-content" style="overflow: visible;">
 				@foreach($permissions as $permission) 
-				<div class="tab-pane active" id="{{{$permission->code . $uniqueId}}}">
+				<div class="tab-pane active" id="#####$permission->code . $uniqueId$$$$$$$$$$">
 					<div class="controls" style="margin-left: 0;">
-						<select class="chosen" multiple data-placeholder="{{{$controller->LL('notice.choose')}}}" id="permission-{{{$permission->code . $uniqueId}}}" name="permission[{{{$permission->code}}}][]">
+						<select class="chosen" multiple data-placeholder="#####$controller->LL('notice.choose')$$$$$$$$$$" id="permission-#####$permission->code . $uniqueId$$$$$$$$$$" name="permission[#####$permission->code$$$$$$$$$$][]">
 							<?php
 
 								$sequence = new \Telenok\Object\Sequence();
@@ -73,11 +73,11 @@
 				</div>
 
 				<script type="text/javascript">
-					jQuery('ul#field-{{{ $model->{$field->code} . $uniqueId}}}-permission a:first').tab('show'); 
+					jQuery('ul#field-##### $model->{$field->code} . $uniqueId$$$$$$$$$$-permission a:first').tab('show'); 
 
-					jQuery("#permission-{{{$permission->code . $uniqueId}}}").ajaxChosen({ 
-						keepTypingMsg: "{{{ $controller->LL('notice.typing') }}}",
-						lookingForMsg: "{{{ $controller->LL('notice.looking-for') }}}",
+					jQuery("#permission-#####$permission->code . $uniqueId$$$$$$$$$$").ajaxChosen({ 
+						keepTypingMsg: "##### $controller->LL('notice.typing') $$$$$$$$$$",
+						lookingForMsg: "##### $controller->LL('notice.looking-for') $$$$$$$$$$",
 						type: "GET",
 						url: "{{ URL::route("cmf.field.permission.list.title") }}", 
 						dataType: "json",
@@ -95,7 +95,7 @@
 					},
 					{
 						width: "100%",
-						no_results_text: "{{{ $controller->LL('notice.not-found') }}}"
+						no_results_text: "##### $controller->LL('notice.not-found') $$$$$$$$$$"
 					});
 
 				</script>

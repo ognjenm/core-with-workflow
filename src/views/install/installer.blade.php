@@ -83,17 +83,17 @@
 						<ul class="wizard-steps clearfix">
 							<li class="active" data-target="#modal-step1" style="min-width: 25%; max-width: 25%;">
 								<span class="step">1</span>
-								<span class="title">{{{ \Lang::get('core::install/process.step.1.description.title') }}}</span>
+								<span class="title">##### \Lang::get('core::install/process.step.1.description.title') $$$$$$$$$$</span>
 							</li>
 
 							<li data-target="#modal-step2" style="min-width: 25%; max-width: 25%;">
 								<span class="step">2</span>
-								<span class="title">{{{ \Lang::get('core::install/process.step.2.description.title') }}}</span>
+								<span class="title">##### \Lang::get('core::install/process.step.2.description.title') $$$$$$$$$$</span>
 							</li>
 
 							<li data-target="#modal-step3" style="min-width: 25%; max-width: 25%;">
 								<span class="step">3</span>
-								<span class="title">{{{ \Lang::get('core::install/process.step.3.description.title') }}}</span>
+								<span class="title">##### \Lang::get('core::install/process.step.3.description.title') $$$$$$$$$$</span>
 							</li>
 
 							<li data-target="#modal-step4" style="min-width: 25%; max-width: 25%;">
@@ -106,7 +106,7 @@
 					<div id="modal-step-contents" class="modal-body step-content">
 						<div id="modal-step1" class="step-pane active">
 							<div>
-								<h4 class="blue center">{{{ \Lang::get('core::install/process.step.1.title') }}}</h4> 
+								<h4 class="blue center">##### \Lang::get('core::install/process.step.1.title') $$$$$$$$$$</h4> 
 							</div>
 							<div>
 								<p>{{\Lang::get('core::install/process.step.1.description')}}</p>
@@ -115,49 +115,49 @@
 
 						<div id="modal-step2" class="step-pane">
 							<div class="center">
-								<h4 class="blue center">{{{ \Lang::get('core::install/process.step.2.title') }}}</h4> 
+								<h4 class="blue center">##### \Lang::get('core::install/process.step.2.title') $$$$$$$$$$</h4> 
 							</div>
 
 							<div>
 								<dl class="dl-horizontal">
-									<dt style="width: 250px;">{{{ \Lang::get('core::install/process.os') }}}</dt>
-									<dd style="margin-left: 270px;"><i class="fa fa-check green"></i> {{{ php_uname() }}}</dd>
-									<dt style="width: 250px;">{{{ \Lang::get('core::install/process.php.version') }}}</dt>
+									<dt style="width: 250px;">##### \Lang::get('core::install/process.os') $$$$$$$$$$</dt>
+									<dd style="margin-left: 270px;"><i class="fa fa-check green"></i> ##### php_uname() $$$$$$$$$$</dd>
+									<dt style="width: 250px;">##### \Lang::get('core::install/process.php.version') $$$$$$$$$$</dt>
 										@if (version_compare(PHP_VERSION, '5.4.0') >= 0)
 									<dd style="margin-left: 270px;">
-										<i class="fa fa-check green"></i> {{{ phpversion() }}}
+										<i class="fa fa-check green"></i> ##### phpversion() $$$$$$$$$$
 										@else
 										<?php $errors = TRUE; ?>
 									<dd style="margin-left: 270px;" class="text-warning red">
-										<i class="fa fa-times red"></i> {{{ \Lang::get('core::install/process.php.version.error') }}}
+										<i class="fa fa-times red"></i> ##### \Lang::get('core::install/process.php.version.error') $$$$$$$$$$
 										@endif
 									</dd>
-									<dt style="width: 250px;">{{{ \Lang::get('core::install/process.directory.install') }}}</dt>
-									<dd style="margin-left: 270px;"><i class="fa fa-check green"></i> {{{ base_path() }}}</dd>
-									<dt style="width: 250px;">{{{ \Lang::get('core::install/process.directory.writeable') }}}</dt>
+									<dt style="width: 250px;">##### \Lang::get('core::install/process.directory.install') $$$$$$$$$$</dt>
+									<dd style="margin-left: 270px;"><i class="fa fa-check green"></i> ##### base_path() $$$$$$$$$$</dd>
+									<dt style="width: 250px;">##### \Lang::get('core::install/process.directory.writeable') $$$$$$$$$$</dt>
 									<dd style="margin-left: 270px;">
 										@if (with(new Illuminate\Support\Collection(\File::directories(app_path())))->filter(function($dir){ return !\File::isWritable($dir); })->isEmpty())
 										<div>
-										<i class="fa fa-check green"></i> {{{ app_path() }}}
+										<i class="fa fa-check green"></i> ##### app_path() $$$$$$$$$$
 										@else
 										<div class="text-warning red">
-										<i class="fa fa-times red"></i> {{{ \Lang::get('core::install/process.directory.writeable.error', array('dir' => app_path())) }}}
+										<i class="fa fa-times red"></i> ##### \Lang::get('core::install/process.directory.writeable.error', array('dir' => app_path())) $$$$$$$$$$
 										@endif
 										</div>
 										@if (with(new Illuminate\Support\Collection(\File::directories(storage_path())))->filter(function($dir){ return !\File::isWritable($dir); })->isEmpty())
 										<div>
-										<i class="fa fa-check green"></i> {{{ storage_path() }}}
+										<i class="fa fa-check green"></i> ##### storage_path() $$$$$$$$$$
 										@else
 										<div class="text-warning red">
-										<i class="fa fa-times red"></i> {{{ \Lang::get('core::install/process.directory.writeable.error', array('dir' => storage_path())) }}}
+										<i class="fa fa-times red"></i> ##### \Lang::get('core::install/process.directory.writeable.error', array('dir' => storage_path())) $$$$$$$$$$
 										@endif
 										</div>
 										@if (with(new Illuminate\Support\Collection(\File::directories(public_path())))->filter(function($dir){ return !\File::isWritable($dir); })->isEmpty())
 										<div>
-										<i class="fa fa-check green"></i> {{{ public_path() }}}
+										<i class="fa fa-check green"></i> ##### public_path() $$$$$$$$$$
 										@else
 										<div class="text-warning red">
-										<i class="fa fa-times red"></i> {{{ \Lang::get('core::install/process.directory.writeable.error', array('dir' => public_path())) }}}
+										<i class="fa fa-times red"></i> ##### \Lang::get('core::install/process.directory.writeable.error', array('dir' => public_path())) $$$$$$$$$$
 										@endif
 										</div>
 									</dd>
@@ -168,7 +168,7 @@
 
 						<div id="modal-step3" class="step-pane">
 							<div class="center">
-								<h4 class="blue center">{{{ \Lang::get('core::install/process.step.3.title') }}} <i class="fa fa-spinner fa fa-spin orange bigger-125"></i></h4> 
+								<h4 class="blue center">##### \Lang::get('core::install/process.step.3.title') $$$$$$$$$$ <i class="fa fa-spinner fa fa-spin orange bigger-125"></i></h4> 
 							</div>
 
 							<div>
@@ -176,7 +176,7 @@
 							</div> 
 
 							<div class="center text-warning red error-list error-common hide">
-								<h4 class="center"><i class="fa fa-exclamation-triangle"></i> {{{ \Lang::get('core::install/process.error.common') }}}</h4> 
+								<h4 class="center"><i class="fa fa-exclamation-triangle"></i> ##### \Lang::get('core::install/process.error.common') $$$$$$$$$$</h4> 
 							</div>
 
 							<div class="form-group">
@@ -185,8 +185,8 @@
 									<span>
 										<input type="text" name="domain" value="" placeholder="telenok.com"/>
 									</span>
-									<span class="help-block">{{{ Lang::get('core::install/process.param.domain.example') }}}</span>
-									<div class="help-block red error-list domain hide">{{{ Lang::get('core::install/process.param.domain.error') }}}</div>
+									<span class="help-block">##### Lang::get('core::install/process.param.domain.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list domain hide">##### Lang::get('core::install/process.param.domain.error') $$$$$$$$$$</div>
 								</div>
 							</div>
 
@@ -215,8 +215,8 @@
 									<span>
 										<input type="text" name="superuser_login" value="" placeholder="admin"/>
 									</span>
-									<span class="help-block">{{{ \Lang::get('core::install/process.param.superuser_login.example') }}}</span>
-									<div class="help-block red error-list superuser_login hide">{{{ \Lang::get('core::install/process.param.superuser_login.error') }}}</div>
+									<span class="help-block">##### \Lang::get('core::install/process.param.superuser_login.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list superuser_login hide">##### \Lang::get('core::install/process.param.superuser_login.error') $$$$$$$$$$</div>
 								</div>
 							</div>
 
@@ -227,8 +227,8 @@
 									<span>
 										<input type="password" name="superuser_password" value="" />
 									</span>
-									<span class="help-block">{{{ \Lang::get('core::install/process.param.superuser_password.example') }}}</span>
-									<div class="help-block red error-list superuser_password hide">{{{ \Lang::get('core::install/process.param.superuser_password.error') }}}</div>
+									<span class="help-block">##### \Lang::get('core::install/process.param.superuser_password.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list superuser_password hide">##### \Lang::get('core::install/process.param.superuser_password.error') $$$$$$$$$$</div>
 								</div>
 							</div>
 
@@ -254,8 +254,8 @@
 									<span>
 										<input type="text" name="db_host" value="" placeholder="192.168.0.100" />
 									</span>
-									<span class="help-block">{{{ \Lang::get('core::install/process.param.db_host.example') }}}</span>
-									<div class="help-block red error-list db_host hide">{{{ \Lang::get('core::install/process.param.db_host.error') }}}</div>
+									<span class="help-block">##### \Lang::get('core::install/process.param.db_host.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list db_host hide">##### \Lang::get('core::install/process.param.db_host.error') $$$$$$$$$$</div>
 								</div>
 							</div>
 
@@ -265,8 +265,8 @@
 									<span>
 										<input type="text" name="db_database" value="" placeholder="laravel" />
 									</span>
-									<span class="help-block">{{{ \Lang::get('core::install/process.param.db_database.example') }}}</span>
-									<div class="help-block red error-list db_database hide">{{{ \Lang::get('core::install/process.param.db_database.error') }}}</div>
+									<span class="help-block">##### \Lang::get('core::install/process.param.db_database.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list db_database hide">##### \Lang::get('core::install/process.param.db_database.error') $$$$$$$$$$</div>
 								</div>
 							</div>
 
@@ -276,8 +276,8 @@
 									<span>
 										<input type="text" name="db_username" value="" placeholder="root"/>
 									</span>
-									<span class="help-block">{{{ \Lang::get('core::install/process.param.db_username.example') }}}</span>
-									<div class="help-block red error-list db_username hide">{{{ \Lang::get('core::install/process.param.db_username.error') }}}</div>
+									<span class="help-block">##### \Lang::get('core::install/process.param.db_username.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list db_username hide">##### \Lang::get('core::install/process.param.db_username.error') $$$$$$$$$$</div>
 								</div>
 							</div>
 
@@ -296,8 +296,8 @@
 									<span>
 										<input type="text" name="db_prefix" value="" />
 									</span>
-									<span class="help-block">{{{ \Lang::get('core::install/process.param.db_prefix.example') }}}</span>
-									<div class="help-block red error-list db_prefix hide">{{{ \Lang::get('core::install/process.param.db_prefix.error') }}}</div>
+									<span class="help-block">##### \Lang::get('core::install/process.param.db_prefix.example') $$$$$$$$$$</span>
+									<div class="help-block red error-list db_prefix hide">##### \Lang::get('core::install/process.param.db_prefix.error') $$$$$$$$$$</div>
 								</div>
 							</div> 
 
@@ -305,7 +305,7 @@
 
 						<div id="modal-step4" class="step-pane">
 							<div class="center">
-								<h4 class="blue center">{{{ \Lang::get('core::install/process.step.4.title') }}}</h4> 
+								<h4 class="blue center">##### \Lang::get('core::install/process.step.4.title') $$$$$$$$$$</h4> 
 							</div>
 						</div>
 					</div>
@@ -313,11 +313,11 @@
 					<div class="modal-footer wizard-actions">
 						<button class="btn btn-sm btn-prev" disabled="disabled">
 							<i class="fa fa-arrow-left"></i>
-							{{{ \Lang::get('core::install/process.btn.prev') }}}
+							##### \Lang::get('core::install/process.btn.prev') $$$$$$$$$$
 						</button>
 
-						<button data-last="{{{ \Lang::get('core::install/process.btn.finish') }}} " class="btn btn-success btn-sm btn-next">
-							{{{ \Lang::get('core::install/process.btn.next') }}}
+						<button data-last="##### \Lang::get('core::install/process.btn.finish') $$$$$$$$$$ " class="btn btn-success btn-sm btn-next">
+							##### \Lang::get('core::install/process.btn.next') $$$$$$$$$$
 							<i class="fa fa-arrow-right fa fa-on-right"></i>
 						</button>
 

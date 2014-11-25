@@ -418,32 +418,34 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             ))->render();
     }
     
+    public function getFilterQueryLike($value, $query, $model, $input)
+    {     
+        $query->where(function($query) use ($value, $model, $field)
+        {
+            \Illuminate\Support\Collection::make(explode(' ', $value))
+                ->reject(function($i) 
+                { 
+                    return !trim($i);
+                }) 
+                ->each(function($i) use ($query, $model, $field)
+                {
+                    $query->orWhere($model->getTable() . '.' . $field, 'like', '%' . trim($i) . '%');
+                });
+
+            $query->orWhere($model->getTable().'.id', intval($value));
+        }); 
+    }
+    
     public function getFilterQuery($model, $query)
     {
         $translate = new \Telenok\Object\Translation();
         
         if ($title = trim(\Input::get('sSearch')))
         {
-			$query->where(function($query) use ($title, $model)
-			{
-				\Illuminate\Support\Collection::make(explode(' ', $title))
-						->reject(function($i) { return !trim($i); })
-						->each(function($i) use ($query, $model)
-				{
-					$query->orWhere($model->getTable().'.title', 'like', '%'.trim($i).'%');
-					$query->orWhere($model->getTable().'.id', $i);
-				});
-			});
-			
-            $query->leftJoin($translate->getTable(), function($join) use ($model, $translate)
-            {
-                $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
-                        ->on($translate->getTable().'.translation_object_field_code', '=', \DB::raw("'title'"))
-                        ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
-            });
+            $this->getFilterQueryLike($title, $query, $model, 'title');
         } 
 
-		if (\Input::get('filter_want_search', false))
+		if (\Input::get('multifield_search', false))
 		{
 			$this->getFilterSubQuery(\Input::get('filter', []), $model, $query);
 		}
@@ -452,21 +454,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         
         if (\Input::get('iSortCol_0', 0))
         {
-            if (in_array($orderByField, $model->getMultilanguage()))
-            { 
-                $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $orderByField)
-                {
-                    $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
-                            ->on($translate->getTable().'.translation_object_field_code', '=', \DB::raw("'{$orderByField}'"))
-                            ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
-                });
-
-                $query->orderBy($translate->getTable().'.translation_object_string', \Input::get('sSortDir_0'));
-            }
-            else
-            {
-                $query->orderBy($model->getTable() . '.' . $orderByField, \Input::get('sSortDir_0'));
-            }
+            $query->orderBy($model->getTable() . '.' . $orderByField, \Input::get('sSortDir_0'));
         }
     }
 
@@ -519,15 +507,17 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     public function getTreeList()
     {
         $tree = [];
+        $input = \Telenok\Support\Helper\Input::getCollection(\Input::all());
 
-        $id = \Input::get('id', -1);
+        $id = $input->get('id', -1);
+        $searchStr = trim($input->get('search_string'));
 
         if ($id == -1)
         {
             $tree = [
                 'data' => $this->LL('tree.root'),
                 'attr' => ['id' => 0, 'rel' => 'folder'],
-                "metadata" => ['id' => 0, 'gridId' => $this->getGridId()],
+                'metadata' => ['id' => 0, 'gridId' => $this->getGridId()],
                 'state' => 'closed'
             ];
         }
@@ -535,7 +525,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         {
             try
             {
-                $list = $this->getTreeListModel($id);
+                $list = $this->getTreeListModel($id, $searchStr);
 
                 $parents = $list->lists('id', 'tree_pid');
 
@@ -560,30 +550,40 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return $tree;
     } 
 
-    public function getTreeListModel($treePid = 0)
+    public function getTreeListModel($treePid = 0, $str = '', $input = [])
     {
         $model = $this->getModelTree();
         
         $query = \Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->active();
 
-        $sequences_object_type = [\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey()];
+        $sequences_object_type = [];
+        
+        $sequences_object_type[] = \Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey();
 
         if ($model !== null)
         {
             $sequences_object_type[] = \Telenok\Object\Type::where('code', $model->getTable())->first()->getKey();
         }
         
-        if ($treePid==0)
+        if ($str)
         {
-            $query->where('pivot_relation_m2m_tree.tree_depth', '<', 2);
+            $this->getFilterQueryLike($str, $query, $model, $input);
         }
         else
         {
-            $query->where('pivot_relation_m2m_tree.tree_pid', $treePid);
-        } 
-        
+            if ($treePid == 0)
+            {
+                $query->where('pivot_relation_m2m_tree.tree_depth', '<', 2);
+            }
+            else
+            {
+                $query->where('pivot_relation_m2m_tree.tree_pid', $treePid);
+            }
+            
+            $query->whereIn('object_sequence.sequences_object_type', $sequences_object_type);
+        }
+
         $query->where('object_sequence.treeable', 1);
-        $query->whereIn('object_sequence.sequences_object_type', $sequences_object_type);
 		$query->withPermission('read', null, ['direct-right']);
 
         return $query->get();
@@ -642,9 +642,13 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return [];
     }
 
-    public function getList()
+    public function getList($input = [])
     {
         $content = [];
+        
+        $input = $input ?: \Input::all();
+        
+        if ()
         
         $total = \Input::get('iDisplayLength', 10);
         $sEcho = \Input::get('sEcho');
@@ -1001,7 +1005,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         {
             try
             {
-                $model->sequence->makeLastChildOf(\Telenok\System\Folder::findOrFail($input->get('tree_pid'))->sequence);
+                $model->sequence->makeLastChildOf(\App\Model\Telenok\System\Folder::findOrFail($input->get('tree_pid'))->sequence);
             }
             catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) 
             { 

@@ -17,7 +17,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     {
         $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
         {
-            if (!\Input::get('filter_want_search', false) && ($treePid = \Input::get('treePid', 0)))
+            if (!\Input::get('multifield_search', false) && ($treePid = \Input::get('treePid', 0)))
             { 
                 $query->where($model->getTable().'.field_object_type', $treePid);
             }

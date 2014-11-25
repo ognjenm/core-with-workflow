@@ -12,6 +12,41 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     protected $specialField = ['string_default', 'string_regex', 'string_password', 'string_max', 'string_min', 'string_list_size'];
     protected $ruleList = ['string_regex' => ['valid_regex']];
 
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null && trim($value))
+		{
+            $fieldCode = $field->code;
+            $translate = new \Telenok\Object\Translation();
+
+            if (in_array($fieldCode, $model->getMultilanguage()))
+            {
+                $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $fieldCode)
+                {
+                    $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
+                            ->on($translate->getTable().'.translation_object_field_code', '=', \DB::raw("'" . $fieldCode . "'"))
+                            ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
+                });
+
+                $query->where(function($query) use ($value, $model)
+                {
+                    \Illuminate\Support\Collection::make(explode(' ', $value))
+                            ->reject(function($i) { return !trim($i); })
+                            ->each(function($i) use ($query, $translate)
+                    {
+                        $query->orWhere($translate->getTable().'.translation_object_string', 'like', '%' . trim($i) . '%');
+                    });
+
+                    $query->orWhere($model->getTable() . '.id', intval($value));
+                });
+            }
+            else 
+            {
+                parent::getFilterQuery($field, $model, $query, $name, $value);
+            }
+		}
+    }
+
     public function getModelAttribute($model, $key, $value, $field)
     {
         if ($field->multilanguage)

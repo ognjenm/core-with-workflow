@@ -16,7 +16,7 @@
 	else if (button_type == 'delete.close')
 	{ 
 		@if ($model)
-		if (confirm('{{{ $controller->LL('notice.sure') }}}'))
+		if (confirm('##### $controller->LL('notice.sure') $$$$$$$$$$'))
 		{
 			$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getRealPath()])}}");
 		}
@@ -76,7 +76,7 @@
 		<div class="col-sm-9">
 			@if ($model && $model->getSize() >= $controller->getMaxSizeToView())
 
-			{{{ $controller->LL('error.file-too-big') }}}
+			##### $controller->LL('error.file-too-big') $$$$$$$$$$
 
 			@else
 

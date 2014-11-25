@@ -8,10 +8,10 @@
         <div>
             <div data-toggle="buttons" class="btn-group btn-overlap">
                 <label class="btn btn-white btn-sm btn-primary  active ">
-                    <input type="radio" value="0" name="multilanguage" checked="checked"> {{{$controller->LL('btn.no')}}}
+                    <input type="radio" value="0" name="multilanguage" checked="checked"> #####$controller->LL('btn.no')$$$$$$$$$$
                 </label>
                 <label class="btn btn-white btn-sm btn-primary ">
-                    <input type="radio" value="1" name="multilanguage"> {{{$controller->LL('btn.yes')}}}
+                    <input type="radio" value="1" name="multilanguage"> #####$controller->LL('btn.yes')$$$$$$$$$$
                 </label>
             </div>
         </div>

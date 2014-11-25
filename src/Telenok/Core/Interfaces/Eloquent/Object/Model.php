@@ -4,7 +4,7 @@ namespace Telenok\Core\Interfaces\Eloquent\Object;
 
 abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
-	use \Illuminate\Database\Eloquent\SoftDeletingTrait;
+	use \Illuminate\Database\Eloquent\SoftDeletes;
 	
 	public $incrementing = false;
 	public $timestamps = true;
@@ -550,11 +550,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 						
 			foreach ($this->getObjectField()->all() as $key => $field)
 			{
-				$fieldController = $fields->get($field->key);
+				$controller = $fields->get($field->key);
 
-				if ($fieldController)
+				if ($controller)
 				{
-					static::$listMultilanguage[$class] = array_merge(static::$listMultilanguage[$class], (array) $fieldController->getMultilanguage($this, $field));
+					static::$listMultilanguage[$class] = array_merge(static::$listMultilanguage[$class], (array) $controller->getMultilanguage($this, $field));
 				}
 			}
 		}

@@ -3,7 +3,7 @@
 
 		<div class="modal-header table-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>{{{ $controller->LL('wizard.file.header') }}}</h4>
+			<h4>##### $controller->LL('wizard.file.header') $$$$$$$$$$</h4>
 		</div>
 		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
 			<script type="text/javascript">
@@ -15,15 +15,15 @@
 					"contextmenu" : {
 						'items' : {
 							'create' : {
-								"label" : "{{{ $controller->LL('btn.create') }}}",
+								"label" : "##### $controller->LL('btn.create') $$$$$$$$$$",
 								"action" : function (obj) { this.create(obj); }
 							},
 							"rename" : {
-								"label" : "{{{ $controller->LL('btn.rename') }}}",
+								"label" : "##### $controller->LL('btn.rename') $$$$$$$$$$",
 								"action" : function (obj) { this.rename(obj); }
 						   },
 							'remove' : {
-								"label" : "{{{ $controller->LL('btn.delete') }}}",
+								"label" : "##### $controller->LL('btn.delete') $$$$$$$$$$",
 								"action" : function (obj) { this.create(obj); }
 							}, 
 							'ccp' : false  
@@ -56,7 +56,7 @@
 				.bind("create.jstree", function(e, data) {
 					if (data.rslt.parent == -1) 
 					{
-						alert("{{{ $controller->LL('notice.error') }}}!");
+						alert("##### $controller->LL('notice.error') $$$$$$$$$$!");
 						jQuery.jstree.rollback(data.rlbk);
 						return;
 					} 
@@ -70,7 +70,7 @@
 				.bind("rename.jstree", function(e, data) {
 					if (data.rslt.parent == -1) 
 					{
-						alert("{{{ $controller->LL('notice.error') }}}!");
+						alert("##### $controller->LL('notice.error') $$$$$$$$$$!");
 						jQuery.jstree.rollback(data.rlbk);
 						return;
 					} 
@@ -93,8 +93,8 @@
 					jQuery('#tree-{{$uniqueId}}').jstree('get_selected').each(function(){    
 						$modal.data('path')( jQuery(this).data('path') ); 
 						$modal.modal('hide');
-					});">{{{ $controller->LL('btn.choose') }}}</a>
-			<a class="btn" data-dismiss="modal">{{{ $controller->LL('btn.close') }}}</a>
+					});">##### $controller->LL('btn.choose') $$$$$$$$$$</a>
+			<a class="btn" data-dismiss="modal">##### $controller->LL('btn.close') $$$$$$$$$$</a>
 		</div>
 	</div>
 </div>

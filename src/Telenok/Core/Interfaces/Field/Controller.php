@@ -288,7 +288,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 						->reject(function($i) { return !trim($i); })
 						->each(function($i) use ($query, $name, $model)
 				{
-					$query->where($model->getTable().'.'.$name, 'like', '%'.trim($i).'%');
+					$query->orWhere($model->getTable() . '.' . $name, 'like', '%'.trim($i).'%');
 				});
 			});
 		}

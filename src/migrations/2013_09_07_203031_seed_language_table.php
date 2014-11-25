@@ -37,7 +37,7 @@ class SeedLanguageTable extends Migration {
  
 		DB::table('language')->insertGetId(
 				[
-					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\System\Language']),
+					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\System\Language']),
 					'title' => "English",
 					'locale' => 'en',
 					'active' => 1,

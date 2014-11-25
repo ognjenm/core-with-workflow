@@ -22,10 +22,7 @@ class CoreServiceProvider extends ServiceProvider {
     {
         $this->package('telenok/core');
 
-        if (\Request::is('telenok', 'telenok/*'))
-        {
-            include __DIR__ . '/../../config/route.php';
-        }
+        include __DIR__ . '/../../config/route.php';
 
         $this->commands('command.telenok.install');
         $this->commands('command.telenok.migration');
@@ -77,7 +74,7 @@ class CoreServiceProvider extends ServiceProvider {
         });
 
         //DONOTDELETETHISCOMMENT
-        return;
+        //return;
         //~DONOTDELETETHISCOMMENT
 
         $this->app->singleton('telenok.config', '\Telenok\Core\Config');

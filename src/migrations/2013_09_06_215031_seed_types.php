@@ -98,7 +98,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Настройки', 'en' => 'Setting'], JSON_UNESCAPED_UNICODE),
 						'code' => 'setting',
 						'active' => 1,
-						'class_model' => '\Telenok\System\Setting',
+						'class_model' => '\App\Model\Telenok\System\Setting',
 						'class_controller' => '\Telenok\Core\Module\System\Setting\Controller',
 					]
 			);
@@ -165,7 +165,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Список языков', 'en' => 'List of languages'], JSON_UNESCAPED_UNICODE),
 						'code' => 'language',
 						'active' => 1,
-						'class_model' => '\Telenok\System\Language',
+						'class_model' => '\App\Model\Telenok\System\Language',
 					]
 			);
 
@@ -176,7 +176,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Папка', 'en' => 'Folder'], JSON_UNESCAPED_UNICODE),
 						'code' => 'folder',
 						'active' => 1,
-						'class_model' => '\Telenok\System\Folder',
+						'class_model' => '\App\Model\Telenok\System\Folder',
 						'treeable' => 1
 					]
 			);
@@ -211,7 +211,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Страница', 'en' => 'Page'], JSON_UNESCAPED_UNICODE),
 						'code' => 'page',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\Page',
+						'class_model' => 'App\Model\Telenok\Web\Page',
 						'class_controller' => '\Telenok\Core\Module\Web\Page\Controller',
 					]
 			);
@@ -223,7 +223,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Группа модулей', 'en' => 'Module group'], JSON_UNESCAPED_UNICODE),
 						'code' => 'module_group',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\ModuleGroup'
+						'class_model' => 'App\Model\Telenok\Web\ModuleGroup'
 					]
 			);
 
@@ -234,7 +234,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Модуль', 'en' => 'Module'], JSON_UNESCAPED_UNICODE),
 						'code' => 'module',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\Module'
+						'class_model' => 'App\Model\Telenok\Web\Module'
 					]
 			);
 
@@ -245,7 +245,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Группа виджетов', 'en' => 'Widget group'], JSON_UNESCAPED_UNICODE),
 						'code' => 'widget_group',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\WidgetGroup'
+						'class_model' => 'App\Model\Telenok\Web\WidgetGroup'
 					]
 			);
 
@@ -256,7 +256,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Виджет', 'en' => 'Widget'], JSON_UNESCAPED_UNICODE),
 						'code' => 'widget',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\Widget'
+						'class_model' => 'App\Model\Telenok\Web\Widget'
 					]
 			);
 
@@ -267,7 +267,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Контроллер страницы', 'en' => 'Page controller'], JSON_UNESCAPED_UNICODE),
 						'code' => 'page_controller',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\PageController',
+						'class_model' => 'App\Model\Telenok\Web\PageController',
 						'class_controller' => '\Telenok\Core\Module\Web\PageController\Controller',
 					]
 			);
@@ -279,7 +279,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Виджет на странице', 'en' => 'Widget on page'], JSON_UNESCAPED_UNICODE),
 						'code' => 'widget_on_page',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\WidgetOnPage',
+						'class_model' => 'App\Model\Telenok\Web\WidgetOnPage',
 						'class_controller' => '\Telenok\Core\Module\Web\WidgetOnPage\Controller',
 					]
 			);
@@ -335,7 +335,7 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Домены', 'en' => 'Domains'], JSON_UNESCAPED_UNICODE),
 						'code' => 'domain',
 						'active' => 1,
-						'class_model' => '\Telenok\Web\Domain', 
+						'class_model' => 'App\Model\Telenok\Web\Domain', 
 						'class_controller' => '\Telenok\Core\Module\Web\Domain\Controller',
 					]
 			);

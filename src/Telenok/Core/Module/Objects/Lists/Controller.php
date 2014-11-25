@@ -138,24 +138,24 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 	public function getFilterSubQuery($input, $model, $query)
 	{
-		$fieldConfig = \App::make('telenok.config')->getObjectFieldController();
+		$controller = \App::make('telenok.config')->getObjectFieldController();
 
 		if (!$input instanceof \Illuminate\Support\Collection)
 		{
 			$input = \Illuminate\Support\Collection::make($input);
 		}
 
-		$model->getFieldForm()->each(function($field) use ($input, $query, $fieldConfig, $model)
+		$model->getFieldForm()->each(function($field) use ($input, $query, $controller, $model)
 		{
 			if ($field->allow_search)
 			{
 				if ($input->has($field->code))
 				{
-					$fieldConfig->get($field->key)->getFilterQuery($field, $model, $query, $field->code, $input->get($field->code));
+					$controller->get($field->key)->getFilterQuery($field, $model, $query, $field->code, $input->get($field->code));
 				}
 				else
 				{
-                    $fieldConfig->get($field->key)->getFilterQuery($field, $model, $query, $field->code, null);
+                    $controller->get($field->key)->getFilterQuery($field, $model, $query, $field->code, null);
 				}
 			}
         });

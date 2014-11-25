@@ -33,7 +33,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	{
 		$content = ['controller' => $this];
 
-		$wop = \Telenok\Web\WidgetOnPage::where('widget_page', $pageId)->whereHas('widgetLanguageLanguage', function($query) use ($languageId)
+		$wop = App\Model\Telenok\Web\WidgetOnPage::where('widget_page', $pageId)->whereHas('widgetLanguageLanguage', function($query) use ($languageId)
 			{
 				$query->where('id', $languageId);
 			})
@@ -87,7 +87,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		try
 		{
-			$page = \Telenok\Web\Page::findOrFail($pageId);
+			$page = App\Model\Telenok\Web\Page::findOrFail($pageId);
 
             $this->setCacheTime($page->cache_time);
 

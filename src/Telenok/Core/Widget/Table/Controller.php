@@ -81,7 +81,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	{
 		$content = [];
 
-		$wop = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('widget_order')->get();
+		$wop = App\Model\Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('widget_order')->get();
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 
@@ -95,7 +95,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function getInsertContent($id = 0)
 	{
-		$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
+		$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 
 		if ($widgetOnPage->isWidgetLink())
 		{
@@ -160,7 +160,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	{
 		$content = [];
 
-		$wop = \Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('widget_order')->get();
+		$wop = App\Model\Telenok\Web\WidgetOnPage::where('container', $container_id)->orderBy('widget_order')->get();
 
 		$widgetConfig = \App::make('telenok.config')->getWidget();
 
@@ -186,8 +186,8 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		
 		\DB::transaction(function() use ($languageId, $pageId, $key, $id, $container, $order, &$widgetOnPage, $bufferId)
 		{
-			$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id);
-			$buffer = \Telenok\System\Buffer::findOrFail($bufferId);
+			$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
+			$buffer = \App\Model\Telenok\System\Buffer::findOrFail($bufferId);
 
 			if ($buffer->key == 'cut')
 			{
@@ -197,7 +197,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 					"key" => $key,
 				]);
 
-				$bufferWidget = \Telenok\System\Buffer::find($bufferId);
+				$bufferWidget = \App\Model\Telenok\System\Buffer::find($bufferId);
 
 				if ($bufferWidget)
 				{
@@ -206,7 +206,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 			}
 			else if ($buffer->key == 'copy')
 			{
-				$widgetOnPage = \Telenok\Web\WidgetOnPage::findOrFail($id)->replicate();
+				$widgetOnPage = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id)->replicate();
 				$widgetOnPage->push();
 				$widgetOnPage->storeOrUpdate([
 						"container" => $container,
@@ -239,14 +239,14 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 				$originalWidget->widgetLink()->save($widgetOnPage);
 			}
 
-			\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
+			App\Model\Telenok\Web\WidgetOnPage::where("widget_order", ">=", $order)
 					->where("container", $container)->get()->each(function($item)
 			{
 				$item->storeOrUpdate(["widget_order" => $item->order + 1]);
 			});
 
-			$widgetOnPage->widgetPage()->associate(\Telenok\Web\Page::findOrFail($pageId))->save(); 
-			$widgetOnPage->widgetLanguageLanguage()->associate(\Telenok\System\Language::findOrFail($languageId))->save(); 
+			$widgetOnPage->widgetPage()->associate(App\Model\Telenok\Web\Page::findOrFail($pageId))->save(); 
+			$widgetOnPage->widgetLanguageLanguage()->associate(\App\Model\Telenok\System\Language::findOrFail($languageId))->save(); 
 			$widgetOnPage->save();
 
 			if ($buffer->key == 'cut' || $buffer->key == 'copy')
@@ -268,9 +268,9 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		{ 
 			$newContainres[$key] = preg_replace('/(container-)(\d+)(-\d+-\d+)/', "\${1}" . $widgetOnPage->id . "\${3}", $container);
 
-			\Telenok\Web\WidgetOnPage::where("container", $container)->get()->each(function($item) use ($widgetOnPage, $buffer, $newContainres, $key)
+			App\Model\Telenok\Web\WidgetOnPage::where("container", $container)->get()->each(function($item) use ($widgetOnPage, $buffer, $newContainres, $key)
 			{
-				$buffer = \Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $item->getKey(), 'web-page', $buffer->key);
+				$buffer = \App\Model\Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $item->getKey(), 'web-page', $buffer->key);
 				
 				$widget = \App::make('telenok.config')->getWidget()->get($item->key);
 				
@@ -328,9 +328,9 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function removeFromPage($id = 0)
 	{
-		$w = \Telenok\Web\WidgetOnPage::findOrFail($id);
+		$w = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
         
-		if (\Telenok\Web\WidgetOnPage::whereIn('container', $w->structure->get('containerIds', []))->count())
+		if (App\Model\Telenok\Web\WidgetOnPage::whereIn('container', $w->structure->get('containerIds', []))->count())
 		{
             throw new \Exception($this->LL('widget.has.child'));
 		}
@@ -361,7 +361,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
             {
                 for($y = 0; $y < $row; $y++)
                 {
-                    if (\Telenok\Web\WidgetOnPage::where('container', 'container-' . $model->id . '-' . $x . '-' . $y)->count())
+                    if (App\Model\Telenok\Web\WidgetOnPage::where('container', 'container-' . $model->id . '-' . $x . '-' . $y)->count())
                     {
                         throw new \Exception($this->LL('widget.has.child'));
                     }
@@ -372,7 +372,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
             {
                 for($y = $inputRow; $y < $row; $y++)
                 {
-                    if (\Telenok\Web\WidgetOnPage::where('container', 'container-' . $model->id . '-' . $x . '-' . $y)->count())
+                    if (App\Model\Telenok\Web\WidgetOnPage::where('container', 'container-' . $model->id . '-' . $x . '-' . $y)->count())
                     {
                         throw new \Exception($this->LL('widget.has.child'));
                     }

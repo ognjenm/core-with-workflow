@@ -55,10 +55,9 @@ return [
     'table.empty' => 'Отсутствуют доступные данные для таблицы',
     'table.empty.showed' => 'Отсутствуют данные для показа',
     'table.empty.filtered' => 'Отсутствуют данные под условиями поиска',
-    'table.search' => 'Найти',
     'table.showed' => 'Показаны записи с _START_ до _END_',
     'table.filter.header' => 'Фильтр поиска',
-    'table.filter.btn' => 'Найти',
+    'btn.search' => 'Найти',
 
     'tooltip.description' => "Описание поля",
 
