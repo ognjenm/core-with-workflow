@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Workflow\Thread;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller 
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller 
 {
     protected $key = 'workflow-thread';
     protected $parent = 'workflow';

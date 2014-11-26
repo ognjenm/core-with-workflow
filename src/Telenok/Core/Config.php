@@ -20,7 +20,7 @@ class Config {
 
 				foreach ($collection as $class)
 				{
-					$object = \App::build($class);
+					$object = app($class);
 
 					$list->put($object->getKey(), $object);
 				}
@@ -71,7 +71,7 @@ class Config {
 
 				foreach ($collection as $class)
 				{
-					$object = \App::build($class);
+					$object = app($class);
 
 					$list->put($object->getKey(), $object);
 				}
@@ -101,7 +101,7 @@ class Config {
 
 				foreach ($collection as $class)
 				{
-					$object = \App::build($class);
+					$object = app($class);
 
 					$list->put($object->getKey(), $object);
 				}
@@ -131,7 +131,7 @@ class Config {
 
 				foreach ($collection as $class)
 				{
-					$object = \App::build($class);
+					$object = app($class);
 
 					$list->put($object->getKey(), $object);
 				}
@@ -187,9 +187,9 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
 				{
-					$object = \App::build($item->controller_class);
+					$object = app($item->controller_class);
 					$object->setModuleGroupModel($item);
 					$list->put($object->getKey(), $object);
 				});
@@ -213,9 +213,9 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
 				{
-					$object = \App::build($item->controller_class);
+					$object = app($item->controller_class);
 					$object->setModuleModel($item);
 					$list->put($object->getKey(), $object);
 				});
@@ -228,35 +228,7 @@ class Config {
 
 		return $list;
 	}
-/*
-	public function getController($flush = false)
-	{
-		static $list = null;
 
-		if ($list === null || $flush)
-		{
-			try
-			{
-				$listControllers = \Illuminate\Support\Collection::make([]);
-				$list = \Illuminate\Support\Collection::make([]);
-
-                \Event::fire('telenok.controller.frontend', $listControllers);
-
-                $listControllers->each(function($item) use ($list)
-                {
-					$object = \App::build($item);
-					$list->put($object->getKey(), $object);
-                });
-			}
-			catch (\Exception $e)
-			{
-				throw new \RuntimeException('Failed to get controller. Error: ' . $e->getMessage());
-			}
-		}
-
-		return $list;
-	}
-*/
 	public function getWidgetGroup($flush = false)
 	{
 		static $list = null;
@@ -267,9 +239,9 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				App\Model\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
 				{
-					$object = \App::build($item->controller_class);
+					$object = app($item->controller_class);
 					$object->setWidgetGroupModel($item);
 					$list->put($object->getKey(), $object);
 				});
@@ -293,10 +265,9 @@ class Config {
 			{
 				$list = \Illuminate\Support\Collection::make([]);
 
-				App\Model\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
 				{
-					$object = \App::build($item->controller_class);
-					//$object->setWidgetModel($item);
+					$object = app($item->controller_class);
 					$list->put($object->getKey(), $object);
 				});
 			}
@@ -324,9 +295,9 @@ class Config {
 		$routeCommon = [];
 		$routeDomain = []; 
 
-		$domains = App\Model\Telenok\Web\Domain::active()->get();
+		$domains = \App\Model\Telenok\Web\Domain::active()->get();
 		
-		$pages = App\Model\Telenok\Web\Page::whereHas('pagePageController', function($query) 
+		$pages = \App\Model\Telenok\Web\Page::whereHas('pagePageController', function($query) 
 		{ 
 			$now = \Carbon\Carbon::now();
 			$query->where('active', 1)

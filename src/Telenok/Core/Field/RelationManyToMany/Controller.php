@@ -26,7 +26,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Object\Type::whereIn('id', [$field->relation_many_to_many_has, $field->relation_many_to_many_belong_to])->first();
+		return \App\Model\Telenok\Object\Type::whereIn('id', [$field->relation_many_to_many_has, $field->relation_many_to_many_belong_to])->first();
 	}
 
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null)
@@ -59,7 +59,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
         $id = $field->relation_many_to_many_has ?: $field->relation_many_to_many_belong_to;
 
-        $class = \Telenok\Object\Sequence::getModel($id)->class_model;
+        $class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
 
 		$model = new $class;
 
@@ -153,7 +153,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			$input->put('relation_many_to_many_has', $input->get('field_has'));
 		}
 
-		$input->put('relation_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('relation_many_to_many_has'))->orWhere('id', $input->get('relation_many_to_many_has'))->pluck('id')));
+		$input->put('relation_many_to_many_has', intval(\App\Model\Telenok\Object\Type::where('code', $input->get('relation_many_to_many_has'))->orWhere('id', $input->get('relation_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);
 		
@@ -178,7 +178,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
             $codeFieldHasMany = $model->code; 
             $codeTypeHasMany = $relatedTypeOfModelField->code; 
 
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('relation_many_to_many_has')); 
+            $typeBelongTo = \App\Model\Telenok\Object\Type::findOrFail($input->get('relation_many_to_many_has')); 
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 
@@ -201,8 +201,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
                     'field_2' => $pivotField,
                 ];
 
-            $hasManyObject = \App::build($classModelHasMany);
-            $belongToObject = \App::build($classBelongTo);
+            $hasManyObject = app($classModelHasMany);
+            $belongToObject = app($classBelongTo);
 
             if ($input->get('create_belong') !== false) 
             {
@@ -241,11 +241,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 					'field_order' => $input->get('field_order_belong', $model->field_order),
 				];
 
-				$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
+				$validator = $this->validator(new \App\Model\Telenok\Object\Field(), $toSave, []);
 
 				if ($validator->passes()) 
 				{
-					\Telenok\Object\Field::create($toSave);
+					\App\Model\Telenok\Object\Field::create($toSave);
 				}
 
 				if (!$this->validateMethodExists($belongToObject, $belongTo['method']))

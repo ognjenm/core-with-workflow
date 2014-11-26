@@ -112,7 +112,7 @@
                                 <a href="#" class="user-title-label dropdown-toggle" data-toggle="dropdown">
                                     <i class="fa fa-circle light-green middle"></i>
                                     &nbsp;
-                                    <span class="white middle bigger-120">##### \Auth::user()->username $$$$$$$$$$</span>
+                                    <span class="white middle bigger-120">{{ \Auth::user()->username }}</span>
                                 </a>
 
                                 <ul class="align-left dropdown-menu dropdown-caret dropdown-lighter">

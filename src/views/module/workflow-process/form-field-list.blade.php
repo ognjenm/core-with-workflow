@@ -20,13 +20,13 @@
 
 		<!-- Process field -->
 
-		{{Form::hidden('process', $model->{$field->code})}}
+		{!! Form::hidden('process', $model->{$field->code}) !!}
 
 		<div class="form-group">
-			{{ Form::label('process', $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+			{!! Form::label('process', $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 			<div class="col-sm-3">
 				<button type="button" class="btn" onclick="showProcessModal{{$uniqueId}}(); return false;">
-					##### $controller->LL('btn.open-process-editor') $$$$$$$$$$
+					{{ $controller->LL('btn.open-process-editor') }}
 				</button>
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 				if (window.frames['frame-process-{{$uniqueId}}'] && window.frames['frame-process-{{$uniqueId}}'].oryxEditor)
 				{
 					jQuery.ajax({
-						url: '{{ URL::route("cmf.workflow.apply-diagram", ['sessionDiagramId' => $sessionDiagramId]) }}',
+						url: '{!! URL::route("cmf.workflow.apply-diagram", ['sessionDiagramId' => $sessionDiagramId]) !!}',
 						method: 'post',
 						dataType: 'json',
 						data: {
@@ -82,7 +82,7 @@
 					jQuery('div.modal-body', modal)
 						.html(  '<iframe name="frame-process-{{$uniqueId}}" id="frame-process-{{$uniqueId}}" ' +
 								' style="width: 100%; border: none;"' + 
-								' src="{{ URL::route("cmf.module.workflow-process.diagram.show", ['diagramId' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) }}" />')
+								' src="{!! URL::route("cmf.module.workflow-process.diagram.show", ['diagramId' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) !!}" />')
 				
                 }
 
@@ -104,5 +104,5 @@
 		</script>
 	
 	@else
-		{{ \App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) }}
+		{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 	@endif

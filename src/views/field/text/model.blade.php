@@ -19,7 +19,7 @@
 		<h4 class="row">
 			<span class="col-sm-12">
 				<i class="ace-icon fa fa-list-ul"></i>
-				##### $field->translate('title_list') $$$$$$$$$$
+				{{ $field->translate('title_list') }}
 			</span>
 		</h4>
 	</div>
@@ -38,8 +38,8 @@
 
 				@foreach($languages as $language)
 				<li class="<?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$">
-						#####$language->translate('title')$$$$$$$$$$
+					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-{{$field->code}}">
+						{{$language->translate('title')}}
 					</a>
 				</li>
 				@endforeach
@@ -47,8 +47,8 @@
 			</ul>
 			<div class="tab-content">
 				@foreach($languages as $language)
-				<div id="{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$" class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					{{ Form::textarea("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) }}
+				<div id="{{$uniqueId}}-language-{{$language->locale}}-{{$field->code}}" class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>">
+					{!! Form::textarea("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) !!}
 				</div>
 				@endforeach
 			</div> 
@@ -59,9 +59,9 @@
 </div>
 @else
 <div class="form-group">
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class'=>'control-label')) }}
+	{!! Form::label("{$field->code}", $field->translate('title'), array('class'=>'control-label')) !!}
 	<div class="controls">
-		{{ Form::textarea($field->code, $model->translate($field->code), $domAttr) }}
+		{!! Form::textarea($field->code, $model->translate($field->code), $domAttr) !!}
 	</div>
 </div>
 @endif

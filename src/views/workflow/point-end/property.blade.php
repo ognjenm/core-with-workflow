@@ -18,30 +18,30 @@
                             {!! Form::hidden('stencilId', $stencilId) !!}
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[title]">#####$controller->LL('title')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('title')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[title]" value="#####$property->get('title')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[title]" value="{{$property->get('title')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[bgcolor]">#####$controller->LL('property.bgcolor')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[bgcolor]">{{$controller->LL('property.bgcolor')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[bgcolor]" value="#####$property->get('bgcolor')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[bgcolor]" value="{{$property->get('bgcolor')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[bordercolor]">#####$controller->LL('property.bordercolor')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[bordercolor]">{{$controller->LL('property.bordercolor')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[bordercolor]" value="#####$property->get('bordercolor')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[bordercolor]" value="{{$property->get('bordercolor')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[description]">#####$controller->LL('property.description')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[description]">{{$controller->LL('property.description')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[description]" value="#####$property->get('description')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[description]" value="{{$property->get('description')}}" />
                                 </div>
                             </div>
 
@@ -64,18 +64,18 @@
                     var $form = jQuery('form', $modal);
                     $modal.data('model-data')($form);
                     return false;">
-                    ##### $controller->LL('btn.apply') $$$$$$$$$$
+                    {{ $controller->LL('btn.apply') }}
                 </button>
 
                 <button class="btn btn-success" data-dismiss="modal" onclick="
                     var $modal = jQuery(this).closest('div.modal');
                     var $form = jQuery('form', $modal);
                     $modal.data('model-data')($form);">
-                    ##### $controller->LL('btn.apply.close') $$$$$$$$$$
+                    {{ $controller->LL('btn.apply.close') }}
                 </button>
 
                 <button class="btn btn-danger" data-dismiss="modal">
-                    ##### $controller->LL('btn.close') $$$$$$$$$$
+                    {{ $controller->LL('btn.close') }}
                 </button>
 
             </div>

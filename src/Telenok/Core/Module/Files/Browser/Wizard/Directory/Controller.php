@@ -74,7 +74,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function getListContent()
     {
         return array(
-            'content' => \View::make("core::module/files-browser.wizard-directory", array(
+            'content' => view("core::module/files-browser.wizard-directory", array(
                     'controller' => $this,
                     'uniqueId' => str_random(),
                 ))->render() 

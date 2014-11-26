@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Web\PageController;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
 	protected $key = 'web-page-controller';
 	protected $parent = 'web';

@@ -16,9 +16,9 @@
 	else if (button_type == 'delete.close')
 	{ 
 		@if ($model)
-		if (confirm('##### $controller->LL('notice.sure') $$$$$$$$$$'))
+		if (confirm('{{ $controller->LL('notice.sure') }}'))
 		{
-			$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getRealPath()])}}");
+			$el.attr('action', "{!! $controller->getRouterDelete(['id' => $model->getRealPath()]) !!}");
 		}
 		else
 		{
@@ -37,15 +37,15 @@
 
 	@section('formField')
 	
-	{{ Form::hidden('modelType', $modelType) }}
-	{{ Form::hidden('modelPath', $model ? $model->getRealPath() : '') }}
+	{!! Form::hidden('modelType', $modelType) !!}
+	{!! Form::hidden('modelPath', $model ? $model->getRealPath() : '') !!}
 
 	
 	<div class="form-group">
-		{{ Form::label("directory", $controller->LL('field.directory'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+		{!! Form::label("directory", $controller->LL('field.directory'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 
 		<div class="col-sm-9">
-			{{ Form::text('directory', $modelCurrentDirectory->getRealPath(), ['readonly' => 'readonly', 'class' => 'col-xs-5 col-sm-5']) }}
+			{!! Form::text('directory', $modelCurrentDirectory->getRealPath(), ['readonly' => 'readonly', 'class' => 'col-xs-5 col-sm-5']) !!}
 		</div>
 	</div>
 
@@ -53,34 +53,34 @@
 	@if ($modelType == 'directory')
 
 	<div class="form-group">
-		{{ Form::label("name", $controller->LL('field.directory.name'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+		{!! Form::label("name", $controller->LL('field.directory.name'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 
 		<div class="col-sm-9">
-			{{ Form::text('name', $model ? $model->getFilename() : '', ['class' => 'col-xs-5 col-sm-5']) }}
+			{!! Form::text('name', $model ? $model->getFilename() : '', ['class' => 'col-xs-5 col-sm-5']) !!}
 		</div>
 	</div>
 	
 	@elseif ($modelType == 'file')
 
 	<div class="form-group">
-		{{ Form::label("name", $controller->LL('field.file.name'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+		{!! Form::label("name", $controller->LL('field.file.name'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 
 		<div class="col-sm-9">
-			{{ Form::text('name', $model ? $model->getFilename() : '', ['class' => 'col-xs-5 col-sm-5']) }}
+			{!! Form::text('name', $model ? $model->getFilename() : '', ['class' => 'col-xs-5 col-sm-5']) !!}
 		</div>
 	</div>
 
 	<div class="form-group">
-		{{ Form::label("content", $controller->LL('field.file.content'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+		{!! Form::label("content", $controller->LL('field.file.content'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 
 		<div class="col-sm-9">
 			@if ($model && $model->getSize() >= $controller->getMaxSizeToView())
 
-			##### $controller->LL('error.file-too-big') $$$$$$$$$$
+			{{ $controller->LL('error.file-too-big') }}
 
 			@else
 
-			{{ Form::textarea('content', $model ? \File::get($model->getRealPath()) : '', ['class' => 'form-control']) }}
+			{!! Form::textarea('content', $model ? \File::get($model->getRealPath()) : '', ['class' => 'form-control']) !!}
 
 			@endif
 		</div>

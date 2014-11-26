@@ -15,16 +15,16 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$term = trim(\Input::get('term'));
 		$return = [];
 
-		$sequence = new \Telenok\Object\Sequence();
+		$sequence = new \App\Model\Telenok\Object\Sequence();
 
 		$sequenceTable = $sequence->getTable();
-		$typeTable = (new \Telenok\Object\Type())->getTable();
+		$typeTable = (new \App\Model\Telenok\Object\Type())->getTable();
 
 		$sequence->addMultilanguage('title_type');
 
 		try
 		{
-			\Telenok\Object\Sequence::select($sequenceTable . '.id', $sequenceTable . '.title', $typeTable . '.title AS title_type')
+			\App\Model\Telenok\Object\Sequence::select($sequenceTable . '.id', $sequenceTable . '.title', $typeTable . '.title AS title_type')
 					->join($typeTable, function($join) use ($sequenceTable, $typeTable)
 					{
 						$join->on($sequenceTable . '.sequences_object_type', '=', $typeTable . '.id');
@@ -94,10 +94,10 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 	public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
 	{
-		$permissions = \Telenok\Security\Permission::all();
+		$permissions = \App\Model\Telenok\Security\Permission::all();
         $this->setViewModel($field);
 
-		return \View::make($this->getViewModel(), array(
+		return view($this->getViewModel(), array(
 					'parentController' => $controller,
 					'controller' => $this,
 					'model' => $model,
@@ -135,7 +135,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	public function getListFieldContent($field, $item, $type = null)
 	{
 		$items = [];
-		$rows = \Illuminate\Support\Collection::make(\Telenok\Security\Permission::take(8)->get());
+		$rows = \Illuminate\Support\Collection::make(\App\Model\Telenok\Security\Permission::take(8)->get());
 
 		if ($rows->count())
 		{

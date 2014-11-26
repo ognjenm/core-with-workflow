@@ -17,7 +17,7 @@
 		<h4 class="row">
 			<span class="col-sm-12">
 				<i class="ace-icon fa fa-list-ul"></i>
-				##### $field->translate('title_list') $$$$$$$$$$
+				{{ $field->translate('title_list') }}
 			</span>
 		</h4>
 	</div>
@@ -37,8 +37,8 @@
 
 				@foreach($languages as $language)
 				<li class="<?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$">
-						#####$language->translate('title')$$$$$$$$$$
+					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-{{$field->code}}">
+						{{$language->translate('title')}}
 					</a>
 				</li>
 				@endforeach
@@ -52,11 +52,11 @@
 				?>
 				
 				@foreach($languages as $language)
-				<div id="{{$uniqueId}}-language-{{$language->locale}}-#####$field->code$$$$$$$$$$" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
+				<div id="{{$uniqueId}}-language-{{$language->locale}}-{{$field->code}}" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
 
 					@if ($field->icon_class)
 					<span class="input-group-addon">
-						<i class="{{$field->icon_class}}"></i>
+						<i class="{{ $field->icon_class }}"></i>
 					</span>
 					@endif
 
@@ -65,14 +65,14 @@
 					?>
 
 					@if ($field->string_password)
-						{{ Form::password("{$field->code}[{$language->locale}]", $domAttr ) }}
+						{!! Form::password("{$field->code}[{$language->locale}]", $domAttr ) !!}
 					@else
-						{{ Form::text("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) }}
+						{!! Form::text("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) !!}
 					@endif
 
 					@if ($field->translate('description'))
-					<span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
-						  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
+					<span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+						  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
 					@endif
 
 				</div>
@@ -86,7 +86,7 @@
 
 <div class="form-group">
 
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+	{!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 
 	<?php
 
@@ -100,7 +100,7 @@
             @if ($field->icon_class)
 		<div class="input-group">
             <span class="input-group-addon">
-                <i class="{{$field->icon_class}}"></i>
+                <i class="{{ $field->icon_class }}"></i>
             </span>
             @else
 		<div>
@@ -110,14 +110,14 @@
                 <?php 
                     $domAttr['autocomplete'] = "off";
                 ?>
-                {{ Form::password($field->code, $domAttr) }}
+                {!! Form::password($field->code, $domAttr) !!}
             @else
-                {{ Form::text($field->code, $model->translate($field->code), $domAttr) }}
+                {!! Form::text($field->code, $model->translate($field->code), $domAttr) !!}
             @endif 
 
             @if ($field->translate('description'))
-            <span title="" data-content="##### $field->translate('description') $$$$$$$$$$" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="#####\Lang::get('core::default.tooltip.description')$$$$$$$$$$">?</span>
+            <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
             @endif
             
 		</div>

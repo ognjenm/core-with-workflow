@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Objects\Field;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller { 
 
     protected $key = 'objects-field';
     protected $parent = 'objects';
@@ -30,7 +30,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function validate($model = null, $input = null, $message = [])
     {
-        \App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->validate();
+        app('telenok.config')->getObjectFieldController()->get($input->get('key'))->validate();
 
         return $this;
     } 
@@ -59,19 +59,19 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 		else
 		{
-			$modelType = \Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
+			$modelType = \App\Model\Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
 			
 			$input->put('field_object_type', $modelType->getKey());
 		} 
 
 		// preprocessing at field controller
-		if (!\App::make('telenok.config')->getObjectFieldController()->has($input->get('key')))
+		if (!app('telenok.config')->getObjectFieldController()->has($input->get('key')))
 		{
 			throw new \Exception('There are not field with key "' . $input->get('key') . '"');
 		}
 		else
 		{
-			\App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
+			app('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
 		}
 		
         return parent::preProcess($model, $type, $input);
@@ -79,7 +79,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function postProcess($model, $type, $input)
     {   
-        $field = \App::make('telenok.config')->getObjectFieldController()->get($input->get('key'));
+        $field = app('telenok.config')->getObjectFieldController()->get($input->get('key'));
 
         $field->postProcess($model, $type, $input);  
 

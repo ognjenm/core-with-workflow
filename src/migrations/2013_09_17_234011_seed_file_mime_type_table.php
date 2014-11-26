@@ -18,7 +18,7 @@ class SeedFileMimeTypeTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Mime type", 'en' => "Mime type"], 
                     'title_list' => ['ru' => "Mime type", 'en' => "Mime type"], 

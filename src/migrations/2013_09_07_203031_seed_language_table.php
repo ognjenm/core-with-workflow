@@ -20,7 +20,7 @@ class SeedLanguageTable extends Migration {
 
 		DB::table('object_field')->insertGetId(
 				[
-					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\Object\Field']),
 					'title' => json_encode(['ru' => 'ISO код', 'en' => 'ISO code'], JSON_UNESCAPED_UNICODE),
 					'title_list' => json_encode(['ru' => 'ISO код', 'en' => 'ISO code'], JSON_UNESCAPED_UNICODE),
 					'key' => 'string',

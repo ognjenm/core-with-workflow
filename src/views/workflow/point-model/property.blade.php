@@ -18,52 +18,52 @@
                             {!! Form::hidden('stencilId', $stencilId) !!}
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[title]">#####$controller->LL('property.title')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[title]" value="#####$property->get('title')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[title]" value="{{$property->get('title')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[bgcolor]">#####$controller->LL('property.bgcolor')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[bgcolor]">{{$controller->LL('property.bgcolor')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[bgcolor]" value="#####$property->get('bgcolor')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[bgcolor]" value="{{$property->get('bgcolor')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[bordercolor]">#####$controller->LL('property.bordercolor')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[bordercolor]">{{$controller->LL('property.bordercolor')}}</label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="stencil[bordercolor]" value="#####$property->get('bordercolor')$$$$$$$$$$" />
+                                    <input type="text" name="stencil[bordercolor]" value="{{$property->get('bordercolor')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[description]">#####$controller->LL('property.description')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[description]">{{$controller->LL('property.description')}}</label>
                                 <div class="col-sm-3">
-                                    <textarea style="width: 300px;" name="stencil[description]">#####$property->get('description')$$$$$$$$$$</textarea>
+                                    <textarea style="width: 300px;" name="stencil[description]">{{$property->get('description')}}</textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[event_list]">#####$controller->LL('property.event.list')$$$$$$$$$$ <span class="red">*</span></label>
+                                <label class="col-sm-3 control-label" for="stencil[event_list]">{{$controller->LL('property.event.list')}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
-                                    <select class="chosen-select" multiple data-placeholder="#####$controller->LL('notice.choose')$$$$$$$$$$" id="input-event-list{{$uniqueId}}" name="stencil[event_list][]">
-                                        <option value="workflow.store.before" @if (in_array('workflow.store.before', $property->get('event_list', []))) selected @endif>#####$controller->LL('property.event.list.1')$$$$$$$$$$</option>
-                                        <option value="workflow.store.after" @if (in_array('workflow.store.after', $property->get('event_list', []))) selected @endif>#####$controller->LL('property.event.list.2')$$$$$$$$$$</option>
-                                        <option value="workflow.update.before" @if (in_array('workflow.update.before', $property->get('event_list', []))) selected @endif>#####$controller->LL('property.event.list.3')$$$$$$$$$$</option>
-                                        <option value="workflow.update.after" @if (in_array('workflow.update.after', $property->get('event_list', []))) selected @endif>#####$controller->LL('property.event.list.4')$$$$$$$$$$</option>
+                                    <select class="chosen-select" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[event_list][]">
+                                        <option value="workflow.store.before" @if (in_array('workflow.store.before', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.1')}}</option>
+                                        <option value="workflow.store.after" @if (in_array('workflow.store.after', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.2')}}</option>
+                                        <option value="workflow.update.before" @if (in_array('workflow.update.before', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.3')}}</option>
+                                        <option value="workflow.update.after" @if (in_array('workflow.update.after', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.4')}}</option>
                                     </select> 
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[model_type]">#####$controller->LL('property.model.type')$$$$$$$$$$ <span class="red">*</span></label>
+                                <label class="col-sm-3 control-label" for="stencil[model_type]">{{$controller->LL('property.model.type')}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
-                                    <select class="chosen-select-deselect" data-placeholder="#####$controller->LL('notice.choose')$$$$$$$$$$" id="input-model-type{{$uniqueId}}" name="stencil[model_type]">
-                                        @foreach(\Telenok\Object\Type::active()->get() as $type)
+                                    <select class="chosen-select-deselect" data-placeholder="{{$controller->LL('notice.choose')}}" id="input-model-type{{$uniqueId}}" name="stencil[model_type]">
+                                        @foreach(\App\Model\Telenok\Object\Type::active()->get() as $type)
                                         
-                                        <option value="{{$type->getKey()}}" @if ($type->getKey() == $property->get('model_type', 0)) selected="selected" @endif>[{{$type->getKey()}}] #####$type->translate('title')$$$$$$$$$$</option>
+                                        <option value="{{$type->getKey()}}" @if ($type->getKey() == $property->get('model_type', 0)) selected="selected" @endif>[{{$type->getKey()}}] {{$type->translate('title')}}</option>
                                         
                                         @endforeach
                                     </select> 
@@ -71,12 +71,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[model_list]">#####$controller->LL('property.model.list')$$$$$$$$$$</label>
+                                <label class="col-sm-3 control-label" for="stencil[model_list]">{{$controller->LL('property.model.list')}}</label>
                                 <div class="col-sm-3">
-                                    <select class="chosen-select" multiple data-placeholder="#####$controller->LL('notice.choose')$$$$$$$$$$" id="input-model-list{{$uniqueId}}" name="stencil[model_list][]">
-                                        @foreach(\Telenok\Object\Sequence::active()->whereIn('id', array_merge([0], $property->get('model_list', [])))->get() as $type)
+                                    <select class="chosen-select" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="input-model-list{{$uniqueId}}" name="stencil[model_list][]">
+                                        @foreach(\App\Model\Telenok\Object\Sequence::active()->whereIn('id', array_merge([0], $property->get('model_list', [])))->get() as $type)
                                         
-                                        <option value="{{$type->getKey()}}" selected="selected">[{{$type->getKey()}}] #####$type->translate('title')$$$$$$$$$$</option>
+                                        <option value="{{$type->getKey()}}" selected="selected">[{{$type->getKey()}}] {{$type->translate('title')}}</option>
                                         
                                         @endforeach
                                     </select> 
@@ -97,8 +97,8 @@
             });
             jQuery("#input-model-list{{$uniqueId}}").ajaxChosen(
                 {
-                    keepTypingMsg: "#####$controller->LL('notice.typing')$$$$$$$$$$",
-                    lookingForMsg: "#####$controller->LL('notice.looking-for')$$$$$$$$$$",
+                    keepTypingMsg: "{{$controller->LL('notice.typing')}}",
+                    lookingForMsg: "{{$controller->LL('notice.looking-for')}}",
                     type: "GET",
                     url: "{!! \URL::route("cmf.module.objects-lists.list.json") !!}", 
                     dataCallback: function(data) 
@@ -123,7 +123,7 @@
                 },
                 {
                     width: "300px",
-                    no_results_text: "#####$controller->LL('notice.not-found')$$$$$$$$$$"
+                    no_results_text: "{{$controller->LL('notice.not-found')}}"
                 });       
         </script>
 
@@ -136,18 +136,18 @@
                     var $form = jQuery('form', $modal);
                     $modal.data('model-data')($form);
                     return false;">
-                    ##### $controller->LL('btn.apply') $$$$$$$$$$
+                    {{ $controller->LL('btn.apply') }}
                 </button>
 
                 <button class="btn btn-success" data-dismiss="modal" onclick="
                     var $modal = jQuery(this).closest('div.modal');
                     var $form = jQuery('form', $modal);
                     $modal.data('model-data')($form);">
-                    ##### $controller->LL('btn.apply.close') $$$$$$$$$$
+                    {{ $controller->LL('btn.apply.close') }}
                 </button>
 
                 <button class="btn btn-danger" data-dismiss="modal">
-                    ##### $controller->LL('btn.close') $$$$$$$$$$
+                    {{ $controller->LL('btn.close') }}
                 </button>
 
             </div>

@@ -1,11 +1,11 @@
 <div class="container-table">
 
-    <div class="table-header">{{ Lang::get("{$controller->getPackage()}::module/{$controller->getKey()}.list.name")}}</div>
+    <div class="table-header">{{ $controller->LL("list.name") }}</div>
 
     <div class="filter display-none">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h5 class="widget-title smaller">##### $controller->LL('table.filter.header') $$$$$$$$$$</h5>
+                <h5 class="widget-title smaller">{{ $controller->LL('table.filter.header') }}</h5>
                 <span class="widget-toolbar no-border">
                     <a data-action="collapse" href="#">
                         <i class="fa fa-chevron-up"></i>
@@ -19,11 +19,11 @@
                         
                         <button class="btn btn-info btn-sm" onclick="return false;">
                             <i class="fa fa-key bigger-110"></i>
-                            ##### $controller->LL('btn.search') $$$$$$$$$$
+                            {{ $controller->LL('btn.search') }}
                         </button>
                         <button class="btn btn-sm" type="reset">
                                 <i class="fa fa-eraser bigger-110"></i>
-                                ##### $controller->LL('btn.clear') $$$$$$$$$$
+                                {{ $controller->LL('btn.clear') }}
                         </button>
                     </form>
                 </div>
@@ -38,7 +38,7 @@
 
     <script type="text/javascript">
 
-		var currentDirectory{{$uniqueId}} = '{{$currentDirectory}}';
+		var currentDirectory{{$uniqueId}} = '{!! $currentDirectory !!}';
 
         var presentation = telenok.getPresentation('{{$controller->getPresentationModuleKey()}}');
         var aoColumns = []; 
@@ -49,30 +49,30 @@
 							"bSortable": false});
                 @foreach((array)$fields as $key => $field)
                     @if ($key==0)
-                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "##### $controller->LL("field." . $field) $$$$$$$$$$", "bSortable": false });
-                        aoColumns.push({ "mData": "tableManageItem", "sTitle": "##### $controller->LL('action') $$$$$$$$$$", "bSortable": false });
+                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "{{ $controller->LL("field." . $field) }}", "bSortable": false });
+                        aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{ $controller->LL('action') }}", "bSortable": false });
                     @else
-                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "##### $controller->LL("field." . $field) $$$$$$$$$$", "bSortable": false });
+                        aoColumns.push({ "mData": "{{ $field}}", "sTitle": "{{ $controller->LL("field." . $field) }}", "bSortable": false });
                     @endif
                 @endforeach
 
                 presentation.addDataTable({
                     aoColumns : aoColumns,
 					aaSorting: [],
-                    sAjaxSource : '{{ $controller->getRouterList(['uniqueId' => $uniqueId]) }}',
+                    sAjaxSource : '{!! $controller->getRouterList(['uniqueId' => $uniqueId]) !!}',
                     domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}", 
 					tableListBtnCreate: {
 							"sExtends": "collection",
 							'sButtonClass': 'btn btn-sm btn-success',
-							"sButtonText": "<i class='fa fa-plus smaller-90'></i> ##### $controller->LL('list.btn.create') $$$$$$$$$$",
+							"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{ $controller->LL('list.btn.create') }}",
 							"aButtons": [ 
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-folder'></i> ##### $controller->LL('btn.create.directory') $$$$$$$$$$",
+									"sButtonText": "<i class='fa fa-folder'></i> {{ $controller->LL('btn.create.directory') }}",
 									"fnClick": function(nButton, oConfig, oFlash) 
 									{ 
 										telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').addTabByURL({
-											url: '{{ $controller->getRouterCreate() }}',
+											url: '{!! $controller->getRouterCreate() !!}',
 											data: {
 												currentDirectory: currentDirectory{{$uniqueId}},
 												modelType : 'directory'
@@ -83,10 +83,10 @@
 								{
 									"sExtends": "text",
 									'sButtonClass': '',
-									"sButtonText": "<i class='fa fa-file'></i> ##### $controller->LL('btn.create.file') $$$$$$$$$$",
+									"sButtonText": "<i class='fa fa-file'></i> {{ $controller->LL('btn.create.file') }}",
 									"fnClick": function(nButton, oConfig, oFlash) {
 										telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').addTabByURL({
-											url: '{{ $controller->getRouterCreate() }}', 
+											url: '{!! $controller->getRouterCreate() !!}', 
 											data: {
 												currentDirectory: currentDirectory{{$uniqueId}},
 												modelType : 'file'

@@ -23,11 +23,11 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
         if ($structure !== null && ($view = $structure->get('view')))
         {
-            $content = \View::make($view, ['controller' => $this])->render();
+            $content = view($view, ['controller' => $this])->render();
         }
         else if ($m = $this->getWidgetModel())
         {
-            $content = \View::make('widget.' . $m->getKey(), ['controller' => $this, 'frontendController' => $this->getFrontendController()])->render();
+            $content = view('widget.' . $m->getKey(), ['controller' => $this, 'frontendController' => $this->getFrontendController()])->render();
         }
 
         $this->setCachedContent($content);

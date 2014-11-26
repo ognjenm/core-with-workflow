@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Objects\Sequence;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller { 
 
     protected $key = 'objects-sequence';
     protected $parent = 'objects';
@@ -16,7 +16,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     
     public function getListItem($model)
     {
-        $sequence = (new \Telenok\Object\Sequence());
+        $sequence = (new \App\Model\Telenok\Object\Sequence());
         
         $query = $model::select($model->getTable().'.*')
             ->where(function($query) use ($sequence, $model)

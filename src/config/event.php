@@ -5,10 +5,10 @@
     return new \Telenok\Core\Interfaces\Validator\Validator($translator, $data, $rules, $messages, $customAttributes);
 });
 
-Validator::extend('valid_regex', function($attribute, $value, $parameters)
+\Validator::extend('valid_regex', function($attribute, $value, $parameters)
 {
     return (@preg_match($value, NULL) !== FALSE);
-}); 
+});  
 
 \Event::listen('telenok.setting.add', function($list) 
 {
@@ -106,7 +106,6 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('Telenok\Core\Field\System\Active\Controller');
     $list->push('Telenok\Core\Field\System\Permission\Controller');
     $list->push('Telenok\Core\Field\FileManyToMany\Controller');
-    $list->push('Telenok\Core\Field\System\WorkflowStatus\Controller');
     $list->push('Telenok\Core\Field\Upload\Controller');
     $list->push('Telenok\Core\Field\SelectOne\Controller');
     $list->push('Telenok\Core\Field\SelectMany\Controller');
@@ -138,7 +137,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 /*
 \Event::listen('telenok.module.profile.add', function($param){
-    \App::make('telenok.config')->addModule($param);
+    app('telenok.config')->addModule($param);
 });
 */
 
@@ -155,19 +154,19 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 \Event::listen('telenok.compile.route', function()
 {
-    \App::make('telenok.config')->compileRouter();
+    app('telenok.config')->compileRouter();
 });
 
 
 
 \Event::listen('telenok.compile.setting', function()
 {
-    \App::make('telenok.config')->compileSetting();
+    app('telenok.config')->compileSetting();
 });
 
 
 
-\App::make('telenok.config')->runWorkflowListener();
+app('telenok.config')->runWorkflowListener();
 
 
 Event::listen('illuminate.query', function($sql, $bindings, $time) {

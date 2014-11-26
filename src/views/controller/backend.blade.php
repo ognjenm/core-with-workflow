@@ -9,7 +9,7 @@
     <body class="no-skin telenok-backend">
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="navbar-inner">
-				<a class="navbar-brand" href="telenok/"><small>#####\Config::get('app.backend.brand')$$$$$$$$$$</small></a>
+				<a class="navbar-brand" href="telenok/"><small>{{\Config::get('app.backend.brand')}}</small></a>
 				<ul class="nav ace-nav pull-right">
 
 					@foreach($listModuleMenuTop as $itemFirstLevel)
@@ -17,12 +17,12 @@
 					@if (!$itemFirstLevel->get('parent'))
 
 						@if ($itemFirstLevel->get('li'))
-						{{$itemFirstLevel->get('li')}}
+                            {!! $itemFirstLevel->get('li') !!}
 						@else
 						<li>
 						@endif
 
-						{{$itemFirstLevel->get('content')}}
+						{!! $itemFirstLevel->get('content') !!}
 
 							<ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer" id="user_menu">
 								@foreach($listModuleMenuTop as $itemSecondLevel)
@@ -34,12 +34,12 @@
 									@endif
 
 									@if ($itemFirstLevel->get('li'))
-									{{$itemFirstLevel->get('li')}}
+                                        {!! $itemFirstLevel->get('li') !!}
 									@else
 									<li>
 									@endif
 
-									{{$itemSecondLevel->get('content')}}
+									{!! $itemSecondLevel->get('content') !!}
 
 									@if ($itemSecondLevel->get('devider_after'))
 										<li class="divider"></li>
@@ -84,12 +84,12 @@
                 <div class="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <button title='#####$listModuleGroupItem->getName()$$$$$$$$$$' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} ##### $listModuleGroupItem->getButton() $$$$$$$$$$"><i class="##### $listModuleGroupItem->getIcon() $$$$$$$$$$"></i></button>
+                        <button title='{{$listModuleGroupItem->getName()}}' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} {{ $listModuleGroupItem->getButton() }}"><i class="{{ $listModuleGroupItem->getIcon() }}"></i></button>
                         @endforeach
                     </div>
                     <div class="sidebar-shortcuts-mini">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <span class="btn ##### $listModuleGroupItem->getButton() $$$$$$$$$$"></span>
+                        <span class="btn {{ $listModuleGroupItem->getButton() }}"></span>
                         @endforeach
                     </div>
                 </div> 
@@ -103,19 +103,19 @@
                             @if ($listModuleItem->isParentAndSingle()) 
                             <li class="parent-single">
                                 <a href="#" onclick='
-                                    telenok.addModule( "{{ $listModuleItem->getKey() }}", "{{ $listModuleItem->getRouterActionParam() }}", function(moduleKey) {
+                                    telenok.addModule( "{{ $listModuleItem->getKey() }}", "{!! $listModuleItem->getRouterActionParam() !!}", function(moduleKey) {
                                                 telenok.processModuleContent(moduleKey);
                                             }); 
                                             return false;'>
-                                    <i class="menu-icon ##### $listModuleItem->getIcon() $$$$$$$$$$"></i>
-                                    <span class="menu-text">##### $listModuleItem->getName() $$$$$$$$$$</span>
+                                    <i class="menu-icon {{ $listModuleItem->getIcon() }}"></i>
+                                    <span class="menu-text">{{ $listModuleItem->getName() }}</span>
                                 </a>
                             </li>
                             @elseif (!$listModuleItem->getParent())
                             <li>
                                 <a class="dropdown-toggle" href="#">
-                                    <i class="menu-icon ##### $listModuleItem->getIcon() $$$$$$$$$$"></i>
-                                    <span class="menu-text">##### $listModuleItem->getName() $$$$$$$$$$</span>
+                                    <i class="menu-icon {{ $listModuleItem->getIcon() }}"></i>
+                                    <span class="menu-text">{{ $listModuleItem->getName() }}</span>
                                     <b class="arrow fa fa-angle-down"></b>
                                 </a>
                                 <ul class="submenu"> 
@@ -124,12 +124,12 @@
                                     @if ($item->getParent() == $listModuleItem->getKey())
 									
 									<li class="">
-										<a href="#" onclick='telenok.addModule("{{ $item->getKey() }}", "{{ $item->getRouterActionParam() }}", function(moduleKey) {
+										<a href="#" onclick='telenok.addModule("{{ $item->getKey() }}", "{!! $item->getRouterActionParam() !!}", function(moduleKey) {
                                                 telenok.processModuleContent(moduleKey);
                                             });
                                             return false;'>
 											<i class="menu-icon fa fa-caret-right"></i>
-											##### $item->getName() $$$$$$$$$$
+											{{ $item->getName() }}
 										</a>
 										<b class="arrow"></b>
 									</li>
@@ -153,7 +153,7 @@
             <div class="main-content clearfix">
                 <div class="breadcrumbs">
                     <ul class="breadcrumb">
-                        <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{Lang::get('core::default.home')}}</a></li> 
+                        <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{ $controller->LL('home') }}</a></li> 
                     </ul>
 
                     <div class="nav-search">
@@ -196,7 +196,7 @@
 
 									<ul class="dropdown-menu dropdown-default pull-right">
 										<li>
-											<a href="#" onclick="jQuery.post('{{ URL::route('cmf.clear.cache') }}'); return false;">Clear cache now</a>
+											<a href="#" onclick="jQuery.post('{!! URL::route('cmf.clear.cache') !!}'); return false;">Clear cache now</a>
 										</li>
 									</ul>
 								</div>
@@ -217,12 +217,12 @@
 				<div class="modal-content">
 					<div class="modal-header table-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>#####$controller->LL("notice.title")$$$$$$$$$$</h4>
+						<h4>{{$controller->LL("notice.title")}}</h4>
 					</div>
 					<div class="modal-body">
 					</div>
 					<div class="modal-footer">
-						<button class="btn" data-dismiss="modal">#####$controller->LL("btn.close")$$$$$$$$$$</button> 
+						<button class="btn" data-dismiss="modal">{{$controller->LL("btn.close")}}</button> 
 					</div>
 				</div>
 			</div>

@@ -27,7 +27,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         $term = trim(\Input::get('term'));
         $return = [];
         
-		$class = \Telenok\Object\Sequence::getModel($id)->class_model;
+		$class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
 
 		$model = new $class;
 

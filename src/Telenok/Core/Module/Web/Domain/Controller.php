@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Web\Domain;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
 	protected $key = 'web-domain';
 	protected $parent = 'web';

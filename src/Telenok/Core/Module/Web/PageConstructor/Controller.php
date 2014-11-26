@@ -25,7 +25,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 	public function getPresentationContent()
 	{
-		return \View::make($this->getPresentationView(), [
+		return view($this->getPresentationView(), [
 					'presentation' => $this->getPresentation(),
 					'presentationModuleKey' => $this->getPresentationModuleKey(),
 					'controller' => $this,
@@ -38,8 +38,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		try
 		{
-			$page = App\Model\Telenok\Web\Page::findOrFail($id);
-			$controllerClass = \App::build($page->pagePageController->controller_class);
+			$page = \App\Model\Telenok\Web\Page::findOrFail($id);
+			$controllerClass = app($page->pagePageController->controller_class);
 
 			return [
 				'pageId' => $id,
@@ -62,7 +62,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		$return = \Illuminate\Support\Collection::make([]);
 
-		$query = App\Model\Telenok\Web\Page::query();
+		$query = \App\Model\Telenok\Web\Page::query();
 
 		if (\Input::get('term'))
 		{
@@ -84,7 +84,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			return \Response::json('Empty page id or widget key', 403);
 		}
 		
-		$widget = \App::make('telenok.config')->getWidget()->get($key); 
+		$widget = app('telenok.config')->getWidget()->get($key); 
 		
 		if (intval($bufferId))
 		{
@@ -102,9 +102,9 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		try
 		{
-			$widget = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
+			$widget = \App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 
-			\App::make('telenok.config')->getWidget()->get($widget->key)->removeFromPage($id);
+			app('telenok.config')->getWidget()->get($widget->key)->removeFromPage($id);
 
 			return ['success' => 1];
 		}
@@ -120,7 +120,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 	public function addBufferWidget($id = 0, $key = 'copy')
 	{
-		$widget = App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
+		$widget = \App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 
 		$buffer = \App\Model\Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $widget->getKey(), 'web-page', $key);
 

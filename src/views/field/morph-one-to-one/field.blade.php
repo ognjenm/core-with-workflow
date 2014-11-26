@@ -13,7 +13,7 @@
 ?>
  
 <div class="form-group">
-    {{ Form::label($linkedField, $controller->LL('entity.'.$linkedField), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+    {!! Form::label($linkedField, $controller->LL('entity.'.$linkedField), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
     <div class="col-sm-9">
         <?php 
 
@@ -25,7 +25,7 @@
             }
 			
         ?>
-        {{ Form::hidden($linkedField, $model->{$linkedField}) }}
-        {{ Form::select($linkedField, \Telenok\Object\Type::get(['title', 'id'])->transform(function($item) { return ['title' => $item->translate('title'), 'id' => $item->id]; })->sortBy('title')->lists('title', 'id'), $model->$linkedField, $domAttr) }}
+        {!! Form::hidden($linkedField, $model->{$linkedField}) !!}
+        {!! Form::select($linkedField, \App\Model\Telenok\Object\Type::get(['title', 'id'])->transform(function($item) { return ['title' => $item->translate('title'), 'id' => $item->id]; })->sortBy('title')->lists('title', 'id'), $model->$linkedField, $domAttr) !!}
     </div>
 </div> 

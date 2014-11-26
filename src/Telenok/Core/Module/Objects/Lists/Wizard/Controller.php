@@ -56,9 +56,9 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				->setRouterUpdate("cmf.module.{$this->getKey()}.wizard.update");
     }    
 	
-    public function create($id = null)
+    public function create()
     { 
-		$id = $id ?: \Input::get('id');
+		$id = $this->getRequest()->input('id');
   
 		if (is_array($id))
 		{
@@ -73,7 +73,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 		$id = (array)$id;
 		
 		return [
-				'tabContent' => \View::make('core::module.objects-lists.wizard-choose-type', 
+				'tabContent' => view('core::module.objects-lists.wizard-choose-type', 
 					[
 						'controller' => $this,
 						'typeId' => $id,
@@ -85,14 +85,14 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
     public function choose()
     {
 		$typeList = [];
-		$id = \Input::get('id', 0);
+		$id = $this->getRequest->input('id', 0);
 		
 		try
 		{
 			if (is_array($id))
 			{
 				$typeList = $id;
-				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
+				$id = \App\Model\Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
 			}
 			
             $model = $this->modelByType($id);
@@ -107,7 +107,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         return array(
             'tabKey' => "{$this->getTabKey()}-{$model->getTable()}",
             'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationListWizardView(), array(
+            'tabContent' => view($this->getPresentationListWizardView(), array(
                 'controller' => $this,  
 				'presentation' => $this->getPresentation(),
                 'model' => $model,
@@ -140,7 +140,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			if (is_array($id))
 			{
 				$typeList = $id;
-				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
+				$id = \App\Model\Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
 			}
 
             $type = $this->getType($id);
@@ -175,7 +175,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			
 			$items = $query->get();
 			
-			$config = \App::make('telenok.config')->getObjectFieldController();
+			$config = app('telenok.config')->getObjectFieldController();
 
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
             {

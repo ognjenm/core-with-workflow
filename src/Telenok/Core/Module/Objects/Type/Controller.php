@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Objects\Type;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
     protected $key = 'objects-type';
     protected $parent = 'objects';
@@ -29,7 +29,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		try
 		{
-			\Telenok\Security\Resource::create([
+			\App\Model\Telenok\Security\Resource::create([
 				'title' => $title,
 				'code' => $resCode,
 				'active' => 1
@@ -50,7 +50,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		try
 		{
-			(new \Telenok\Security\Resource())->storeOrUpdate([
+			(new \App\Model\Telenok\Security\Resource())->storeOrUpdate([
 				'title' => $title,
 				'code' => $resCodeOwn,
 				'active' => 1
@@ -250,15 +250,15 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     {
 		$multilanguage = $input->get('multilanguage');
 		
-		$tabMain = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
-		$tabVisible = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
-		$tabAdditionally = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
+		$tabMain = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
+		$tabVisible = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
+		$tabAdditionally = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
 		
 		$translationSeed = $this->translationSeed();
 		
 		if (!$tabMain)
 		{
-			$tabMain = (new \Telenok\Object\Tab())->storeOrUpdate(
+			$tabMain = (new \App\Model\Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.main'),
 						'code' => 'main',
@@ -271,7 +271,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (!$tabVisible)
 		{
-			$tabVisible = (new \Telenok\Object\Tab())->storeOrUpdate(
+			$tabVisible = (new \App\Model\Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.visibility'),
 						'code' => 'visibility',
@@ -284,7 +284,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (!$tabAdditionally)
 		{
-			$tabAdditionally = (new \Telenok\Object\Tab())->storeOrUpdate(
+			$tabAdditionally = (new \App\Model\Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.additionally'),
 						'code' => 'additionally',
@@ -295,9 +295,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'id')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'id')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'title' => array_get($translationSeed, 'model.№'),
 				'title_list' => array_get($translationSeed, 'model.№'),
 				'key' => 'integer-unsigned',
@@ -315,9 +315,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'title')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'title')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'title' => array_get($translationSeed, 'model.title'),
 				'title_list' => array_get($translationSeed, 'model.title'),
 				'key' => 'string',
@@ -336,9 +336,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'created-by')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'created-by')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'created-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -346,9 +346,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 		
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'updated-by')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'updated-by')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'updated-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -356,9 +356,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 		
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'locked-by')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'locked-by')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'locked-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -368,9 +368,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		
 		if ($model->treeable)
 		{
-			if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())
+			if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())
 			{
-				(new \Telenok\Object\Field())->storeOrUpdate([
+				(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 					'key' => 'tree',
 					'field_object_type' => $model->getKey(),
 					'field_object_tab' => $tabMain->getKey(),
@@ -380,12 +380,12 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 		else
 		{
-			\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
+			\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'active',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabVisible->getKey(),
@@ -393,9 +393,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]); 
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'permission')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'permission')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'permission',
 				'field_object_type' => $model->getKey(),
 			]); 

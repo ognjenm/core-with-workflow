@@ -5,7 +5,7 @@
     <div class="filter display-none">
         <div class="widget-box transparent">
             <div class="widget-header">
-                <h5 class="widget-title smaller">##### $controller->LL('table.filter.header') $$$$$$$$$$</h5>
+                <h5 class="widget-title smaller">{{ $controller->LL('table.filter.header') }}</h5>
                 <span class="widget-toolbar no-border">
                     <a data-action="collapse" href="#">
                         <i class="fa fa-chevron-up"></i>
@@ -21,9 +21,9 @@
                         @foreach($fieldsFilter as $key => $field) 
 								
 							<div class="form-group">
-								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">##### $field->translate('title') $$$$$$$$$$</label>
+								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">{{ $field->translate('title') }}</label>
 								<div class="col-sm-9">
-									{!! \App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFilterContent($field) !!} 
+									{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFilterContent($field) !!} 
 								</div>
 							</div> 
 						
@@ -33,11 +33,11 @@
 							<div class="hr hr-8 dotted"></div>
 							<button class="btn btn-sm btn-info" onclick="presentationTableFilter{{$uniqueId}}(this);">
 								<i class="fa fa-search bigger-110"></i>
-								##### $controller->LL('btn.search') $$$$$$$$$$
+								{{ $controller->LL('btn.search') }}
 							</button>
 							<button class="btn btn-sm" type="reset" onclick="presentationTableFilter{{$uniqueId}}(this, true);">
 								<i class="fa fa-eraser bigger-110"></i>
-								##### $controller->LL('btn.clear') $$$$$$$$$$
+								{{ $controller->LL('btn.clear') }}
 							</button>
 						</div>
 
@@ -62,9 +62,9 @@
 					"sDefaultContent": '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]"><span class="lbl"></span></label>',
 					"bSortable": false});
 			@foreach($fields as $key => $field)
-					aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "##### $field->translate('title_list') $$$$$$$$$$", "bSortable": @if ($field->allow_sort) true @else false @endif });
+					aoColumns.push({ "mData": "{{ $field->code }}", "sTitle": "{{ $field->translate('title_list') }}", "bSortable": @if ($field->allow_sort) true @else false @endif });
 				@if ( ($key==1 && $fields->count() > 1) || ($key==0 && $fields->count() < 2) )
-					aoColumns.push({ "mData": "tableManageItem", "sTitle": "##### $controller->LL('action') $$$$$$$$$$", "bSortable": false }); 
+					aoColumns.push({ "mData": "tableManageItem", "sTitle": "{{ $controller->LL('action') }}", "bSortable": false }); 
 				@endif
 			@endforeach
 

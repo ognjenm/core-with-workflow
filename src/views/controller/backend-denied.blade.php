@@ -1,7 +1,7 @@
 @extends('core::layout.backend')
 
 @section('head')
-<title>##### $controller->LL('title-page') $$$$$$$$$$</title>
+<title>{{ $controller->LL('title-page') }}</title>
 @parent
 @stop
 

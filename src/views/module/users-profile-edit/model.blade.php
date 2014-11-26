@@ -17,7 +17,7 @@
 			setTimeout(function() { ajaxLock{{$uniqueId}}(); }, {{ $controller->getLockInFormPeriod() * 700}});
 
 			jQuery.ajax({
-				url: '##### $controller->getRouterLock() $$$$$$$$$$',
+				url: '{{ $controller->getRouterLock() }}',
 				type: 'post',
 				data: { id: {{ intval($model->getKey()) }} },
 				dataType: 'json',
@@ -41,7 +41,7 @@
         }
 		else if (button_type == 'delete.close')
 		{ 
-			if (confirm('##### $controller->LL('notice.sure') $$$$$$$$$$'))
+			if (confirm('{{ $controller->LL('notice.sure') }}'))
 			{
 				$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getKey()])}}");
 			}
@@ -63,7 +63,7 @@
 	@if ($model->locked())
     <div>
 		@if (\Auth::check() && \Auth::user()->id != $model->lockedByUser->id)
-		<div class="alert alert-danger">#####$controller->LL('notice.locked', ['at' => $model->locked_at, 'by' => $model->lockedByUser->username])$$$$$$$$$$<button data-dismiss="alert" class="close" type="button"><i class="fa fa-times"></i></button></div>
+		<div class="alert alert-danger">{{$controller->LL('notice.locked', ['at' => $model->locked_at, 'by' => $model->lockedByUser->username])}}<button data-dismiss="alert" class="close" type="button"><i class="fa fa-times"></i></button></div>
 		@endif
 	</div>
 	@endif
@@ -71,9 +71,9 @@
 	
 	@section('formField')
 	
-	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
+	{!! Form::hidden($model->getKeyName(), $model->getKey()) !!}
 	
-    {{ $controller->getFormContent($model, $type, $fields, $uniqueId) }}
+    {!! $controller->getFormContent($model, $type, $fields, $uniqueId) !!}
 
 	@stop
     

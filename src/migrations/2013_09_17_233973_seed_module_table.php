@@ -18,7 +18,7 @@ class SeedModuleTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['en' => 'Controller class', 'ru' => 'Класс контроллера'],
                     'title_list' => ['en' => 'Controller class', 'ru' => 'Класс контроллера'],
@@ -37,7 +37,7 @@ class SeedModuleTable extends Migration {
                 ]
         );
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Порядок", 'en' => "Order"],
                     'title_list' => ['ru' => "Порядок", 'en' => "Order"],

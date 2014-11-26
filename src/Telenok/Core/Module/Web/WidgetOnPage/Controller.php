@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Web\WidgetOnPage;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
 	protected $key = 'web-page-wop';
     protected $presentation = 'tree-tab-object';
@@ -19,7 +19,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     { 
         if ($input->get('key'))
         {
-            \App::make('telenok.config')->getWidget()->get($input->get('key'))->preProcess($model, $type, $input);
+            app('telenok.config')->getWidget()->get($input->get('key'))->preProcess($model, $type, $input);
         }
         
         return parent::postProcess($model, $type, $input);
@@ -39,12 +39,12 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
             }
             else
             {
-                $viewContent = \App::make('telenok.config')->getWidget()->get($input->get('key'))->getViewContent();
+                $viewContent = app('telenok.config')->getWidget()->get($input->get('key'))->getViewContent();
             }
              
             \File::put($templateFile, $viewContent);
             
-            \App::make('telenok.config')->getWidget()->get($input->get('key'))->postProcess($model, $type, $input);
+            app('telenok.config')->getWidget()->get($input->get('key'))->postProcess($model, $type, $input);
         }
         
         return parent::postProcess($model, $type, $input);

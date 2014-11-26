@@ -18,7 +18,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Object\Type::whereIn('id', [$field->morph_many_to_many_has, $field->morph_many_to_many_belong_to])->first();
+		return \App\Model\Telenok\Object\Type::whereIn('id', [$field->morph_many_to_many_has, $field->morph_many_to_many_belong_to])->first();
 	} 
 	
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null)
@@ -51,7 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
         $id = $field->morph_many_to_many_has ?: $field->morph_many_to_many_belong_to;
 
-        $class = \Telenok\Object\Sequence::getModel($id)->class_model;
+        $class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
 
 		$model = new $class;
 
@@ -150,7 +150,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			$input->put('morph_many_to_many_has', $input->get('field_has'));
 		}
 
-		$input->put('morph_many_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
+		$input->put('morph_many_to_many_has', intval(\App\Model\Telenok\Object\Type::where('code', $input->get('morph_many_to_many_has'))->orWhere('id', $input->get('morph_many_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0); 
 
@@ -169,7 +169,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			} 
 
             $typeMorphMany = $model->fieldObjectType()->first();
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('morph_many_to_many_has')); 
+            $typeBelongTo = \App\Model\Telenok\Object\Type::findOrFail($input->get('morph_many_to_many_has')); 
 
             $morphManyCode = $model->code;
             $morphToCode = $morphManyCode . '_' . $typeMorphMany->code;
@@ -178,8 +178,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
             $classModelMorphTo = $typeBelongTo->class_model;
  
 
-            $morphManyObject = \App::build($classModelMorphMany);
-            $morphToObject = \App::build($classModelMorphTo);
+            $morphManyObject = app($classModelMorphMany);
+            $morphToObject = app($classModelMorphTo);
 
             $pivotTable = 'pivot_morph_m2m_' . $morphManyCode . '_' . $typeBelongTo->code;
 
@@ -253,11 +253,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				];
 
 
-				$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
+				$validator = $this->validator(new \App\Model\Telenok\Object\Field(), $toSave, []);
 
 				if ($validator->passes()) 
 				{
-					\Telenok\Object\Field::create($toSave);
+					\App\Model\Telenok\Object\Field::create($toSave);
 				}
 
 				if (!$this->validateMethodExists($morphToObject, $morphTo['method']))

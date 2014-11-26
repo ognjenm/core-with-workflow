@@ -1,10 +1,10 @@
 <div class="widget-box telenok-widget-box draggable @if (!$widgetOnPage->active) widget-color-red @elseif ($widgetOnPage->isWidgetLink()) widget-color-blue @else widget-color-green @endif" 
-	 data-widget-key="#####$key$$$$$$$$$$" 
-	 data-widget-id="#####$id$$$$$$$$$$"
+	 data-widget-key="{{$key}}" 
+	 data-widget-id="{{$id}}"
 	 data-widget-buffer-id="0"
 	 data-widget-buffer-key="0">
     <div class="widget-header widget-header-small @if (!$widgetOnPage->active) header-color-red @elseif ($widgetOnPage->isWidgetLink()) header-color-blue @else header-color-green @endif">
-		<h5 class="widget-title lighter">#####$header$$$$$$$$$$. #####$widgetOnPage->translate('title')$$$$$$$$$$</h5>
+		<h5 class="widget-title lighter">{{$header}}. {{$widgetOnPage->translate('title')}}</h5>
 
 		<div class="widget-toolbar no-border">
 			<a data-action="cut" href="#">
@@ -39,7 +39,7 @@
 						@foreach($rows as $r)
 						<tr>
 							@foreach($r as $c)
-							<td data-container-id="#####$c['container_id']$$$$$$$$$$" class="frontend-container" 
+							<td data-container-id="{{$c['container_id']}}" class="frontend-container" 
                                 style="vertical-align: top; padding: 2px; margin: 0;">@foreach($c['content'] as $content){!! $content !!}@endforeach</td>
 							@endforeach
 						</tr>

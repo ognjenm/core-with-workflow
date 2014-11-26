@@ -10,10 +10,10 @@ class Guard extends \Illuminate\Auth\Guard {
     }
 
     /*
-     * \Auth::cannot(\Telenok\Security\Permission->code eg: 'write', \Telenok\Security\Resource->code 'log')
+     * \Auth::cannot(\App\Model\Telenok\Security\Permission->code eg: 'write', \App\Model\Telenok\Security\Resource->code 'log')
      * \Auth::cannot(222, \News $news)
-     * \Auth::cannot(\Telenok\Security\Permission $read, \User $user)
-     * \Auth::cannot(\Telenok\Security\Permission $read, ['object_type.language.%'])
+     * \Auth::cannot(\App\Model\Telenok\Security\Permission $read, \User $user)
+     * \Auth::cannot(\App\Model\Telenok\Security\Permission $read, ['object_type.language.%'])
     */
     public function cannot($permissionCode = null, $resourceCode = null)
     {
@@ -21,10 +21,10 @@ class Guard extends \Illuminate\Auth\Guard {
     }
 
     /*
-     * \Auth::can(\Telenok\Security\Permission->code eg: 'write', \Telenok\Security\Resource->code 'log')
+     * \Auth::can(\App\Model\Telenok\Security\Permission->code eg: 'write', \App\Model\Telenok\Security\Resource->code 'log')
      * \Auth::can(222, \News $news)
-     * \Auth::can(\Telenok\Security\Permission $read, \User $user)
-     * \Auth::can(\Telenok\Security\Permission $read, ['object_type.language.%'])
+     * \Auth::can(\App\Model\Telenok\Security\Permission $read, \User $user)
+     * \Auth::can(\App\Model\Telenok\Security\Permission $read, ['object_type.language.%'])
     */
     public function can($permissionCode = null, $resourceCode = null)
     { 

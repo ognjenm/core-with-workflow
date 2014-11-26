@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Workflow\Process;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
     protected $key = 'workflow-process';
     protected $parent = 'workflow';
@@ -85,7 +85,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
             if ($id)
             {
-                $process = \Telenok\Workflow\Process::find($id);
+                $process = \App\Model\Telenok\Workflow\Process::find($id);
                 
                 if ($process && !empty($process->process->get('stencil')))
                 {
@@ -119,9 +119,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     { 
         $id = \Input::get('diagramId');
         
-		$model = \Telenok\Workflow\Process::find($id);
+		$model = \App\Model\Telenok\Workflow\Process::find($id);
 		
-        return \View::make($this->diagramBody, [
+        return view($this->diagramBody, [
                 'controller' => $this,
                 'model' => $model,
                 'stencilData' => ($model ? $model->process->get('diagram', []) : false),
@@ -255,7 +255,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function getElements()
     {
-        return \App::make('telenok.config')->getWorkflowElement();
+        return app('telenok.config')->getWorkflowElement();
     }
 	
     public function preProcess($model, $type, $input)
@@ -276,7 +276,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     {
         $isValid = true;
 
-        $elements = \App::make('telenok.config')->getWorkflowElement();
+        $elements = app('telenok.config')->getWorkflowElement();
         $processCollection = \Illuminate\Support\Collection::make($process);
         
         $stencilData = $processCollection->get('stencil', []);

@@ -1,7 +1,7 @@
 @extends('core::layout.backend')
 
 @section('head')
-    <title>##### $controller->LL('title-page') $$$$$$$$$$</title>
+    <title>{{ $controller->LL('title-page') }}</title>
     @parent
 @stop
         
@@ -19,7 +19,7 @@
                                 <div class="center">
                                     <h1>
                                         <i class="fa fa-leaf green"></i>
-                                        <span class="green">#####\Config::get('app.backend.brand')$$$$$$$$$$</span>
+                                        <span class="green">{{\Config::get('app.backend.brand')}}</span>
                                     </h1>
                                     <h4 class="blue">&copy; Telenok CMS</h4>
                                 </div>
@@ -34,23 +34,23 @@
                                             <div class="widget-main">
                                                 <h4 class="header blue lighter bigger">
                                                     <i class="fa fa-coffee green"></i>
-                                                    ##### $controller->LL('please-fill') $$$$$$$$$$
+                                                    {{ $controller->LL('please-fill') }}
                                                 </h4>
 
                                                 <div class="space-6"></div>
 
-                                                {{ Form::open(['route' => 'cmf.login', 'method' => 'post']) }}
+                                                {!! Form::open(['route' => 'cmf.login', 'method' => 'post']) !!}
                                                     <fieldset>
                                                         <label>
                                                             <span class="block input-icon input-fa fa-right">
-                                                                <input type="text" name="username" class="col-md-12" placeholder="##### $controller->LL('username') $$$$$$$$$$" />
+                                                                <input type="text" name="username" class="col-md-12" placeholder="{{ $controller->LL('username') }}" />
                                                                 <i class="fa fa-user"></i>
                                                             </span>
                                                         </label>
 
                                                         <label>
                                                             <span class="block input-icon input-fa fa-right">
-                                                                <input type="password" name="password" autocomplete="off" class="col-md-12" placeholder="##### $controller->LL('password') $$$$$$$$$$" />
+                                                                <input type="password" name="password" autocomplete="off" class="col-md-12" placeholder="{{ $controller->LL('password') }}" />
                                                                 <i class="fa fa-lock"></i>
                                                             </span>
                                                         </label>
@@ -60,21 +60,21 @@
                                                         <div class="clearfix">
                                                             <label class="inline">
                                                                 <input type="checkbox" name='remember' value="1" />
-                                                                <span class="lbl"> ##### $controller->LL('remember') $$$$$$$$$$</span>
+                                                                <span class="lbl"> {{ $controller->LL('remember') }}</span>
                                                             </label>
 
                                                             <button type="submit" class="width-35 pull-right btn btn-sm btn-primary">
                                                                 <i class="fa fa-key"></i>
-                                                                ##### $controller->LL('login') $$$$$$$$$$
+                                                                {{ $controller->LL('login') }}
                                                             </button>
                                                         </div>
 
                                                         <div class="space-4"></div>
                                                     </fieldset>
-                                                {{ Form::close() }}
+                                                {!! Form::close() !!}
 
                                                 <div class="social-or-login center">
-                                                    <span class="bigger-110">##### $controller->LL('login-social') $$$$$$$$$$</span>
+                                                    <span class="bigger-110">{{ $controller->LL('login-social') }}</span>
                                                 </div>
 
                                                 <div class="social-login center">
@@ -96,7 +96,7 @@
                                                 <div>
                                                     <a href="#" onclick="show_box('forgot-box'); return false;" class="forgot-password-link">
                                                         <i class="fa fa-arrow-left"></i>
-                                                        ##### $controller->LL('forgot-password') $$$$$$$$$$
+                                                        {{ $controller->LL('forgot-password') }}
                                                     </a>
                                                 </div>
                                             </div>
@@ -108,12 +108,12 @@
                                             <div class="widget-main">
                                                 <h4 class="header red lighter bigger">
                                                     <i class="fa fa-key"></i>
-                                                    ##### $controller->LL('retrieve-password') $$$$$$$$$$
+                                                    {{ $controller->LL('retrieve-password') }}
                                                 </h4>
 
                                                 <div class="space-6"></div>
                                                 <p>
-                                                    ##### $controller->LL('title-email-password') $$$$$$$$$$
+                                                    {{ $controller->LL('title-email-password') }}
                                                 </p>
 
                                                 <form>
@@ -128,7 +128,7 @@
                                                         <div class="clearfix">
                                                             <button onclick="return false;" class="width-35 pull-right btn btn-sm btn-danger">
                                                                 <i class="fa fa-lightbulb-o"></i>
-                                                                ##### $controller->LL('send-me') $$$$$$$$$$
+                                                                {{ $controller->LL('send-me') }}
                                                             </button>
                                                         </div>
                                                     </fieldset>
@@ -137,7 +137,7 @@
 
                                             <div class="toolbar center">
                                                 <a href="#" onclick="show_box('login-box'); return false;" class="back-to-login-link">
-                                                    ##### $controller->LL('back-login') $$$$$$$$$$
+                                                    {{ $controller->LL('back-login') }}
                                                     <i class="fa fa-arrow-right"></i>
                                                 </a>
                                             </div>
@@ -268,7 +268,7 @@
 
                                                 <div class="space-6"></div>
 
-                                                <form action="{{ URL::route('cmf.login') }}" method="post">
+                                                <form action="{!! URL::route('cmf.login') !!}" method="post">
                                                     <fieldset>
                                                         <label>
                                                             <span class="block input-icon input-fa fa-right">

@@ -69,10 +69,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 $value = \Carbon\Carbon::createFromFormat('H:i:s', $value);
             }
 		}
-			
-        parent::setModelSpecialAttribute($model, $key, $value);
 
-        return true;
+        return parent::setModelSpecialAttribute($model, $key, $value);
     }
     
     public function postProcess($model, $type, $input)

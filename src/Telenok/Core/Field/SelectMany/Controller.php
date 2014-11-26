@@ -122,7 +122,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			parent::setModelSpecialAttribute($model, $key, $value);
 		}
 
-        return true;
+        return $this;
     }
     
     public function getListFieldContent($field, $item, $type = null)

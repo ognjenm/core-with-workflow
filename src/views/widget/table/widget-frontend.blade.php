@@ -4,7 +4,7 @@
         @foreach($rows as $r)
         <tr>
             @foreach($r as $c)
-            <td data-container-id="#####$c['container_id']$$$$$$$$$$">
+            <td data-container-id="{{$c['container_id']}}">
                 
                 @foreach($c['content'] as $content)
                 {!! $content !!}

@@ -88,7 +88,7 @@
 
 <div class="widget-box span">
     <div class="widget-header widget-header-flat">
-        <h4 class="lighter widget-title smaller">#####$treeChoose$$$$$$$$$$</h4>
+        <h4 class="lighter widget-title smaller">{{$treeChoose}}</h4>
         <span class="widget-toolbar">
 
             <a data-action="settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -98,12 +98,12 @@
             <ul class="dropdown-menu dropdown-caret">
                 <li>
                     <div class="input-group" style="margin: 0 6px;">
-                        <input type="text" placeholder="##### $controller->LL('btn.search') $$$$$$$$$$..." onclick="event.stopPropagation();" class="form-control" style="float: none; width: 200px;">
+                        <input type="text" placeholder="{{ $controller->LL('btn.search') }}..." onclick="event.stopPropagation();" class="form-control" style="float: none; width: 200px;">
                         <span class="input-group-btn">
-                            <button onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).closest('div').find('input').val());return false;" title="#####$controller->LL('btn.search')$$$$$$$$$$" type="button" class="btn btn-info btn-sm">
+                            <button onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).closest('div').find('input').val());return false;" title="{{$controller->LL('btn.search')}}" type="button" class="btn btn-info btn-sm">
                                 <i class="fa fa-search"></i>
                             </button>
-                            <button onclick="jQuery('#tree-{{$id}}').jstree('clear_search');jQuery(this).closest('div').find('input').val('');return false;" title="#####$controller->LL('btn.clear')$$$$$$$$$$" type="button" class="btn btn-sm">
+                            <button onclick="jQuery('#tree-{{$id}}').jstree('clear_search');jQuery(this).closest('div').find('input').val('');return false;" title="{{$controller->LL('btn.clear')}}" type="button" class="btn btn-sm">
                                 <i class="fa fa-times"></i>
                             </button>					
                         </span>								

@@ -16,7 +16,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		if ($value !== null && trim($value))
 		{
             $fieldCode = $field->code;
-            $translate = new \Telenok\Object\Translation();
+            $translate = new \App\Model\Telenok\Object\Translation();
 
             if (in_array($fieldCode, $model->getMultilanguage()))
             {
@@ -128,7 +128,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			parent::setModelSpecialAttribute($model, $key, $value);
 		}
 
-        return true;
+        return $this;
     }
 	
     public function postProcess($model, $type, $input)

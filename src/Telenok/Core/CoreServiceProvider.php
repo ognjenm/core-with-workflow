@@ -23,6 +23,7 @@ class CoreServiceProvider extends ServiceProvider {
         $this->package('telenok/core');
 
         include __DIR__ . '/../../config/route.php';
+        include __DIR__ . '/../../config/IoC.php';
 
         $this->commands('command.telenok.install');
         $this->commands('command.telenok.migration');

@@ -19,7 +19,7 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			
 			if ($type && $type->class_model)
 			{
-				static::eraseStatic(\App::build($type->class_model));
+				static::eraseStatic(app($type->class_model));
 			}
 			
 			$model->createFieldResource($type);
@@ -27,7 +27,7 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		
 		static::deleting(function($model)
 		{
-			if ($controllers = \App::make('telenok.config')->getObjectFieldController()->get($model->key))
+			if ($controllers = app('telenok.config')->getObjectFieldController()->get($model->key))
 			{
 				return $controllers->processDeleting($model);
 			}
@@ -38,9 +38,9 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		$code = 'object_field.' . $type->code . '.' . $this->code;
 		
-		if (!\Telenok\Security\Resource::where('code', $code)->count())
+		if (!\App\Model\Telenok\Security\Resource::where('code', $code)->count())
 		{
-			(new \Telenok\Security\Resource())->storeOrUpdate([
+			(new \App\Model\Telenok\Security\Resource())->storeOrUpdate([
 				'title' => 'Object ' . $type->code . '. Field ' . $this->code,
 				'code' => $code,
 				'active' => 1
@@ -56,7 +56,7 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		{
 			parent::getFillable();
 
-			foreach(\App::make('telenok.config')->getObjectFieldController()->all() as $controller)
+			foreach(app('telenok.config')->getObjectFieldController()->all() as $controller)
 			{
                 $dateField = (array) $controller->getSpecialDateField($this);
 
@@ -82,7 +82,7 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public static function eraseStatic($model)
 	{
-		$class = get_class($model);
+		$class = get_class($this);
 
 		static::$listSpecialFieldController[$class] = null; 
 
@@ -126,12 +126,12 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
  
 	public function fieldObjectType()
 	{
-		return $this->belongsTo('\Telenok\Object\Type', 'field_object_type');
+		return $this->belongsTo('\App\Model\Telenok\Object\Type', 'field_object_type');
 	}
  
 	public function fieldObjectTab()
 	{
-		return $this->belongsTo('\Telenok\Object\Tab', 'field_object_tab');
+		return $this->belongsTo('\App\Model\Telenok\Object\Tab', 'field_object_tab');
 	}
 }
 

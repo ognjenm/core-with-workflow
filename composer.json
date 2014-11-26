@@ -2,7 +2,7 @@
     "name": "telenok/core",
     "description": "Telenok CMS Core engine",
     "version": "0.0.2",
-    "keywords": ["cms", "telenok", "core"],
+    "keywords": ["cms", "telenok", "core", "laravel"],
     "homepage": "http://telenok.com",
     "minimum-stability": "dev",
     "license": [
@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "4.2.*"
+        "illuminate/support": "5.0.*"
     },
     "autoload": {
         "classmap": [

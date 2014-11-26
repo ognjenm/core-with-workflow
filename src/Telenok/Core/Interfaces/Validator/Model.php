@@ -5,19 +5,75 @@ namespace Telenok\Core\Interfaces\Validator;
 class Model {
 
     protected $model;
-    protected $ruleList;
-    protected $input;
+    protected $ruleList = [];
+    protected $input = [];
     protected $validator;
-    protected $message;
-    protected $customAttributes;
+    protected $message = [];
+    protected $customAttribute = [];
+    
+    public function setModel(\Illuminate\Database\Eloquent\Model $param = null)
+    {
+        $this->model = $param;
 
-    public function __construct($model = null, $input = null, $message = [], $customAttributes = [])
-    { 
-        $this->model = $model;
-        $this->input = \Illuminate\Support\Collection::make($input instanceof \Illuminate\Support\Collection ? $input->all() : $input);
-		$this->message = array_merge(\Lang::get('core::default.error'), (array)$message);
-        $this->ruleList = $this->processRule($model->getRule());
-        $this->customAttributes = $customAttributes;  
+        return $this;
+    }
+    
+    public function getModel()
+    {
+        return $this->model;
+    }
+    
+    public function setInput(\Illuminate\Support\Collection $param = null)
+    {
+        $this->input = $param;
+
+        return $this;
+    }
+    
+    public function getInput()
+    {
+        return $this->input;
+    }
+    
+    public function setMessage(array $param = null)
+    {
+        $this->message = array_merge(\Lang::get('core::default.error'), (array)$param);
+
+        return $this;
+    }
+    
+    public function getMessage()
+    {
+        return $this->message;
+    }
+    
+    public function setRuleList(array $param = null)
+    {
+        $this->ruleList = $param;
+
+        return $this;
+    }
+    
+    public function getRuleList()
+    {
+        if (empty($this->ruleList))
+        {
+            $this->ruleList = $this->processRule($this->getModel()->getRule());
+        }
+        
+        return $this->ruleList;
+    } 
+    
+    public function setCustomAttribute(array $param = null)
+    {
+        $this->customAttribute = $param;
+
+        return $this;
+    }
+    
+    public function getCustomAttribute()
+    {
+        return $this->customAttribute;
     }
 
     protected function processRule($rule)
@@ -34,7 +90,7 @@ class Model {
     }
 
     public function passes()
-    { 
+    {  
         if ($this->model instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model && $this->model->exists)
         {
             $this->ruleList = array_intersect_key($this->ruleList, $this->input->all());
@@ -45,7 +101,13 @@ class Model {
             }
         }
 
-        $this->validator = \Validator::make($this->input->all(), $this->ruleList, $this->message, $this->input->merge($this->customAttributes)->all())->setModel($this->model);
+        $this->validator = \Validator::make(
+                                $this->getInput()->all(), 
+                                $this->getRuleList(), 
+                                $this->getMessage(), 
+                                $this->getInput()->merge($this->getCustomAttribute())->all()
+                            )
+                            ->setModel($this->getModel());
 
         if ($this->validator->passes()) 
 		{

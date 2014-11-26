@@ -36,7 +36,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return [
             'tabKey' => "{$this->getTabKey()}-{$this->getParent()}",
             'tabLabel' => 'File manager',
-            'tabContent' => \View::make($this->getPresentationContentView(), array(
+            'tabContent' => view($this->getPresentationContentView(), array(
                 'controller' => $this,
 				'currentDirectory' => addslashes(base_path()),
                 'fields' => $this->tableColumn,
@@ -161,7 +161,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			return [
 				'tabKey' => $this->getTabKey() . '-new-' . $tabKey,
 				'tabLabel' => $this->LL('list.create.' . (in_array($modelType, ['file', 'directory']) ? $modelType : "")),
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory),
 					'modelType' => $modelType,
@@ -208,7 +208,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			return [
 				'tabKey' => $this->getTabKey() . '-edit-' . $tabKey,
 				'tabLabel' => $this->LL('list.edit.' . $modelType),
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($model->getPath()),
 					'modelType' => $modelType,
@@ -231,12 +231,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 	
-    public function store($id = null, $input = array())
+    public function store($id = null)
 	{
 		try
 		{
-			$modelType = \Input::get('modelType');
-			$name = trim(\Input::get('name'));
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+
+			$modelType = $input->get('modelType');
+			$name = trim($input->get('name'));
 
 			$currentDirectory = new \SplFileInfo(\Input::get('directory'));
 
@@ -275,7 +277,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			}
 			
 			return [
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory->getRealPath()),
                     'success' => true,
@@ -297,14 +299,16 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 	
-    public function update($id = null, $input = array())
+    public function update()
 	{
 		try
 		{
-			$modelType = \Input::get('modelType');
-			$modelPath = \Input::get('modelPath');
-			$directory = trim(\Input::get('directory'));
-			$name = trim(\Input::get('name'));
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+            
+			$modelType = $input->get('modelType');
+			$modelPath = $input->get('modelPath');
+			$directory = trim($input->get('directory'));
+			$name = trim($input->get('name'));
 
 			$currentDirectory = new \SplFileInfo($directory);
 			$model = new \SplFileInfo($modelPath);
@@ -338,7 +342,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			{
 				$pathNew = $currentDirectory->getPathname() . DIRECTORY_SEPARATOR . $name; 
 
-				if (strlen(\Input::get('content', "")) && \File::size($modelPath) < $this->getMaxSizeToView())
+				if (strlen(\Input::get('content', '')) && \File::size($modelPath) < $this->getMaxSizeToView())
 				{
 					\File::put($model->getRealPath(), \Input::get('content'));
 				}
@@ -354,7 +358,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			}
 			
 			return [
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory->getRealPath()),
                     'success' => true,
@@ -452,7 +456,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function getWizardListContent111()
     {
         return array(
-            'content' => \View::make("core::module/files-browser.wizard", array(
+            'content' => view("core::module/files-browser.wizard", array(
                     'controller' => $this,
                     'route' => $this->getRouterEdit(),
                     'uniqueId' => str_random(),

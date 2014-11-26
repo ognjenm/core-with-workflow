@@ -1,34 +1,34 @@
 	@if (!in_array($field->code, ['key', 'field_view']))
 
-		{{\App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId)}}
+		{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
 	@elseif ($field->code == "field_view" && $model->exists)
 
         <?php
 
-            $views = \App::make('telenok.config')->getObjectFieldViewModel()->get($model->key, []);
+            $views = app('telenok.config')->getObjectFieldViewModel()->get($model->key, []);
 
             if (empty($viewsCollection))
             {
-                $views[] = \App::make('telenok.config')->getObjectFieldController()->get($model->key)->getViewModel();
+                $views[] = app('telenok.config')->getObjectFieldController()->get($model->key)->getViewModel();
             }
             
             $views = array_combine($views, $views);
         ?>
 
 		<div class="form-group">
-			{{ Form::label('key', $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+			{!! Form::label('key', $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 			<div class="col-sm-9">
-                {{ Form::select($field->code, $views, $model->{$field->code}) }}
+                {!! Form::select($field->code, $views, $model->{$field->code}) !!}
 			</div>
 		</div>
 
 	@elseif ($field->code=='key')
 
-		{{ Form::hidden('key', $model->{$field->code}) }}
+		{!! Form::hidden('key', $model->{$field->code}) !!}
 
 		<div class="form-group">
-			{{ Form::label('key', $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+			{!! Form::label('key', $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 			<div class="col-sm-9">
 
 				<?php 
@@ -43,7 +43,7 @@
 				$selectFields = [];
 				$multilanguageFields = [];
 
-				\App::make('telenok.config')->getObjectFieldController()
+				app('telenok.config')->getObjectFieldController()
                         ->reject(function($i) { return in_array($i->getKey(),['locked-by', 'deleted-by', 'created-by', 'active', 'permission', 'updated-by']);})
                         ->each(function($field) use (&$selectFields, &$multilanguageFields) 
 				{  
@@ -56,7 +56,7 @@
 				});
 
 				?>
-			{{ Form::select('key', $selectFields, $model->{$field->code}, $key) }}
+			{!! Form::select('key', $selectFields, $model->{$field->code}, $key) !!}
 			</div>
 		</div>
 
@@ -86,7 +86,7 @@
 
 		@if ($model->exists) 
 
-		{{\App::make('telenok.config')->getObjectFieldController()->get($model->key)->getFormFieldContent($model, $uniqueId)}}
+		{!! app('telenok.config')->getObjectFieldController()->get($model->key)->getFormFieldContent($model, $uniqueId) !!}
 
 		@endif
 

@@ -32,7 +32,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 			}
 		}
 
-		return \View::make('core::controller.backend-login', ['controller' => $this]);
+		return view('core::controller.backend-login', ['controller' => $this]);
 	}
 
 	public function logout()
@@ -44,17 +44,17 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 	public function errorAccessDenied()
 	{
-		return \View::make('core::controller.backend-denied', ['controller' => $this]);
+		return view('core::controller.backend-denied', ['controller' => $this]);
 	}
 
 	public function frontendAreaWidgetList()
 	{
-		return \View::make('core::controller.backend-frontend-iframe-widget-list', ['controller' => $this]);
+		return view('core::controller.backend-frontend-iframe-widget-list', ['controller' => $this]);
 	}
 
 	public function frontendArea()
 	{
-		return \View::make('core::controller.backend-frontend-iframe-content', ['controller' => $this]);
+		return view('core::controller.backend-frontend-iframe-content', ['controller' => $this]);
 	}
 
 	public function getContent()
@@ -62,7 +62,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$listModuleMenuLeft = \Illuminate\Support\Collection::make([]);
 		\Event::fire('telenok.module.menu.left', $listModuleMenuLeft);
 
-		$config = \App::make('telenok.config');
+		$config = app('telenok.config');
 
 		$setArray = [];
 
@@ -139,7 +139,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$setArray['listModuleMenuTop'] = $listModuleMenuTop;
 		$setArray['controller'] = $this;
 
-		return \View::make('core::controller.backend', $setArray);
+		return view('core::controller.backend', $setArray);
 	}
 
 }

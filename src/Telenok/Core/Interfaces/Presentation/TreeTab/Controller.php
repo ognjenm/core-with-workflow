@@ -2,9 +2,10 @@
 
 namespace Telenok\Core\Interfaces\Presentation\TreeTab;
 
-use \Telenok\Core\Interfaces\Exception\Validate as ValidateException;
+use \Telenok\Core\Interfaces\Module\Controller as Module;
+use \Telenok\Core\Interfaces\Presentation\IPresentation;
 
-abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
+abstract class Controller extends Module implements IPresentation {
 
     protected $tabKey = '';
     protected $presentation = 'tree-tab';
@@ -323,52 +324,56 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function getModelList()
     {
-        return \App::build($this->modelList);
+        return app($this->modelList);
     }    
     
     public function getModel($id)
     {
-        return \Telenok\Object\Sequence::getModel($id);
+        return \App\Model\Telenok\Object\Sequence::getModel($id);
     }
  
     public function getType($id)
     {
-        return \Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->firstOrFail();
+        return \App\Model\Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->firstOrFail();
     } 
 
     public function getTypeByModel($id)
     {
-        return \Telenok\Object\Sequence::findOrFail($id)->sequencesObjectType;
+        return \App\Model\Telenok\Object\Sequence::findOrFail($id)->sequencesObjectType;
     }
     
     public function modelByType($id)
     {
-        return \App::build($this->getType($id)->class_model);
+        return app($this->getType($id)->class_model);
     }
 
     public function getModelTree()
     {
-        return \App::build($this->modelTree);
+        return app($this->modelTree);
     }    
 
-    public function validator($model = null, $input = null, $message = [], $customAttribute = [])
+    public function validator($model = null, array $input = [], array $message = [], array $customAttribute = [])
     {
-        return new \Telenok\Core\Interfaces\Validator\Model($model ?: $this->getModelList(), $input, $message, $customAttribute);
+        return app('\Telenok\Core\Interfaces\Validator\Model')
+                    ->setModel($model ?: $this->getModelList())
+                    ->setInput($input)
+                    ->setMessage($message)
+                    ->setCustomAttributes($customAttribute);
     }
 
     public function validateException()
     {
-        return new ValidateException();
+        return app('\Telenok\Core\Interfaces\Exception\Validate');
     }
 
-    public function validate($model = null, $input = null, $message = [])
+    public function validator(\Illuminate\Database\Eloquent\Model $model = null, array $input = [], array $message = [], array $customAttribute = [])
     { 
         return $this;
     }
     
     public function getActionParam()
     { 
-        return json_encode(array(
+        return json_encode([
             'presentation' => $this->getPresentation(),
 			'presentationModuleKey' => $this->getPresentationModuleKey(),
             'presentationContent' => $this->getPresentationContent(),
@@ -378,44 +383,44 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             'breadcrumbs' => $this->getBreadcrumbs(),
             'pageHeader' => $this->getPageHeader(),
             'uniqueId' => str_random(), 
-        ));
+        ]);
     }
     
     public function getPresentationContent()
     {
-        return \View::make($this->getPresentationView(), array(
+        return view($this->getPresentationView(), [
             'presentation' => $this->getPresentation(),
 			'presentationModuleKey' => $this->getPresentationModuleKey(),
             'controller' => $this,
             'uniqueId' => str_random(),
             'iDisplayLength' => $this->displayLength
-        ))->render();
+        ])->render();
     } 
 
     public function getContent()
     {
         $model = $this->getModelList();
 
-        return array(
+        return [
             'tabKey' => $this->getTabKey(),
             'tabLabel' => $this->LL('list.name'),
-            'tabContent' => \View::make($this->getPresentationContentView(), array(
+            'tabContent' => view($this->getPresentationContentView(), array(
                 'controller' => $this, 
                 'fields' => $model->getFieldList(),
                 'fieldsFilter' => $this->getModelFieldFilter(),
                 'gridId' => $this->getGridId(), 
                 'uniqueId' => str_random(),
             ))->render()
-        );
+        ];
     }
     
     public function getTreeContent()
     {
-        return \View::make($this->getPresentationTreeView(), array(
+        return view($this->getPresentationTreeView(), [
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
                 'id' => str_random(),
-            ))->render();
+            ])->render();
     }
     
     public function getFilterQueryLike($value, $query, $model, $input)
@@ -438,23 +443,21 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     
     public function getFilterQuery($model, $query)
     {
-        $translate = new \Telenok\Object\Translation();
-        
-        if ($title = trim(\Input::get('sSearch')))
+        if ($title = trim($this->getRequest()->input('sSearch')))
         {
             $this->getFilterQueryLike($title, $query, $model, 'title');
         } 
 
-		if (\Input::get('multifield_search', false))
+		if ($this->getRequest()->input('multifield_search', false))
 		{
-			$this->getFilterSubQuery(\Input::get('filter', []), $model, $query);
+			$this->getFilterSubQuery($this->getRequest()->input('filter', []), $model, $query);
 		}
         
-        $orderByField = \Input::get('mDataProp_' . \Input::get('iSortCol_0'));
+        $orderByField = $this->getRequest()->input('mDataProp_' . $this->getRequest()->input('iSortCol_0'));
         
-        if (\Input::get('iSortCol_0', 0))
+        if ($this->getRequest()->input('iSortCol_0', 0))
         {
-            $query->orderBy($model->getTable() . '.' . $orderByField, \Input::get('sSortDir_0'));
+            $query->orderBy($model->getTable() . '.' . $orderByField, $this->getRequest()->input('sSortDir_0'));
         }
     }
 
@@ -477,7 +480,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function getListItem($model)
     {
-        $sequence = (new \Telenok\Object\Sequence());
+        $sequence = (new \App\Model\Telenok\Object\Sequence());
         
         $query = $model::select($model->getTable() . '.*')
             ->join($sequence->getTable(), function($join) use ($sequence, $model)
@@ -488,7 +491,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
             {
                 if ($this->getModelList()->treeForming())
                 {
-                    $query->where($sequence->getTable().'.tree_pid', \Input::get('treePid', 0))->orWhere($sequence->getTable() . '.' . $sequence->getKeyName(), \Input::get('treePid', 0));
+                    $query->where($sequence->getTable().'.tree_pid', $this->getRequest()->input('treePid', 0))->orWhere($sequence->getTable() . '.' . $sequence->getKeyName(), $this->getRequest()->input('treePid', 0));
                 }
             }); 
             
@@ -496,7 +499,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
         $this->getFilterQuery($model, $query); 
         
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function getListItemProcessed($field, $item)
@@ -507,7 +510,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     public function getTreeList()
     {
         $tree = [];
-        $input = \Telenok\Support\Helper\Input::getCollection(\Input::all());
+        $input = $this->getRequest()->input();
 
         $id = $input->get('id', -1);
         $searchStr = trim($input->get('search_string'));
@@ -529,7 +532,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
                 $parents = $list->lists('id', 'tree_pid');
 
-                $folderId = \Telenok\Object\Type::where('code', 'folder')->first()->getKey();
+                $folderId = \App\Model\Telenok\Object\Type::where('code', 'folder')->first()->getKey();
 
                 foreach ($list as $key => $item)
                 {
@@ -554,15 +557,15 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     {
         $model = $this->getModelTree();
         
-        $query = \Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->active();
+        $query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->active();
 
         $sequences_object_type = [];
         
-        $sequences_object_type[] = \Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey();
+        $sequences_object_type[] = \App\Model\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey();
 
         if ($model !== null)
         {
-            $sequences_object_type[] = \Telenok\Object\Type::where('code', $model->getTable())->first()->getKey();
+            $sequences_object_type[] = \App\Model\Telenok\Object\Type::where('code', $model->getTable())->first()->getKey();
         }
         
         if ($str)
@@ -642,17 +645,17 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return [];
     }
 
-    public function getList($input = [])
+    public function getList()
     {
         $content = [];
         
         $input = $input ?: \Input::all();
         
-        if ()
+        dd($request->input());
         
-        $total = \Input::get('iDisplayLength', 10);
-        $sEcho = \Input::get('sEcho');
-        $iDisplayStart = \Input::get('iDisplayStart', 0);
+        $total = $this->getRequest()->input('iDisplayLength', 10);
+        $sEcho = $this->getRequest()->input('sEcho');
+        $iDisplayStart = $this->getRequest()->input('iDisplayStart', 0);
 
         $model = $this->getModelList();
         $items = $this->getListItem($model)->get();
@@ -685,19 +688,19 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 		switch ($action)
 		{
 			case 'create':
-				return [ $this->getRouterStore(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterStore(['id' => $model->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', false), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			case 'edit':
-				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			case 'store':
-				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			case 'update':
-				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterUpdate(['id' => $model->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			default:
@@ -708,12 +711,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function create($id = null)
     {  
-		$id = $id ?: \Input::get('id');
+		$id = $id ?: $this->getRequest()->input('id');
 		
         return [
             'tabKey' => $this->getTabKey().'-new-'.str_random(),
             'tabLabel' => $this->LL('list.create'),
-            'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+            'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList(), 
 				'routerParam' => $this->getRouterParam('create'),
@@ -724,12 +727,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function edit($id = null)
     { 
-		$id = $id ?: \Input::get('id');
+		$id = $id ?: $this->getRequest()->input('id');
 		
         return [
             'tabKey' => $this->getTabKey() . '-edit-' . $id,
             'tabLabel' => $this->LL('list.edit'),
-            'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+            'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList()->find($id), 
 				'routerParam' => $this->getRouterParam('edit'),
@@ -742,7 +745,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
     {
         $content = [];
 
-        $ids = (array)\Input::get('tableCheckAll');
+        $ids = (array)$this->getRequest()->input('tableCheckAll');
 
         if (empty($ids)) 
         {
@@ -751,7 +754,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         
         foreach ($ids as $id)
         {
-            $content[] = \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+            $content[] = view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
                 'controller' => $this,
                 'model' => $this->getModelList()->find($id), 
 				'routerParam' => $this->getRouterParam('edit'),
@@ -794,7 +797,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function deleteList($id = null, $ids = [])
     {
-        $ids = !empty($ids) ? $ids : (array)\Input::get('tableCheckAll');
+        $ids = !empty($ids) ? $ids : (array)$this->getRequest()->input('tableCheckAll');
 
         if (empty($ids)) 
         {
@@ -832,11 +835,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function lock()
     {
-		$id = \Input::get('id');
+		$id = $this->getRequest()->input('id');
 
 		try
 		{
-			$model = \Telenok\Object\Sequence::find($id)->model;
+			$model = \App\Model\Telenok\Object\Sequence::find($id)->model;
 
 			if (!$model->locked())
 			{
@@ -853,13 +856,13 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function lockList()
     {
-		$tableCheckAll = \Input::get('tableCheckAll', []);
+		$tableCheckAll = $this->getRequest()->input('tableCheckAll', []);
 		
 		try
 		{
 			foreach($tableCheckAll as $id)
 			{
-				$model = \Telenok\Object\Sequence::find($id)->model;
+				$model = \App\Model\Telenok\Object\Sequence::find($id)->model;
 				
 				if (!$model->locked())
 				{
@@ -877,7 +880,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
 	public function unlockList()
     {
-		$tableCheckAll = \Input::get('tableCheckAll', []);
+		$tableCheckAll = $this->getRequest()->input('tableCheckAll', []);
 		
 		try
 		{
@@ -885,7 +888,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 			
 			foreach($tableCheckAll as $id)
 			{
-				$model = \Telenok\Object\Sequence::find($id)->model;
+				$model = \App\Model\Telenok\Object\Sequence::find($id)->model;
 
 				if ($model && $model->locked_by_user == $userId)
 				{
@@ -902,16 +905,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 	}
 
 
-    public function store($id = null, $input = [])
+    public function store($id = null)
     {   
         try 
 		{
-			if (empty($input))
-			{
-				$input = \Input::all();
-			}
-
-			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
 			$model = null;
 
@@ -927,7 +925,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
         $return = [];
 		
-        $return['content'] = \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge([
+        $return['content'] = view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge([
                     'controller' => $this,
                     'model' => $model,
 					'routerParam' => $this->getRouterParam('store'),
@@ -939,16 +937,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
         return $return;
     }
     
-    public function update($id = null, $input = [])
+    public function update()
     { 
         try 
         {
-			if (empty($input))
-			{
-				$input = \Input::all();
-			}
-
-			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input());  
 
             $model = null;
 
@@ -964,7 +957,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
  
         $return = []; 
 		
-        $return['content'] = \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge([
+        $return['content'] = view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge([
                     'controller' => $this,
                     'model' => $model,
 					'routerParam' => $this->getRouterParam('update'),
@@ -978,10 +971,10 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function save($input = [], $type = null)
     {   
-        $input = $input instanceof  \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+        $input = $input instanceof  \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array)$input);
         $model = $this->getModelList();
 
-        $validator = $this->validator($model, $input, $this->LL('error'), ['table' => $model->getTable()]);
+        $validator = $this->validator($model, $input->all(), $this->LL('error'), ['table' => $model->getTable()]);
 
         if ($validator->fails()) 
         {

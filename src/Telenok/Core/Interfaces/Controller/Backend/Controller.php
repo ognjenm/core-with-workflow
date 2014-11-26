@@ -4,8 +4,12 @@ namespace Telenok\Core\Interfaces\Controller\Backend;
 
 abstract class Controller extends \Illuminate\Routing\Controller {
 
+    use \Telenok\Core\Support\PackageLoad;
+    
     protected $key = '';
     protected $package = '';
+    protected $languageDirectory = 'controller';
+    protected $request; 
 
     public function getName()
     {
@@ -17,42 +21,22 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this->key;
     }
 
-    public function getPackage()
-    {
-        if ($this->package) return $this->package;
-        
-        $list = explode('\\', __NAMESPACE__);
-        
-        return strtolower(array_get($list, 1));
-    }
-
     public function getContent()
     {
         return '';
-    }   
-
-    public function LL($key='', $param = [])
+    }
+    
+    public function setRequest(\Illuminate\Http\Request $request = null)
     {
-        $key_ = "{$this->getPackage()}::controller/{$this->getKey()}.$key";
-        $key_default_ = "{$this->getPackage()}::default.$key";
+        $this->request = $request;
         
-        $word = \Lang::get($key_, $param);
-        
-        // not found in current wordspace
-        if ($key_ === $word)
-        {
-            $word = \Lang::get($key_default_, $param);
-            
-            // not found in default wordspace
-            if ($key_default_ === $word)
-            {
-                return $key_;
-            }
-        } 
-        
-        return $word;
+        return $this;
     }
 
+    public function getRequest()
+    {
+        return $this->request;
+    }
 }
 
 ?>

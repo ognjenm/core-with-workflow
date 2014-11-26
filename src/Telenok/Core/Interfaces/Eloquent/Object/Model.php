@@ -37,7 +37,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			if ($model->hasVersioning())
 			{
-				\Telenok\Object\Version::add($model);
+				\App\Model\Telenok\Object\Version::add($model);
 			}
 
 			$model->deleteSequence();
@@ -59,14 +59,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			if ($this->getKey())
 			{
-				$sequence = new \Telenok\Object\Sequence();
+				$sequence = new \App\Model\Telenok\Object\Sequence();
 				$sequence->{$sequence->getKeyName()} = $this->getKey();
 				$sequence->class_model = get_class($this);
 				$sequence->save();
 			}
 			else
 			{
-				$sequence = \Telenok\Object\Sequence::create(['class_model' => get_class($this)]);
+				$sequence = \App\Model\Telenok\Object\Sequence::create(['class_model' => get_class($this)]);
 			}
 
 			$this->{$this->getKeyName()} = $sequence->getKey();
@@ -77,7 +77,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
 		{
-			\Telenok\Object\Sequence::withTrashed()->find($this->getKey())->restore();
+			\App\Model\Telenok\Object\Sequence::withTrashed()->find($this->getKey())->restore();
 		}
 	}
 
@@ -85,7 +85,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
 		{
-			$sequence = \Telenok\Object\Sequence::find($this->getKey());
+			$sequence = \App\Model\Telenok\Object\Sequence::find($this->getKey());
 			
 			if ($this->forceDeleting)
 			{
@@ -102,7 +102,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
 		{
-			\Telenok\Object\Translation::where('translation_object_model_id', $this->getKey())->forceDelete();
+			\App\Model\Telenok\Object\Translation::where('translation_object_model_id', $this->getKey())->forceDelete();
 
 			foreach ($this->getMultilanguage() as $fieldCode)
 			{
@@ -110,7 +110,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 				foreach ($value as $language => $string)
 				{
-					\Telenok\Object\Translation::create([
+					\App\Model\Telenok\Object\Translation::create([
 						'translation_object_model_id' => $this->getKey(),
 						'translation_object_field_code' => $fieldCode,
 						'translation_object_language' => $language,
@@ -140,12 +140,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function sequence()
 	{
-		return $this->hasOne('\Telenok\Object\Sequence', 'id');
+		return $this->hasOne('\App\Model\Telenok\Object\Sequence', 'id');
 	}
 	
 	public function type()
 	{
-		return \Telenok\Object\Type::whereCode($this->getTable())->first();
+		return \App\Model\Telenok\Object\Type::whereCode($this->getTable())->first();
 	} 
 
 	public function hasVersioning()
@@ -280,7 +280,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
                 if ($type->classController())
 				{
-					$classControllerObject = \App::build($type->classController());
+					$classControllerObject = app($type->classController());
 
 					$classControllerObject->preProcess($model, $type, $input);
 				}
@@ -371,7 +371,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		foreach($input->all() as $key => $value)
 		{
 			$f = $objectField->get($key);
-			$f_ = \App::make('telenok.config')->getObjectFieldController();
+			$f_ = app('telenok.config')->getObjectFieldController();
 
 			if ($f)
 			{
@@ -429,7 +429,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function postProcess($type, $input)
 	{
-		$config = \App::make('telenok.config')->getObjectFieldController();
+		$config = app('telenok.config')->getObjectFieldController();
 
 		foreach ($type->field()->get() as $field)
 		{
@@ -438,7 +438,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		if ($this->hasVersioning())
 		{
-			\Telenok\Object\Version::add($this);
+			\App\Model\Telenok\Object\Version::add($this);
 		}
 
 		return $this;
@@ -546,7 +546,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			static::$listMultilanguage[$class] = (array)$this->multilanguageList;
 			
-			$fields = \App::make('telenok.config')->getObjectFieldController();
+			$fields = app('telenok.config')->getObjectFieldController();
 						
 			foreach ($this->getObjectField()->all() as $key => $field)
 			{
@@ -587,7 +587,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			static::$listFieldController[$class] = [];
             static::$listFieldDate[$class] = [];
 
-			$controllers = \App::make('telenok.config')->getObjectFieldController();
+			$controllers = app('telenok.config')->getObjectFieldController();
 
 			foreach ($this->getObjectField()->all() as $key => $field)
 			{
@@ -715,7 +715,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			if (\Auth::guest())
 			{
-				$subject = \Telenok\Security\Resource::where('code', 'user_unauthorized')->active()->first();
+				$subject = \App\Model\Telenok\Security\Resource::where('code', 'user_unauthorized')->active()->first();
 			}
 			else if (\Auth::check())
 			{
@@ -731,10 +731,10 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 		else
 		{
-			$subject = \Telenok\Object\Sequence::where('id', $subjectCode)->active()->first();
+			$subject = \App\Model\Telenok\Object\Sequence::where('id', $subjectCode)->active()->first();
 		}
 		
-		$permission = \Telenok\Security\Permission::where('id', $permissionCode)->orWhere('code', $permissionCode)->active()->first();
+		$permission = \App\Model\Telenok\Security\Permission::where('id', $permissionCode)->orWhere('code', $permissionCode)->active()->first();
 
 		if (!$subject || !$permission)
 		{ 
@@ -742,9 +742,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		}
 
 		$now = \Carbon\Carbon::now();
-		$spr = new \Telenok\Security\SubjectPermissionResource();
-		$sequence = new \Telenok\Object\Sequence();
-		$type = new \Telenok\Object\Type();
+		$spr = new \App\Model\Telenok\Security\SubjectPermissionResource();
+		$sequence = new \App\Model\Telenok\Object\Sequence();
+		$type = new \App\Model\Telenok\Object\Type();
 		
 		$query->addSelect($this->getTable() . '.*');
 		
@@ -766,7 +766,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		{
 			$queryWhere->where(\DB::raw(1), 0);
 
-			$filters = \App::make('telenok.config')->getAclResourceFilter();
+			$filters = app('telenok.config')->getAclResourceFilter();
 
 			if (!empty($filterCode))
 			{
@@ -815,7 +815,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 			else
 			{
-				$sequence = \Telenok\Object\Sequence::findOrFail($modelOrId);
+				$sequence = \App\Model\Telenok\Object\Sequence::findOrFail($modelOrId);
 			}
 		} 
 
@@ -1164,27 +1164,27 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function createdByUser()
 	{
-		return $this->belongsTo('\Telenok\User\User', 'created_by_user');
+		return $this->belongsTo('\App\Model\Telenok\User\User', 'created_by_user');
 	}
 
 	public function updatedByUser()
 	{
-		return $this->belongsTo('\Telenok\User\User', 'updated_by_user');
+		return $this->belongsTo('\App\Model\Telenok\User\User', 'updated_by_user');
 	}
 
 	public function deletedByUser()
 	{
-		return $this->belongsTo('\Telenok\User\User', 'deleted_by_user');
+		return $this->belongsTo('\App\Model\Telenok\User\User', 'deleted_by_user');
 	}
 
 	public function lockedByUser()
 	{
-		return $this->belongsTo('\Telenok\User\User', 'locked_by_user');
+		return $this->belongsTo('\App\Model\Telenok\User\User', 'locked_by_user');
 	}
 
 	public function aclSubject()
 	{
-		return $this->hasMany('\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
+		return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
 	}
 }
 

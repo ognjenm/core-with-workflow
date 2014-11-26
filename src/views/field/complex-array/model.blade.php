@@ -13,18 +13,18 @@ if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($mod
 ?> 
 
 <div class="form-group">
-    {{ Form::label($disabled ? str_random() : "{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+    {!! Form::label($disabled ? str_random() : "{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 	<div class="col-sm-9">
 		
 		@if ((is_string($value) && mb_strlen($value) < 250) || is_numeric($value))
-			{{ Form::text("{$field->code}", $value, $domAttr) }}
+			{!! Form::text("{$field->code}", $value, $domAttr) !!}
 		@elseif (is_string($value) && mb_strlen($value) >= 250)
 		
 			<?php
 				$domAttr['class'] = $field->css_class?: 'form-control';
 			?>
 		
-			{{ Form::textarea("{$field->code}", $value, $domAttr ) }}
+			{!! Form::textarea("{$field->code}", $value, $domAttr ) !!}
 			
 		@elseif ($value instanceof \Illuminate\Support\Collection)
 		
@@ -32,7 +32,7 @@ if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($mod
 				$domAttr['disabled'] = 'disabled';
 			?> 
 		
-			{{ Form::text("", 'Not editable Object Collection', $domAttr) }}
+			{!! Form::text("", 'Not editable Object Collection', $domAttr) !!}
 		
 		@else
 		
@@ -40,7 +40,7 @@ if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($mod
 				$domAttr['disabled'] = 'disabled';
 			?> 
 	
-			{{ Form::text("", 'Empty data', $domAttr) }}
+			{!! Form::text("", 'Empty data', $domAttr) !!}
 		
 		@endif
 		

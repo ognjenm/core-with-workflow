@@ -14,7 +14,7 @@
 
 					<?php
 
-						$model = new \Telenok\Object\Type();
+						$model = new \App\Model\Telenok\Object\Type();
 
 						$query = $model::withPermission();
 						
@@ -30,7 +30,7 @@
 
 					?>
 
-					{{ implode('', $option) }}
+					{!! implode('', $option) !!}
 
 				</select> 
 				
@@ -40,8 +40,8 @@
 		<div class="modal-footer">
 
 			<div class="center no-margin">
-				<button class="btn btn-success" onclick="createWizard{{$uniqueId}}(this, '{{$controller->getRouterCreate(['id' => '_id_', 'saveBtn' => \Input::get('saveBtn'), 'chooseBtn' => \Input::get('chooseBtn'), 'chooseSequence' => 1])}}');">
-					##### $controller->LL('btn.continue') $$$$$$$$$$
+				<button class="btn btn-success" onclick="createWizard{{$uniqueId}}(this, '{!! $controller->getRouterCreate(['id' => '_id_', 'saveBtn' => \Input::get('saveBtn'), 'chooseBtn' => \Input::get('chooseBtn'), 'chooseSequence' => 1]) !!}');">
+					{{ $controller->LL('btn.continue') }}
 				</button>
 			</div>
 		</div>

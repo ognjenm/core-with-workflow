@@ -18,7 +18,7 @@ class SeedPageTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Заголовок в теге <meta>", 'en' => "Title in <meta> tag"],
                     'title_list' => ['ru' => "Заголовок в теге <meta>", 'en' => "Title in <meta> tag"],
@@ -36,7 +36,7 @@ class SeedPageTable extends Migration {
                 ]
         );
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Ключевые слова в теге <meta>", 'en' => "Keywords in <meta> tag"],
                     'title_list' => ['ru' => "Ключевые слова в теге <meta>", 'en' => "Keywords in <meta> tag"],
@@ -54,7 +54,7 @@ class SeedPageTable extends Migration {
                 ]
         );
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Описание in <meta> tag", 'en' => "Description in <meta> tag"],
                     'title_list' => ['ru' => "Описание in <meta> tag", 'en' => "Description in <meta> tag"],
@@ -72,7 +72,7 @@ class SeedPageTable extends Migration {
                 ]
         );
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Имя файла шаблона", 'en' => "File name of template"],
                     'title_list' => ['ru' => "Имя файла шаблона", 'en' => "File name of template"],
@@ -90,7 +90,7 @@ class SeedPageTable extends Migration {
                 ]
         );
 
-        (new \Telenok\Object\Field())->storeOrUpdate(
+        (new \App\Model\Telenok\Object\Field())->storeOrUpdate(
                 [
                     'title' => ['ru' => "Период кэширования", 'en' => "Cache time"],
                     'title_list' => ['ru' => "Период кэширования", 'en' => "Cache time"],
@@ -111,7 +111,7 @@ class SeedPageTable extends Migration {
                 ]
         );
 
-        (new \Telenok\Object\Field())->storeOrUpdate(
+        (new \App\Model\Telenok\Object\Field())->storeOrUpdate(
                 [
                     'title' => ['en' => 'URL pattern', 'ru' => 'URL шаблон'],
                     'title_list' => ['en' => 'URL pattern', 'ru' => 'URL шаблон'],
@@ -131,7 +131,7 @@ class SeedPageTable extends Migration {
                 ]
         );
 
-        (new \Telenok\Object\Field())->storeOrUpdate(
+        (new \App\Model\Telenok\Object\Field())->storeOrUpdate(
                 [
                     'title' => ['en' => 'URL redirect', 'ru' => 'URL перенаправления'],
                     'title_list' => ['en' => 'URL redirect', 'ru' => 'URL перенаправления'],

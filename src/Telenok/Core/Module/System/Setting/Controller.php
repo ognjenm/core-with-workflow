@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\System\Setting;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
 	protected $key = 'system-setting';
     protected $presentation = 'tree-tab-object';

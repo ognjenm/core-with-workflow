@@ -4,13 +4,16 @@ namespace Telenok\Core\Interfaces\Field;
 
 abstract class Controller extends \Illuminate\Routing\Controller {
 
+    use \Telenok\Core\Support\PackageLoad;
+
     protected $ruleList = [];
     protected $specialField = [];
     protected $specialDateField = [];
     protected $allowMultilanguage = true; 
+    protected $package = '';
+    protected $languageDirectory = 'field';
 
     protected $key = '';
-    protected $package = '';
     protected $displayLength = 5;
 	
     protected $viewModel = "";
@@ -22,6 +25,11 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     protected $routeWizardEdit = "";
     protected $routeWizardChoose = "";
 
+    public function __construct()
+    {
+        
+    }
+    
     public function getName()
     {
         return $this->LL('name');
@@ -47,6 +55,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         {
             $this->viewModel = $this->viewModel ?: "core::field.{$this->getKey()}.model";
         }
+        
+        return $this;
     }
 
     public function getViewField()
@@ -139,14 +149,14 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     {
         $model->setAttribute($key, $value);
         
-        return true;
+        return $this;
     }
 	
     public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
     { 
         $this->setViewModel($field);
         
-        return \View::make($this->getViewModel(), array(
+        return view($this->getViewModel(), array(
                 'parentController' => $controller,
                 'controller' => $this,
                 'model' => $model,
@@ -171,8 +181,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
         try 
         {
-            $model = \Telenok\Object\Sequence::getModel($id);
-            $field = \Telenok\Object\Sequence::getModel($fieldId);
+            $model = \App\Model\Telenok\Object\Sequence::getModel($id);
+            $field = \App\Model\Telenok\Object\Sequence::getModel($fieldId);
             $type = $this->getLinkedModelType($field);
 			 
 			$query = $model->{camel_case($field->code)}();
@@ -199,7 +209,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 						return $item->show_in_list == 1 && \Auth::can('read', 'object_field.' . $type->code . '.' . $item->code);
 					});
 
-			$config = \App::make('telenok.config')->getObjectFieldController();
+			$config = app('telenok.config')->getObjectFieldController();
 
 			$canUpdate = \Auth::can('update', 'object_field.' . $model->getTable() . '.' . $field->code);
 			
@@ -271,7 +281,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     public function getFormFieldContent($model = null, $uniqueId = null)
     {
-        return \View::make($this->getViewField(), array(
+        return view($this->getViewField(), array(
                 'controller' => $this,
                 'model' => $model,
                 'uniqueId' => $uniqueId,
@@ -364,9 +374,13 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         }
     }
 
-    public function validator($model = null, $input = null, $messages = [])
+    public function validator(\Illuminate\Database\Eloquent\Model $model = null, array $input = [], array $message = [], array $customAttribute = [])
     {
-        return new \Telenok\Core\Interfaces\Validator\Model($model, $input, $messages);
+        return app('\Telenok\Core\Interfaces\Validator\Model')
+                    ->setModel($model ?: $this->getModelList())
+                    ->setInput($input)
+                    ->setMessage($message)
+                    ->setCustomAttributes($customAttribute);   
     }
 
     public function validateException()
@@ -410,7 +424,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	{
 		try
 		{
-			$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)
+			$tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)
 						->where(function($query) use ($tabCode)
 						{
 							$query->where('id', $tabCode);
@@ -422,7 +436,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		{
 			try
 			{
-				$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
+				$tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
 			} 
 			catch (\Exception $ex) 
 			{
@@ -437,15 +451,15 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	{
 		try
 		{
-			$tabHas = \Telenok\Object\Tab::firstOrFail('id', $tabHasId);
+			$tabHas = \App\Model\Telenok\Object\Tab::firstOrFail('id', $tabHasId);
 			
-			$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)->whereCode($tabHas->code);
+			$tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->whereCode($tabHas->code);
 		} 
 		catch (\Exception $ex) 
 		{
 			try
 			{
-				$tabTo = \Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
+				$tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
 			} 
 			catch (\Exception $ex) 
 			{
@@ -455,37 +469,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
 		return $tabTo;
 	}
-
-    public function getPackage()
-    {
-        if ($this->package) return $this->package;
-        
-        $list = explode('\\', __NAMESPACE__);
-        
-        return strtolower(array_get($list, 1));
-    }
-
-    public function LL($key = '', $param = [])
-    {
-        $key_ = "{$this->getPackage()}::field/{$this->getKey()}.$key";
-        $key_default_ = "{$this->getPackage()}::default.$key";
-        
-        $word = \Lang::get($key_, $param);
-        
-        // not found in current wordspace
-        if ($key_ === $word)
-        {
-            $word = \Lang::get($key_default_, $param);
-            
-            // not found in default wordspace
-            if ($key_default_ === $word)
-            {
-                return $key_;
-            }
-        } 
-
-        return $word;
-    }
 }
 
 ?>
