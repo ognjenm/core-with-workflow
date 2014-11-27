@@ -16,12 +16,12 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 	public function login()
 	{
-		$username = trim(\Input::get('username'));
-		$password = trim(\Input::get('password'));
-		$remember = intval(\Input::get('remember'));
+		$username = trim($this->getRequest()->input('username'));
+		$password = trim($this->getRequest()->input('password'));
+		$remember = intval($this->getRequest()->input('remember'));
 
-		if ($username && $password && (\Auth::attempt(['username' => $username, 'password' => $password], $remember) || \Auth::attempt(['email' => $username, 'password' => $password], $remember)))
-		{
+		if ($username && $password && (app('auth')->attempt(['username' => $username, 'password' => $password], $remember) || app('auth')->attempt(['email' => $username, 'password' => $password], $remember)))
+		{ 
 			if (\Auth::can('read', 'control_panel'))
 			{
 				return \Redirect::route('cmf.content');
@@ -31,7 +31,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 				return \Redirect::route('error.access-denied');
 			}
 		}
-
+        
 		return view('core::controller.backend-login', ['controller' => $this]);
 	}
 
@@ -81,7 +81,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 				})
 				->sortBy(function($item) use ($listModuleMenuLeft)
                 {
-                    return $item->getModuleModel()->module_order;
+                    return $item->getModelModule()->module_order;
                 });
 
 

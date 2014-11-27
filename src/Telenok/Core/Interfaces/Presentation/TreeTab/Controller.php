@@ -31,8 +31,8 @@ abstract class Controller extends Module implements IPresentation {
     protected $routerListLock = '';
     protected $routerListUnlock = '';
 
-    protected $modelList = '';
-    protected $modelTree = '';
+    protected $modelListClass = '';
+    protected $modelTreeClass = ''; 
 
     protected $displayLength = 15;
     protected $additionalViewParam = [];
@@ -40,7 +40,6 @@ abstract class Controller extends Module implements IPresentation {
     protected $lockInListPeriod = 3600;
     protected $lockInFormPeriod = 300;
 
-	
 	public function getLockInListPeriod()
     {
         return $this->lockInListPeriod;
@@ -324,7 +323,7 @@ abstract class Controller extends Module implements IPresentation {
 
     public function getModelList()
     {
-        return app($this->modelList);
+        return app($this->modelListClass);
     }    
     
     public function getModel($id)
@@ -349,7 +348,7 @@ abstract class Controller extends Module implements IPresentation {
 
     public function getModelTree()
     {
-        return app($this->modelTree);
+        return app($this->modelTreeClass);
     }    
 
     public function validator($model = null, array $input = [], array $message = [], array $customAttribute = [])
@@ -364,12 +363,7 @@ abstract class Controller extends Module implements IPresentation {
     public function validateException()
     {
         return app('\Telenok\Core\Interfaces\Exception\Validate');
-    }
-
-    public function validator(\Illuminate\Database\Eloquent\Model $model = null, array $input = [], array $message = [], array $customAttribute = [])
-    { 
-        return $this;
-    }
+    } 
     
     public function getActionParam()
     { 
@@ -423,29 +417,29 @@ abstract class Controller extends Module implements IPresentation {
             ])->render();
     }
     
-    public function getFilterQueryLike($value, $query, $model, $input)
+    public function getFilterQueryLike($value, $query, $model, $field)
     {     
         $query->where(function($query) use ($value, $model, $field)
         {
             \Illuminate\Support\Collection::make(explode(' ', $value))
-                ->reject(function($i) 
+                ->filter(function($i) 
                 { 
-                    return !trim($i);
+                    return trim($i);
                 }) 
                 ->each(function($i) use ($query, $model, $field)
                 {
                     $query->orWhere($model->getTable() . '.' . $field, 'like', '%' . trim($i) . '%');
                 });
 
-            $query->orWhere($model->getTable().'.id', intval($value));
+            $query->orWhere($model->getTable() . '.id', intval($value));
         }); 
     }
     
     public function getFilterQuery($model, $query)
     {
-        if ($title = trim($this->getRequest()->input('sSearch')))
+        if ($str = trim($this->getRequest()->input('sSearch')))
         {
-            $this->getFilterQueryLike($title, $query, $model, 'title');
+            $this->getFilterQueryLike($str, $query, $model, 'title');
         } 
 
 		if ($this->getRequest()->input('multifield_search', false))
@@ -478,9 +472,9 @@ abstract class Controller extends Module implements IPresentation {
         } 
     }
 
-    public function getListItem($model)
+    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
     {
-        $sequence = (new \App\Model\Telenok\Object\Sequence());
+        $sequence = app('\App\Model\Telenok\Object\Sequence');
         
         $query = $model::select($model->getTable() . '.*')
             ->join($sequence->getTable(), function($join) use ($sequence, $model)
@@ -512,10 +506,10 @@ abstract class Controller extends Module implements IPresentation {
         $tree = [];
         $input = $this->getRequest()->input();
 
-        $id = $input->get('id', -1);
-        $searchStr = trim($input->get('search_string'));
+        $id = $this->getRequest()->input('id', 0);
+        $searchStr = $this->getRequest()->input('search_string');
 
-        if ($id == -1)
+        if ($id == -1 && !$searchStr)
         {
             $tree = [
                 'data' => $this->LL('tree.root'),
@@ -529,22 +523,34 @@ abstract class Controller extends Module implements IPresentation {
             try
             {
                 $list = $this->getTreeListModel($id, $searchStr);
-
-                $parents = $list->lists('id', 'tree_pid');
-
-                $folderId = \App\Model\Telenok\Object\Type::where('code', 'folder')->first()->getKey();
-
-                foreach ($list as $key => $item)
+                $folderId = \App\Model\Telenok\Object\Type::where('code', 'folder')->pluck('id');
+            
+                if ($searchStr)
                 {
-                    if ($item->getAttribute('tree_pid') == $id)
+                    foreach ($list->all() as $l)
                     {
-                        $tree[] = [
-                            "data" => $item->translate('title'), 
-                            'attr' => ['id' => $item->getKey(), 'rel' => ($folderId == $item->sequences_object_type ? 'folder' : '')],
-                            "state" => (isset($parents[$item->getKey()]) ? 'closed' : ''),
-                            "metadata" => array_merge( ['id' => $item->getKey(), 'gridId' => $this->getGridId() ], $this->getTreeListItemProcessed($item)),
-                        ];
+                        foreach($l->parents()->get()->all() as $l_)
+                        {
+                           $tree[] = "#{$l_->getKey()}";
+                        }
                     }
+                } 
+                else
+                {
+                    $parents = $list->lists('id', 'tree_pid');
+
+                    foreach ($list as $key => $item)
+                    {
+                        if ($item->tree_pid == $id)
+                        {
+                            $tree[] = [
+                                "data" => $item->translate('title'), 
+                                'attr' => ['id' => $item->getKey(), 'rel' => ($folderId == $item->sequences_object_type ? 'folder' : '')],
+                                "state" => (isset($parents[$item->getKey()]) ? 'closed' : ''),
+                                "metadata" => array_merge( ['id' => $item->getKey(), 'gridId' => $this->getGridId() ], $this->getTreeListItemProcessed($item)),
+                            ];
+                        }
+                    }                
                 }
             }
             catch (\Exception $e) { return $e->getMessage(); }
@@ -557,7 +563,9 @@ abstract class Controller extends Module implements IPresentation {
     {
         $model = $this->getModelTree();
         
-        $query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->active();
+        $sequence = new \App\Model\Telenok\Object\Sequence();
+        
+        $query = $sequence->pivotTreeLinkedExtraAttr()->active();
 
         $sequences_object_type = [];
         
@@ -570,7 +578,7 @@ abstract class Controller extends Module implements IPresentation {
         
         if ($str)
         {
-            $this->getFilterQueryLike($str, $query, $model, $input);
+            $this->getFilterQueryLike($str, $query, $sequence, 'title');
         }
         else
         {
@@ -587,6 +595,7 @@ abstract class Controller extends Module implements IPresentation {
         }
 
         $query->where('object_sequence.treeable', 1);
+        $query->groupBy('object_sequence.id');
 		$query->withPermission('read', null, ['direct-right']);
 
         return $query->get();
@@ -639,27 +648,25 @@ abstract class Controller extends Module implements IPresentation {
     {
         return "{$this->getPresentation()}-{$this->getTabKey()}-{$key}";
     }
-    
-    public function getModelFieldFilter()
+
+    public function getModelFieldFilter($model = null)
     {
-        return [];
+        return \Illuminate\Support\Collection::make();
     }
 
     public function getList()
     {
         $content = [];
-        
-        $input = $input ?: \Input::all();
-        
-        dd($request->input());
-        
-        $total = $this->getRequest()->input('iDisplayLength', 10);
-        $sEcho = $this->getRequest()->input('sEcho');
-        $iDisplayStart = $this->getRequest()->input('iDisplayStart', 0);
+
+        $input = $this->getRequest()->input();
+
+        $total = $input->get('iDisplayLength', $this->displayLength);
+        $sEcho = $input->get('sEcho');
+        $iDisplayStart = $input->get('iDisplayStart', 0);
 
         $model = $this->getModelList();
         $items = $this->getListItem($model)->get();
-        
+
         foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
         {
             $put = ['tableCheckAll' => '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]" value="'.$item->getKey().'" /><span class="lbl"></span></label>'];
@@ -668,7 +675,7 @@ abstract class Controller extends Module implements IPresentation {
             { 
                 $put[$field->code] = $this->getListItemProcessed($field, $item);
             }
-            
+
             $put['tableManageItem'] = $this->getListButton($item);
 
             $content[] = $put;
@@ -709,9 +716,9 @@ abstract class Controller extends Module implements IPresentation {
 		}
 	} 
 
-    public function create($id = null)
+    public function create()
     {  
-		$id = $id ?: $this->getRequest()->input('id');
+		$id = $this->getRequest()->input('id');
 		
         return [
             'tabKey' => $this->getTabKey().'-new-'.str_random(),
@@ -725,9 +732,9 @@ abstract class Controller extends Module implements IPresentation {
         ];
     }
 
-    public function edit($id = null)
+    public function edit()
     { 
-		$id = $id ?: $this->getRequest()->input('id');
+		$id = $this->getRequest()->input('id');
 		
         return [
             'tabKey' => $this->getTabKey() . '-edit-' . $id,
@@ -741,7 +748,7 @@ abstract class Controller extends Module implements IPresentation {
         ];
     }
 
-    public function editList($id = null)
+    public function editList()
     {
         $content = [];
 

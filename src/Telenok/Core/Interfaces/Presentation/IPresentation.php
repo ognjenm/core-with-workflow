@@ -2,8 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Presentation;
 
-interface IPresentation {
-    
+interface IPresentation extends \Telenok\Core\Interfaces\Module\IModule {
     
     public function getPresentation();
     
@@ -16,8 +15,6 @@ interface IPresentation {
     public function getPresentationContentView();
     
     public function setPresentationContentView($key);
-
-    public function getActionParam();
 
     public function getPresentationContent();
 

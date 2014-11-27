@@ -175,7 +175,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time) {
 	{
 		$sql = vsprintf(str_replace(array('%', '?'), array('%%', '"%s"'), $sql), $bindings);
 
-		var_dump($sql);
+		echo $sql . PHP_EOL;
 	}
 });
 

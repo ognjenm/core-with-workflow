@@ -10,9 +10,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     public function processTree()
     {
-        $path = trim(\Input::get('path'), '.');
-        $new = trim(\Input::get('new'));
-        $op = trim(\Input::get('op'));
+        $path = trim($this->getRequest()->input('path'), '.');
+        $new = trim($this->getRequest()->input('new'));
+        $op = trim($this->getRequest()->input('op'));
 
         try 
         {
@@ -86,7 +86,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $basePath = base_path();
         $basePathLength = \Str::length($basePath);
         
-        $id = $basePath.\Input::get('id');
+        $id = $basePath.$this->getRequest()->input('id');
         
         $listTree = [];
                 
@@ -102,7 +102,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             );
         }
         
-        if (!\Input::get('id'))
+        if (!$this->getRequest()->input('id'))
         {
             $listTree = array(
                 'data' => array(

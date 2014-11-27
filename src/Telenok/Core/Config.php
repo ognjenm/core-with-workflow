@@ -16,7 +16,7 @@ class Config {
 
 				\Event::fire('telenok.acl.filter.resource.add', $collection);
 
-				$list = new \Illuminate\Support\Collection([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
@@ -63,11 +63,11 @@ class Config {
 		{
 			try
 			{
-				$collection = \Illuminate\Support\Collection::make([]);
+				$collection = \Illuminate\Support\Collection::make();
 
 				\Event::fire('telenok.workflow.action.add', $collection);
 
-				$list = new \Illuminate\Support\Collection([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
@@ -93,11 +93,11 @@ class Config {
 		{
 			try
 			{
-				$collection = \Illuminate\Support\Collection::make([]);
+				$collection = \Illuminate\Support\Collection::make();
 
 				\Event::fire('telenok.setting.add', $collection);
 
-				$list = new \Illuminate\Support\Collection([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
@@ -123,11 +123,11 @@ class Config {
 		{
 			try
 			{
-				$collection = \Illuminate\Support\Collection::make([]);
+				$collection = \Illuminate\Support\Collection::make();
 
 				\Event::fire('telenok.objects-field.add', $collection);
 
-				$list = new \Illuminate\Support\Collection([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
@@ -166,7 +166,7 @@ class Config {
                     $l[$fieldKey][] = $viewModel;
 				}
                 
-                $list = new \Illuminate\Support\Collection($l);
+                $list = \Illuminate\Support\Collection::make($l);
 			}
 			catch (\Exception $e)
 			{
@@ -190,7 +190,7 @@ class Config {
 				\App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
 				{
 					$object = app($item->controller_class);
-					$object->setModuleGroupModel($item);
+					$object->setModelModuleGroup($item);
 					$list->put($object->getKey(), $object);
 				});
 			}
@@ -216,7 +216,7 @@ class Config {
 				\App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
 				{
 					$object = app($item->controller_class);
-					$object->setModuleModel($item);
+					$object->setModelModule($item);
 					$list->put($object->getKey(), $object);
 				});
 			}

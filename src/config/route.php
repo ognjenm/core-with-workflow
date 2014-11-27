@@ -65,8 +65,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/field/file-many-to-many/upload', array('as' => 'cmf.field.file-many-to-many.upload', 'uses' => "Telenok\Core\Field\FileManyToMany\Controller@upload"));
  
 
-// Module Dashboard
-
+// Module Dashboard 
 \Route::any('telenok/module/dashboard', array('as' => 'cmf.module.dashboard', 'uses' => "Telenok\Core\Module\Dashboard\Controller@getContent"));
 
 // Module Profile
@@ -97,7 +96,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/objects-lists/create/type', array('as' => 'cmf.module.objects-lists.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@create"));
 \Route::any('telenok/module/objects-lists/edit', array('as' => 'cmf.module.objects-lists.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@edit"));
 \Route::any('telenok/module/objects-lists/store/type/{id}', array('as' => 'cmf.module.objects-lists.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@store"));
-\Route::any('telenok/module/objects-lists/update/type/{id}', array('as' => 'cmf.module.objects-lists.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@update"));
+\Route::any('telenok/module/objects-lists/update', array('as' => 'cmf.module.objects-lists.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@update"));
 \Route::any('telenok/module/objects-lists/delete/{id}', array('as' => 'cmf.module.objects-lists.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@delete"));
 \Route::any('telenok/module/objects-lists/list', array('as' => 'cmf.module.objects-lists.list', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getList"));
 \Route::any('telenok/module/objects-lists/list/json', array('as' => 'cmf.module.objects-lists.list.json', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getListJson"));
@@ -112,7 +111,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/objects-lists/wizard/create/type', array('as' => 'cmf.module.objects-lists.wizard.create', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@create"));
 \Route::any('telenok/module/objects-lists/wizard/edit', array('as' => 'cmf.module.objects-lists.wizard.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@edit"));
 \Route::any('telenok/module/objects-lists/wizard/store/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.store', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@store"));
-\Route::any('telenok/module/objects-lists/wizard/update/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@update"));
+\Route::any('telenok/module/objects-lists/wizard/update', array('as' => 'cmf.module.objects-lists.wizard.update', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@update"));
 \Route::any('telenok/module/objects-lists/wizard/delete/{id}', array('as' => 'cmf.module.objects-lists.wizard.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@delete"));
 \Route::any('telenok/module/objects-lists/wizard/choose', array('as' => 'cmf.module.objects-lists.wizard.choose', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@choose"));
 \Route::any('telenok/module/objects-lists/wizard/list', array('as' => 'cmf.module.objects-lists.wizard.list', 'uses' => "Telenok\Core\Module\Objects\Lists\Wizard\Controller@getWizardList"));
@@ -169,22 +168,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 
 // Module Web\Page
 \Route::any('telenok/module/web-page/action-param', array('as' => 'cmf.module.web-page.action.param', 'uses' => "Telenok\Core\Module\Web\Page\Controller@getActionParam"));
-
-// Module Web\WidgetOnPage
-/*
-\Route::any('telenok/module/web-page/widget-on-page/action-param', array('as' => 'cmf.module.web-page-wop.action.param', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@getActionParam"));
-\Route::any('telenok/module/web-page/widget-on-page', array('as' => 'cmf.module.web-page-wop', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@getContent"));
-\Route::any('telenok/module/web-page/widget-on-page/list', array('as' => 'cmf.module.web-page-wop.list', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@getList"));
-\Route::any('telenok/module/web-page/widget-on-page/create', array('as' => 'cmf.module.web-page-wop.create', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@create"));
-\Route::any('telenok/module/web-page/widget-on-page/edit/{id}', array('as' => 'cmf.module.web-page-wop.edit', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@edit"));
-\Route::any('telenok/module/web-page/widget-on-page/store', array('as' => 'cmf.module.web-page-wop.store', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@store"));
-\Route::any('telenok/module/web-page/widget-on-page/update/{id}', array('as' => 'cmf.module.web-page-wop.update', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@update"));
-\Route::any('telenok/module/web-page/widget-on-page/delete/{id}', array('as' => 'cmf.module.web-page-wop.delete', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@delete"));
-\Route::any('telenok/module/web-page/widget-on-page/list', array('as' => 'cmf.module.web-page-wop.list', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@getList"));
-\Route::any('telenok/module/web-page/widget-on-page/list/edit', array('as' => 'cmf.module.web-page-wop.list.edit', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@editList"));
-\Route::any('telenok/module/web-page/widget-on-page/list/delete', array('as' => 'cmf.module.web-page-wop.list.delete', 'uses' => "Telenok\Core\Module\Web\WidgetOnPage\Controller@deleteList"));
-*/ 
-
+  
 
 // Module Workflow Process
 \Route::any('telenok/module/workflow-process/action-param', array('as' => 'cmf.module.workflow-process.action.param', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getActionParam"));
@@ -197,45 +181,3 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/workflow/element/start/point-form/property', array('as' => 'cmf.workflow.point-form.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Form@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/end/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
 \Route::any('telenok/module/workflow/element/form-field-hide/property', array('as' => 'cmf.workflow.form-field-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormFieldHide@getPropertyContent"));
-
-
-
-/*\Route::any('telenok/module/workflow-process', array('as' => 'cmf.module.workflow-process', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getContent"));
-\Route::any('telenok/module/workflow-process/list', array('as' => 'cmf.module.workflow-process.list', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getList"));
-\Route::any('telenok/module/workflow-process/create', array('as' => 'cmf.module.workflow-process.create', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@create"));
-\Route::any('telenok/module/workflow-process/edit/{id}', array('as' => 'cmf.module.workflow-process.edit', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@edit"));
-\Route::any('telenok/module/workflow-process/store', array('as' => 'cmf.module.workflow-process.store', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@store"));
-\Route::any('telenok/module/workflow-process/update/{id}', array('as' => 'cmf.module.workflow-process.update', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@update"));
-\Route::any('telenok/module/workflow-process/delete/{id}', array('as' => 'cmf.module.workflow-process.delete', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@delete"));
-\Route::any('telenok/module/workflow-process/list', array('as' => 'cmf.module.workflow-process.list', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getList"));
-\Route::any('telenok/module/workflow-process/list/edit', array('as' => 'cmf.module.workflow-process.list.edit', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@editList"));
-\Route::any('telenok/module/workflow-process/list/delete', array('as' => 'cmf.module.workflow-process.list.delete', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@deleteList"));
-*/
-// Module Workflow Thread
-/*
-\Route::any('telenok/module/workflow-thread/action-param', array('as' => 'cmf.module.workflow-thread.action.param', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@getActionParam"));
-\Route::any('telenok/module/workflow-thread', array('as' => 'cmf.module.workflow-thread', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@getContent"));
-\Route::any('telenok/module/workflow-thread/list', array('as' => 'cmf.module.workflow-thread.list', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@getList"));
-\Route::any('telenok/module/workflow-thread/create', array('as' => 'cmf.module.workflow-thread.create', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@create"));
-\Route::any('telenok/module/workflow-thread/edit/{id}', array('as' => 'cmf.module.workflow-thread.edit', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@edit"));
-\Route::any('telenok/module/workflow-thread/store', array('as' => 'cmf.module.workflow-thread.store', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@store"));
-\Route::any('telenok/module/workflow-thread/update/{id}', array('as' => 'cmf.module.workflow-thread.update', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@update"));
-\Route::any('telenok/module/workflow-thread/delete/{id}', array('as' => 'cmf.module.workflow-thread.delete', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@delete"));
-\Route::any('telenok/module/workflow-thread/list', array('as' => 'cmf.module.workflow-thread.list', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@getList"));
-\Route::any('telenok/module/workflow-thread/list/edit', array('as' => 'cmf.module.workflow-thread.list.edit', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@editList"));
-\Route::any('telenok/module/workflow-thread/list/delete', array('as' => 'cmf.module.workflow-thread.list.delete', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@deleteList"));
-*/
-
-
-
- 
-
- 
-// Widget Html
-/*
-\Route::any('telenok/widget/html/content', array('as' => 'cmf.widget.html.content', 'uses' => "Telenok\Core\Widget\Html\Controller@getContent"));
-\Route::any('telenok/widget/html/setting/get', array('as' => 'cmf.widget.html.setting.get', 'uses' => "Telenok\Core\Widget\Html\Controller@getSettingContent"));
-\Route::any('telenok/widget/html/setting/set', array('as' => 'cmf.widget.html.setting.set', 'uses' => "Telenok\Core\Widget\Html\Controller@setSetting"));
-
-*/
-

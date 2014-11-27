@@ -3,12 +3,12 @@
 namespace Telenok\Core\Interfaces\Presentation\TreeTabObject;
 
 abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controller {
-    
+
     protected $key = '';
     protected $parent = '';
     protected $typeList = '';
     protected $typeTree = '';
-    
+
     protected $presentationTreeView = 'core::presentation.tree-tab-object.tree';
     protected $presentationContentView = 'core::presentation.tree-tab-object.content';
     protected $presentationModelView = 'core::presentation.tree-tab-object.model';
@@ -106,7 +106,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		{
 			return;
 		}
-		
+
         return view($this->getPresentationTreeView(), array(
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
@@ -125,20 +125,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
             ), $this->getAdditionalViewParam()))->render();
     }
 
-    public function getModelFieldFilter()
+    public function getModelFieldFilter($model = null)
     {
-		$model = $this->getModelList();
-        $fields = [];
-
-        $model->getFieldForm()->each(function($field) use (&$fields)
+        return $this->getModelList()->getFieldForm()->filter(function($field)
 		{
-			if ($field->allow_search)
-            {
-                $fields[] = $field;
-            }
+            return $field->allow_search;
         }); 
-
-        return $fields;
     }
 
     public function getFilterSubQuery($input, $model, $query)
@@ -169,10 +161,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     public function getList()
     {
         $content = [];
-
-        $total = \Input::get('iDisplayLength', 10);
-        $sEcho = \Input::get('sEcho');
-        $iDisplayStart = \Input::get('iDisplayStart', 0);
+        
+        $input = $this->getRequest()->input();
+        
+        $total = $input->get('iDisplayLength', $this->displayLength);
+        $sEcho = $input->get('sEcho');
+        $iDisplayStart = $input->get('iDisplayStart', 0); 
 
         try
         {
@@ -219,39 +213,43 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         ];
     }
 
-    public function getListItem($model)
+    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
     {  
         $query = $model::select($model->getTable() . '.*')->withPermission();
 
         $this->getFilterQuery($model, $query); 
 
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
     
     public function getFilterQueryLike($str, $query, $model, $field)
-    {    
-        $controller->get($field->key)->getFilterQuery($field, $model, $query, $field->code, $input->get($field->code));
-
-        $query->orWhere($model->getTable().'.id', intval($str));
+    {
+        $query->where(function($query) use ($str, $query, $model, $field)
+        {
+            $f = $model->getObjectField()->get($field);
+            app('telenok.config')
+                    ->getObjectFieldController()->get($f->key)
+                    ->getFilterQuery($f, $model, $query, $f->code, $str);
+        });
     }
     
     public function getFilterQuery($model, $query)
     {
         $translate = new \App\Model\Telenok\Object\Translation();
         
-        if ($title = trim(\Input::get('sSearch')))
+        if ($title = trim($this->getRequest()->input('sSearch')))
         {
             $this->getFilterQueryLike($title, $query, $model, 'title');
         } 
 
-		if (\Input::get('multifield_search', false))
+		if ($this->getRequest()->input('multifield_search', false))
 		{
-			$this->getFilterSubQuery(\Input::get('filter', []), $model, $query);
+			$this->getFilterSubQuery($this->getRequest()->input('filter', []), $model, $query);
 		}
         
-        $orderByField = \Input::get('mDataProp_' . \Input::get('iSortCol_0'));
+        $orderByField = $this->getRequest()->input('mDataProp_' . $this->getRequest()->input('iSortCol_0'));
         
-        if (\Input::get('iSortCol_0', 0))
+        if ($this->getRequest()->input('iSortCol_0', 0))
         {
             if (in_array($orderByField, $model->getMultilanguage()))
             { 
@@ -262,11 +260,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                             ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
                 });
 
-                $query->orderBy($translate->getTable().'.translation_object_string', \Input::get('sSortDir_0'));
+                $query->orderBy($translate->getTable().'.translation_object_string', $this->getRequest()->input('sSortDir_0'));
             }
             else
             {
-                $query->orderBy($model->getTable() . '.' . $orderByField, \Input::get('sSortDir_0'));
+                $query->orderBy($model->getTable() . '.' . $orderByField, $this->getRequest()->input('sSortDir_0'));
             }
         }
     }
@@ -466,19 +464,19 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		switch ($action)
 		{
 			case 'create':
-				return [ $this->getRouterStore(['id' => $type->getKey(), 'files' => true,  'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false)]) ];
+				return [ $this->getRouterStore(['id' => $type->getKey(), 'files' => true,  'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', false)]) ];
 				break;
 
 			case 'edit':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true)]) ];
 				break;
 
 			case 'store':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true)]) ];
 				break;
 
 			case 'update':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true)]) ];
 				break;
 
 			default:

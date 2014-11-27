@@ -53,7 +53,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
         $class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
 
-		$model = new $class;
+		$model = app($class);
 
         $model::withPermission()->take(20)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$option)
         {
@@ -253,7 +253,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				];
 
 
-				$validator = $this->validator(new \App\Model\Telenok\Object\Field(), $toSave, []);
+				$validator = $this->validator(app('\App\Model\Telenok\Object\Field'), $toSave, []);
 
 				if ($validator->passes()) 
 				{

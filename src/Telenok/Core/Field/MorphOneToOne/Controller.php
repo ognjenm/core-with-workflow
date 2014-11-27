@@ -150,7 +150,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         
         $class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
         
-		$model = new $class;
+		$model = app($class);
 		
         $query = $model::withPermission()->take(20)->groupBy($model->getTable() . '.id');
 		
@@ -396,7 +396,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				}
 				else
 				{
-					$validator = $this->validator(new \App\Model\Telenok\Object\Field(), $toSave, []);
+					$validator = $this->validator(app('\App\Model\Telenok\Object\Field'), $toSave, []);
 					
 					if ($validator->passes()) 
 					{

@@ -6,7 +6,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     protected $key = 'objects-lists';
     protected $parent = 'objects';
-    protected $modelTree = '\App\Model\Telenok\Object\Type';
+    protected $modelTreeClass = '\App\Model\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationContentView = 'core::module.objects-lists.content';
@@ -16,8 +16,6 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
     protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
 
-	
-	
     public function setPresentationModelView($view = '')
 	{
 		$this->presentationModelView = $view;
@@ -76,14 +74,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {  
         try 
         {
-            $model = $this->modelByType(\Input::get('treePid', 0));
-            $type = $this->getType(\Input::get('treePid', 0)); 
+            $model = $this->modelByType($this->getRequest()->input('treePid', 0));
+            $type = $this->getType($this->getRequest()->input('treePid', 0)); 
 
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getContent();
 			} 
-            
+
             $fields = $model->getFieldList(); 
         }
         catch (\LogicException $e) 
@@ -103,7 +101,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 'model' => $model,
                 'type' => $type,
                 'fields' => $fields,
-                'fieldsFilter' => $this->getModelFieldFilterExtended($model, $type),
+                'fieldsFilter' => $this->getModelFieldFilter($model),
                 'gridId' => $this->getGridId($model->getTable()),
                 'uniqueId' => str_random(),
             ])->render()
@@ -121,11 +119,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				], $this->getAdditionalViewParam()))->render();
 	}
 
-	public function getModelFieldFilterExtended($model, $type)
+	public function getModelFieldFilter($model = null)
 	{
 		$fields = [];
 
-		$model->getFieldForm()->each(function($item) use (&$fields)
+		$model->getFieldForm()->each(function($item)
 		{
 			if ($item->allow_search)
 			{
@@ -160,23 +158,34 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			}
         });
     }
+    
+    public function getFilterQueryLike($str, $query, $model, $field)
+    {
+        $query->where(function($query) use ($str, $query, $model, $field)
+        {
+            $f = $model->getObjectField()->get($field);
+            app('telenok.config')
+                    ->getObjectFieldController()->get($f->key)
+                    ->getFilterQuery($f, $model, $query, $f->code, $str);
+        });
+    }
 
-    public function getListItem($model)
+    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
     {  
         $query = $model::select($model->getTable() . '.*')->withPermission();
 
         $this->getFilterQuery($model, $query); 
 
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function getListJson()
     {
         $content = [];
         
-        $fields = \Input::get('fields', ['id', 'title']);
-        $type = $this->getType(\Input::get('treePid', 0));
-        $model = $this->modelByType(\Input::get('treePid', 0));
+        $fields = $this->getRequest()->input('fields', ['id', 'title']);
+        $type = $this->getType($this->getRequest()->input('treePid', 0));
+        $model = $this->modelByType($this->getRequest()->input('treePid', 0));
         
         $items = $this->getListItem($model)->get();
 
@@ -203,14 +212,17 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function getList()
     {
         $content = [];
-
-        $iDisplayStart = intval(\Input::get('iDisplayStart', 10));
-        $sEcho = \Input::get('sEcho');
+        
+        $input = $this->getRequest()->input();
+        
+        $total = $input->get('iDisplayLength', $this->displayLength);
+        $sEcho = $input->get('sEcho');
+        $iDisplayStart = $input->get('iDisplayStart', 0); 
 
         try
         {
-            $type = $this->getType(\Input::get('treePid', 0));
-            $model = $this->modelByType(\Input::get('treePid', 0)); 
+            $type = $this->getType($input->get('treePid', 0));
+            $model = $this->modelByType($input->get('treePid', 0)); 
 			
 			if ($type->classController())
 			{
@@ -221,7 +233,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 			$config = app('telenok.config')->getObjectFieldController();
 
-            foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
+            foreach ($items->slice(0, $this->displayLength, true) as $item)
             {
                 $put = ['tableCheckAll' => '<label><input type="checkbox" class="ace ace-switch ace-switch-6" name="tableCheckAll[]" value="'.$item->getKey().'" /><span class="lbl"></span></label>'];
 
@@ -419,7 +431,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
     }
 
-    public function editList($id = null)
+    public function editList()
     { 
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
         $ids = $input->get('tableCheckAll', []);
@@ -474,7 +486,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     public function deleteList($id = null, $ids = [])
     {
-        $ids = empty($ids) ? (array)\Input::get('tableCheckAll') : $ids;
+        $ids = empty($ids) ? (array)$this->getRequest()->input('tableCheckAll') : $ids;
 
         if (empty($ids)) 
         {
@@ -613,19 +625,19 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		switch ($action)
 		{
 			case 'create':
-				return [ $this->getRouterStore(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterStore(['id' => $type->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', false), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			case 'edit':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			case 'store':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			case 'update':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'chooseSequence' => \Input::get('chooseSequence', false)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'chooseSequence' => $this->getRequest()->input('chooseSequence', false)]) ];
 				break;
 
 			default:

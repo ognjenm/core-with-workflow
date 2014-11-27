@@ -65,21 +65,20 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			return $this->chooseType($id);
 		}
 
-        return parent::create($id);
+        return parent::create();
     }
 	
     public function chooseType($id = [])
     { 
-		$id = (array)$id;
-		
 		return [
-				'tabContent' => view('core::module.objects-lists.wizard-choose-type', 
+				'tabContent' => view(
+                    'core::module.objects-lists.wizard-choose-type', 
 					[
 						'controller' => $this,
-						'typeId' => $id,
+						'typeId' => (array)$id,
 						'uniqueId' => str_random(),
 					])->render()
-			];
+            ];
     }
     
     public function choose()
@@ -116,8 +115,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
                 'fields' => $fields,
                 'uniqueId' => ($uniqueId = str_random()),
                 'gridId' => str_random(),
-				'saveBtn' => \Input::get('saveBtn', true), 
-				'chooseBtn' => \Input::get('chooseBtn', true),  
+				'saveBtn' => $this->getRequest()->input('saveBtn', true), 
+				'chooseBtn' => $this->getRequest()->input('chooseBtn', true),  
                 'contentForm' => ( $model->classController() ? $this->typeForm($model)->getFormContent($model, $type, $fields, $uniqueId) : FALSE),
             ))->render()
         );
@@ -130,10 +129,12 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         $content = [];
 		$typeList = [];
 
-        $iDisplayStart = intval(\Input::get('iDisplayStart', 10));
-        $sEcho = \Input::get('sEcho');
-		$id = \Input::get('id', 0);
-		$sSearch = trim(\Input::get('sSearch', 0));
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());  
+        
+        $iDisplayStart = intval($input->get('iDisplayStart', 10));
+        $sEcho = $input->get('sEcho');
+		$id = $input->get('id', 0);
+		$sSearch = trim($input->get('sSearch', 0));
 		
         try
         {
@@ -223,10 +224,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
                             return false;
 					});
 				</script>
-				<button id="btnfield' . $uniq . '" type="button" class="btn btn-xs btn-success">'.$this->LL('btn.choose').'</button>
-
+				<button id="btnfield' . $uniq . '" type="button" class="btn btn-xs btn-success">'.$this->LL('btn.choose').'</button> 
 		';
-    }
-	
-	
+    } 
 }

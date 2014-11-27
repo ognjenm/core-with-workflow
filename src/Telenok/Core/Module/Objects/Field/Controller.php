@@ -13,11 +13,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
 	
-    public function getListItem($model)
+    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
     {
         $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
         {
-            if (!\Input::get('multifield_search', false) && ($treePid = \Input::get('treePid', 0)))
+            if (!$this->getRequest()->input('multifield_search', false) && ($treePid = $this->getRequest()->input('treePid', 0)))
             { 
                 $query->where($model->getTable().'.field_object_type', $treePid);
             }
@@ -25,7 +25,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         $this->getFilterQuery($model, $query); 
 
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
     public function validate($model = null, $input = null, $message = [])

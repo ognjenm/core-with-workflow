@@ -24,7 +24,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getTitleList($id = null) 
     { 
-        $term = trim(\Input::get('term'));
+        $term = trim($this->getRequest()->input('term'));
         $return = [];
         
 		$class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;

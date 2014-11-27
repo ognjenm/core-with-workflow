@@ -64,9 +64,9 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 		$query = \App\Model\Telenok\Web\Page::query();
 
-		if (\Input::get('term'))
+		if ($this->getRequest()->input('term'))
 		{
-			$query->where('title', 'like', '%' . trim(\Input::get('term')) . '%');
+			$query->where('title', 'like', '%' . trim($this->getRequest()->input('term')) . '%');
 		}
 
 		$query->get()->each(function($item) use ($return)

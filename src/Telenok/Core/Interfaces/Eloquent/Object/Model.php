@@ -495,7 +495,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
         $f->setModelAttribute($this, $key, $value, $this->getObjectField()->get($key));
     }
     
-	protected function getObjectField()
+	public function getObjectField()
 	{   
 		$class = get_class($this);
  
@@ -1071,14 +1071,14 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		$sequence = $this->sequenceTreeable();
 
-		return \Telenok\Core\Module\Objects\Sequence::where('tree_pid', '=', $sequence->tree_pid);
+		return \App\Model\Telenok\Object\Sequence::where('tree_pid', '=', $sequence->tree_pid);
 	}
 
 	public function parents()
 	{
 		$sequence = $this->sequenceTreeable();
 
-		return \Telenok\Core\Module\Objects\Sequence::pivotTreeLinkedExtraAttr()->where('id', '=', $sequence->tree_pid);
+		return \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->where($this->getTable() . '.id', '=', $sequence->tree_pid);
 	}
 
 
@@ -1102,26 +1102,32 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public static function allRoot()
 	{
-		$query = \Telenok\Core\Module\Objects\Sequence::pivotTreeLinkedExtraAttr()->where($sequence->tree_pid, '=', 0);
+        $sequence = new \App\Model\Telenok\Object\Sequence();
+
+        $query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->where($sequence->getTable() . '.tree_pid', 0);
 
 		return $query;
 	}
 
 	public static function allDepth($depth = 0)
 	{
-		$query = \Telenok\Core\Module\Objects\Sequence::pivotTreeLinkedExtraAttr()->whereIn($sequence->tree_depth, (array) $depth);
+        $sequence = new \App\Model\Telenok\Object\Sequence();
+        
+		$query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->whereIn($sequence->getTable() . '.tree_depth', (array) $depth);
 
 		return $query;
 	}
 
 	public static function allLeaf()
 	{
-		$query = \Telenok\Core\Module\Objects\Sequence::pivotTreeLinkedExtraAttr()->join('pivot_relation_m2m_tree', function($join)
+        $sequence = new \App\Model\Telenok\Object\Sequence();
+
+		$query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->join('pivot_relation_m2m_tree', function($join) use ($sequence)
 		{
-			$join->on($this->getTable() . '.tree_id', '=', 'pivot_relation_m2m_tree.tree_pid');
+			$join->on($sequence->getTable() . '.tree_id', '=', 'pivot_relation_m2m_tree.tree_pid');
 		})
-		->whereNull($this->getTable() . '.tree_id')
-		->select($this->getTable() . '.*');
+		->whereNull($sequence->getTable() . '.tree_id')
+		->select($sequence->getTable() . '.*');
 
 		return $query;
 	}

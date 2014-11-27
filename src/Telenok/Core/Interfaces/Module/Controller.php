@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Module;
 
-abstract class Controller extends \Illuminate\Routing\Controller {
+abstract class Controller extends \Illuminate\Routing\Controller implements \Telenok\Core\Interfaces\Module\IModule {
 
     use \Telenok\Core\Support\PackageLoad;
     
@@ -13,7 +13,8 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     protected $icon = 'fa fa-desktop'; 
     protected $package = '';
     protected $languageDirectory = 'module';
-    protected $moduleModel; 
+    protected $modelModule; 
+    protected $modelRepository;
     protected $request; 
 
     public function __construct()
@@ -65,9 +66,9 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this;
     }	
     
-    public function setRequest(\Illuminate\Http\Request $request = null)
+    public function setRequest(\Illuminate\Http\Request $param = null)
     {
-        $this->request = $request;
+        $this->request = $param;
         
         return $this;
     }
@@ -97,16 +98,16 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this->group;
     }  
     
-    public function setModuleModel($model)
+    public function setModelModule($model)
     {
-        $this->moduleModel = $model;
+        $this->modelModule = $model;
         
         return $this;
     }
     
-    public function getModuleModel()
+    public function getModelModule()
     {
-        return $this->moduleModel;
+        return $this->modelModule;
     }
 
     public function children()

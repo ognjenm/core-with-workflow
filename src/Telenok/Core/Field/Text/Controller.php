@@ -27,10 +27,10 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                             ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
                 });
 
-                $query->where(function($query) use ($value, $model)
+                $query->where(function($query) use ($value, $model, $translate)
                 {
                     \Illuminate\Support\Collection::make(explode(' ', $value))
-                            ->reject(function($i) { return !trim($i); })
+                            ->filter(function($i) { return trim($i); })
                             ->each(function($i) use ($query, $translate)
                     {
                         $query->orWhere($translate->getTable().'.translation_object_string', 'like', '%' . trim($i) . '%');

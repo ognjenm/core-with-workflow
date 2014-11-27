@@ -9,7 +9,7 @@ abstract class Controller {
     protected $key = '';
     protected $icon = 'fa fa-desktop'; 
     protected $btn = 'btn-info'; 
-    protected $moduleGroupModel; 
+    protected $modelGroupModule; 
     protected $package; 
     protected $languageDirectory = 'module-group';
 
@@ -33,17 +33,15 @@ abstract class Controller {
         return $this->key;
     }
     
-    public function setModuleGroupModel($model)
+    public function setModelModuleGroup($model)
     {
-        $this->moduleGroupModel = $model;
+        $this->modelGroupModule = $model;
         
         return $this;
     }
     
-    public function getModuleGroupModel()
+    public function getModelModuleGroup()
     {
-        return $this->moduleGroupModel;
+        return $this->modelGroupModule;
     }
 }
-
-?>

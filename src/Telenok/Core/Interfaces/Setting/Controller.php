@@ -53,7 +53,7 @@ abstract class Controller {
 
     public function validateException()
     {
-        return new \Telenok\Core\Interfaces\Exception\Validate();
+        return app('\Telenok\Core\Interfaces\Exception\Validate');
     }
   
 }

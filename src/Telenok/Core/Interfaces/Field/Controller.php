@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Field;
 
-abstract class Controller extends \Illuminate\Routing\Controller {
+abstract class Controller extends \Illuminate\Routing\Controller implements \Telenok\Core\Interfaces\Field\IField {
 
     use \Telenok\Core\Support\PackageLoad;
 
@@ -24,11 +24,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     protected $routeWizardCreate = "";
     protected $routeWizardEdit = "";
     protected $routeWizardChoose = "";
-
-    public function __construct()
-    {
-        
-    }
     
     public function getName()
     {
@@ -151,7 +146,19 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         
         return $this;
     }
-	
+    
+    public function setRequest(\Illuminate\Http\Request $param = null)
+    {
+        $this->request = $param;
+        
+        return $this;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
     public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
     { 
         $this->setViewModel($field);
@@ -173,10 +180,10 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     public function getTableList($id = null, $fieldId = null, $uniqueId = null) 
     {
-        $term = trim(\Input::get('sSearch'));
-        $iDisplayStart = intval(\Input::get('iDisplayStart', 0));
-        $iDisplayLength = intval(\Input::get('iDisplayLength', 10));
-        $sEcho = \Input::get('sEcho');
+        $term = trim($this->getRequest()->input('sSearch'));
+        $iDisplayStart = intval($this->getRequest()->input('iDisplayStart', 0));
+        $iDisplayLength = intval($this->getRequest()->input('iDisplayLength', 10));
+        $sEcho = $this->getRequest()->input('sEcho');
         $content = [];
 
         try 
@@ -374,7 +381,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         }
     }
 
-    public function validator(\Illuminate\Database\Eloquent\Model $model = null, array $input = [], array $message = [], array $customAttribute = [])
+    public function validator($model = null, array $input = [], array $message = [], array $customAttribute = [])
     {
         return app('\Telenok\Core\Interfaces\Validator\Model')
                     ->setModel($model ?: $this->getModelList())
@@ -385,7 +392,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     public function validateException()
     {
-        return new \Telenok\Core\Interfaces\Exception\Validate();
+        return app('\Telenok\Core\Interfaces\Exception\Validate');
     }
     
     public function preProcess($model, $type, $input)

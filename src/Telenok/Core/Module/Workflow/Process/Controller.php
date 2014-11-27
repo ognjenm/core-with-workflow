@@ -53,11 +53,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     public function applyDiagram()
     { 
-		$id = \Input::get('id', 0);
-		$clear = \Input::get('clear', false);
-		$clearOnly = \Input::get('clearOnly', false);
-		$diagramData = json_decode(\Input::get('diagram', ''), true);
-		$sessionDiagramId = \Input::get('sessionDiagramId');
+		$id = $this->getRequest()->input('id', 0);
+		$clear = $this->getRequest()->input('clear', false);
+		$clearOnly = $this->getRequest()->input('clearOnly', false);
+		$diagramData = json_decode($this->getRequest()->input('diagram', ''), true);
+		$sessionDiagramId = $this->getRequest()->input('sessionDiagramId');
 
 		if ($clear || $clearOnly)
 		{
@@ -117,7 +117,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     public function diagramShow()
     { 
-        $id = \Input::get('diagramId');
+        $id = $this->getRequest()->input('diagramId');
         
 		$model = \App\Model\Telenok\Workflow\Process::find($id);
 		
@@ -126,7 +126,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                 'model' => $model,
                 'stencilData' => ($model ? $model->process->get('diagram', []) : false),
                 'uniqueId' => str_random(), 
-				'sessionDiagramId' => \Input::get('sessionDiagramId'),
+				'sessionDiagramId' => $this->getRequest()->input('sessionDiagramId'),
             ])->render();
     }
 

@@ -18,7 +18,7 @@
                     <form class="form-horizontal telenok-object-field-filter" onsubmit="return false;">
 						
 						<input type="hidden" name="multifield_search" value="1" />
-                        @foreach($fieldsFilter as $key => $field) 
+                        @foreach($fieldsFilter->all() as $key => $field) 
 								
 							<div class="form-group">
 								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">{{ $field->translate('title') }}</label>
