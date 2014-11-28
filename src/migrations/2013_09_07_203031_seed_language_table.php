@@ -34,15 +34,18 @@ class SeedLanguageTable extends Migration {
 					'field_order' => 6,
 				]
 		);
- 
+        
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+
 		DB::table('language')->insertGetId(
 				[
 					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\System\Language']),
 					'title' => "English",
 					'locale' => 'en',
 					'active' => 1,
-                    'active_at_start' => \DB::raw('NOW()'), 
-                    'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR'),
+                    'active_at_start' => $now, 
+                    'active_at_end' => $plus15Year,
 				]
 		);
 	}

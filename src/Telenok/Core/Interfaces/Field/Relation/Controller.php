@@ -98,7 +98,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         $method = camel_case($field->code);
 
-        return $item->$method()->take(8)->getResults();
+        return $item->$method()->take(8)->get();
     }
 }
 

@@ -6,9 +6,9 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	protected $ruleList = ['title' => ['required', 'min:1'], 'title_list' => ['required', 'min:1'], 'code' => ['required', 'unique:object_field,code,:id:,id,field_object_type,:field_object_type:', 'regex:/^[A-Za-z][A-Za-z0-9_]*$/']];
 	protected $table = 'object_field';
-	
+
 	protected static $listSpecialFieldController = [];  
-    
+
 	public static function boot()
 	{
 		parent::boot();
@@ -20,11 +20,11 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			if ($type && $type->class_model)
 			{
 				static::eraseStatic(app($type->class_model));
-			}
-			
-			$model->createFieldResource($type);
+
+                $model->createFieldResource($type);
+			} 
 		});
-		
+
 		static::deleting(function($model)
 		{
 			if ($controllers = app('telenok.config')->getObjectFieldController()->get($model->key))
@@ -37,7 +37,7 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	public function createFieldResource($type)
 	{
 		$code = 'object_field.' . $type->code . '.' . $this->code;
-		
+
 		if (!\App\Model\Telenok\Security\Resource::where('code', $code)->count())
 		{
 			(new \App\Model\Telenok\Security\Resource())->storeOrUpdate([
@@ -50,8 +50,8 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public function getFillable()
 	{ 
-		$class = get_class($this);
-
+		$class = get_class($this); 
+        
 		if (!isset(static::$listFieldController[$class]))
 		{
 			parent::getFillable();
@@ -82,7 +82,7 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public static function eraseStatic($model)
 	{
-		$class = get_class($this);
+		$class = get_class($model);
 
 		static::$listSpecialFieldController[$class] = null; 
 

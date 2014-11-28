@@ -323,7 +323,7 @@ abstract class Controller {
 		}
 	} 
     
-	public function validate($model = null, $input = null)
+	public function validate($model = null, $input = [])
 	{
 	}
 	

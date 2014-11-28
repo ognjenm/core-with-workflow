@@ -76,7 +76,7 @@ class Element extends \Illuminate\Routing\Controller {
         return $this->stencilConfig;
     }
 
-    public function setStencilSetConfig(array $param = [])
+    public function setStencilSetConfig($param = [])
     {
         $this->stencilConfig = array_merge($this->stencilConfig, $param);
 

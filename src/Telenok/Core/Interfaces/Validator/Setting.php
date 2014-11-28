@@ -10,9 +10,9 @@ class Setting {
     protected $message = [];
     protected $customAttribute = [];
     
-    public function setInput(\Illuminate\Support\Collection $param = null)
+    public function setInput($param = [])
     {
-        $this->input = $param;
+        $this->input = \Illuminate\Support\Collection::make($param);
 
         return $this;
     }
@@ -22,7 +22,7 @@ class Setting {
         return $this->input;
     }
     
-    public function setMessage(array $param = null)
+    public function setMessage($param = [])
     {
         $this->message = array_merge(\Lang::get('core::default.error'), (array)$param);
 
@@ -34,7 +34,7 @@ class Setting {
         return $this->message;
     }
     
-    public function setRuleList(array $param = null)
+    public function setRuleList($param = [])
     {
         $this->ruleList = $this->processRule($param);
 
@@ -51,7 +51,7 @@ class Setting {
         return $this->ruleList;
     } 
     
-    public function setCustomAttribute(array $param = null)
+    public function setCustomAttribute($param = [])
     {
         $this->customAttribute = $param;
 

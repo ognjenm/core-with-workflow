@@ -127,6 +127,9 @@ class SeedCommonFields extends Migration {
     
     public static function alterActive($typeId = null, $tabId = null)
     {
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+        
         DB::table('object_field')->insert(
                 [
                     'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\Object\Field']),
@@ -158,8 +161,8 @@ class SeedCommonFields extends Migration {
                     'title_list' => json_encode(['en' => 'Active time'], JSON_UNESCAPED_UNICODE),
                     'key' => 'datetime-range',
                     'code' => 'active_at',
-                    'datetime_range_default_start' => \DB::raw('NOW()'),
-                    'datetime_range_default_end' => \DB::raw('NOW() + INTERVAL 10 YEAR'),
+                    'datetime_range_default_start' => $now,
+                    'datetime_range_default_end' => $plus15Year,
                     'active' => 1,
                     'field_object_type' => $typeId,
                     'field_object_tab' => $tabId,

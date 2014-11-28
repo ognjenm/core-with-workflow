@@ -32,7 +32,7 @@
 
 			<ul class="nav nav-tabs" id="field-{{ $model->{$field->code} . $uniqueId }}-permission">
 				@foreach($permissions as $permission) 
-				<li><a href="{{#$permission->code . $uniqueId}}" data-toggle="tab">{{$permission->translate('title')}}</a></li>
+				<li><a href="#{{$permission->code . $uniqueId}}" data-toggle="tab">{{$permission->translate('title')}}</a></li>
 				@endforeach
 			</ul>
 
@@ -44,8 +44,8 @@
 							<?php
 
 								$sequence = new \App\Model\Telenok\Object\Sequence();
-								$spr = new Telenok\Security\SubjectPermissionResource();
-								$type = new Telenok\Object\Type();
+								$spr = new \App\Model\Telenok\Security\SubjectPermissionResource();
+								$type = new \App\Model\Telenok\Object\Type();
 
 								$sequence->addMultilanguage('title_type');
 

@@ -11,7 +11,7 @@ class Model {
     protected $message = [];
     protected $customAttribute = [];
     
-    public function setModel(\Illuminate\Database\Eloquent\Model $param = null)
+    public function setModel($param = null)
     {
         $this->model = $param;
 
@@ -23,9 +23,9 @@ class Model {
         return $this->model;
     }
     
-    public function setInput(\Illuminate\Support\Collection $param = null)
+    public function setInput($param = [])
     {
-        $this->input = $param;
+        $this->input = \Illuminate\Support\Collection::make($param);
 
         return $this;
     }
@@ -35,7 +35,7 @@ class Model {
         return $this->input;
     }
     
-    public function setMessage(array $param = null)
+    public function setMessage($param = [])
     {
         $this->message = array_merge(\Lang::get('core::default.error'), (array)$param);
 
@@ -47,7 +47,7 @@ class Model {
         return $this->message;
     }
     
-    public function setRuleList(array $param = null)
+    public function setRuleList($param = [])
     {
         $this->ruleList = $param;
 
@@ -64,7 +64,7 @@ class Model {
         return $this->ruleList;
     } 
     
-    public function setCustomAttribute(array $param = null)
+    public function setCustomAttribute($param = [])
     {
         $this->customAttribute = $param;
 
@@ -82,7 +82,7 @@ class Model {
 		{
             $el = preg_replace_callback('/\:\w+\:/', function($matches) use ($this_) 
 			{
-                return $this_->input->get(trim($matches[0], ':'), 'NULL');
+                return $this_->getInput()->get(trim($matches[0], ':'), 'NULL');
             }, $el);
         }, $this);
 
@@ -93,7 +93,7 @@ class Model {
     {  
         if ($this->model instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model && $this->model->exists)
         {
-            $this->ruleList = array_intersect_key($this->ruleList, $this->input->all());
+            $this->ruleList = array_intersect_key($this->ruleList, $this->getInput()->all());
 
             if (empty($this->ruleList))
             {
@@ -109,7 +109,7 @@ class Model {
                             )
                             ->setModel($this->getModel());
 
-        if ($this->validator->passes()) 
+        if ($this->validator()->passes()) 
 		{
 			return true;
 		}
@@ -124,7 +124,7 @@ class Model {
 
     public function messages()
     {
-        $messages = $this->validator->messages()->all();
+        $messages = $this->validator()->messages()->all();
 
         return empty($messages) ? ['undefined' => $this->message['undefined']] : $messages;
     }

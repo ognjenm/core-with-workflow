@@ -261,7 +261,7 @@ class SeedUserTable extends Migration {
 			Schema::create('pivot_relation_m2m_group_user', function(Blueprint $table)
 			{
 				$table->increments('id');
-				$table->timestamps();
+				$table->nullableTimestamps();
 				$table->integer('group')->unsigned()->default(0);
 				$table->integer('group_user')->unsigned()->default(0);
 				

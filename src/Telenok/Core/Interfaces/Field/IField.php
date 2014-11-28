@@ -58,7 +58,7 @@ interface IField {
 
     public function getListFieldContent($field, $item, $type = null);
 
-    public function validate($input = null, $messages = []);
+    public function validate($model = null, $input = [], $messages = []);
 	
     public function validateMethodExists($object, $method);
     
@@ -69,7 +69,7 @@ interface IField {
     
     public function updateModelFile($model, $param, $stubFile, $dir);
 
-    public function validator($model = null, array $input = [], array $message = [], array $customAttribute = []);
+    public function validator($model = null, $input = [], $message = [], $customAttribute = []);
 
     public function validateException();
     

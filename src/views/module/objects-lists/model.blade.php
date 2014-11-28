@@ -18,7 +18,7 @@
 			jQuery.ajax({
 				url: '{{ $controller->getRouterLock() }}',
 				type: 'post',
-				data: { id: {{ intval($model->getKey()) }} },
+				data: { id: {{ intval($model->getKey()) }}, _token: "{{ csrf_token() }}" },
 				dataType: 'json',
 				cache: false
 			});

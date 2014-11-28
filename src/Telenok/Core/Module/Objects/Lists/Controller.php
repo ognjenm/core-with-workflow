@@ -121,17 +121,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
 	public function getModelFieldFilter($model = null)
 	{
-		$fields = [];
-
-		$model->getFieldForm()->each(function($item)
-		{
-			if ($item->allow_search)
-			{
-				$fields[] = $item;
-			}
-		});
-
-		return $fields;
+		return $model->getFieldForm()->filter(function($item) { return $item->allow_search; });
 	}
 
 	public function getFilterSubQuery($input, $model, $query)
@@ -213,7 +203,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {
         $content = [];
         
-        $input = $this->getRequest()->input();
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
         
         $total = $input->get('iDisplayLength', $this->displayLength);
         $sEcho = $input->get('sEcho');

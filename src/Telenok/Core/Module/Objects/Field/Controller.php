@@ -28,9 +28,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
-    public function validate($model = null, $input = null, $message = [])
+    public function validate($model = null, $input = [], $message = [])
     {
-        app('telenok.config')->getObjectFieldController()->get($input->get('key'))->validate();
+        $key = $model->exists && $model->key ? $model->key : $input->get('key');
+
+        if ($key)
+        {
+            app('telenok.config')->getObjectFieldController()->get($key)->validate($model, $input, $message);
+        }
 
         return $this;
     } 

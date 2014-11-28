@@ -59,7 +59,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 		catch (\Exception $ex) {}
 	}
 
-    public function validateClassModel($model, $type, $input)
+    public function validateClassModel($model, $type, $input = [])
     { 
 		$input->put('class_model', strtolower(trim($input->get('class_model'), '\\ ')));
 
@@ -88,7 +88,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 		}
 	}
 
-    public function validateClassController($model, $type, $input)
+    public function validateClassController($model, $type, $input = [])
     {
 		if (!$input->get('class_controller'))
 		{

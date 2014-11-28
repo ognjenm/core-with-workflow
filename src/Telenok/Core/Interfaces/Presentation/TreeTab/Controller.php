@@ -351,13 +351,18 @@ abstract class Controller extends Module implements IPresentation {
         return app($this->modelTreeClass);
     }    
 
-    public function validator($model = null, array $input = [], array $message = [], array $customAttribute = [])
+    public function validate($model = null, $input = null, $message = [])
+    { 
+        return $this;
+    }
+
+    public function validator($model = null, $input = [], $message = [], $customAttribute = [])
     {
         return app('\Telenok\Core\Interfaces\Validator\Model')
                     ->setModel($model ?: $this->getModelList())
                     ->setInput($input)
                     ->setMessage($message)
-                    ->setCustomAttributes($customAttribute);
+                    ->setCustomAttribute($customAttribute);
     }
 
     public function validateException()

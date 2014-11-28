@@ -73,7 +73,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->timestamp($fieldName);
+				$table->timestamp($fieldName)->nullable();
 			});
 		}
 		

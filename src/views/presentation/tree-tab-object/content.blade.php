@@ -76,7 +76,7 @@
 				btnCreateUrl : '{!! $controller->getRouterCreate(['id' => $type->getKey()]) !!}',
 				btnListEditUrl : '{!! $controller->getRouterListEdit(['id' => $type->getKey()]) !!}',
 				btnListDeleteUrl : '{!! $controller->getRouterListDelete(['id' => $type->getKey()]) !!}',
-				btnListLockUrl : '{!! $controller->getRouterListLock(['id' => $type->getKey()]) }}',
+				btnListLockUrl : '{!! $controller->getRouterListLock(['id' => $type->getKey()]) !!}',
 				btnListUnlockUrl : '{!! $controller->getRouterListUnlock(['id' => $type->getKey()]) !!}',
 				btnCreateDisabled : '{{ !\Auth::can('create', "object_type.{$type->code}") }}',
 				btnListDeleteDisabled : '{!!  !\Auth::can('delete', "object_type.{$type->code}") !!}'

@@ -18,10 +18,19 @@ class SeedSubjectPermissionResourceTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		\DB::table('object_type')->update(['active_at_start' => \DB::raw('NOW()'), 'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
-		\DB::table('object_field')->update(['active_at_start' => \DB::raw('NOW()'), 'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
-		\DB::table('object_tab')->update(['active_at_start' => \DB::raw('NOW()'), 'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
-
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+        
+        foreach(['object_type', 'object_field', 'object_tab', 'setting', 'object_sequence'] as $table)
+        {
+            \DB::table($table)->update([
+                'active_at_start' => $now, 
+                'active_at_end' => $plus15Year,
+                'created_at' => $now,
+                'updated_at' => $now, 
+            ]);
+        }
+ 
 		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('field.code'),

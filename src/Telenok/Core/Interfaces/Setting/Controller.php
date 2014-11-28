@@ -32,7 +32,7 @@ abstract class Controller {
 		return $this->formSettingContentView ?: "{$this->getPackage()}::setting/{$this->getKey()}.content";
 	}
 
-    public function validate($input = null)
+    public function validate($input = [])
     {
         $validator = $this->validator($this->ruleList, $input);
          
@@ -42,13 +42,13 @@ abstract class Controller {
         }
     } 
 
-    public function validator(array $rule = [], array $input = [], array $message = [], array $customAttribute = [])
+    public function validator($rule = [], $input = [], $message = [], $customAttribute = [])
     {
         return app('\Telenok\Core\Interfaces\Validator\Setting')
                     ->setRuleList($rule)
                     ->setInput($input)
                     ->setMessage($message)
-                    ->setCustomAttributes($customAttribute);
+                    ->setCustomAttribute($customAttribute);
     }
 
     public function validateException()

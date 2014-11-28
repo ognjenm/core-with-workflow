@@ -10,12 +10,14 @@ class SeedLast extends Migration {
 		\App\Model\Telenok\Object\Type::all()->each(function($type)
 		{
 			$table = $type->code;
-			
+            $now = \Carbon\Carbon::now()->toDateTimeString();
+            $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+
 			\DB::table($table)->update([
-				'created_at' => \DB::raw('NOW()'),
-				'updated_at' => \DB::raw('NOW()'),
-				'active_at_start' => \DB::raw('NOW()'),
-				'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR'),
+				'created_at' => $now,
+				'updated_at' => $now,
+				'active_at_start' => $now,
+				'active_at_end' => $plus15Year,
 			]);
 		});   
 
@@ -54,7 +56,7 @@ class SeedLast extends Migration {
 				\Telenok\Core\Security\Acl::addResource('Own records with object: ' . $type->code, "object_type.{$type->code}.own");
 			}
 			catch (\Exception $exc) {}
-			
+
 			$type->field()->get()->each(function($field) use ($type)
 			{
 				try
@@ -64,7 +66,7 @@ class SeedLast extends Migration {
 				catch (\Exception $exc) {}
 			});
 		});
-		
+
 		(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 			'title' => ['en' => 'Role', 'ru' => 'Роль'],
 			'title_list' => ['en' => 'Role', 'ru' => 'Роль'],

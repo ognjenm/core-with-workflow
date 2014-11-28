@@ -162,7 +162,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     {
         $content = [];
         
-        $input = $this->getRequest()->input();
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
         
         $total = $input->get('iDisplayLength', $this->displayLength);
         $sEcho = $input->get('sEcho');

@@ -340,7 +340,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 		}
 	}
 
-	public function validate($model = null, $input = null)
+	public function validate($model = null, $input = [])
 	{
         if (!$model->exists)
         {

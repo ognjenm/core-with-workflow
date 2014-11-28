@@ -20,8 +20,7 @@ class SubjectPermissionResource extends \Telenok\Core\Interfaces\Eloquent\Object
 	public function aclSubjectObjectSequence()
 	{
 		return $this->belongsTo('\App\Model\Telenok\Object\Sequence', 'acl_subject_object_sequence');
-	}
-
+	} 
 
     public function aclPermissionObjectSequence()
     {

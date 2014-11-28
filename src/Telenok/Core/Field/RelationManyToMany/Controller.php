@@ -140,7 +140,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
         return $model;
     }
-	
+
     public function preProcess($model, $type, $input)
     {
 		if (!$input->get('relation_many_to_many_belong_to'))
@@ -165,7 +165,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         try 
         {
 			$model->fill(['relation_many_to_many_has' => $input->get('relation_many_to_many_has')])->save();
-			
+
 			if (!$input->get('relation_many_to_many_has'))
 			{
 				return parent::postProcess($model, $type, $input);

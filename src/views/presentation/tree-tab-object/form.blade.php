@@ -7,7 +7,7 @@
 
 					@if ($tab->field()->active()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->count())
 					<li>
-						<a data-toggle="tab" href="{{#$uniqueId}}_{{$tab->code}}">
+						<a data-toggle="tab" href="#{{$uniqueId}}_{{$tab->code}}">
 							@if ($tab->icon_class)
 							<i class="{{$tab->icon_class}}"></i>
 							@endif

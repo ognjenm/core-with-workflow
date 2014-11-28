@@ -60,7 +60,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			if ($this->getKey())
 			{
 				$sequence = new \App\Model\Telenok\Object\Sequence();
-				$sequence->{$sequence->getKeyName()} = $this->getKey();
+				$sequence->id = $this->getKey();
 				$sequence->class_model = get_class($this);
 				$sequence->save();
 			}
@@ -69,7 +69,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				$sequence = \App\Model\Telenok\Object\Sequence::create(['class_model' => get_class($this)]);
 			}
 
-			$this->{$this->getKeyName()} = $sequence->getKey();
+			$this->id = $sequence->id;
 		}
 	}
 
@@ -120,8 +120,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 
 			$type = $this->type();
-			
-			$this->sequence->fill([
+
+			$this->sequence()->first()->fill([
 				'title' => ($this->title instanceof \Illuminate\Support\Collection ? $this->title->all() : $this->title),
 				'created_at' => $this->created_at,
 				'updated_at' => $this->updated_at,
@@ -133,8 +133,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				'updated_by_user' => $this->updated_by_user,
 				'sequences_object_type' => $type->getKey(),
 				'treeable' => $type->treeable,
-			])
-			->save();
+			])->save();
 		}
 	}
 
@@ -222,7 +221,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			throw new \Exception("Telenok\Core\Interfaces\Eloquent\Object\Model::storeOrUpdate() - Error: 'type of object not found, please, define it'");
 		}
 
-		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
+		$input = \Illuminate\Support\Collection::make($input);
 		 
 		try
 		{
@@ -238,8 +237,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		catch (\Exception $ex) 
 		{
 			$model = new static();
-		}
-
+		} 
+        
 		if ($withPermission)
 		{
 			$model->validateStoreOrUpdatePermission($type, $input);
@@ -247,15 +246,9 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		foreach($model->fillable as $fillable)
 		{
-			if ($input->has($fillable))
-			{
-				//$model->__set($fillable, $input->get($fillable));
-				//$model->$fillable = $input->get($fillable);
-			}
+			if ($input->has($fillable)) {}
 			else if (!$model->exists)
 			{
-				//$this->__set($fillable, null);
-				//$input->put($fillable, null);
 				$model->$fillable = null;
 				$input->put($fillable, null);
 			}
@@ -287,7 +280,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 				$model->preProcess($type, $input);  
 
-				$validator = new \Telenok\Core\Interfaces\Validator\Model($model, $input, $this->LL('error'), $this->validatorCustomAttributes());
+				$validator = app('\Telenok\Core\Interfaces\Validator\Model')
+                                    ->setModel($model)
+                                    ->setInput($input)
+                                    ->setMessage($this->LL('error'))
+                                    ->setCustomAttribute($this->validatorCustomAttributes());   
 
 				if ($validator->fails())
 				{
@@ -645,13 +642,13 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function translate($field, $locale = '')
 	{
-		$locale = $locale ? : \Config::get('app.locale');
+		$locale = $locale ?: app('config')->get('app.locale');
 
 		if ($this->$field instanceof \Illuminate\Support\Collection)
 		{
 			$translated = $this->$field->get($locale);
 
-			return $translated ? : $this->$field->get(\Config::get('app.localeDefault'));
+			return $translated ? : $this->$field->get(app('config')->get('app.localeDefault'));
 		}
 		else if ( ($this->$field instanceof \ArrayAccess && ($v = $this->$field)) || (($v = json_decode($this->$field, true)) && json_last_error()===JSON_ERROR_NONE))
 		{
@@ -847,12 +844,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function treeParent()
 	{
-        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_id', 'tree_pid');
+        return $this->belongsToMany('\App\Model\Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_id', 'tree_pid');
 	}
 
 	public function treeChild()
 	{
-        return $this->belongsToMany('Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
+        return $this->belongsToMany('\App\Model\Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
 	}
 
 	public function scopePivotTreeLinkedExtraAttr($query)

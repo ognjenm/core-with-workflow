@@ -12,7 +12,7 @@ class CreateBufferTable extends Migration {
 			Schema::create('buffer', function(Blueprint $table)
 			{
 				$table->increments('id');
-				$table->timestamps();
+				$table->nullableTimestamps();
 				$table->softDeletes();
 				$table->integer('user_id')->unsigned()->default(0)->nullable();
 				$table->integer('sequence_id')->unsigned()->default(0)->nullable();

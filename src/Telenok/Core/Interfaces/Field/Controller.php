@@ -321,9 +321,9 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
         return \Str::limit($item->translate((string)$field->code), 20);
     }
 
-    public function validate($input = null, $messages = [])
+    public function validate($model = null, $input = [], $messages = [])
     {
-        $validator = $this->validator($this, $input, $this->LL('error'));
+        $validator = $this->validator($this, $input, array_merge($messages, $this->LL('error')));
         
         if ($validator->fails()) 
         {
@@ -381,13 +381,13 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
         }
     }
 
-    public function validator($model = null, array $input = [], array $message = [], array $customAttribute = [])
+    public function validator($model = null, $input = [], $message = [], $customAttribute = [])
     {
         return app('\Telenok\Core\Interfaces\Validator\Model')
-                    ->setModel($model ?: $this->getModelList())
+                    ->setModel($model)
                     ->setInput($input)
                     ->setMessage($message)
-                    ->setCustomAttributes($customAttribute);   
+                    ->setCustomAttribute($customAttribute);   
     }
 
     public function validateException()
