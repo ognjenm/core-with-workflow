@@ -333,7 +333,7 @@ abstract class Controller extends Module implements IPresentation {
  
     public function getType($id)
     {
-        return \App\Model\Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->firstOrFail();
+        return \App\Model\Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->active()->firstOrFail();
     } 
 
     public function getTypeByModel($id)
@@ -949,7 +949,7 @@ abstract class Controller extends Module implements IPresentation {
         return $return;
     }
     
-    public function update()
+    public function update($id = null)
     { 
         try 
         {

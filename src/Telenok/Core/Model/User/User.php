@@ -59,6 +59,13 @@ class User extends \Telenok\Core\Interfaces\Eloquent\Object\Model implements Aut
 		return $this->belongsToMany('\App\Model\Telenok\User\Group', 'pivot_relation_m2m_group_user', 'group_user', 'group')->withTimestamps();
 	}
 
+    public function avatarUserFileExtension()
+    {
+        return $this->belongsTo('\App\Model\Telenok\File\FileExtension', 'avatar_user_file_extension');
+    }
 
+    public function avatarUserFileMimeType()
+    {
+        return $this->belongsTo('\App\Model\Telenok\File\FileMimeType', 'avatar_user_file_mime_type');
+    }
 }
-?>

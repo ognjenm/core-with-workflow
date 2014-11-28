@@ -16,7 +16,4 @@ class Role extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     {
         return $this->belongsToMany('\App\Model\Telenok\User\Group', 'pivot_relation_m2m_role_group', 'role', 'role_group')->withTimestamps();
     }
-	
 }
-
-?>

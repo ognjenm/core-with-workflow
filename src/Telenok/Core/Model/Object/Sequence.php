@@ -33,21 +33,23 @@ class Sequence extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		return $this->belongsTo('\App\Model\Telenok\User\User', 'updated_by_user');
 	}
+    
+    public function aclResource()
+    {
+        return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_resource_object_sequence');
+    }
 
-	public function aclResource()
-	{
-		return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_resource_object_sequence');
-	}
 
-	public function aclSubject()
-	{
-		return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
-	}
+    public function aclSubject()
+    {
+        return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
+    }
 
     public function aclPermission()
     {
         return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_permission_object_sequence');
     }
-
+    
+    
 }
 ?>

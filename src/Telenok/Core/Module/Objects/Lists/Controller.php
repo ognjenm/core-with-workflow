@@ -566,13 +566,13 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return $return;
     }
 
-    public function update()
+    public function update($id = null)
     {
         try 
         {
             $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
             
-            $type = $this->getType($input->get('id'));            
+            $type = $this->getType($id);            
 
 			if ($type->classController())
 			{

@@ -17,4 +17,3 @@ class FileExtension extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
         return $this->hasMany('\App\Model\Telenok\File\File', 'upload_file_file_extension');
     }
 }
-?>

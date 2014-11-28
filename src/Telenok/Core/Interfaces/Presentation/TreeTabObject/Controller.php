@@ -366,7 +366,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return $return;
     }
 
-    public function update()
+    public function update($id = null)
     {
         try 
         {

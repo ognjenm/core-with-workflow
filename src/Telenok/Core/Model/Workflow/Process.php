@@ -16,7 +16,5 @@ class Process extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     public function threadWorkflowProcess()
     {
         return $this->belongsTo('\App\Model\Telenok\Workflow\Process', 'thread_workflow_process');
-    }
-
+    }  
 }
-?>

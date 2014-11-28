@@ -38,5 +38,5 @@ class WidgetOnPage extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
         
         return parent::preProcess($type, $input);
     }
+    
 }
-?>

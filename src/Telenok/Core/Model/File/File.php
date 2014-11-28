@@ -32,5 +32,5 @@ class File extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     {
         return $this->belongsTo('\App\Model\Telenok\File\FileMimeType', 'upload_file_file_mime_type');
     }
-
+    
 }

@@ -21,6 +21,5 @@ class Page extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     {
         return $this->belongsTo('\App\Model\Telenok\Web\Domain', 'page_domain');
     } 
-}
-
-?>
+     
+} 
