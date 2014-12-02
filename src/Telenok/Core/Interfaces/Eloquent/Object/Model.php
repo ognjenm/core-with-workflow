@@ -795,72 +795,12 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	public function treeChild()
 	{
         return $this->belongsToMany('\App\Model\Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
-	}
-
-	public function makeRoot()
-	{
-		\DB::transaction(function()
-		{
-			$childs = \DB::table('pivot_relation_m2m_tree')->where('tree_path', 'LIKE', '%.' . $this->getKey() . '.%')->get();
-
-			foreach ($childs as $item)
-			{
-				\DB::table('pivot_relation_m2m_tree')->where('id', $item->id)->update(
-				[
-					'tree_path' => '.0.' . $this->getKey() . '.' . preg_replace('/.+\.' . $this->getKey() . '\./', '.0.' . $this->getKey() . '.', $item->tree_path),
-				]);
-			}
-
-			if (\DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->count())
-			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->update(
-                [
-                    'tree_path' => '.0.',
-                    'tree_pid' => 0,
-                    'tree_depth' => 0,
-                    'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
-				]);
-			}
-			else
-			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->insert(
-						[
-							'tree_id' => $this->getKey(),
-							'tree_path' => '.0.',
-							'tree_pid' => 0,
-							'tree_depth' => 0,
-							'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
-				]);
-			}
-		});
-
-		return $this;
-	}
-
-
-	
-	
-	
-	
-	
-	
-	
-	
+	} 
 	
 	/* Treeable section */
-	
 	public function treeAttr()
 	{
-        $el = $this->withTreeAttr()->where($this->getTable() . '.id', $this->getKey())->first();
-
-		if ($el)
-		{
-			return $el;
-		}
-		else
-		{
-			throw new \Exception('Model "' . get_class($this) . '" is not treeable');
-		}
+        return $this->withTreeAttr()->where($this->getTable() . '.id', $this->getKey())->firstOrFail();
 	}
 	
 	public function scopeWithTreeAttr($query)
@@ -901,6 +841,63 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return $query;
 	}
 
+	public function makeRoot()
+	{
+		\DB::transaction(function()
+		{
+            try
+            {
+                // throw Exception if not attr in pivot_relation_m2m_tree
+                $model = $this->treeAttr();
+                $childs = \DB::table('pivot_relation_m2m_tree')->where('tree_path', 'LIKE', '%.' . $this->getKey() . '.%')->get();
+
+                foreach ($childs as $item)
+                {
+                    \DB::table('pivot_relation_m2m_tree')->where('id', $item->id)->update(
+                    [
+                        'tree_path' => preg_replace('/.*\.' . $this->getKey() . '\./', '.0.' . $this->getKey() . '.', $item->tree_path),
+                        'tree_depth' => \DB::raw('(tree_depth - ' . $model->tree_depth . ')'),
+                    ]);
+                }
+                
+                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->update(
+                [
+                    'tree_path' => '.0.',
+                    'tree_pid' => 0,
+                    'tree_depth' => 0,
+                    'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
+                ]);
+            }
+			catch(\Exception $e)
+            {
+                $this->insertTree();
+			}
+		});
+
+		return $this;
+	}
+    
+    protected function insertTree()
+    {
+        if ($this->exists && ($el = \App\Model\Telenok\Object\Sequence::findOrFail($this->getKey())) && $el->treeable)
+        {
+            \DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->insert(
+            [
+                'tree_id' => $this->getKey(),
+                'tree_path' => '.0.',
+                'tree_pid' => 0,
+                'tree_depth' => 0,
+                'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
+            ]);
+        }
+        else
+        {
+            throw new Exception('Not exists or not treeable');
+        }
+        
+        return $this;
+    }
+
 	public function makeLastChildOf($parent)
 	{
         if (!$parent instanceof \Illuminate\Database\Eloquent\Model)
@@ -908,37 +905,44 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
             $parent = \App\Model\Telenok\Object\Sequence::find($parent);
         }
         
-		$sequence = $this->treeAttr();
-		$sequenceParent = $parent->treeAttr();
+        try
+        {
+            $sequence = $this->treeAttr();
+            $sequenceParent = $parent->treeAttr();
 
-		if ($sequence->isAncestor($sequenceParent))
-		{
-			throw new \Exception('Cant move Ancestor to Descendant');
-		}
+            if ($sequence->isAncestor($sequenceParent))
+            {
+                throw new \Exception('Cant move Ancestor to Descendant');
+            }
 
-		\DB::transaction(function() use ($sequence, $sequenceParent)
-		{
-			$children = $sequence->children()->get();
+            \DB::transaction(function() use ($sequence, $sequenceParent)
+            {
+                $children = $sequence->children()->get();
 
-			foreach ($children->all() as $child)
-			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
-				[
-					'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
-					'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
-				]);
-			}
+                foreach ($children->all() as $child)
+                {
+                    \DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
+                    [
+                        'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
+                        'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
+                    ]);
+                }
 
-			\DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
-			[
-				'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
-				'tree_pid' => $sequenceParent->getKey(),
-				'tree_order' => ($sequenceParent->children(1)->where('tree_id', '<>', $sequence->getKey())->max('tree_order') + 1),
-				'tree_depth' => ($sequenceParent->tree_depth + 1)
-			]);
-		});
+                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
+                [
+                    'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
+                    'tree_pid' => $sequenceParent->getKey(),
+                    'tree_order' => ($sequenceParent->children(1)->where('tree_id', '<>', $sequence->getKey())->max('tree_order') + 1),
+                    'tree_depth' => ($sequenceParent->tree_depth + 1)
+                ]);
+            });
+        } 
+        catch (Exception $ex) 
+        {
+            $this->insertTree();
+        }
 
-		return $sequence;
+		return $this;
 	}
 
 	public function makeFirstChildOf($parent)
@@ -948,39 +952,46 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
             $parent = \App\Model\Telenok\Object\Sequence::find($parent);
         }
         
-		$sequence = $this->treeAttr();
-		$sequenceParent = $parent->treeAttr();
+        try
+        {
+            $sequence = $this->treeAttr();
+            $sequenceParent = $parent->treeAttr();
 
-		if ($sequence->isAncestor($sequenceParent))
-		{
-			throw new \Exception('Cant move Ancestor to Descendant');
-		}
+            if ($sequence->isAncestor($sequenceParent))
+            {
+                throw new \Exception('Cant move Ancestor to Descendant');
+            }
 
-		\DB::transaction(function() use ($sequence, $sequenceParent)
-		{
-			$sequenceParent->children(1)->increment('tree_order');
+            \DB::transaction(function() use ($sequence, $sequenceParent)
+            {
+                $sequenceParent->children(1)->increment('tree_order');
 
-			$children = $sequence->children()->get();
+                $children = $sequence->children()->get();
 
-			foreach ($children->all() as $child)
-			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
-				[
-					'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
-					'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
-				]);
-			}
+                foreach ($children->all() as $child)
+                {
+                    \DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
+                    [
+                        'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
+                        'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
+                    ]);
+                }
 
-			\DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
-			[
-				'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
-				'tree_pid' => $sequenceParent->getKey(),
-				'tree_order' => 0,
-				'tree_depth' => ($sequenceParent->tree_depth + 1)
-			]);
-		});
+                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
+                [
+                    'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
+                    'tree_pid' => $sequenceParent->getKey(),
+                    'tree_order' => 0,
+                    'tree_depth' => ($sequenceParent->tree_depth + 1)
+                ]);
+            });
+        } 
+        catch (Exception $ex) 
+        {
+            $this->insertTree();
+        }
 
-		return $sequence;
+		return $this;
 	}
 
 	public function isAncestor($descendant)
@@ -1016,39 +1027,45 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
             $sibling = \App\Model\Telenok\Object\Sequence::find($sibling);
         }
 
-		$sequence = $this->treeAttr();
-		$sequenceSibling = $sibling->treeAttr();
+        try
+        {
+            $sequence = $this->treeAttr();
+            $sequenceSibling = $sibling->treeAttr();
 
-        if ($sequence->isAncestor($sequenceSibling)) 
-		{
-			throw new \Exception('Cant move Ancestor to Descendant');
-		}
+            if ($sequence->isAncestor($sequenceSibling)) 
+            {
+                throw new \Exception('Cant move Ancestor to Descendant');
+            }
 
-        \DB::transaction(function() use ($sequence, $sequenceSibling, $op)
-        { 
-            $sequenceSibling->sibling()->where('tree_order', $op, $sequenceSibling->tree_order)->increment('tree_order');
+            \DB::transaction(function() use ($sequence, $sequenceSibling, $op)
+            { 
+                $sequenceSibling->sibling()->where('tree_order', $op, $sequenceSibling->tree_order)->increment('tree_order');
 
-			$children = $sequence->children()->get();
+                $children = $sequence->children()->get();
 
-			foreach($children as $child) 
-			{
-				$child->update([
-					'tree_path' => str_replace($sequence->tree_path, $sequenceSibling->getTreePath(), $child->getTreePath()),
-					'tree_depth' => ( $sequenceSibling->tree_depth + ($child->getTreeDepth() - $sequence->getTreeDepth()) ),
-				]);
-			}
+                foreach($children as $child) 
+                {
+                    $child->update([
+                        'tree_path' => str_replace($sequence->tree_path, $sequenceSibling->tree_path, $child->tree_path),
+                        'tree_depth' => ($sequenceSibling->tree_depth + ($child->tree_depth - $sequence->tree_depth)),
+                    ]);
+                }
+                
+                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
+                [
+                    'tree_path' => $sequenceSibling->tree_path,
+                    'tree_pid' => $sequenceSibling->tree_pid,
+                    'tree_order' => $sequenceSibling->tree_order + ($op == '>' ? 1 : 0),
+                    'tree_depth' => $sequenceSibling->tree_depth,
+                ]);
+            });
+        } 
+        catch (Exception $ex) 
+        {
+            $this->insertTree();
+        }
 
-            $sequence->fill([
-                'tree_path' => $sequenceSibling->tree_path,
-                'tree_pid' => $sequenceSibling->tree_pid,
-                'tree_order' => $sequenceSibling->tree_order + ($op == '>' ? 1 : 0),
-                'tree_depth' => $sequenceSibling->tree_depth,
-            ]);
-
-            $sequence->save();
-        });
-
-        return $sequence;
+        return $this;
     }   
 
 	public function makePreviousSiblingOf($sibling)
@@ -1072,12 +1089,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
 		$sequence = $this->treeAttr();
 
-		return \App\Model\Telenok\Object\Sequence::whereIn($this->getTable() . '.id', array_filter(explode('.', $sequence->tree_path)));
+		return \App\Model\Telenok\Object\Sequence::whereIn($this->getTable() . '.id', array_filter(explode('.', $sequence->tree_path), 'strlen'));
 	}
-
-
-
-
 
 	public function isLeaf()
 	{
@@ -1117,11 +1130,11 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	{
         $model = new static;
 
-		$query = \App\Model\Telenok\Object\Sequence::withTreeAttr()->join('pivot_relation_m2m_tree', function($join) use ($model)
+		$query = \App\Model\Telenok\Object\Sequence::withTreeAttr()->leftJoin('pivot_relation_m2m_tree AS tree_leaf', function($join) use ($model)
 		{
-			$join->on($model->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_pid');
+			$join->on($model->getTable() . '.id', '=', 'tree_leaf.tree_pid');
 		})
-		->whereNull('pivot_relation_m2m_tree.tree_id');
+		->whereNull('tree_leaf.tree_id');
 
 		return $query;
 	}

@@ -442,21 +442,23 @@ abstract class Controller extends Module implements IPresentation {
     
     public function getFilterQuery($model, $query)
     {
-        if ($str = trim($this->getRequest()->input('sSearch')))
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+        
+        if ($str = trim($input->get('sSearch')))
         {
             $this->getFilterQueryLike($str, $query, $model, 'title');
         } 
 
-		if ($this->getRequest()->input('multifield_search', false))
+		if ($input->get('multifield_search', false))
 		{
-			$this->getFilterSubQuery($this->getRequest()->input('filter', []), $model, $query);
+			$this->getFilterSubQuery($input->get('filter', []), $model, $query);
 		}
         
-        $orderByField = $this->getRequest()->input('mDataProp_' . $this->getRequest()->input('iSortCol_0'));
+        $orderByField = $input->get('mDataProp_' . $input->get('iSortCol_0'));
         
-        if ($this->getRequest()->input('iSortCol_0', 0))
+        if ($input->get('iSortCol_0', 0))
         {
-            $query->orderBy($model->getTable() . '.' . $orderByField, $this->getRequest()->input('sSortDir_0'));
+            $query->orderBy($model->getTable() . '.' . $orderByField, $input->get('sSortDir_0'));
         }
     }
 
@@ -521,7 +523,7 @@ abstract class Controller extends Module implements IPresentation {
         {
             $tree->push([
                 'data' => $this->LL('tree.root'),
-                'attr' => ['id' => 0, 'rel' => 'folder'],
+                'attr' => ['id' => 0, 'rel' => 'folder', 'title' => 'ID: 0'],
                 'metadata' => ['id' => 0, 'gridId' => $this->getGridId()],
                 'state' => 'closed'
             ]);
@@ -532,7 +534,7 @@ abstract class Controller extends Module implements IPresentation {
             {
                 $list = $this->getTreeListModel($id, $searchStr);
                 $folderId = \App\Model\Telenok\Object\Type::where('code', 'folder')->pluck('id');
-            
+
                 if ($searchStr)
                 {
                     foreach ($list->all() as $l)
@@ -541,19 +543,21 @@ abstract class Controller extends Module implements IPresentation {
                         {
                            $tree->push("#{$l_->getKey()}");
                         }
+                        
+                        $tree->push("#{$l->getKey()}");
                     }
                 } 
                 else
                 {
                     $parents = $list->lists('id', 'tree_pid');
-                    
+
                     foreach ($list as $key => $item)
                     {
                         if ($item->tree_pid == $id)
                         {
                             $tree->push([
                                 "data" => $item->translate('title'), 
-                                'attr' => ['id' => $item->getKey(), 'rel' => ($folderId == $item->sequences_object_type ? 'folder' : '')],
+                                'attr' => ['id' => $item->getKey(), 'rel' => ($folderId == $item->sequences_object_type ? 'folder' : ''), 'title' => 'ID: ' . $item->getKey()],
                                 "state" => (isset($parents[$item->getKey()]) ? 'closed' : ''),
                                 "metadata" => array_merge( ['id' => $item->getKey(), 'gridId' => $this->getGridId() ], $this->getTreeListItemProcessed($item)),
                             ]);
@@ -561,7 +565,10 @@ abstract class Controller extends Module implements IPresentation {
                     }                
                 }
             }
-            catch (\Exception $e) { return $e->getMessage(); }
+            catch (\Exception $e)
+            {     
+                return $e->getMessage(); 
+            }
         }
 
         return $tree->all();
@@ -591,13 +598,13 @@ abstract class Controller extends Module implements IPresentation {
             
             if ($treePid == 0)
             {
-                $query = \App\Model\Telenok\Object\Sequence::withChildren(2)->active();
+                $query = \App\Model\Telenok\Object\Sequence::withChildren(2)->orderBy('pivot_tree_children.tree_order')->active();
             }
             else
             {
-                $query = \App\Model\Telenok\Object\Sequence::find($treePid)->children(2)->active();
+                $query = \App\Model\Telenok\Object\Sequence::find($treePid)->children(2)->orderBy('pivot_tree_attr.tree_order')->active();
             }
-            
+
             $query->whereIn('object_sequence.sequences_object_type', $types);
         }
 

@@ -177,9 +177,23 @@ div.widget-header.widget-header-green { background: linear-gradient(to bottom, #
     font-family: "Open Sans" !important;
 }
 
-.jstree.jstree-proton {
+.telenok-tree .jstree.jstree-proton {
     font-family: inherit !important;
     text-align: left;
+}
+
+.telenok-tree .jstree.jstree-proton a.jstree-search {
+    color: red;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.telenok-tree .jstree.jstree-proton a.jstree-search.jstree-clicked {
+    color: white;
+}
+
+.telenok-tree .jstree.jstree-proton a.jstree-search.jstree-hovered {
+    color: white;
 }
 
 
