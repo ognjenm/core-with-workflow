@@ -97,6 +97,8 @@ class SeedCommonFields extends Migration {
                     'show_in_list' => 1,
                     'show_in_form' => 1,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'required' => 1,
                     'field_order' => 3,
                 ]
@@ -119,6 +121,8 @@ class SeedCommonFields extends Migration {
                     'show_in_list' => 0,
                     'show_in_form' => 1,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'required' => 1,
                     'field_order' => 4,
                 ]
@@ -150,6 +154,8 @@ class SeedCommonFields extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'field_order' => 9,
                 ]
         );
@@ -170,6 +176,8 @@ class SeedCommonFields extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'field_order' => 10,
                 ]
         );

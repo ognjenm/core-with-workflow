@@ -627,6 +627,11 @@ class SeedLast extends Migration {
 
 			$modelField = null;
 		});
+
+		\App\Model\Telenok\Object\Sequence::where('treeable', 1)->get()->each(function($item)
+		{
+			$item->makeRoot();
+		});
 		
 		
 		//Group

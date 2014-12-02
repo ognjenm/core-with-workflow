@@ -28,7 +28,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 
 \Route::get('telenok', array('as' => 'cmf.content', 'uses' => "Telenok\Core\Controller\Backend\Controller@getContent"));
  
-\Route::post('telenok/login', array('as' => 'cmf.login', 'uses' => "Telenok\Core\Controller\Backend\Controller@login"));
+\Route::any('telenok/login', array('as' => 'cmf.login', 'uses' => "Telenok\Core\Controller\Backend\Controller@login"));
 \Route::post('telenok/logout', array('as' => 'cmf.logout', 'uses' => "Telenok\Core\Controller\Backend\Controller@logout"));
 
 \Route::post('telenok/clear-cache', array('as' => 'cmf.clear.cache', function()

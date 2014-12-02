@@ -31,6 +31,8 @@ class SeedPageTable extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'required' => 0,
                     'field_order' => 3,
                 ]
@@ -49,6 +51,8 @@ class SeedPageTable extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'required' => 0,
                     'field_order' => 4,
                 ]
@@ -67,6 +71,8 @@ class SeedPageTable extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'required' => 0,
                     'field_order' => 5,
                 ]
@@ -85,6 +91,8 @@ class SeedPageTable extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 1,
                     'allow_search' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'required' => 1,
                     'field_order' => 6,
                 ]
