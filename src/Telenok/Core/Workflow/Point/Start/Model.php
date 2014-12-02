@@ -20,7 +20,7 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
     {
 		$eventList = $this->getInput()->get('event_list', []);
 
-        return in_array($event->getEventCode(), $eventList);
+        return in_array($event->getEventCode(), $eventList, true);
     }
 
     public function getPropertyValue($data = [])

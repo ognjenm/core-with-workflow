@@ -57,7 +57,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['select_many_data']))
+			if (in_array($key, ['select_many_data'], true))
 			{ 
 				return \Illuminate\Support\Collection::make(json_decode($value, true));
 			}
@@ -74,7 +74,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {  
-		if (in_array($key, ['select_many_data']))
+		if (in_array($key, ['select_many_data'], true))
 		{ 
 			$default = [];
 

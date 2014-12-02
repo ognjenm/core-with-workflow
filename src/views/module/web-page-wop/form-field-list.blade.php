@@ -1,9 +1,9 @@
 
-							@if (!in_array($field->code, ['structure']))
+							@if ($field->code === 'structure')
 
 								{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
-							@elseif ($field->code=='structure')
+							@elseif ($field->code === 'structure')
 
 								<?php
 

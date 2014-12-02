@@ -1,4 +1,4 @@
-							@if (!in_array($field->code, ['value']))
+							@if (!in_array($field->code, ['value'], true))
 
 								{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 

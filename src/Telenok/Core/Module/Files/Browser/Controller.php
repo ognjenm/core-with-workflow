@@ -51,7 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     {
         $content = []; 
         
-        $input = $this->getRequest()->input();
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
         
 		$currentDirectory = $input->get('currentDirectory');
 		
@@ -146,7 +146,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 </div>';
     }
 
-    public function create($id = null)
+    public function create()
 	{
 		try
 		{ 
@@ -162,7 +162,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			
 			return [
 				'tabKey' => $this->getTabKey() . '-new-' . $tabKey,
-				'tabLabel' => $this->LL('list.create.' . (in_array($modelType, ['file', 'directory']) ? $modelType : "")),
+				'tabLabel' => $this->LL('list.create.' . (in_array($modelType, ['file', 'directory'], true) ? $modelType : "")),
 				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory),
@@ -174,7 +174,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 					'uniqueId' => str_random(),  
 				), $this->getAdditionalViewParam()))->render()
 			];
-		} 
+		}
 		catch (\Exception $ex) 
 		{
 			return [
@@ -183,9 +183,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 
-    public function edit($id = null)
+    public function edit()
 	{
-		$id = $id ?: $this->getRequest()->input('id');
+		$id = $this->getRequest()->input('id');
 
 		try
 		{
@@ -204,9 +204,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			{
 				$modelType = 'directory';
 			}
-			
-            $tabKey = md5($id);
-            
+
+            $tabKey = str_random();
+
 			return [
 				'tabKey' => $this->getTabKey() . '-edit-' . $tabKey,
 				'tabLabel' => $this->LL('list.edit.' . $modelType),
@@ -301,7 +301,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 	
-    public function update()
+    public function update($id = null)
 	{
 		try
 		{
@@ -447,8 +447,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 				return [];
 				break;
 		}
-	} 
-
+	}
 	
 	
 	
@@ -471,7 +470,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $basePath = base_path();
         $basePathLength = \Str::length($basePath);
         
-        $id = $basePath.$this->getRequest()->input('id');
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+        
+        $id = $basePath . $input->get('id');
         
         $listTree = [];
                 
@@ -487,7 +488,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             );
         }
         
-        if (!$this->getRequest()->input('id'))
+        if (!$input->get('id'))
         {
             $listTree = array(
                 'data' => array(
@@ -500,8 +501,5 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
         
         return $listTree;
-    }
-    
-}
-
-?>
+    } 
+} 

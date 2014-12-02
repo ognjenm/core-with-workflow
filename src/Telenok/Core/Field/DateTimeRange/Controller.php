@@ -32,7 +32,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function setModelAttribute($model, $key, $value, $field)
     {   
-        if (in_array($key, [$field->code . '_start', $field->code . '_end']))
+        if (in_array($key, [$field->code . '_start', $field->code . '_end'], true))
         {
             if ($value === null)
             {
@@ -58,7 +58,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['datetime_range_default_start', 'datetime_range_default_end']) && $value === null)
+			if (in_array($key, ['datetime_range_default_start', 'datetime_range_default_end'], true) && $value === null)
 			{ 
                 return \Carbon\Carbon::now();
             }
@@ -75,7 +75,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {
-        if (in_array($key, ['datetime_range_default_start', 'datetime_range_default_end']))
+        if (in_array($key, ['datetime_range_default_start', 'datetime_range_default_end'], true))
 		{
             if ($value === null)
             {

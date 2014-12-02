@@ -7,6 +7,13 @@ class Type extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	protected $ruleList = ['title' => ['required', 'min:1'], 'code' => ['required', 'unique:object_type,code,:id:,id', 'regex:/^[a-z][\w]*$/i'], 'title_list' => ['required', 'min:1']];
 	protected $table = 'object_type';
 
+	protected function translateSync()
+	{
+        parent::translateSync();
+        
+        \App\Model\Telenok\Object\Sequence::where('sequences_object_type', $this->getKey())->update(['treeable' => $this->treeable]);
+	}
+    
 	public function setCodeAttribute($value)
 	{
 		$this->attributes['code'] = strtolower((string) $value);

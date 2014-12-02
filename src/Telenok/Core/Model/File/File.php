@@ -15,7 +15,7 @@ class File extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 			'image/pjpeg',
 			'image/png',
 			'image/tiff',
-		]);
+		], true);
 	}
 
     public function category()

@@ -44,7 +44,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
     {
         try
         {
-			if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime']))
+			if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime'], true))
 			{
 				$value = $value ? : '[]';
 
@@ -72,7 +72,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
     public function setModelSpecialAttribute($model, $key, $value)
     {
-		if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime']))
+		if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime'], true))
 		{
 			$default = [];
 

@@ -23,11 +23,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
 		if (empty($mime))
 		{
-			return in_array($ext, $this->imageExtension);
+			return in_array($ext, $this->imageExtension, true);
 		}
 		else
 		{
-			return in_array($mime, $this->imageMimeType);
+			return in_array($mime, $this->imageMimeType, true);
 		}
     } 
 	
@@ -118,12 +118,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				$fileName = \Str::random(20) . '.' . $extension;
 				$destinationPath = $directoryPath . $fileName; 
 
-				if ($field->upload_allow_mime->count() && !in_array($mimeType, $field->upload_allow_mime->all()))
+				if ($field->upload_allow_mime->count() && !in_array($mimeType, $field->upload_allow_mime->all(), true))
 				{
 					throw new \Exception($this->LL('error.mime-type', ['attribute' => $mimeType]));
 				}
 
-				if ($field->upload_allow_ext->count() && !in_array($extension, $field->upload_allow_ext->all()))
+				if ($field->upload_allow_ext->count() && !in_array($extension, $field->upload_allow_ext->all(), true))
 				{
 					throw new \Exception($this->LL('error.extension', ['attribute' => $extension]));
 				}
@@ -209,7 +209,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['upload_allow_ext', 'upload_allow_mime']))
+			if (in_array($key, ['upload_allow_ext', 'upload_allow_mime'], true))
 			{
 				$value = $value ? : '[]';
 
@@ -228,7 +228,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function setModelSpecialAttribute($model, $key, $value)
     {
-		if (in_array($key, ['upload_allow_ext', 'upload_allow_mime']))
+		if (in_array($key, ['upload_allow_ext', 'upload_allow_mime'], true))
 		{
 			if ($value instanceof \Illuminate\Support\Collection) 
 			{

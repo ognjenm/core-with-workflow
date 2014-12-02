@@ -116,7 +116,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         { 
             $method = camel_case($field->code);
              
-            if (in_array('*', $idsDelete))
+            if (in_array('*', $idsDelete, true))
             {
                 $model->$method()->detach();
             }

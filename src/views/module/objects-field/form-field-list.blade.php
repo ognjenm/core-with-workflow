@@ -1,4 +1,4 @@
-	@if (!in_array($field->code, ['key', 'field_view']))
+	@if (!in_array($field->code, ['key', 'field_view'], true))
 
 		{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
@@ -44,7 +44,7 @@
 				$multilanguageFields = [];
 
 				app('telenok.config')->getObjectFieldController()
-                        ->reject(function($i) { return in_array($i->getKey(),['locked-by', 'deleted-by', 'created-by', 'active', 'permission', 'updated-by']);})
+                        ->reject(function($i) { return in_array($i->getKey(),['locked-by', 'deleted-by', 'created-by', 'active', 'permission', 'updated-by'], true); })
                         ->each(function($field) use (&$selectFields, &$multilanguageFields) 
 				{  
 					$selectFields[$field->getKey()] = $field->getName(); 

@@ -6,9 +6,9 @@
 
                     <?php
                     
-                    $fields = $fields->filter(function($item) 
+                    $fields = $fields->reject(function($item) 
                     { 
-                        return !in_array($item->code, [
+                        return in_array($item->code, [
                             'id', 
                             'permission', 
                             'locked_by_user', 
@@ -21,7 +21,7 @@
                             'group',
                             'active',
                             'configuration',
-                        ]);
+                        ], true);
                     });
                     
                     ?>
@@ -76,13 +76,13 @@
 
                             <div class="col-xs-12 col-sm-8">
                                 <div class="form-group">
-                                    @foreach($fieldInForm->filter(function($item) { return in_array($item->code, ['firstname', 'lastname', 'middlename']); }) as $field) 
+                                    @foreach($fieldInForm->filter(function($item) { return in_array($item->code, ['firstname', 'lastname', 'middlename'], true); }) as $field) 
                                         @include($controller->getPresentationFormFieldListView()) 
                                     @endforeach
                                 </div>
                             </div>
                         </div>
-						@foreach($fieldInForm->filter(function($item) { return !in_array($item->code, ['avatar', 'firstname', 'lastname', 'middlename']); }) as $field) 
+						@foreach($fieldInForm->filter(function($item) { return !in_array($item->code, ['avatar', 'firstname', 'lastname', 'middlename'], true); }) as $field) 
                             @include($controller->getPresentationFormFieldListView()) 
                         @endforeach
 							

@@ -41,7 +41,7 @@
             <div class="btn-group btn-overlap" data-toggle="buttons">
                 @foreach($values as $k => $v)
                 <?php
-                    $checked = ($model->exists && $model->{$field->code}->search($k) !== false) || (!$model->exists && in_array($k, $default)) ? 1 : 0;
+                    $checked = ($model->exists && $model->{$field->code}->search($k) !== false) || (!$model->exists && in_array($k, $default, true)) ? 1 : 0;
                 ?>
                 <label class="btn btn-white btn-sm btn-primary @if ($checked) active @endif" @if ($disabled) disabled="disabled" @endif>
                     <input type="checkbox" @if ($checked) checked="checked" @endif name="{{$field->code}}[]" value="{{$k}}" @if ($disabled) disabled="disabled" @endif /> {{$v}}

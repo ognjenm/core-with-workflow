@@ -479,21 +479,24 @@ abstract class Controller extends Module implements IPresentation {
 
     public function getListItem(\Illuminate\Database\Eloquent\Model $model)
     {
-        $sequence = app('\App\Model\Telenok\Object\Sequence');
-        
-        $query = $model::select($model->getTable() . '.*')
-            ->join($sequence->getTable(), function($join) use ($sequence, $model)
+        $id = $this->getRequest()->input('treePid', 0);
+
+        $query = $model->newQuery();
+
+        if ($model->treeForming())
+        {
+            $query->withTreeAttr();
+            $query->where(function($query) use ($model, $id)
             {
-                $join->on($model->getTable() . '.' . $model->getKeyName(), '=', $sequence->getTable() . '.' . $sequence->getKeyName());
-            })
-            ->where(function($query) use ($sequence, $model)
-            {
-                if ($this->getModelList()->treeForming())
-                {
-                    $query->where($sequence->getTable().'.tree_pid', $this->getRequest()->input('treePid', 0))->orWhere($sequence->getTable() . '.' . $sequence->getKeyName(), $this->getRequest()->input('treePid', 0));
-                }
-            }); 
-            
+                $query->where('pivot_relation_m2m_tree.tree_pid', $id)
+                        ->orWhere($model->getTable() . '.id', $id);
+            });      
+        }
+        else
+        {
+            $query->where($model->getTable() . '.id', $id); 
+        }
+
         $query->withPermission();
 
         $this->getFilterQuery($model, $query); 
@@ -508,20 +511,20 @@ abstract class Controller extends Module implements IPresentation {
 
     public function getTreeList()
     {
-        $tree = [];
-        $input = $this->getRequest()->input();
+        $tree = \Illuminate\Support\Collection::make();
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
-        $id = $this->getRequest()->input('id', 0);
-        $searchStr = $this->getRequest()->input('search_string');
+        $id = $input->get('id', 0);
+        $searchStr = $input->get('search_string');
 
         if ($id == -1 && !$searchStr)
         {
-            $tree = [
+            $tree->push([
                 'data' => $this->LL('tree.root'),
                 'attr' => ['id' => 0, 'rel' => 'folder'],
                 'metadata' => ['id' => 0, 'gridId' => $this->getGridId()],
                 'state' => 'closed'
-            ];
+            ]);
         }
         else
         {
@@ -536,24 +539,24 @@ abstract class Controller extends Module implements IPresentation {
                     {
                         foreach($l->parents()->get()->all() as $l_)
                         {
-                           $tree[] = "#{$l_->getKey()}";
+                           $tree->push("#{$l_->getKey()}");
                         }
                     }
                 } 
                 else
                 {
                     $parents = $list->lists('id', 'tree_pid');
-
+                    
                     foreach ($list as $key => $item)
                     {
                         if ($item->tree_pid == $id)
                         {
-                            $tree[] = [
+                            $tree->push([
                                 "data" => $item->translate('title'), 
                                 'attr' => ['id' => $item->getKey(), 'rel' => ($folderId == $item->sequences_object_type ? 'folder' : '')],
                                 "state" => (isset($parents[$item->getKey()]) ? 'closed' : ''),
                                 "metadata" => array_merge( ['id' => $item->getKey(), 'gridId' => $this->getGridId() ], $this->getTreeListItemProcessed($item)),
-                            ];
+                            ]);
                         }
                     }                
                 }
@@ -561,42 +564,41 @@ abstract class Controller extends Module implements IPresentation {
             catch (\Exception $e) { return $e->getMessage(); }
         }
 
-        return $tree;
+        return $tree->all();
     } 
 
     public function getTreeListModel($treePid = 0, $str = '', $input = [])
     {
         $model = $this->getModelTree();
-        
-        $sequence = new \App\Model\Telenok\Object\Sequence();
-        
-        $query = $sequence->pivotTreeLinkedExtraAttr()->active();
+        $sequence = app('\App\Model\Telenok\Object\Sequence');
 
-        $sequences_object_type = [];
-        
-        $sequences_object_type[] = \App\Model\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey();
-
-        if ($model !== null)
-        {
-            $sequences_object_type[] = \App\Model\Telenok\Object\Type::where('code', $model->getTable())->first()->getKey();
-        }
-        
         if ($str)
         {
+            $query = $sequence->withTreeAttr()->active();
+
             $this->getFilterQueryLike($str, $query, $sequence, 'title');
         }
         else
         {
+            $types = [];
+
+            $types[] = \App\Model\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey();
+
+            if ($model !== null)
+            {
+                $types[] = $model->type()->getKey();
+            }
+            
             if ($treePid == 0)
             {
-                $query->where('pivot_relation_m2m_tree.tree_depth', '<', 2);
+                $query = \App\Model\Telenok\Object\Sequence::withChildren(2)->active();
             }
             else
             {
-                $query->where('pivot_relation_m2m_tree.tree_pid', $treePid);
+                $query = \App\Model\Telenok\Object\Sequence::find($treePid)->children(2)->active();
             }
             
-            $query->whereIn('object_sequence.sequences_object_type', $sequences_object_type);
+            $query->whereIn('object_sequence.sequences_object_type', $types);
         }
 
         $query->where('object_sequence.treeable', 1);
@@ -663,7 +665,7 @@ abstract class Controller extends Module implements IPresentation {
     {
         $content = [];
 
-        $input = $this->getRequest()->input();
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
         $total = $input->get('iDisplayLength', $this->displayLength);
         $sEcho = $input->get('sEcho');
@@ -1010,11 +1012,11 @@ abstract class Controller extends Module implements IPresentation {
         {
             try
             {
-                $model->sequence->makeLastChildOf(\App\Model\Telenok\System\Folder::findOrFail($input->get('tree_pid'))->sequence);
+                $model->makeLastChildOf(\App\Model\Telenok\System\Folder::findOrFail($input->get('tree_pid'))->sequence);
             }
             catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) 
             { 
-                $model->sequence->makeRoot();  
+                $model->makeRoot();  
             } 
         }
         

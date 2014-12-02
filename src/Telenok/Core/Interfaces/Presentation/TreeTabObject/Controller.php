@@ -251,7 +251,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         
         if ($this->getRequest()->input('iSortCol_0', 0))
         {
-            if (in_array($orderByField, $model->getMultilanguage()))
+            if (in_array($orderByField, $model->getMultilanguage(), true))
             { 
                 $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $orderByField)
                 {

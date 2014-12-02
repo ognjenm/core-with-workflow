@@ -159,7 +159,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function treeForming()
 	{
-		return $this->type()->treeable;
+		return $this->type->treeable;
 	}
 
 	public static function eraseStatic($model)
@@ -385,7 +385,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			
 			else
 			{
-				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && (in_array($key, $fieldController->getSpecialField($this)) || in_array($key, $fieldController->getSpecialDateField($this)))
+				if ($this instanceof \Telenok\Core\Model\Object\Field && ($fieldController = $f_->get($this->key)) && (in_array($key, $fieldController->getSpecialField($this), true) || in_array($key, $fieldController->getSpecialDateField($this), true))
 						&&
 					( 
 						(!$this->exists && !\Auth::can('create', 'object_type.object_field')) 
@@ -402,7 +402,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 					{
 						$fieldController = $f_->get($field_->key);
 
-						if ($fieldController && (in_array($key, $fieldController->getModelField($this, $field_)) || in_array($key, $fieldController->getDateField($this, $field_)))
+						if ($fieldController && (in_array($key, $fieldController->getModelField($this, $field_), true) || in_array($key, $fieldController->getDateField($this, $field_), true))
 								&&
 							( 
 								(!$this->exists && !\Auth::can('create', 'object_field.' . $type->code . '.' . $key_)) 
@@ -767,7 +767,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 			if (!empty($filterCode))
 			{
-				$filters = $filters->filter(function($i) use ($filterCode) { return in_array($i->getKey(), (array)$filterCode); });
+				$filters = $filters->filter(function($i) use ($filterCode) { return in_array($i->getKey(), (array)$filterCode, true); });
 			}
 
 			$filters->each(function($item) use ($query, $queryWhere, $permission, $subject)
@@ -786,61 +786,6 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/* Treeable section */
-	
-	public function sequenceTreeable($modelOrId = null)
-	{
-		$modelOrId = $modelOrId !== null ? $modelOrId : $this;
-
-		$sequence = $modelOrId;
-
-		if (!($modelOrId instanceof \Telenok\Core\Model\Object\Sequence))
-		{
-			if ($modelOrId instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model)
-			{
-				$sequence = $modelOrId->sequence;
-			}
-			else
-			{
-				$sequence = \App\Model\Telenok\Object\Sequence::findOrFail($modelOrId);
-			}
-		} 
-
-		if ($sequence->treeable)
-		{
-			$el = $sequence->pivotTreeSequenceExtraAttr()->first();
-
-			if (!$el)
-			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->insert(
-				[
-					'tree_id' => $sequence->getKey(),
-					'tree_path' => '.0.',
-					'tree_pid' => 0,
-					'tree_depth' => 0,
-					'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
-				]);
-
-				$el = $sequence->pivotTreeSequenceExtraAttr()->first();
-			}
-
-			return $el;
-		}
-		else
-		{
-			throw new \Exception('Model "' . $sequence->class_model . '" is not treeable');
-		}
-	}
 
 	public function treeParent()
 	{
@@ -852,49 +797,35 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
         return $this->belongsToMany('\App\Model\Telenok\Object\Sequence', 'pivot_relation_m2m_tree', 'tree_pid', 'tree_id');
 	}
 
-	public function scopePivotTreeLinkedExtraAttr($query)
-	{
-        return $query->leftJoin('pivot_relation_m2m_tree', $this->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_id')
-					->addSelect(['pivot_relation_m2m_tree.*', $this->getTable() . '.*']);
-	} 
-
-	public function scopePivotTreeSequenceExtraAttr($query)
-	{
-        return $query->join('pivot_relation_m2m_tree', $this->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_id')
-					->addSelect(['pivot_relation_m2m_tree.*', $this->getTable() . '.*'])->where($this->getTable() . '.id', $this->getKey());
-	} 
-
 	public function makeRoot()
 	{
-		$sequence = $this->sequenceTreeable(); 
-
-		\DB::transaction(function() use ($sequence)
+		\DB::transaction(function()
 		{
-			$childs = \DB::table('pivot_relation_m2m_tree')->where('tree_path', 'LIKE', '%.' . $sequence->getKey() . '.%')->get();
+			$childs = \DB::table('pivot_relation_m2m_tree')->where('tree_path', 'LIKE', '%.' . $this->getKey() . '.%')->get();
 
 			foreach ($childs as $item)
 			{
 				\DB::table('pivot_relation_m2m_tree')->where('id', $item->id)->update(
 				[
-					'tree_path' => '.0.' . $sequence->getKey() . '.' . preg_replace('/.+\.' . $sequence->getKey() . '\./', '.0.' . $sequence->getKey() . '.', $item->tree_path),
+					'tree_path' => '.0.' . $this->getKey() . '.' . preg_replace('/.+\.' . $this->getKey() . '\./', '.0.' . $this->getKey() . '.', $item->tree_path),
 				]);
 			}
 
-			if (\DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->count())
+			if (\DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->count())
 			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
-						[
-							'tree_path' => '.0.',
-							'tree_pid' => 0,
-							'tree_depth' => 0,
-							'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
+				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->update(
+                [
+                    'tree_path' => '.0.',
+                    'tree_pid' => 0,
+                    'tree_depth' => 0,
+                    'tree_order' => (\DB::table('pivot_relation_m2m_tree')->where('tree_pid', 0)->max('tree_order') + 1)
 				]);
 			}
 			else
 			{
-				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->insert(
+				\DB::table('pivot_relation_m2m_tree')->where('tree_id', $this->getKey())->insert(
 						[
-							'tree_id' => $sequence->getKey(),
+							'tree_id' => $this->getKey(),
 							'tree_path' => '.0.',
 							'tree_pid' => 0,
 							'tree_depth' => 0,
@@ -903,36 +834,82 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 			}
 		});
 
-		return $sequence;
+		return $this;
 	}
 
-	public function children($depth = 0)
-	{
-		$sequence = $this->sequenceTreeable(); 
-		
-		$query = $this->pivotTreeLinkedExtraAttr();
 
-		if ($depth == 1)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/* Treeable section */
+	
+	public function treeAttr()
+	{
+        $el = $this->withTreeAttr()->where($this->getTable() . '.id', $this->getKey())->first();
+
+		if ($el)
 		{
-			$query->where('pivot_relation_m2m_tree.tree_pid', '=', $sequence->getKey());
+			return $el;
 		}
 		else
 		{
-			$query->where('pivot_relation_m2m_tree.tree_path', 'like', $sequence->tree_path . $sequence->getKey() . '.%');
+			throw new \Exception('Model "' . get_class($this) . '" is not treeable');
+		}
+	}
+	
+	public function scopeWithTreeAttr($query)
+	{
+        $query->join('pivot_relation_m2m_tree AS pivot_tree_attr', $this->getTable() . '.id', '=', 'pivot_tree_attr.tree_id')
+            ->addSelect(['*', $this->getTable() . '.id AS id']);
+	}
+
+	public function children($depth = 0)
+	{ 
+		if ($depth == 1)
+		{
+            $query = \App\Model\Telenok\Object\Sequence::withTreeAttr()->where('pivot_tree_attr.tree_pid', $this->getKey());
+		}
+		else
+		{
+            $model = $this->treeAttr();
+            $query = \App\Model\Telenok\Object\Sequence::withTreeAttr();
+            
+            if ($depth)
+            {
+                $query->where('pivot_tree_attr.tree_depth', '<=', $model->tree_depth + $depth);
+            }
+
+            $query->where('pivot_tree_attr.tree_path', 'like', $model->tree_path . $this->getKey() . '.%');
 		}
 
-		if ($depth)
-		{
-			$query->where('pivot_relation_m2m_tree.tree_depth', '<=', $sequence->tree_depth + $depth);
-		}
+		return $query;
+	}
+
+	public function scopeWithChildren($query, $depth = 0)
+	{ 
+        $query->join('object_sequence AS o_tc', $this->getTable().'.id', '=', 'o_tc.id');
+        $query->join('pivot_relation_m2m_tree AS pivot_tree_children', $this->getTable().'.id', '=', 'pivot_tree_children.tree_id');
+        $query->where('pivot_tree_children.tree_depth', '<=', $depth);
+        $query->addSelect([$this->getTable().'.*', 'pivot_tree_children.*', $this->getTable() . '.id AS id']);
 
 		return $query;
 	}
 
 	public function makeLastChildOf($parent)
 	{
-		$sequence = $this->sequenceTreeable();
-		$sequenceParent = $this->sequenceTreeable($parent);
+        if (!$parent instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $parent = \App\Model\Telenok\Object\Sequence::find($parent);
+        }
+        
+		$sequence = $this->treeAttr();
+		$sequenceParent = $parent->treeAttr();
 
 		if ($sequence->isAncestor($sequenceParent))
 		{
@@ -966,8 +943,13 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function makeFirstChildOf($parent)
 	{
-		$sequence = $this->sequenceTreeable($this);
-		$sequenceParent = $this->sequenceTreeable($parent);
+        if (!$parent instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $parent = \App\Model\Telenok\Object\Sequence::find($parent);
+        }
+        
+		$sequence = $this->treeAttr();
+		$sequenceParent = $parent->treeAttr();
 
 		if ($sequence->isAncestor($sequenceParent))
 		{
@@ -1003,30 +985,45 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function isAncestor($descendant)
 	{
-		$sequence = $this->sequenceTreeable();
-		$sequenceDescendant = $this->sequenceTreeable($descendant);
+        if (!$descendant instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $descendant = \App\Model\Telenok\Object\Sequence::find($descendant);
+        }
+
+        $sequence = $this->treeAttr();
+		$sequenceDescendant = $descendant->treeAttr();
 
 		return strpos($sequenceDescendant->tree_path, $sequence->tree_path . $sequence->getKey() . '.') !== false && $sequenceDescendant->tree_path !== $sequence->tree_path;
 	}
 
     public function isDescendant($ancestor)
     { 
-		$sequence = $this->sequenceTreeable();
-		$sequenceAncestor = $this->sequenceTreeable($ancestor);
+        if (!$ancestor instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $ancestor = \App\Model\Telenok\Object\Sequence::find($ancestor);
+        }
+
+		$sequence = $this->treeAttr();
+		$sequenceAncestor = $ancestor->treeAttr();
 
         return strpos($sequence->tree_path, $sequenceAncestor->tree_path . $sequenceAncestor->getKey() . '.') !== false && $sequenceAncestor->tree_path !== $sequence->tree_path;
     }
 
     protected function processSiblingOf($sibling, $op)
     {  
-		$sequence = $this->sequenceTreeable();
-		$sequenceSibling = $this->sequenceTreeable($sibling);
+        if (!$sibling instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $sibling = \App\Model\Telenok\Object\Sequence::find($sibling);
+        }
+
+		$sequence = $this->treeAttr();
+		$sequenceSibling = $sibling->treeAttr();
 
         if ($sequence->isAncestor($sequenceSibling)) 
 		{
 			throw new \Exception('Cant move Ancestor to Descendant');
 		}
-		
+
         \DB::transaction(function() use ($sequence, $sequenceSibling, $op)
         { 
             $sequenceSibling->sibling()->where('tree_order', $op, $sequenceSibling->tree_order)->increment('tree_order');
@@ -1066,65 +1063,65 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function sibling()
 	{
-		$sequence = $this->sequenceTreeable();
+		$sequence = $this->treeAttr();
 
-		return \App\Model\Telenok\Object\Sequence::where('tree_pid', '=', $sequence->tree_pid);
+		return \App\Model\Telenok\Object\Sequence::withTreeAttr()->where('tree_pid', '=', $sequence->tree_pid);
 	}
 
 	public function parents()
 	{
-		$sequence = $this->sequenceTreeable();
+		$sequence = $this->treeAttr();
 
-		return \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->where($this->getTable() . '.id', '=', $sequence->tree_pid);
+		return \App\Model\Telenok\Object\Sequence::whereIn($this->getTable() . '.id', array_filter(explode('.', $sequence->tree_path)));
 	}
 
 
-	
-	 
+
+
 
 	public function isLeaf()
 	{
-		$sequence = $this->sequenceTreeable();
+		$sequence = $this->treeAttr();
 
 		return !$sequence->children(1)->count();
 	}
 
 	public function calculateRelativeDepth($object)
 	{
-		$sequence = $this->sequenceTreeable();
-		$sequenceObject = $this->sequenceTreeable($object);
+        if (!$object instanceof \Illuminate\Database\Eloquent\Model)
+        {
+            $object = \App\Model\Telenok\Object\Sequence::find($object);
+        }
+
+		$sequence = $this->treeAttr();
+		$sequenceObject = $object->treeAttr();
 
 		return abs($sequence->tree_depth - $sequenceObject->tree_depth);
 	}
 
 	public static function allRoot()
 	{
-        $sequence = new \App\Model\Telenok\Object\Sequence();
-
-        $query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->where($sequence->getTable() . '.tree_pid', 0);
+        $query = \App\Model\Telenok\Object\Sequence::withTreeAttr()->where('tree_pid', 0);
 
 		return $query;
 	}
 
 	public static function allDepth($depth = 0)
-	{
-        $sequence = new \App\Model\Telenok\Object\Sequence();
-        
-		$query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->whereIn($sequence->getTable() . '.tree_depth', (array) $depth);
+	{ 
+		$query = \App\Model\Telenok\Object\Sequence::withTreeAttr()->whereIn('tree_depth', (array) $depth);
 
 		return $query;
 	}
 
 	public static function allLeaf()
 	{
-        $sequence = new \App\Model\Telenok\Object\Sequence();
+        $model = new static;
 
-		$query = \App\Model\Telenok\Object\Sequence::pivotTreeLinkedExtraAttr()->join('pivot_relation_m2m_tree', function($join) use ($sequence)
+		$query = \App\Model\Telenok\Object\Sequence::withTreeAttr()->join('pivot_relation_m2m_tree', function($join) use ($model)
 		{
-			$join->on($sequence->getTable() . '.tree_id', '=', 'pivot_relation_m2m_tree.tree_pid');
+			$join->on($model->getTable() . '.id', '=', 'pivot_relation_m2m_tree.tree_pid');
 		})
-		->whereNull($sequence->getTable() . '.tree_id')
-		->select($sequence->getTable() . '.*');
+		->whereNull('pivot_relation_m2m_tree.tree_id');
 
 		return $query;
 	}
@@ -1190,5 +1187,3 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		return $this->hasMany('\App\Model\Telenok\Security\SubjectPermissionResource', 'acl_subject_object_sequence');
 	}
 }
-
-?>

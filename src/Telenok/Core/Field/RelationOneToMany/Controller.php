@@ -127,7 +127,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
              
             $relatedField = $field->code . '_' . $model->sequence->sequencesObjectType->code;
 
-            if (in_array('*', $idsDelete))
+            if (in_array('*', $idsDelete, true))
             {
                 $model->$method()->get()->each(function($item) use ($relatedField) 
                 {

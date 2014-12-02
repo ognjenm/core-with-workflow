@@ -22,9 +22,9 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
 		$typeId = $this->getInput()->get('model_type', 0);
 		$modelIds = $this->getInput()->get('model_list', []);
 
-        return in_array($event->getEventCode(), $eventList) 
+        return in_array($event->getEventCode(), $eventList, true) 
                 && $event->getResource()->get('type')->getKey() == $typeId 
-                && (empty($modelIds) || (!empty($modelIds) && in_array($event->getResource()->get('model')->getKey(), $modelIds)));
+                && (empty($modelIds) || (!empty($modelIds) && in_array($event->getResource()->get('model')->getKey(), $modelIds, true)));
     }
 
     public function log($data = [])

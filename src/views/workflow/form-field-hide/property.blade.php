@@ -65,7 +65,7 @@
                                     <select class="chosen-select" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="input-field-list{{$uniqueId}}" name="stencil[field_list][]">
                                         @foreach(\App\Model\Telenok\Object\Field::active()->get() as $field)
                                         
-                                        <option value="{{$field->getKey()}}" class="field-{{$field->field_object_type}}" @if (in_array($field->getKey(), $property->get('field_list', []))) selected="selected" @endif>[{{$field->getKey()}}] {{$field->translate('title')}}</option>
+                                        <option value="{{$field->getKey()}}" class="field-{{$field->field_object_type}}" @if (in_array($field->getKey(), $property->get('field_list', []), true)) selected="selected" @endif>[{{$field->getKey()}}] {{$field->translate('title')}}</option>
                                         
                                         @endforeach
                                     </select> 

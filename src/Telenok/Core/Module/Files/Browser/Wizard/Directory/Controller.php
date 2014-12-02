@@ -117,7 +117,4 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
         return $listTree;
     }
-
 }
-
-?>

@@ -49,8 +49,8 @@
                                 <label class="col-sm-3 control-label" for="stencil[event_list]">{{$controller->LL('property.event.list')}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
                                     <select class="chosen-select" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[event_list][]">
-                                        <option value="workflow.form.create" @if (in_array('workflow.form.create', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.1')}}</option>
-                                        <option value="workflow.form.edit" @if (in_array('workflow.form.edit', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.2')}}</option>
+                                        <option value="workflow.form.create" @if (in_array('workflow.form.create', $property->get('event_list', []), true)) selected @endif>{{$controller->LL('property.event.list.1')}}</option>
+                                        <option value="workflow.form.edit" @if (in_array('workflow.form.edit', $property->get('event_list', []), true)) selected @endif>{{$controller->LL('property.event.list.2')}}</option>
                                     </select> 
                                 </div>
                             </div>

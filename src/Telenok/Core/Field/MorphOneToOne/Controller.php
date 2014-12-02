@@ -38,7 +38,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
     {
         try
         {
-			if (in_array($key, ['morph_one_to_one_belong_to_type_list']))
+			if (in_array($key, ['morph_one_to_one_belong_to_type_list'], true))
 			{
 				$value = $value ? : '[]';
 
@@ -66,7 +66,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
     public function setModelSpecialAttribute($model, $key, $value)
     {
-		if (in_array($key, ['morph_one_to_one_belong_to_type_list']))
+		if (in_array($key, ['morph_one_to_one_belong_to_type_list'], true))
 		{
 			$default = [];
 
@@ -212,7 +212,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			{
 				$objectModel = \App\Model\Telenok\Object\Sequence::find($id)->model()->first();
 
-				if (in_array($objectModel->type()->getKey(), $field->morph_one_to_one_belong_to_type_list->all()))
+				if (in_array($objectModel->type()->getKey(), $field->morph_one_to_one_belong_to_type_list->all(), true))
 				{
 					$model->fill([$field->code . '_type' => get_class($objectModel), $field->code . '_id' => $objectModel->getKey()])->save();
 				}

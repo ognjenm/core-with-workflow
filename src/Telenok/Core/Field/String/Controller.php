@@ -19,7 +19,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
             $fieldCode = $field->code;
             $translate = new \App\Model\Telenok\Object\Translation();
 
-            if (in_array($fieldCode, $model->getMultilanguage()))
+            if (in_array($fieldCode, $model->getMultilanguage(), true))
             {
                 $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $fieldCode)
                 {
@@ -100,7 +100,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['string_default']) && $model->multilanguage)
+			if (in_array($key, ['string_default'], true) && $model->multilanguage)
 			{ 
 				return \Illuminate\Support\Collection::make(json_decode($value, true));
 			}
@@ -117,7 +117,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {  
-		if (in_array($key, ['string_default']) && $model->multilanguage)
+		if (in_array($key, ['string_default'], true) && $model->multilanguage)
 		{
 			$default = [];
 

@@ -49,10 +49,10 @@
                                 <label class="col-sm-3 control-label" for="stencil[event_list]">{{$controller->LL('property.event.list')}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
                                     <select class="chosen-select" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[event_list][]">
-                                        <option value="workflow.store.before" @if (in_array('workflow.store.before', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.1')}}</option>
-                                        <option value="workflow.store.after" @if (in_array('workflow.store.after', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.2')}}</option>
-                                        <option value="workflow.update.before" @if (in_array('workflow.update.before', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.3')}}</option>
-                                        <option value="workflow.update.after" @if (in_array('workflow.update.after', $property->get('event_list', []))) selected @endif>{{$controller->LL('property.event.list.4')}}</option>
+                                        <option value="workflow.store.before" @if (in_array('workflow.store.before', $property->get('event_list', []), true)) selected @endif>{{$controller->LL('property.event.list.1')}}</option>
+                                        <option value="workflow.store.after" @if (in_array('workflow.store.after', $property->get('event_list', []), true)) selected @endif>{{$controller->LL('property.event.list.2')}}</option>
+                                        <option value="workflow.update.before" @if (in_array('workflow.update.before', $property->get('event_list', []), true)) selected @endif>{{$controller->LL('property.event.list.3')}}</option>
+                                        <option value="workflow.update.after" @if (in_array('workflow.update.after', $property->get('event_list', []), true)) selected @endif>{{$controller->LL('property.event.list.4')}}</option>
                                     </select> 
                                 </div>
                             </div>

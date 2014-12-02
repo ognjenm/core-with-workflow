@@ -37,7 +37,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		
         if (!empty($idsParentDelete))
         {
-            if (in_array('*', $idsParentDelete))
+            if (in_array('*', $idsParentDelete, true))
             {
                 $model->treeParent()->detach();
             }
@@ -61,7 +61,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 		
         if (!empty($idsChildelete))
         {
-            if (in_array('*', $idsChildelete))
+            if (in_array('*', $idsChildelete, true))
             {
                 $model->treeChild()->detach();
             }

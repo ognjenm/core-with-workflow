@@ -84,7 +84,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
     public function choose()
     {
 		$typeList = [];
-		$id = $this->getRequest->input('id', 0);
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+		$id = $input->get('id', 0);
 		
 		try
 		{
@@ -115,8 +116,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
                 'fields' => $fields,
                 'uniqueId' => ($uniqueId = str_random()),
                 'gridId' => str_random(),
-				'saveBtn' => $this->getRequest()->input('saveBtn', true), 
-				'chooseBtn' => $this->getRequest()->input('chooseBtn', true),  
+				'saveBtn' => $input->get('saveBtn', true), 
+				'chooseBtn' => $input->get('chooseBtn', true),  
                 'contentForm' => ( $model->classController() ? $this->typeForm($model)->getFormContent($model, $type, $fields, $uniqueId) : FALSE),
             ))->render()
         );
