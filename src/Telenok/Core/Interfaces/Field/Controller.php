@@ -18,7 +18,8 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
 	
     protected $viewModel = "";
     protected $viewField = "";
-	
+    protected $viewFilter = "";
+
     protected $routeListTable = "";
     protected $routeListTitle = "";
     protected $routeWizardCreate = "";
@@ -38,6 +39,11 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
     public function getViewModel()
     {
         return $this->viewModel ?: "core::field.{$this->getKey()}.model";
+    }
+
+    public function getViewFilter()
+    {
+        return $this->viewFilter ?: "core::field.{$this->getKey()}.filter";
     }
 
     public function setViewModel($field = null)

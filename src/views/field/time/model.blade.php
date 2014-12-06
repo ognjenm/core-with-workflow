@@ -10,13 +10,13 @@
         $disabled = true; 
     }
     
-    if (!$model->exists && $field->time_default)
-    {
-        $value = $field->time_default->setTimezone(\Config::get('app.timezone'));
-    }
-    else 
+    if ($model->exists && $model->{$field->code})
     {
         $value = $model->{$field->code}->setTimezone(\Config::get('app.timezone'));
+    }
+    else
+    {
+        $value = $field->time_default->setTimezone(\Config::get('app.timezone'));
     }
 
     $domAttr['placeholder'] = ($placeholder = $field->time_default->toTimeString()) ? $placeholder : $field->translate('title');

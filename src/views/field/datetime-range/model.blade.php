@@ -10,32 +10,30 @@
         $disabled = true; 
     }
     
-    if (!$model->exists && $field->datetime_range_default_start)
-    {
-        $valueStart = $field->datetime_range_default_start->setTimezone(\Config::get('app.timezone'));
-    }
-    else 
+    if ($model->exists && $model->{$field->code . '_start'})
     {
         $valueStart = $model->{$field->code . '_start'}->setTimezone(\Config::get('app.timezone'));
     }
-    
-    if (!$model->exists && $field->datetime_range_default_end)
+    else
     {
-        $valueEnd = $field->datetime_range_default_end->setTimezone(\Config::get('app.timezone'));
+        $valueStart = $field->datetime_range_default_start->setTimezone(\Config::get('app.timezone'));
     }
-    else 
+
+    if ($model->exists && $model->{$field->code . '_end'})
     {
         $valueEnd = $model->{$field->code . '_end'}->setTimezone(\Config::get('app.timezone'));
     }
-
+    else
+    {
+        $valueEnd = $field->datetime_range_default_end->setTimezone(\Config::get('app.timezone'));
+    }
+    
     $domAttrStart['placeholder'] = ($placeholder = $field->datetime_range_default_start) ? $placeholder : $field->translate('title');
     $domAttrEnd = $domAttrStart;
     $domAttrEnd['placeholder'] = ($placeholder = $field->datetime_range_default_end) ? $placeholder : $field->translate('title');
 
     $random = str_random();
 ?>
-
-
 
 <div class="form-group">
 	{!! Form::label("{$field->code}_start" , $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
@@ -70,7 +68,7 @@
             </div>
             @if ($field->translate('description'))
             <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
+                  class="help-button" data-original-title="{{$controller->LL('tooltip.description')}}">?</span>
             @endif
         </div>
     </div>

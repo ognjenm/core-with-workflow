@@ -82,7 +82,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         } 
         catch (\Exception $e) 
         {  
-            return ['message' => 'Empty required'];
+            return ['message' => $e->getMessage()];
         } 
         
         return [

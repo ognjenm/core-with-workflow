@@ -50,6 +50,33 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         }
     }
     
+    public function getFilterContent($field = null)
+    {
+        return view($this->getViewFilter(), [
+            'controller' => $this,
+            'field' => $field,
+        ]);
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null)
+		{
+			$query->where(function($query) use ($value, $name, $model)
+			{
+                if ($v = trim(array_get($value, 'start')))
+                {
+                    $query->where($model->getTable() . '.' . $name, '>=', $v);
+                }
+
+                if ($v = trim(array_get($value, 'end')))
+                {
+                    $query->where($model->getTable() . '.' . $name, '<=', $v);
+                }
+			});
+		}
+    }
+
     public function setModelSpecialAttribute($model, $key, $value)
     {  
         if ($key == 'datetime_default')

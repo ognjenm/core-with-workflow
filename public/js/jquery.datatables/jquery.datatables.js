@@ -2663,7 +2663,7 @@
 			.bind(
 				'keyup.DT search.DT input.DT paste.DT cut.DT',
 				_fnDataSource( settings ) === 'ssp' ?
-					_fnThrottle( searchFn, 400 ):
+					_fnThrottle( searchFn, 1000 ):
 					searchFn
 			)
 			.bind( 'keypress.DT', function(e) {

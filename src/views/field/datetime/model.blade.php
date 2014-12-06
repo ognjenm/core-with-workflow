@@ -1,9 +1,9 @@
 <?php 
     $disabled = false;
     
-    $domAttr = ['class' => $field->css_class?: 'col-sm-8'];
+    $domAttr = ['class' => $field->css_class?: 'col-sm-4'];
     
-    if ($model->exists)
+    if ($model->exists && $model->{$field->code})
     {
         $value = $model->{$field->code}->setTimezone(\Config::get('app.timezone'));
     }
