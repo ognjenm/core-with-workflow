@@ -5,11 +5,11 @@
     
     if ($model->exists)
     {
-        $value = $model->{$field->code};
+        $value = $model->{$field->code}->setTimezone(\Config::get('app.timezone'));
     }
     else
     {
-        $value = $field->datetime_default;
+        $value = $field->datetime_default->setTimezone(\Config::get('app.timezone'));
     }
 
 	if ((!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)))

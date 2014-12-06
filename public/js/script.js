@@ -144,14 +144,14 @@ var telenokJS = Clazzzz.extend(
     { 
         var param = this.getModule(moduleKey) || {};
 
-        if (!param.preCallingPresentation)
+        if (!param.preCallingPresentationFlag)
         {
             this.preCallingPresentation(moduleKey);
         }
         
         param = this.getModule(moduleKey);
 
-        param.preCallingPresentation = true;
+        param.preCallingPresentationFlag = true;
 
         this.setModuleParam(moduleKey, param);
 

@@ -258,12 +258,12 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -296,12 +296,12 @@
                 dataType: 'json'
             }).done(function(data) { 
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 				
                 $modal.data('model-data', function(data)
                 {  
@@ -355,12 +355,12 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				$modal = jQuery('#modal-{{$uniqueId}}');
+				$modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {

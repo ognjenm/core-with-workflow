@@ -11,7 +11,5 @@ return array(
     'list.name' => 'Field of objects',
     'list.names' => 'Field of objects',
     'list.create' => 'Field creating',
-    'list.edit' => 'Field editing',
-		
-    'btn.continue' => 'Continue',
+    'list.edit' => 'Field editing', 
 );

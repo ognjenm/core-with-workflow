@@ -213,7 +213,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         ];
     }
 
-    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
+    public function getListItem($model)
     {  
         $query = $model::select($model->getTable() . '.*')->withPermission();
 

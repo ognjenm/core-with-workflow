@@ -19,6 +19,11 @@ class Sequence extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		return app(\App\Model\Telenok\Object\Sequence::findOrFail($id)->sequencesObjectType->class_model)->findOrFail($id);
 	}
 
+	public function delete()
+	{
+        $this->model()->delete();
+    }
+    
 	public function sequencesObjectType()
 	{
 		return $this->belongsTo('\App\Model\Telenok\Object\Type', 'sequences_object_type');

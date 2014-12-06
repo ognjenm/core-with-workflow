@@ -42,7 +42,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseMorphO2O{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseMorphO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{ $controller->LL('btn.choose') }}
             </button>
@@ -53,7 +53,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
 				)
-            <button onclick="createMorphO2O{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="createMorphO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
                 {{ $controller->LL('btn.create') }}
             </button>
@@ -64,7 +64,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="editMorphO2O{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editMorphO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{ $controller->LL('btn.edit') }}
             </button>
@@ -75,7 +75,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="deleteMorphO2O{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
+            <button onclick="deleteMorphO2O{{$jsUnique}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{ $controller->LL('btn.delete') }}
             </button>
@@ -90,7 +90,7 @@
 
     <script type="text/javascript">
         
-        function createMorphO2O{{$uniqueId}}(obj, url) 
+        function createMorphO2O{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -100,12 +100,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -122,7 +122,7 @@
             });
         }
 
-        function editMorphO2O{{$uniqueId}}(obj, url) 
+        function editMorphO2O{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -138,12 +138,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -161,7 +161,7 @@
             });
         }
 
-        function deleteMorphO2O{{$uniqueId}}(obj) 
+        function deleteMorphO2O{{$jsUnique}}(obj) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -169,7 +169,7 @@
             jQuery('input[type="hidden"]', $block).val(0);
         }
 
-        function chooseMorphO2O{{$uniqueId}}(obj, url) 
+        function chooseMorphO2O{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -179,12 +179,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {

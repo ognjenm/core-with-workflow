@@ -20,8 +20,6 @@
 
         {!! HTML::style('packages/telenok/core/css/style.css') !!}
 
-        {!! -- HTML::style('packages/telenok/core/js/jquery.datatables/jquery.datatables.css') --!!}
-
         {!! HTML::script('packages/telenok/core/js/jquery.js') !!}
         {!! HTML::script('packages/telenok/core/js/jquery-ui.js') !!}
         {!! HTML::script('packages/telenok/core/js/jquery.gritter.js') !!}

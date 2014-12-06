@@ -15,12 +15,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	{
 		return \App\Model\Telenok\Object\Type::whereIn('id', [$field->relation_one_to_one_has, $field->relation_one_to_one_belong_to])->first();
 	}
-	
+
     public function getModelField($model, $field)
     {
 		return $field->relation_one_to_one_belong_to ? [$field->code] : [];
     } 
-	
+
     public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
     { 		
 		if ($field->relation_one_to_one_has || $field->relation_one_to_one_belong_to)
@@ -28,7 +28,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			return parent::getFormModelContent($controller, $model, $field, $uniqueId);
 		}
 	}  
-    
+
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
     {
 		if (!empty($value))
@@ -45,9 +45,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 				$linkedTable = $relatedQuery->getRelated()->getTable();
 
-				
 				$alias = $linkedTable . $field->code;
-				
+
 				$query->join($linkedTable . ' as ' . $alias, function($join) use ($linkedTable, $relatedQuery, $model, $alias)
 				{
 					$join->on($model->getTable() . '.id', '=', $alias . '.' . $relatedQuery->getPlainForeignKey());

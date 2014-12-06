@@ -9,6 +9,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		return $field->{$linkedField};
 	}
 
+    public function getModelAttribute($model, $key, $value, $field)
+    {
+        return $value;
+    }
+
 	public function validateExistsInputField($input, $param = [])
 	{
 		foreach((array)$param as $p)
@@ -18,7 +23,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 				return;
 			}
 		}
-		
+
 		throw new \Exception('Please, define one or more keys "' . implode('", "', (array)$param) . '"');
 	}
 
@@ -26,7 +31,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     { 
         $term = trim($this->getRequest()->input('term'));
         $return = [];
-        
+
 		$class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
 
 		$model = new $class;
@@ -44,7 +49,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			{
 				$query->orWhere('object_translation.translation_object_string', 'like', "%{$i}%");
 			});
-			
+
 			$query->orWhere($model->getTable() . '.id', (int)$term);
 		})
 		->take(20)->groupBy($model->getTable() . '.id')->get()->each(function($item) use (&$return)
@@ -54,7 +59,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
         return $return;
     }
-	
+
     public function getListButtonExtended($item, $field, $type, $uniqueId, $canUpdate)
     {
         return '<div class="hidden-phone visible-lg btn-group">
@@ -62,7 +67,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                         onclick="editTableRow'.$uniqueId.'(this, \''.\URL::route($this->getRouteWizardEdit(), ['id' => $item->getKey(), 'saveBtn' => 1, 'chooseBtn' => 0]).'\'); return false;">
                         <i class="fa fa-pencil"></i>
                     </button>
-                    
+
                     <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->active ? 'active' : 'inactive')) . '">
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
                     </button>
@@ -78,11 +83,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getListFieldContent($field, $item, $type = null)
     {
-        $method = camel_case($field->code);
-
         $items = [];
         $rows = \Illuminate\Support\Collection::make($this->getListFieldContentItems($field, $item, $type));
-        
+
         if ($rows->count())
         {
             foreach($rows->slice(0, 7, TRUE) as $row)
@@ -101,5 +104,3 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         return $item->$method()->take(8)->get();
     }
 }
-
-?>

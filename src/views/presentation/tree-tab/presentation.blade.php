@@ -1,3 +1,9 @@
+<?php
+
+    $jsUnique = str_random();
+
+?>
+
 <script type="text/javascript">
   
 	if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
@@ -27,8 +33,8 @@
 			},
 			setParam: function(param)
 			{
-				this.presentationParam = param;
-				this.presentationDomId = telenok.getPresentationDomId(param.presentation);
+				this.presentationParam = param; 
+                this.presentationDomId = telenok.getPresentationDomId(param.presentation); 
 				this.moduleKey = param.key;
 				return this;
 			},
@@ -373,7 +379,7 @@
 				return this;
 			},
 			callMe: function(param)
-			{
+			{ 
 				this.setParam(param); 
 				this.setBreadcrumbs(param); 
 				this.setPageHeader();

@@ -3,6 +3,7 @@
 	$domAttr = ['disabled' => 'disabled', 'class' => 'col-xs-5 col-sm-5'];
     $method = camel_case($field->code);
     $linkedField = $field->relation_one_to_one_has ? 'relation_one_to_one_has' : 'relation_one_to_one_belong_to';
+    $jsUnique = str_random();
 
     $title = '';
     $id = 0;
@@ -40,7 +41,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseO2O{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{ $controller->LL('btn.choose') }}
             </button>
@@ -51,7 +52,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
 				)
-            <button onclick="createO2O{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="createO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
                 {{ $controller->LL('btn.create') }}
             </button>
@@ -62,7 +63,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="editO2O{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{ $controller->LL('btn.edit') }}
             </button>
@@ -73,7 +74,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="deleteO2O{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
+            <button onclick="deleteO2O{{$jsUnique}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{ $controller->LL('btn.delete') }}
             </button>
@@ -89,7 +90,7 @@
 
     <script type="text/javascript">
         
-        function createO2O{{$uniqueId}}(obj, url) 
+        function createO2O{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -99,12 +100,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -121,7 +122,7 @@
             });
         }
 
-        function editO2O{{$uniqueId}}(obj, url) 
+        function editO2O{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -137,12 +138,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -160,7 +161,7 @@
             });
         }
 
-        function deleteO2O{{$uniqueId}}(obj) 
+        function deleteO2O{{$jsUnique}}(obj) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -168,7 +169,7 @@
             jQuery('input[type="hidden"]', $block).val(0);
         }
 
-        function chooseO2O{{$uniqueId}}(obj, url) 
+        function chooseO2O{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -178,12 +179,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {

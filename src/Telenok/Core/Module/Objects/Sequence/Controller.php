@@ -8,13 +8,15 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $parent = 'objects';
     protected $typeList = 'object_sequence';
     protected $presentation = 'tree-tab-object';
+    protected $presentationView = 'core::module.objects-sequence.presentation';
 
-    public function getActionParam()
+    
+    public function getActionParam11()
     { 
         return json_encode([]);
     }
-    /*
-    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
+
+    public function getListItem11($model)
     {
         $sequence = app('\App\Model\Telenok\Object\Sequence');
         
@@ -32,5 +34,5 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         $this->getFilterQuery($model, $query); 
 
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
-    }*/
+    }
 }

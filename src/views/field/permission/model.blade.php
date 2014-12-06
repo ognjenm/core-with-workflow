@@ -2,6 +2,7 @@
 	$domAttr = ['class'=>'ace ace-switch ace-switch-3'];
 	$disabled = false;
 	$value = 1;
+    $jsUnique = str_random();
 	/*
 	if (!$model->exists) 
 	{
@@ -30,17 +31,17 @@
 	<div class="widget-body"> 
 		<div class="widget-main">
 
-			<ul class="nav nav-tabs" id="field-{{ $model->{$field->code} . $uniqueId }}-permission">
+			<ul class="nav nav-tabs" id="field-tabs-{{$jsUnique}}-permission">
 				@foreach($permissions as $permission) 
-				<li><a href="#{{$permission->code . $uniqueId}}" data-toggle="tab">{{$permission->translate('title')}}</a></li>
+				<li><a href="#{{$permission->code . $jsUnique}}" data-toggle="tab">{{$permission->translate('title')}}</a></li>
 				@endforeach
 			</ul>
 
 			<div class="tab-content" style="overflow: visible;">
 				@foreach($permissions as $permission) 
-				<div class="tab-pane active" id="{{$permission->code . $uniqueId}}">
+				<div class="tab-pane active" id="{{$permission->code . $jsUnique}}">
 					<div class="controls" style="margin-left: 0;">
-						<select class="chosen" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="permission-{{$permission->code . $uniqueId}}" name="permission[{{$permission->code}}][]">
+						<select class="chosen" multiple data-placeholder="{{$controller->LL('notice.choose')}}" id="permission-{{$permission->code . $jsUnique}}" name="permission[{{$permission->code}}][]">
 							<?php
 
 								$sequence = new \App\Model\Telenok\Object\Sequence();
@@ -73,9 +74,9 @@
 				</div>
 
 				<script type="text/javascript">
-					jQuery('ul#field-{{ $model->{$field->code} . $uniqueId}}-permission a:first').tab('show'); 
+					jQuery('ul#field-tabs-{{$jsUnique}}-permission a:first').tab('show'); 
 
-					jQuery("#permission-{{$permission->code . $uniqueId}}").ajaxChosen({ 
+					jQuery("#permission-tabs-{{$jsUnique}}").ajaxChosen({ 
 						keepTypingMsg: "{{ $controller->LL('notice.typing') }}",
 						lookingForMsg: "{{ $controller->LL('notice.looking-for') }}",
 						type: "GET",

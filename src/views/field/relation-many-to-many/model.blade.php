@@ -204,12 +204,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -233,56 +233,50 @@
             });
         }
 
-        if (typeof editTableRow{{$jsUnique}} == "undefined")
+        function editTableRow{{$jsUnique}}(obj, url) 
         {
-            function editTableRow{{$jsUnique}}(obj, url) 
-            {
-                jQuery.ajax({
-                    url: url,
-                    method: 'get',
-                    dataType: 'json'
-                }).done(function(data) {
+            jQuery.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json'
+            }).done(function(data) {
 
-                    if (!jQuery('#modal-{{$uniqueId}}').size())
-                    {
-                        jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
-                    }
+                if (!jQuery('#modal-{{$jsUnique}}').size())
+                {
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                }
 
-                    var $modal = jQuery('#modal-{{$uniqueId}}');
+                var $modal = jQuery('#modal-{{$jsUnique}}');
 
-                    $modal.data('model-data', function(data)
-                    {  
-                        var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
-                        var $dt = $table.dataTable();
-                        var $tr = jQuery(obj).closest('tr');
-                            $dt.fnUpdate({title: data.title}, $tr[0], 1);
-                    });
-
-                    $modal.html(data.tabContent);
-
-                    $modal.modal('show').on('hidden', function() 
-                    { 
-                        jQuery(this).html(""); 
-                    });
+                $modal.data('model-data', function(data)
+                {  
+                    var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
+                    var $dt = $table.dataTable();
+                    var $tr = jQuery(obj).closest('tr');
+                        $dt.fnUpdate({title: data.title}, $tr[0], 1);
                 });
-            }
+
+                $modal.html(data.tabContent);
+
+                $modal.modal('show').on('hidden', function() 
+                { 
+                    jQuery(this).html(""); 
+                });
+            });
         }
 
-        if (typeof deleteTableRow{{$jsUnique}} == "undefined")
+        function deleteTableRow{{$jsUnique}}(obj) 
         {
-            function deleteTableRow{{$jsUnique}}(obj) 
-            {
-                var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
-                var $tr = jQuery(obj).closest("tr");
+            var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
+            var $tr = jQuery(obj).closest("tr");
 
-                var data = $dt.fnGetData($tr[0]);
+            var data = $dt.fnGetData($tr[0]);
 
-                $tr.toggleClass('line-through red');
-                jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
-                jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
+            $tr.toggleClass('line-through red');
+            jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
+            jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
 
-                removeM2M{{$jsUnique}}(data.id);
-            }
+            removeM2M{{$jsUnique}}(data.id);
         }
 
         function deleteM2MAddition{{$jsUnique}}(obj) 
@@ -305,12 +299,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {	

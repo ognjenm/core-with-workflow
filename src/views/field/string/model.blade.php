@@ -2,6 +2,7 @@
     
     $domAttr = ['class' => $field->css_class?: ''];
     $disabled = false;
+    $jsUnique = str_random();
 
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
     {
@@ -37,7 +38,7 @@
 
 				@foreach($languages as $language)
 				<li class="<?php if ($language->locale == $localeDefault) echo "active"; ?>">
-					<a data-toggle="tab" href="#{{$uniqueId}}-language-{{$language->locale}}-{{$field->code}}">
+					<a data-toggle="tab" href="#{{$jsUnique}}-language-{{$language->locale}}-{{$field->code}}">
 						{{$language->translate('title')}}
 					</a>
 				</li>
@@ -52,7 +53,7 @@
 				?>
 				
 				@foreach($languages as $language)
-				<div id="{{$uniqueId}}-language-{{$language->locale}}-{{$field->code}}" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
+				<div id="{{$jsUnique}}-language-{{$language->locale}}-{{$field->code}}" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
 
 					@if ($field->icon_class)
 					<span class="input-group-addon">

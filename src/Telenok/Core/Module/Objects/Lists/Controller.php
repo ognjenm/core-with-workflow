@@ -16,6 +16,33 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
     protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
 
+    public function getActionParam()
+    { 
+        if ($typeId = $this->getRequest()->input('typeId', 0))
+        {
+            $type = $this->getType($typeId); 
+
+			if ($type->classController())
+			{
+				return $this->typeForm($type)->getActionParam();
+			} 
+        }
+        else
+        {
+            return json_encode([
+                'presentation' => $this->getPresentation(),
+                'presentationModuleKey' => $this->getPresentationModuleKey(),
+                'presentationContent' => $this->getPresentationContent(),
+                'key' => $this->getKey(),
+                'treeContent' => $this->getTreeContent(),
+                'url' => $this->getRouterContent(),
+                'breadcrumbs' => $this->getBreadcrumbs(),
+                'pageHeader' => $this->getPageHeader(),
+                'uniqueId' => str_random(), 
+            ]);
+        }
+    }
+
     public function setPresentationModelView($view = '')
 	{
 		$this->presentationModelView = $view;
@@ -160,7 +187,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         });
     }
 
-    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
+    public function getListItem($model)
     {  
         $query = $model::select($model->getTable() . '.*')->withPermission();
 

@@ -201,12 +201,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -231,57 +231,51 @@
             });
         }
         
-        if (typeof editTableRow{{$jsUnique}} == "undefined")
+        function editTableRow{{$jsUnique}}(obj, url) 
         {
-            function editTableRow{{$jsUnique}}(obj, url) 
-            {
-                jQuery.ajax({
-                    url: url,
-                    method: 'get',
-                    dataType: 'json'
-                }).done(function(data) {
+            jQuery.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json'
+            }).done(function(data) {
 
-                    if (!jQuery('#modal-{{$uniqueId}}').size())
-                    {
-                        jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
-                    }
+                if (!jQuery('#modal-{{$jsUnique}}').size())
+                {
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                }
 
-                    var $modal = jQuery('#modal-{{$uniqueId}}');
+                var $modal = jQuery('#modal-{{$jsUnique}}');
 
-                    $modal.data('model-data', function(data)
-                    {  
-                        var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
-                        var $dt = $table.dataTable();
-                        var $tr = jQuery(obj).closest('tr');
-                            $dt.fnUpdate({title: data.title}, $tr[0], 1);
+                $modal.data('model-data', function(data)
+                {  
+                    var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
+                    var $dt = $table.dataTable();
+                    var $tr = jQuery(obj).closest('tr');
+                        $dt.fnUpdate({title: data.title}, $tr[0], 1);
 
-                    });
-
-                    $modal.html(data.tabContent);
-
-                    $modal.modal('show').on('hidden', function() 
-                    { 
-                        jQuery(this).html(""); 
-                    });
                 });
-            }
+
+                $modal.html(data.tabContent);
+
+                $modal.modal('show').on('hidden', function() 
+                { 
+                    jQuery(this).html(""); 
+                });
+            });
         }
 
-        if (typeof deleteTableRow{{$jsUnique}} == "undefined")
+        function deleteTableRow{{$jsUnique}}(obj) 
         {
-            function deleteTableRow{{$jsUnique}}(obj) 
-            {
-                var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
-                var $tr = jQuery(obj).closest("tr");
+            var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
+            var $tr = jQuery(obj).closest("tr");
 
-                var data = $dt.fnGetData($tr[0]);
+            var data = $dt.fnGetData($tr[0]);
 
-                $tr.toggleClass('line-through red');
-                jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
-                jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
+            $tr.toggleClass('line-through red');
+            jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
+            jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
 
-                removeO2MHas{{$jsUnique}}(data.id);
-            }
+            removeO2MHas{{$jsUnique}}(data.id);
         }
 
         function deleteO2MHasAddition{{$jsUnique}}(obj) 
@@ -304,12 +298,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -372,7 +366,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseO2MBelongTo{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseO2MBelongTo{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
                 {{ $controller->LL('btn.choose') }}
             </button>
@@ -383,7 +377,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
 				)
-            <button onclick="createO2MBelongTo{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="createO2MBelongTo{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
                 {{ $controller->LL('btn.create') }}
             </button>
@@ -395,7 +389,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="editO2MBelongTo{{$uniqueId}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editO2MBelongTo{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
                 {{ $controller->LL('btn.edit') }}
             </button>
@@ -406,7 +400,7 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="deleteO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
+            <button onclick="deleteO2MBelongTo{{$jsUnique}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
                 {{ $controller->LL('btn.delete') }}
             </button>
@@ -417,7 +411,7 @@
 
     <script type="text/javascript">
         
-        function createO2MBelongTo{{$uniqueId}}(obj, url) 
+        function createO2MBelongTo{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -427,12 +421,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -450,7 +444,7 @@
             });
         }
 
-        function editO2MBelongTo{{$uniqueId}}(obj, url) 
+        function editO2MBelongTo{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -466,12 +460,12 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {  
@@ -489,7 +483,7 @@
             });
         }
 
-        function deleteO2MBelongTo{{$uniqueId}}(obj) 
+        function deleteO2MBelongTo{{$jsUnique}}(obj) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -497,7 +491,7 @@
             jQuery('input[type="hidden"]', $block).val(0);
         }
 
-        function chooseO2MBelongTo{{$uniqueId}}(obj, url) 
+        function chooseO2MBelongTo{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -507,12 +501,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {

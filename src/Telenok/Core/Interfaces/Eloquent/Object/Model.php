@@ -40,7 +40,10 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				\App\Model\Telenok\Object\Version::add($model);
 			}
 
-			$model->deleteSequence();
+    		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
+            {
+                $model->deleteSequence();
+            }
 		});
 		
 		static::restoring(function($model)
@@ -82,20 +85,17 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	protected function deleteSequence()
-	{
-		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
-		{
-			$sequence = \App\Model\Telenok\Object\Sequence::find($this->getKey());
-			
-			if ($this->forceDeleting)
-			{
-				$sequence->forceDelete();
-			}
-			else
-			{
-				$sequence->delete();
-			}
-		}
+	{ 
+        $sequence = \App\Model\Telenok\Object\Sequence::find($this->getKey());
+
+        if ($this->forceDeleting)
+        {
+            $sequence->forceDelete();
+        }
+        else
+        {
+            $sequence->delete();
+        } 
 	}
 
 	protected function translateSync()
@@ -159,7 +159,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 	public function treeForming()
 	{
-		return $this->type->treeable;
+		return $this->type()->treeable;
 	}
 
 	public static function eraseStatic($model)

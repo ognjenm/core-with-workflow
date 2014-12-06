@@ -12,20 +12,20 @@
     
     if (!$model->exists && $field->time_range_default_start)
     {
-        $valueStart = $field->time_range_default_start;
+        $valueStart = $field->time_range_default_start->setTimezone(\Config::get('app.timezone'));
     }
     else 
     {
-        $valueStart = $model->{$field->code . '_start'};
+        $valueStart = $model->{$field->code . '_start'}->setTimezone(\Config::get('app.timezone'));
     }
     
     if (!$model->exists && $field->time_range_default_end)
     {
-        $valueEnd = $field->time_range_default_end;
+        $valueEnd = $field->time_range_default_end->setTimezone(\Config::get('app.timezone'));
     }
     else 
     {
-        $valueEnd = $model->{$field->code . '_end'};
+        $valueEnd = $model->{$field->code . '_end'}->setTimezone(\Config::get('app.timezone'));
     }
 
     $domAttrStart['placeholder'] = ($placeholder = $field->time_range_default_start->toTimeString()) ? $placeholder : $field->translate('title');

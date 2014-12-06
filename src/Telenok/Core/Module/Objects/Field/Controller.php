@@ -13,7 +13,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
 	
-    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
+    public function getListItem($model)
     {
         $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
         {

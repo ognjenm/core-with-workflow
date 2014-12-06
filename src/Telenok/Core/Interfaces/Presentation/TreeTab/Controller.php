@@ -479,7 +479,7 @@ abstract class Controller extends Module implements IPresentation {
         } 
     }
 
-    public function getListItem(\Illuminate\Database\Eloquent\Model $model)
+    public function getListItem($model)
     {
         $id = $this->getRequest()->input('treePid', 0);
 

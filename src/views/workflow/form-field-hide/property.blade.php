@@ -81,8 +81,6 @@
         <script type="text/javascript">
             jQuery("#input-model-type{{$uniqueId}}").chosen({width: "300px"}).on('change', function()
             {
-                console.log('{{$uniqueId}}');
-                
                 jQuery("#input-field-list{{$uniqueId}} option").hide().removeAttr('selected');
                 jQuery("#input-field-list{{$uniqueId}} option.field-" + jQuery(this).val()).show();
                 

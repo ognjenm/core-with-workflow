@@ -90,6 +90,13 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::get('telenok/module/objects-field', array('as' => 'cmf.module.objects-field', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@getContent"));
 \Route::get('telenok/module/objects-field/list', array('as' => 'cmf.module.objects-field.list', 'uses' => "Telenok\Core\Module\Objects\Field\Controller@getList"));
 
+
+// Module Objects\Sequence
+\Route::get('telenok/module/objects-sequence/action-param', array('as' => 'cmf.module.objects-sequence.action.param', 'uses' => "Telenok\Core\Module\Objects\Sequence\Controller@getActionParam"));
+\Route::get('telenok/module/objects-sequence', array('as' => 'cmf.module.objects-sequence', 'uses' => "Telenok\Core\Module\Objects\Sequence\Controller@getContent"));
+\Route::get('telenok/module/objects-sequence/list', array('as' => 'cmf.module.objects-sequence.list', 'uses' => "Telenok\Core\Module\Objects\Sequence\Controller@getList"));
+
+
 // Module Objects\Lists
 \Route::get('telenok/module/objects-lists/action-param', array('as' => 'cmf.module.objects-lists.action.param', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getActionParam"));
 \Route::get('telenok/module/objects-lists', array('as' => 'cmf.module.objects-lists', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getContent"));
