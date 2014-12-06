@@ -40,7 +40,7 @@
                                     
                                     telenok.setModuleParam(data.key, param);                                  
                                     
-                                    telenok.processModuleContent(moduleKey);
+                                    telenok.processModuleContent(data.key);
 
                                     var url = "{!! \URL::route("cmf.module.objects-lists.create", ['id' => '__id__']) !!}".replace("__id__", id);
 

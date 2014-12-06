@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "5.0.*"
+        "laravel/framework": "dev-master#8022bdc29b37c62e932cb38b5c11c65906ee0288"
     },
     "autoload": {
         "classmap": [

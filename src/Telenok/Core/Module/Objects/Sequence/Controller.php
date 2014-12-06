@@ -11,28 +11,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $presentationView = 'core::module.objects-sequence.presentation';
 
     
-    public function getActionParam11()
-    { 
-        return json_encode([]);
-    }
-
-    public function getListItem11($model)
+    public function getAdditionalViewParam()
     {
-        $sequence = app('\App\Model\Telenok\Object\Sequence');
+        $this->additionalViewParam['sSearch'] = $this->getRequest()->input('sSearch');
         
-        $query = $model::select($model->getTable().'.*')
-            ->where(function($query) use ($sequence, $model)
-            {
-                if ($this->getModelList()->treeForming())
-                {
-                    $query->where($sequence->getTable().'.tree_pid', $this->getRequest()->input('treePid', 0))->orWhere($sequence->getTable() . '.' . $sequence->getKeyName(), $this->getRequest()->input('treePid', 0));
-                }
-            }); 
-            
-        $query->withPermission();
-
-        $this->getFilterQuery($model, $query); 
-
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
-    }
+        return $this->additionalViewParam;
+    }   
 }

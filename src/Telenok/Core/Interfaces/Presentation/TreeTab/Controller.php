@@ -403,13 +403,13 @@ abstract class Controller extends Module implements IPresentation {
         return [
             'tabKey' => $this->getTabKey(),
             'tabLabel' => $this->LL('list.name'),
-            'tabContent' => view($this->getPresentationContentView(), array(
+            'tabContent' => view($this->getPresentationContentView(), array_merge([
                 'controller' => $this, 
                 'fields' => $model->getFieldList(),
                 'fieldsFilter' => $this->getModelFieldFilter(),
                 'gridId' => $this->getGridId(), 
                 'uniqueId' => str_random(),
-            ))->render()
+            ], $this->getAdditionalViewParam()))->render()
         ];
     }
     

@@ -88,7 +88,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return [
             'tabKey' => "{$this->getTabKey()}-{$model->getTable()}",
             'tabLabel' => $type->translate('title'),
-            'tabContent' => view($this->getPresentationContentView(), array(
+            'tabContent' => view($this->getPresentationContentView(), array_merge([
                 'controller' => $this,  
                 'model' => $model,
                 'type' => $type,
@@ -96,7 +96,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'fieldsFilter' => $this->getModelFieldFilter(),
                 'gridId' => $this->getGridId(),
                 'uniqueId' => str_random(),
-            ))->render()
+            ], $this->getAdditionalViewParam()))->render()
         ];
     }
 

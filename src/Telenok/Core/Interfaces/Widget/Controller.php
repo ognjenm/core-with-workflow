@@ -94,7 +94,7 @@ abstract class Controller {
 		return $this;
 	}
     
-	public function getContent(\Illuminate\Support\Collection $structure = null)
+	public function getContent($structure = null)
 	{
 		return '';
 	}

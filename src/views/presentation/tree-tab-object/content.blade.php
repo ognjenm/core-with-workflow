@@ -71,6 +71,7 @@
 			presentation.addDataTable({
 				aoColumns : aoColumns, 
 				aaSorting: [],
+                oSearch: {"sSearch": "{{$sSearch}}"},
 				sAjaxSource : '{!! $controller->getRouterList(['treePid' => $type->getKey()]) !!}',
 				domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}",
 				btnCreateUrl : '{!! $controller->getRouterCreate(['id' => $type->getKey()]) !!}',

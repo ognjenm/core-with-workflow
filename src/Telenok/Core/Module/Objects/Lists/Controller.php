@@ -123,7 +123,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return [
             'tabKey' => "{$this->getTabKey()}-{$model->getTable()}",
             'tabLabel' => $type->translate('title'),
-            'tabContent' => view($this->getPresentationContentView(), [
+            'tabContent' => view($this->getPresentationContentView(), array_merge([
                 'controller' => $this,  
                 'model' => $model,
                 'type' => $type,
@@ -131,7 +131,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 'fieldsFilter' => $this->getModelFieldFilter($model),
                 'gridId' => $this->getGridId($model->getTable()),
                 'uniqueId' => str_random(),
-            ])->render()
+            ], $this->getAdditionalViewParam()))->render()
         ];
     }
 

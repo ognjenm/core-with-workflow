@@ -7,7 +7,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
     protected $key = 'html';
     protected $parent = 'standart';
 
-	public function getContent(\Illuminate\Support\Collection $structure = null)
+	public function getContent($structure = null)
 	{
         $content = '';
 

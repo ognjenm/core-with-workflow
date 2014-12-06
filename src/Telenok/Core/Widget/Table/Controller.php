@@ -11,7 +11,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 	protected $row = 2;
 	protected $col = 2;
 
-	public function getContent(\Illuminate\Support\Collection $structure = null)
+	public function getContent($structure = null)
 	{ 
 		$content = [];
 

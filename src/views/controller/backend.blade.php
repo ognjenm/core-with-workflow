@@ -156,13 +156,38 @@
                         <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{ $controller->LL('home') }}</a></li> 
                     </ul>
 
-                    <div class="nav-search">
-                        <form class="form-inline">
+                    <div class="nav-search"> 
+                        <form class="form-inline" onsubmit="backendCommonSearch(this); return false;">
                             <span class="input-icon">
-                                <input type="text" placeholder="Search ..." class="input-small search-query nav-search-input" autocomplete="off">
+                                <input type="text" placeholder="{{$controller->LL('btn.search')}} ..." class="input-small search-query nav-search-input" />
                                 <i class="fa fa-search nav-search-icon"></i>
                             </span>
                         </form>
+                        
+                        <script type="text/javascript">
+                            function backendCommonSearch(obj)
+                            { 
+                                telenok.addModule(
+                                    "object-sequence", 
+                                    "{!! \URL::route("cmf.module.objects-sequence.action.param", []) !!}", 
+                                    function(moduleKey) 
+                                    {
+                                        param = telenok.getModule(moduleKey);
+
+                                        param.addTree = false;
+                                        param.addTab = true;
+
+                                        param.data = param.data || {};
+                                        
+                                        param.data = jQuery.extend({}, param.data, {sSearch: jQuery('input', obj).val()})
+
+                                        telenok.setModuleParam(moduleKey, param);                                  
+
+                                        telenok.processModuleContent(moduleKey);
+                                    }
+                                );
+                            }
+                        </script>
                     </div>
                 </div>
 
