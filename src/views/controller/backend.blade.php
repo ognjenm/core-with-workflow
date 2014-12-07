@@ -80,7 +80,7 @@
         </div>
 
         <div class="main-container">
-            <div id="sidebar" class="sidebar responsive">
+            <div id="sidebar" class="sidebar responsive sidebar-fixed">
                 <div class="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large">
                         @foreach($listModuleGroup as $listModuleGroupItem)
@@ -151,7 +151,7 @@
 
 
             <div class="main-content clearfix">
-                <div class="breadcrumbs">
+                <div class="breadcrumbs breadcrumbs-fixed">
                     <ul class="breadcrumb">
                         <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{ $controller->LL('home') }}</a></li> 
                     </ul>

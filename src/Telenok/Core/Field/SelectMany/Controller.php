@@ -12,6 +12,27 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     protected $specialField = ['select_many_data'];
     protected $viewModel = "core::field.select-many.model-select-box";
 
+    public function saveModelField($field, $model, $input)
+    { 
+        \DB::table('pivot_relation_o2m_field_select_many')
+                ->where('field_id', $field->id)
+                ->where('sequence_id', $model->id)
+                ->delete();
+
+        foreach($input->get($field->code) as $key)
+        {
+            \DB::table('pivot_relation_o2m_field_select_many')->insert(
+                [
+                    'field_id' => $field->id,
+                    'sequence_id' => $model->id,
+                    'key' => $key,
+                ]
+            );
+        }
+
+        return parent::saveModelField($field, $model, $input);
+    }
+
     public function getModelAttribute($model, $key, $value, $field)
     { 
 		$value = $value === null ? '[]' : $value;
@@ -113,6 +134,18 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                         }
                     }
                 }
+
+                $defaultKey = [];
+                
+                foreach(array_get($value, 'default', []) as $v)
+                {
+                    if (strlen(trim($v)))
+                    {
+                        $defaultKey[] = $v;
+                    }
+                }
+                
+                $value['default'] = $defaultKey;
             }
             
 			$model->setAttribute($key, json_encode($value, JSON_UNESCAPED_UNICODE));
@@ -143,6 +176,28 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         }
     }
     
+    public function getFilterContent($field = null)
+    {
+        return view($this->getViewFilter(), [
+            'controller' => $this,
+            'field' => $field,
+        ]);
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null)
+		{
+            $query->join('pivot_relation_o2m_field_select_many AS p_fsm', function($join) use ($model, $field, $value)
+            {
+                $join->on($model->getTable() . '.id', '=', 'p_fsm.sequence_id');
+                $join->where('p_fsm.field_id', '=', $field->id);
+            }); 
+            
+            $query->whereIn('p_fsm.key', (array)$value);
+		}
+    }
+
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

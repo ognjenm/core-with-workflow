@@ -90,7 +90,6 @@
     $list->push('Telenok\Core\Field\IntegerUnsigned\Controller');
     $list->push('Telenok\Core\Field\Text\Controller');
     $list->push('Telenok\Core\Field\String\Controller');
-    $list->push('Telenok\Core\Field\Checkbox\Controller');
 	$list->push('Telenok\Core\Field\ComplexArray\Controller');
     $list->push('Telenok\Core\Field\RelationOneToOne\Controller');
     $list->push('Telenok\Core\Field\RelationOneToMany\Controller');
@@ -103,7 +102,6 @@
     $list->push('Telenok\Core\Field\System\UpdatedBy\Controller');
     $list->push('Telenok\Core\Field\System\DeletedBy\Controller');
     $list->push('Telenok\Core\Field\System\LockedBy\Controller');
-    $list->push('Telenok\Core\Field\System\Active\Controller');
     $list->push('Telenok\Core\Field\System\Permission\Controller');
     $list->push('Telenok\Core\Field\FileManyToMany\Controller');
     $list->push('Telenok\Core\Field\Upload\Controller');

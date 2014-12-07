@@ -17,6 +17,19 @@ class CreateObjectFieldSelectManyTable extends Migration {
 				}
 			});
 		}
+        
+		if (!Schema::hasTable('pivot_relation_o2m_field_select_many'))
+		{
+			Schema::create('pivot_relation_o2m_field_select_many', function(Blueprint $table)
+			{
+				$table->increments('id');
+				$table->integer('field_id')->unsigned()->nullable();
+				$table->integer('sequence_id')->unsigned()->nullable();
+				$table->string('key')->nullable();
+                
+				$table->unique(['sequence_id', 'field_id', 'key'], 'uniq_cp');
+			});
+		}
 	}
 
 }

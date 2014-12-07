@@ -753,7 +753,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		$query->join($type->getTable() . ' as otype', function($join) use ($type, $now)
 		{
 			$join->on('osequence.sequences_object_type', '=', 'otype.id');
-			$join->on('otype.' . $type->getDeletedAtColumn(), ' is ', \DB::raw("null"));
+			$join->whereNull('otype.' . $type->getDeletedAtColumn());
 			$join->where('otype.active', '=', 1);
 			$join->where('otype.active_at_start', '<=', $now);
 			$join->where('otype.active_at_end', '>=', $now);

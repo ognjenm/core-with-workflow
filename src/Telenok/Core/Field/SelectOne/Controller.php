@@ -124,6 +124,22 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         }
     }
     
+    public function getFilterContent($field = null)
+    {
+        return view($this->getViewFilter(), [
+            'controller' => $this,
+            'field' => $field,
+        ]);
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null)
+		{
+            $query->whereIn($model->getTable() . '.' . $name, $value);
+		}
+    }
+
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

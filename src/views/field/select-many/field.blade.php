@@ -106,22 +106,23 @@
 
     <?php
         $selectManyData = $model->select_many_data->all();
-        $allKeys = array_keys($model->select_many_data->get('key', []));
+        $allKeys = $model->select_many_data->get('key', []);
+        $default = $model->select_many_data->get('default', []);
     ?>
 
     var data{{$uniqueId}} = []; 
 
-    @foreach($allKeys as $key)
+    @foreach($allKeys as $k => $key)
 
         var insert = {
             'title': {},
-            'key': "{{array_get($selectManyData, 'key.'.$key)}}",
-            'default': "{{array_get($selectManyData, 'default.'.$key)}}",
+            'key': "{{$key}}",
+            'default': '{{(in_array($key, $default, true) ? $key : "")}}',
         };
 
         @foreach($languages as $l)
 
-            insert['title']["{{$l->locale}}"] = "{{array_get($selectManyData, 'title.'.$l->locale.'.'.$key)}}";
+            insert['title']["{{$l->locale}}"] = "{{array_get($selectManyData, 'title.'.$l->locale.'.'.$k)}}";
 
         @endforeach
 
@@ -209,7 +210,7 @@
 
             jQuery("input.key-value", $templateClone).val(o.key);
 
-            if (o.default == o.key)
+            if (o.default === o.key)
             {
                 jQuery("input.key-default", $templateClone).attr('checked', 'checked');
                 jQuery("input.key-default-hidden", $templateClone).val(o.key);

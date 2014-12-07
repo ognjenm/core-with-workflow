@@ -35,6 +35,7 @@ return [
     'btn.unlock' => 'Unlock',
     'btn.yes' => 'Yes',
     'btn.no' => 'No',
+    'btn.empty' => 'Not matter',
     'btn.continue' => 'Continue',
 
     'notice.title' => 'Notice',
