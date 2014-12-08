@@ -97,7 +97,6 @@
         {!! HTML::script('packages/telenok/core/js/oryx/Core/edge.js') !!}
         {!! HTML::script('packages/telenok/core/js/oryx/Core/abstractPlugin.js') !!}
         {!! HTML::script('packages/telenok/core/js/oryx/Core/abstractLayouter.js') !!}
-        {!! HTML::script('packages/telenok/core/js/oryx/Core/abstractDragTracker.js') !!}
 
         {!! HTML::script('packages/telenok/core/js/oryx/i18n/translation_en.js') !!}
 
@@ -233,7 +232,7 @@
             
             jQuery(function()
             { 
-                //jQuery(document.documentElement).focus().blur();
+                jQuery('#processdata').height(jQuery(window).height());
             });
 		</script> 
 
@@ -243,7 +242,7 @@
 			<div class="sidebar responsive" id="sidebar">
 				<ul class="nav nav-list telenok-sidebar"></ul>
 			</div>
-            <div class="main-content" id="processdata" style="overflow-x: scroll; overflow-y: hidden; text-align: left;"></div>
+            <div class="main-content" id="processdata" style="overflow: auto; text-align: left; height: 450px;position: relative"></div>
 		</div>
 	</body>
 </html>

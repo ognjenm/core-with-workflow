@@ -46,21 +46,19 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		}
 		else if (is_array($value))
 		{
-			$value_ = $model->{$key};
+			$value_ = [];
 
 			foreach($value as $k => $v)
 			{
-				$value_->put($k, $v);
+				$value_[] = $v;
 			}
-			
-			$value_ = $value_->toArray();
 		}
 		else
 		{
-			$value_ = $value;
+			$value_ = (array)$value;
 		}
 
-		$model->setAttribute($key, is_null($value_) ? null : json_encode($value_, JSON_UNESCAPED_UNICODE));
+		$model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));
     }
 
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 

@@ -50,25 +50,23 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     }
 
     public function setModelAttribute($model, $key, $value, $field)
-    {
+    { 
 		if ($value instanceof \Illuminate\Support\Collection) 
 		{
 			$value_ = $value->toArray();
 		}
 		else if (is_array($value))
 		{
-			$value_ = $model->{$key};
-
+            $value_ = [];
+            
 			foreach($value as $k => $v)
 			{
-				$value_->put($k, $v);
+				$value_[] = $v;
 			}
-			
-			$value_ = $value_->toArray();
 		}
 		else
 		{
-			$value_ = $value;
+			$value_ = (array)$value;
 		}
 
 		$model->setAttribute($key, is_null($value_) ? null : json_encode($value_, JSON_UNESCAPED_UNICODE));
