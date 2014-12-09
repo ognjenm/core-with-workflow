@@ -69,7 +69,7 @@
     {
 		@section("select_node")
 		
-        data.inst.toggle_node(data.rslt.obj);
+        //data.inst.toggle_node(data.rslt.obj);
 
         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}')
                 .addTabByURL({

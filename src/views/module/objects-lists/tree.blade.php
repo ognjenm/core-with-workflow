@@ -2,40 +2,18 @@
 
 	@section('select_node') 
 		
-        data.inst.toggle_node(data.rslt.obj);
+        //data.inst.toggle_node(data.rslt.obj);
 
 		if (data.rslt.obj.data("module"))
 		{
 			telenok.addModule(data.rslt.obj.data("moduleKey"), data.rslt.obj.data("moduleRouterActionParam"), function(moduleKey) 
 			{
-                /*
-				telenok.preCallingPresentation(moduleKey);
-
-				var param = telenok.getModule(moduleKey);
-
-				if (telenok.hasPresentation(param.presentationModuleKey))
-				{	   
-					param.addTree = false;
-							
-					telenok.getPresentation(param.presentationModuleKey).callMe(param);
-				}
-
-				telenok.postCallingPresentation(moduleKey); 
-                */
-                
-                
                 var param = telenok.getModule(moduleKey) || {};
 
                 if (!param.preCallingPresentationFlag)
                 {
                     telenok.preCallingPresentation(moduleKey);
                 }
-
-                param = telenok.getModule(moduleKey);
-
-                param.preCallingPresentationFlag = true;
-
-                telenok.setModuleParam(moduleKey, param);
 
                 if (telenok.hasPresentation(param.presentationModuleKey))
                 {

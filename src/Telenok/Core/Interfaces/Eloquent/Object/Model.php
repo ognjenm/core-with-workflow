@@ -903,44 +903,39 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
         if (!$parent instanceof \Illuminate\Database\Eloquent\Model)
         {
             $parent = \App\Model\Telenok\Object\Sequence::find($parent);
-        }
-        
-        try
-        {
-            $sequence = $this->treeAttr();
-            $sequenceParent = $parent->treeAttr();
+        } 
 
-            if ($sequence->isAncestor($sequenceParent))
+        $this->makeRoot();
+        
+        $sequence = $this->treeAttr();
+        $sequenceParent = $parent->treeAttr(); 
+
+        if ($sequence->isAncestor($sequenceParent))
+        {
+            throw new \Exception('Cant move Ancestor to Descendant');
+        }
+
+        \DB::transaction(function() use ($sequence, $sequenceParent)
+        {
+            $children = $sequence->children()->get();
+
+            foreach ($children->all() as $child)
             {
-                throw new \Exception('Cant move Ancestor to Descendant');
+                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
+                [
+                    'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
+                    'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
+                ]);
             }
 
-            \DB::transaction(function() use ($sequence, $sequenceParent)
-            {
-                $children = $sequence->children()->get();
-
-                foreach ($children->all() as $child)
-                {
-                    \DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
-                    [
-                        'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
-                        'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
-                    ]);
-                }
-
-                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
-                [
-                    'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
-                    'tree_pid' => $sequenceParent->getKey(),
-                    'tree_order' => ($sequenceParent->children(1)->where('tree_id', '<>', $sequence->getKey())->max('tree_order') + 1),
-                    'tree_depth' => ($sequenceParent->tree_depth + 1)
-                ]);
-            });
-        } 
-        catch (Exception $ex) 
-        {
-            $this->insertTree();
-        }
+            \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
+            [
+                'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
+                'tree_pid' => $sequenceParent->getKey(),
+                'tree_order' => ($sequenceParent->children(1)->where('tree_id', '<>', $sequence->getKey())->max('tree_order') + 1),
+                'tree_depth' => ($sequenceParent->tree_depth + 1)
+            ]);
+        });
 
 		return $this;
 	}
@@ -951,45 +946,40 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
         {
             $parent = \App\Model\Telenok\Object\Sequence::find($parent);
         }
-        
-        try
-        {
-            $sequence = $this->treeAttr();
-            $sequenceParent = $parent->treeAttr();
 
-            if ($sequence->isAncestor($sequenceParent))
+        $this->makeRoot();
+
+        $sequence = $this->treeAttr();
+        $sequenceParent = $parent->treeAttr();
+
+        if ($sequence->isAncestor($sequenceParent))
+        {
+            throw new \Exception('Cant move Ancestor to Descendant');
+        }
+
+        \DB::transaction(function() use ($sequence, $sequenceParent)
+        {
+            $sequenceParent->children(1)->increment('tree_order');
+
+            $children = $sequence->children()->get();
+
+            foreach ($children->all() as $child)
             {
-                throw new \Exception('Cant move Ancestor to Descendant');
+                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
+                [
+                    'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
+                    'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
+                ]);
             }
 
-            \DB::transaction(function() use ($sequence, $sequenceParent)
-            {
-                $sequenceParent->children(1)->increment('tree_order');
-
-                $children = $sequence->children()->get();
-
-                foreach ($children->all() as $child)
-                {
-                    \DB::table('pivot_relation_m2m_tree')->where('tree_id', $child->getKey())->update(
-                    [
-                        'tree_path' => str_replace($sequence->tree_path, $sequenceParent->tree_path . $sequenceParent->getKey() . '.', $child->tree_path),
-                        'tree_depth' => ( $sequenceParent->tree_depth + 1 + ($child->tree_depth - $sequence->tree_depth) ),
-                    ]);
-                }
-
-                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
-                [
-                    'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
-                    'tree_pid' => $sequenceParent->getKey(),
-                    'tree_order' => 0,
-                    'tree_depth' => ($sequenceParent->tree_depth + 1)
-                ]);
-            });
-        } 
-        catch (Exception $ex) 
-        {
-            $this->insertTree();
-        }
+            \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
+            [
+                'tree_path' => $sequenceParent->tree_path . $sequenceParent->getKey() . '.',
+                'tree_pid' => $sequenceParent->getKey(),
+                'tree_order' => 0,
+                'tree_depth' => ($sequenceParent->tree_depth + 1)
+            ]);
+        });
 
 		return $this;
 	}
@@ -1027,43 +1017,38 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
             $sibling = \App\Model\Telenok\Object\Sequence::find($sibling);
         }
 
-        try
-        {
-            $sequence = $this->treeAttr();
-            $sequenceSibling = $sibling->treeAttr();
+        $this->makeRoot();
 
-            if ($sequence->isAncestor($sequenceSibling)) 
+        $sequence = $this->treeAttr();
+        $sequenceSibling = $sibling->treeAttr();
+
+        if ($sequence->isAncestor($sequenceSibling)) 
+        {
+            throw new \Exception('Cant move Ancestor to Descendant');
+        }
+
+        \DB::transaction(function() use ($sequence, $sequenceSibling, $op)
+        { 
+            $sequenceSibling->sibling()->where('tree_order', $op, $sequenceSibling->tree_order)->increment('tree_order');
+
+            $children = $sequence->children()->get();
+
+            foreach($children as $child) 
             {
-                throw new \Exception('Cant move Ancestor to Descendant');
+                $child->update([
+                    'tree_path' => str_replace($sequence->tree_path, $sequenceSibling->tree_path, $child->tree_path),
+                    'tree_depth' => ($sequenceSibling->tree_depth + ($child->tree_depth - $sequence->tree_depth)),
+                ]);
             }
 
-            \DB::transaction(function() use ($sequence, $sequenceSibling, $op)
-            { 
-                $sequenceSibling->sibling()->where('tree_order', $op, $sequenceSibling->tree_order)->increment('tree_order');
-
-                $children = $sequence->children()->get();
-
-                foreach($children as $child) 
-                {
-                    $child->update([
-                        'tree_path' => str_replace($sequence->tree_path, $sequenceSibling->tree_path, $child->tree_path),
-                        'tree_depth' => ($sequenceSibling->tree_depth + ($child->tree_depth - $sequence->tree_depth)),
-                    ]);
-                }
-                
-                \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
-                [
-                    'tree_path' => $sequenceSibling->tree_path,
-                    'tree_pid' => $sequenceSibling->tree_pid,
-                    'tree_order' => $sequenceSibling->tree_order + ($op == '>' ? 1 : 0),
-                    'tree_depth' => $sequenceSibling->tree_depth,
-                ]);
-            });
-        } 
-        catch (Exception $ex) 
-        {
-            $this->insertTree();
-        }
+            \DB::table('pivot_relation_m2m_tree')->where('tree_id', $sequence->getKey())->update(
+            [
+                'tree_path' => $sequenceSibling->tree_path,
+                'tree_pid' => $sequenceSibling->tree_pid,
+                'tree_order' => $sequenceSibling->tree_order + ($op == '>' ? 1 : 0),
+                'tree_depth' => $sequenceSibling->tree_depth,
+            ]);
+        });
 
         return $this;
     }   

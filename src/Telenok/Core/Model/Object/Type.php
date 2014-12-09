@@ -19,11 +19,6 @@ class Type extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		$this->attributes['code'] = strtolower((string) $value);
 	}
 
-	public function getTreeableAttribute($value)
-	{
-		return $value ? TRUE : FALSE;
-	}
-
 	public function field()
 	{
 		return $this->hasMany('\App\Model\Telenok\Object\Field', 'field_object_type');

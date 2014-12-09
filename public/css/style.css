@@ -196,6 +196,10 @@ div.widget-header.widget-header-green { background: linear-gradient(to bottom, #
     color: white;
 }
 
+.telenok-tree .jstree .jstree-open > ins, .telenok-tree .jstree .jstree-closed > ins {
+    cursor: pointer;
+}
+
 
 
 .dataTables_wrapper .dataTables_processing {

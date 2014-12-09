@@ -33,8 +33,8 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
         $idsParentDelete = array_unique((array)$input->get("tree_parent_delete", []));
         
 		$idsChildAdd = array_unique((array)$input->get("tree_child_add", []));
-        $idsChildelete = array_unique((array)$input->get("tree_child_delete", []));
-		
+        $idsChilDelete = array_unique((array)$input->get("tree_child_delete", []));
+		  
         if (!empty($idsParentDelete))
         {
             if (in_array('*', $idsParentDelete, true))
@@ -55,19 +55,22 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
                 {
                     $model->makeLastChildOf($id);
                 }
-                catch(\Exception $e) {}
+                catch(\Exception $e) {
+                    
+                    throw $e;
+                }
             }
 		}
-		
-        if (!empty($idsChildelete))
+
+        if (!empty($idsChilDelete))
         {
-            if (in_array('*', $idsChildelete, true))
+            if (in_array('*', $idsChilDelete, true))
             {
                 $model->treeChild()->detach();
             }
-            else if (!empty($idsChildelete))
+            else if (!empty($idsChilDelete))
             {
-                $model->treeChild()->detach($idsChildelete);
+                $model->treeChild()->detach($idsChilDelete);
             }
 		}
 

@@ -291,7 +291,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     }
 
     public function createObjectField($model, $input)
-    {
+    { 
 		$multilanguage = $input->get('multilanguage');
 
 		$tabMain = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
@@ -427,12 +427,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 		}
 		else
 		{
-			\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
+			\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->forceDelete();
 		}
 
-		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'active')->count())
 		{
-
 			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
                 'title' => array_get($translationSeed, 'model.active'),
                 'title_list' => array_get($translationSeed, 'model.active'),
@@ -457,7 +456,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
             ]);
         }
         
-		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active_at')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'active_at')->count())
         {
 			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
                 'title' => array_get($translationSeed, 'model.active_at'),

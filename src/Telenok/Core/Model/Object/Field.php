@@ -27,10 +27,14 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 		static::deleting(function($model)
 		{
+            $type = $model->fieldObjectType()->first();
+                        
 			if ($controllers = app('telenok.config')->getObjectFieldController()->get($model->key))
 			{
 				return $controllers->processDeleting($model);
 			}
+            
+            $this->deleteFieldResource($type);
 		});
 	}
 
@@ -46,6 +50,13 @@ class Field extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 				'active' => 1
 			]);
 		}
+	}
+
+	public function deleteFieldResource($type)
+	{
+		$code = 'object_field.' . $type->code . '.' . $this->code;
+ 
+        \App\Model\Telenok\Security\Resource::where('code', $code)->forceDelete();
 	}
 
 	public function getFillable()
