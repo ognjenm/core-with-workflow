@@ -96,28 +96,54 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                                 "sExtends": "text",
                                 "sButtonText": "<i class='fa fa-lock'></i> {{ $controller->LL('btn.lock') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) 
+                                {
+                                    if (param.btnListLockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
                                     {
-                                        if (param.btnListLockUrl)
+                                        jQuery.ajax({
+                                            url: param.btnListLockUrl, 
+                                            data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                            method: 'get',
+                                            dataType: 'json'
+                                        }).done(function(data) 
                                         {
-                                            this_.addTabByURL({
-                                                url: param.btnListLockUrl, 
-                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-                                            });
-                                        }
+                                            if (data.success == 1)
+                                            {
+                                                jQuery.gritter.add({
+                                                    title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                    text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                    class_name: 'gritter-success gritter-light',
+                                                    time: 3000,
+                                                });
+                                            }
+                                        }); 
+                                    }
                                 }
                             },
                             {
                                 "sExtends": "text",
                                 "sButtonText": "<i class='fa fa-unlock'></i> {{ $controller->LL('btn.unlock') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) 
+                                {
+                                    if (param.btnListUnlockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
                                     {
-                                        if (param.btnListUnlockUrl)
+                                        jQuery.ajax({
+                                            url: param.btnListUnlockUrl, 
+                                            data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                            method: 'get',
+                                            dataType: 'json'
+                                        }).done(function(data) 
                                         {
-                                            this_.addTabByURL({
-                                                url: param.btnListUnlockUrl, 
-                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-                                            });
-                                        }
+                                            if (data.success == 1)
+                                            {
+                                                jQuery.gritter.add({
+                                                    title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                    text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                    class_name: 'gritter-success gritter-light',
+                                                    time: 3000,
+                                                });
+                                            }
+                                        }); 
+                                    }
                                 }
                             },
                             {

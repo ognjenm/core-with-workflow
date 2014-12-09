@@ -5,7 +5,6 @@ return [
     'list.btn.create' => 'Create',
     'list.btn.refresh' => 'Refresh',
     'list.btn.select' => 'Selected',
-    'list.save.success' => 'Widget updated',
     'list.btn.choose' => 'Choose',
     'list.btn.delete.all' => 'Delete all',
     'list.btn.edit' => 'Edit',

@@ -746,9 +746,9 @@ abstract class Controller extends Module implements IPresentation {
         ];
     }
 
-    public function edit()
+    public function edit($id = 0)
     { 
-		$id = $this->getRequest()->input('id');
+		$id = $id ?: $this->getRequest()->input('id');
 		
         return [
             'tabKey' => $this->getTabKey() . '-edit-' . $id,

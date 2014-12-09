@@ -45,6 +45,7 @@ trait PackageLoad
     {
         $k = "{$this->getPackage()}::{$this->getLanguageDirectory()}/{$this->getKey()}.$key";
         $kDefault = "{$this->getPackage()}::default.$key";
+        $kStandart = "module/{$this->getKey()}.$key";
 
         $word = \Lang::get($k, $param);
 
@@ -56,7 +57,12 @@ trait PackageLoad
             // not found in default wordspace
             if ($kDefault === $word)
             {
-                return $k;
+                $word = \Lang::get($kStandart, $param);
+
+                if ($kDefault === $word)
+                {
+                    return $k;
+                }
             }
         } 
 

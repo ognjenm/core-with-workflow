@@ -107,11 +107,11 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::post('telenok/module/objects-lists/delete/{id}', array('as' => 'cmf.module.objects-lists.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@delete"));
 \Route::get('telenok/module/objects-lists/list', array('as' => 'cmf.module.objects-lists.list', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getList"));
 \Route::get('telenok/module/objects-lists/list/json', array('as' => 'cmf.module.objects-lists.list.json', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getListJson"));
-\Route::get('telenok/module/objects-lists/list/edit/type/{id}', array('as' => 'cmf.module.objects-lists.list.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@editList"));
+\Route::get('telenok/module/objects-lists/list/edit/', array('as' => 'cmf.module.objects-lists.list.edit', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@editList"));
 \Route::post('telenok/module/objects-lists/list/delete', array('as' => 'cmf.module.objects-lists.list.delete', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@deleteList"));
-\Route::post('telenok/module/objects-lists/list/lock', array('as' => 'cmf.module.objects-lists.list.lock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@lockList"));
-\Route::post('telenok/module/objects-lists/lock', array('as' => 'cmf.module.objects-lists.lock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@lock"));
-\Route::post('telenok/module/objects-lists/list/unlock', array('as' => 'cmf.module.objects-lists.list.unlock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@unlockList"));
+\Route::any('telenok/module/objects-lists/list/lock', array('as' => 'cmf.module.objects-lists.list.lock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@lockList"));
+\Route::any('telenok/module/objects-lists/lock', array('as' => 'cmf.module.objects-lists.lock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@lock"));
+\Route::any('telenok/module/objects-lists/list/unlock', array('as' => 'cmf.module.objects-lists.list.unlock', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@unlockList"));
 \Route::get('telenok/module/objects-lists/list/tree', array('as' => 'cmf.module.objects-lists.list.tree', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getTreeList"));
 //\Route::get('telenok/module/objects-lists/get/namespace-by-path', array('as' => 'cmf.module.objects-lists.get.namespace-by-path', 'uses' => "Telenok\Core\Module\Objects\Lists\Controller@getNamespaceContent"));
 

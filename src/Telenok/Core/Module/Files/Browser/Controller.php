@@ -183,9 +183,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 
-    public function edit()
+    public function edit($id = 0)
 	{
-		$id = $this->getRequest()->input('id');
+		$id = $id ?: $this->getRequest()->input('id');
 
 		try
 		{

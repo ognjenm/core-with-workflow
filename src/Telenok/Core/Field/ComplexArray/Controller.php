@@ -44,18 +44,9 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			$value_ = $value->toArray();
 		}
-		else if (is_array($value))
-		{
-			$value_ = [];
-
-			foreach($value as $k => $v)
-			{
-				$value_[] = $v;
-			}
-		}
 		else
 		{
-			$value_ = (array)$value;
+			$value_ = $value;
 		}
 
 		$model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));

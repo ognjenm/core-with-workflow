@@ -5,7 +5,6 @@ return [
     'list.btn.create' => 'Создать',
     'list.btn.refresh' => 'Обновить',
     'list.btn.select' => 'Выделенные',
-    'list.save.success' => 'Виджет обновлен',
     'list.btn.choose' => 'Выбрать',
     'list.btn.delete.all' => 'Удалить всё',
     'list.btn.edit' => 'Редактировать',

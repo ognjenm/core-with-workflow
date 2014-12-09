@@ -84,7 +84,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 					'typeId' => $item->sequences_object_type, 
 					'module' => ($module ? 1 : 0),
 					'moduleKey' => ($module ? $module->getKey() : ""),
-					'moduleRouterActionParam' => ($module ? $module->getRouterActionParam() : ""),
+					'moduleRouterActionParam' => ($module ? $module->getRouterActionParam(['typeId' => $item->getKey()]) : ""),
 				];
     }
 
@@ -361,11 +361,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
     }
 
-    public function edit()
+    public function edit($id = 0)
     {  
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
-		$id = $input->get('id');
+		$id = $id ?: $input->get('id');
 		
         $model = $this->getModel($id);
         $type = $this->getTypeByModel($id);
@@ -460,8 +460,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         
         $content = [];
         
-        $model = $this->modelByType($id);
-        $type = $this->getType($id);
+        $model = $this->modelByType($input->get('id'));
+        $type = $this->getType($input->get('id'));
         $fields = $model->getFieldForm();
 
         foreach ($ids as $id_)

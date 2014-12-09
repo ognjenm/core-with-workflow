@@ -296,10 +296,10 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         ];
     }
 
-    public function edit()
+    public function edit($id = 0)
     { 
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
-		$id = $input->get('id');
+		$id = $id ?: $input->get('id');
 		
         $model = $this->getModelList()->findOrFail($id);
         $type = $this->getTypeList();

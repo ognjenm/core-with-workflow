@@ -13,7 +13,6 @@
             'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
             "fnClick": function(nButton, oConfig, oFlash)
             {
-				
                 if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
                 else
                 { 

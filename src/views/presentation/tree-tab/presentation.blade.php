@@ -223,28 +223,54 @@
 									"sExtends": "text",
 									"sButtonText": "<i class='fa fa-lock'></i> {{ $controller->LL('btn.lock') }}",
 									"fnClick": function(nButton, oConfig, oFlash) 
-										{
-											if (param.btnListLockUrl)
-											{
-												this_.addTabByURL({
-													url: param.btnListLockUrl, 
-													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-												});
-											}
+                                    {
+                                        if (param.btnListLockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
+                                        {
+                                            jQuery.ajax({
+                                                url: param.btnListLockUrl, 
+                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                                method: 'get',
+                                                dataType: 'json',
+                                            }).done(function(data) 
+                                            {
+                                                if (data.success == 1)
+                                                {
+                                                    jQuery.gritter.add({
+                                                        title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                        text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                        class_name: 'gritter-success gritter-light',
+                                                        time: 3000,
+                                                    });
+                                                }
+                                            }); 
+                                        }
 									}
 								},
 								{
 									"sExtends": "text",
 									"sButtonText": "<i class='fa fa-unlock'></i> {{ $controller->LL('btn.unlock') }}",
 									"fnClick": function(nButton, oConfig, oFlash) 
-										{
-											if (param.btnListUnlockUrl)
-											{
-												this_.addTabByURL({
-													url: param.btnListUnlockUrl, 
-													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-												});
-											}
+                                    {
+                                        if (param.btnListUnlockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
+                                        {
+                                            jQuery.ajax({
+                                                url: param.btnListUnlockUrl, 
+                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                                method: 'get',
+                                                dataType: 'json'
+                                            }).done(function(data) 
+                                            {
+                                                if (data.success == 1)
+                                                {
+                                                    jQuery.gritter.add({
+                                                        title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                        text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                        class_name: 'gritter-success gritter-light',
+                                                        time: 3000,
+                                                    });
+                                                }
+                                            }); 
+                                        }
 									}
 								},
 								{
@@ -380,13 +406,14 @@
 			},
 			callMe: function(param)
 			{ 
-				this.setParam(param); 
-				this.setBreadcrumbs(param); 
-				this.setPageHeader();
+				this.setParam(param);  
 
 				param.addSkeleton===false ? '' : this.showSkeleton();
 				param.addTree===false  ? '' : this.addTree(); 
 				param.addTab===false  ? '' : this.addTabByURL(param); 
+
+				this.setBreadcrumbs(param); 
+				this.setPageHeader();
 
 				return this;
 			}
