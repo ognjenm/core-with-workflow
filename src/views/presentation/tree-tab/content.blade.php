@@ -8,7 +8,7 @@
                 <h5 class="widget-title smaller">{{ $controller->LL('table.filter.header') }}</h5>
                 <span class="widget-toolbar no-border">
                     <a data-action="collapse" href="#">
-                        <i class="fa fa-chevron-up"></i>
+                        <i class="ace-icon fa fa-chevron-up"></i>
                     </a>
                 </span>
             </div>

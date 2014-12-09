@@ -6,10 +6,33 @@
         <div class="widget-box transparent">
             <div class="widget-header">
                 <h5 class="widget-title smaller">{{ $controller->LL('table.filter.header') }}</h5>
-                <span class="widget-toolbar no-border">
-                    <a data-action="collapse" href="#">
-                        <i class="fa fa-chevron-up"></i>
-                    </a>
+                <span class="widget-toolbar">
+                    
+                    <div class="widget-menu">
+                        <a href="#" data-action="settings" data-toggle="dropdown">
+                            <i class="ace-icon fa fa-bars"></i>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer" id="ul-field-filter-{{$uniqueId}}">
+                            <li role="presentation" class="dropdown-header">Filter field</li>
+                            
+                        @foreach($fieldsFilter->all() as $key => $field) 
+
+                            <li class="{{$key < 2 ? 'active' : ''}}">
+                                <a href="#"
+                                    onclick="
+                                        jQuery('#{{$uniqueId}}-field-filter-{{$field->id}}').toggleClass('hidden');
+                                        jQuery(this).closest('li').toggleClass('active');jQuery(this).blur();">{{ $field->translate('title') }}</a>
+                            </li>
+
+                        @endforeach
+                            
+                        </ul>
+                        <script type="text/javascript">
+                            jQuery('body').on('click', '#ul-field-filter-{{$uniqueId}} a', function (e) { e.stopPropagation(); e.preventDefault(); });
+                        </script>
+                    </div>
+                    
                 </span>
             </div>
 
@@ -18,10 +41,9 @@
                     <form class="form-horizontal telenok-object-field-filter" onsubmit="return false;">
 						
 						<input type="hidden" name="multifield_search" value="1" />
-						
                         @foreach($fieldsFilter->all() as $key => $field) 
 								
-							<div class="form-group">
+							<div class="form-group {{$key > 1 ? 'hidden' : ''}}" id="{{$uniqueId}}-field-filter-{{$field->id}}">
 								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">{{ $field->translate('title') }}</label>
 								<div class="col-sm-9">
 									{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFilterContent($field) !!} 
@@ -45,6 +67,7 @@
                     </form>
                 </div>
             </div>
+            
         </div>
     </div>
 
