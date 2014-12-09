@@ -24,7 +24,7 @@
 
 						{!! $itemFirstLevel->get('content') !!}
 
-							<ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer" id="user_menu">
+							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="user_menu">
 								@foreach($listModuleMenuTop as $itemSecondLevel)
 
 								@if ($itemFirstLevel->get('key') == $itemSecondLevel->get('parent'))
@@ -80,7 +80,11 @@
         </div>
 
         <div class="main-container">
-            <div id="sidebar" class="sidebar responsive sidebar-fixed">
+            <div id="sidebar" class="sidebar responsive sidebar-fixed
+                @if (app('auth')->user()->configuration && app('auth')->user()->configuration->get('ui-backend.sidebar-collapse'))
+                menu-min
+                @endif
+                ">
                 <div class="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large">
                         @foreach($listModuleGroup as $listModuleGroupItem)
@@ -145,8 +149,18 @@
                 </ul>
                 @endforeach
 				<div id="sidebar-collapse" class="sidebar-toggle sidebar-collapse">
-					<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
-				</div>            
+					<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" 
+                        @if (app('auth')->user()->configuration && app('auth')->user()->configuration->get('ui-backend.sidebar-collapse'))
+                        class="ace-icon fa fa-angle-double-right"
+                        @else
+                        class="ace-icon fa fa-angle-double-left"
+                        @endif
+                        data-telenok-sidebar-collapse="{{app('auth')->user()->configuration && app('auth')->user()->configuration->get('ui-backend.sidebar-collapse')}}"
+                        onclick="
+                            jQuery(this).data('telenok-sidebar-collapse', jQuery(this).data('telenok-sidebar-collapse') ? 0 : 1);
+                            telenok.updateUserUISetting('ui-backend.sidebar-collapse', jQuery(this).data('telenok-sidebar-collapse'));"   
+                    ></i>
+				</div>
 			</div>
 
 
@@ -190,49 +204,9 @@
                         </script>
                     </div>
                 </div>
-
-
-                <div class="clearfix page-content">
-
-					<div id="ace-settings-container" class="ace-settings-container">
-						<div id="ace-settings-btn" class="btn btn-app btn-xs btn-warning ace-settings-btn">
-							<i class="ace-icon fa fa-cog bigger-150"></i>
-						</div>
-
-						<div id="ace-settings-box" class="ace-settings-box clearfix">
-							<div class="pull-left width-100">
-								<div class="ace-settings-item">
-									<div class="pull-left">
-										<select class="hide" id="skin-colorpicker">
-											<option value="#438EB9" data-skin="no-skin">#438EB9</option>
-											<option value="#222A2D" data-skin="skin-1">#222A2D</option>
-											<option value="#C6487E" data-skin="skin-2">#C6487E</option>
-											<option value="#D0D0D0" data-skin="skin-3">#D0D0D0</option>
-										</select>
-									</div>
-									<span>&nbsp; Choose Skin</span>
-								</div>
-								
-								<div class="btn-group">
-									<button class="btn dropdown-toggle btn-sm btn-warning" data-toggle="dropdown">
-										User action
-										<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-									</button>
-
-									<ul class="dropdown-menu dropdown-default pull-right">
-										<li>
-											<a href="#" onclick="jQuery.post('{!! URL::route('cmf.clear.cache') !!}'); return false;">Clear cache now</a>
-										</li>
-									</ul>
-								</div>
-
-							</div>
- 
-						</div>
-					</div>
- 
-					
-				</div>
+                
+                <div class="clearfix page-content"></div>
+                
             </div>
         </div>
 

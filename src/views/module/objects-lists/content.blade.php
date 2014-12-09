@@ -15,14 +15,21 @@
 
                         <ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer" id="ul-field-filter-{{$uniqueId}}">
                             <li role="presentation" class="dropdown-header">Filter field</li>
+                        
+                        <?php
+                            $userConfig = \Illuminate\Support\Collection::make(app('auth')->user()->configuration); 
+                        ?>
                             
                         @foreach($fieldsFilter->all() as $key => $field) 
 
-                            <li class="{{$key < 2 ? 'active' : ''}}">
+                            <li class="{{$key < 2 || $userConfig->get('field-filter.' . $controller->getKey() . '.' . $field->id) ? 'active' : ''}}">
                                 <a href="#"
                                     onclick="
+                                        jQuery(this).blur();
                                         jQuery('#{{$uniqueId}}-field-filter-{{$field->id}}').toggleClass('hidden');
-                                        jQuery(this).closest('li').toggleClass('active');jQuery(this).blur();">{{ $field->translate('title') }}</a>
+                                        jQuery(this).closest('li').toggleClass('active');
+                                        telenok.updateUserUISetting('field-filter.{{$controller->getKey()}}.{{$field->id}}', jQuery(this).closest('li').hasClass('active') ? 1 : 0);"
+                                    >{{ $field->translate('title') }}</a>
                             </li>
 
                         @endforeach
@@ -43,7 +50,7 @@
 						<input type="hidden" name="multifield_search" value="1" />
                         @foreach($fieldsFilter->all() as $key => $field) 
 								
-							<div class="form-group {{$key > 1 ? 'hidden' : ''}}" id="{{$uniqueId}}-field-filter-{{$field->id}}">
+							<div class="form-group {{$key < 2 || $userConfig->get('field-filter.' . $controller->getKey() . '.' . $field->id) ? '' : 'hidden'}}" id="{{$uniqueId}}-field-filter-{{$field->id}}">
 								<label class="col-sm-3 control-label no-padding-right" for="form-field-1">{{ $field->translate('title') }}</label>
 								<div class="col-sm-9">
 									{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFilterContent($field) !!} 

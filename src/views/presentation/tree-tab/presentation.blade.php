@@ -321,6 +321,7 @@
 				@show 				
 
 				param = jQuery.extend({}, {
+                    "searchDelay": 1000,
 					"multipleSelection": true,
 					"aoColumns": [],
 					"autoWidth": false,
@@ -342,6 +343,7 @@
 						},
 						"sEmptyTable": "{{ \Lang::get('core::default.table.empty') }}",
 						"sSearch": "{{ \Lang::get('core::default.btn.search') }} ",
+						"sSearchPlaceholder": "{{ \Lang::get('core::default.table.placeholder.search') }} ",
 						"sInfo": "{{ \Lang::get('core::default.table.showed') }}",
 						"sInfoEmpty": "{{ \Lang::get('core::default.table.empty.showed') }}",
 						"sZeroRecords": "{{ \Lang::get('core::default.table.empty.filtered') }}",

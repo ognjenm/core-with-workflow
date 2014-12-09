@@ -31,10 +31,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/login', array('as' => 'cmf.login', 'uses' => "Telenok\Core\Controller\Backend\Controller@login"));
 \Route::post('telenok/logout', array('as' => 'cmf.logout', 'uses' => "Telenok\Core\Controller\Backend\Controller@logout"));
 
-\Route::post('telenok/clear-cache', array('as' => 'cmf.clear.cache', function()
-{
-    \Event::fire('telenok.compile.route');
-}));
+\Route::any('telenok/user/update/ui-setting', array('as' => 'cmf.user.update.ui-setting', 'uses' => "Telenok\Core\Controller\Backend\Controller@updateBackendUISetting"));
 
 //\Route::any('telenok/install', array('as' => 'cmf.install', 'uses' => "Telenok\Core\Controller\Install\Controller@getInstallContent"));
 //\Route::any('telenok/install/verify', array('as' => 'cmf.install.process', 'uses' => "Telenok\Core\Controller\Install\Controller@getInstall@process"));
@@ -181,8 +178,8 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::get('telenok/module/workflow-process/action-param', array('as' => 'cmf.module.workflow-process.action.param', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@getActionParam"));
 \Route::get('telenok/module/workflow-process/diagram/show', array('as' => 'cmf.module.workflow-process.diagram.show', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@diagramShow"));
 \Route::get('telenok/module/workflow-process/diagram/stensilset', array('as' => 'cmf.module.workflow-process.diagram.stensilset', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@diagramStencilSet"));
-\Route::post('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
-\Route::post('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@applyDiagram"));
+\Route::any('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
+\Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@applyDiagram"));
 
 \Route::get('telenok/module/workflow/element/start/point-model/property', array('as' => 'cmf.workflow.point-model.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Model@getPropertyContent"));
 \Route::get('telenok/module/workflow/element/start/point-form/property', array('as' => 'cmf.workflow.point-form.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Form@getPropertyContent"));

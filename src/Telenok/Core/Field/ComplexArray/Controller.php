@@ -24,8 +24,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getModelAttribute($model, $key, $value, $field)
     { 
-		$value = $value === null ? '[]' : $value;
-		
+		$value = $value === null || $value === "" ? '[]' : $value;
+        
 		$v = json_decode($value, true);
 		
 		if (is_array($v))

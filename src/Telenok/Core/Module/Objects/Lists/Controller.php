@@ -17,7 +17,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
 
     public function getActionParam()
-    { 
+    {  
         if ($typeId = $this->getRequest()->input('typeId', 0))
         {
             $type = $this->getType($typeId); 

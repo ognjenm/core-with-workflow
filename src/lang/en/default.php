@@ -66,6 +66,7 @@ return [
     'table.empty.filtered' => 'Отсутствуют данные под условиями поиска',
     'table.showed' => 'Показаны записи с _START_ до _END_',
     'table.filter.header' => 'Search filter',
+    'table.placeholder.search' => 'ID or title',
 
     'tooltip.description' => "Field description",
 

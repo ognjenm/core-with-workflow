@@ -80,7 +80,7 @@ ORYX.Plugins.PropertyWindow = {
                 
                 jQuery.ajax({
                     url: shape.getStencil().urlStoreProperty(),
-                    method: 'post',
+                    method: 'get',
                     dataType: 'json',
                     data: $form.serialize()
                 }).done(function(data) 

@@ -13,6 +13,13 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     {
         return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
     } 
+    
+    public function preProcess($model, $type, $input)
+    { 
+        \Event::fire('telenok.compile.route');
+
+        return $this;
+    }
 }
 
 ?>

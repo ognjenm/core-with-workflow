@@ -48,6 +48,7 @@
 							'clear': clear ? 1 : 0,
 							'clearOnly': clearOnly ? 1 : 0,
 							'id': '{{$model->getKey()}}',
+                            '_token': '{{csrf_token()}}'
 						}
 					}).done(function(data) 
 					{

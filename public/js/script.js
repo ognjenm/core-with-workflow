@@ -161,6 +161,17 @@ var telenokJS = Clazzzz.extend(
         }
 
         this.postCallingPresentation(moduleKey); 
+    },
+    updateUserUISetting: function(key, value)
+    {
+        jQuery.ajax({
+            url: '/telenok/user/update/ui-setting',
+            method: 'get',
+            data: {
+                key: key,
+                value: value
+            } 
+        });
     }
 });
 

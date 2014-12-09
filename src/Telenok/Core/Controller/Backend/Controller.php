@@ -14,6 +14,23 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		}
 	}
 
+	public function updateBackendUISetting($key = null, $value = null)
+	{
+        $key = $key ?: $this->getRequest()->input('key');
+        $value = $value ?: $this->getRequest()->input('value');
+        
+        if ($key)
+        {
+            $userConfig = app('auth')->user()->configuration;
+
+            $userConfig->put($key, $value);
+            
+            app('auth')->user()->configuration = $userConfig;
+            
+            app('auth')->user()->update();
+        }
+    }    
+    
 	public function login()
 	{
 		$username = trim($this->getRequest()->input('username'));
