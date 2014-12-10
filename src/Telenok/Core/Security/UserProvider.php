@@ -16,9 +16,7 @@ class UserProvider extends \Illuminate\Auth\EloquentUserProvider {
 		
 		return $this->createModel()->newQuery()
 				->whereId($identifier)
-				->where('active', 1)
-				->where('active_at_start', '<=', $now)
-				->where('active_at_end', '>=', $now)->first();
+                ->active()->first();
 	}
 	
 	/**

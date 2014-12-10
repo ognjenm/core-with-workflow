@@ -440,12 +440,12 @@ class Acl
     /* 
      * Remove permission from resource 
      * 
-     * \Telenok\Core\Security\Acl::resource(120)->unsetPermission('read')
-     * \Telenok\Core\Security\Acl::role(120)->unsetPermission(null, \User $subject)
-     * \Telenok\Core\Security\Acl::user($admin)->unsetPermission(\App\Model\Telenok\Security\Permission $permission, \News $resource)
+     * \Telenok\Core\Security\Acl::resource(120)->unsetPermission('read') remove all permissions on resource with ID 120
+     * \Telenok\Core\Security\Acl::role(120)->unsetPermission(null, \User $user) remove all permission from role with ID 120 which assigned to user $user
+     * \Telenok\Core\Security\Acl::user($admin)->unsetPermission(\App\Model\Telenok\Security\Permission $permission, \SuperAdmin $subject)
      * 
      */
-    public function unsetPermission($permissionCode = null, $resourceCode = null)
+    public function unsetPermission($permissionCode = null, $subjectCode = null)
     {
         if (!$this->subject) 
         {
@@ -453,9 +453,9 @@ class Acl
         }
         
         $permission = null;
-        $resource = null;
+        $subject = null;
 
-        $subject = $this->subject;
+        $resource = $this->subject;
 
         if ($permissionCode instanceof \Telenok\Core\Model\Security\Permission)
         {
@@ -466,29 +466,29 @@ class Acl
             $permission = \App\Model\Telenok\Security\Permission::where('code', $permissionCode)->orWhere('id', $permissionCode)->first();
         }
 
-        if ($resourceCode instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model)
+        if ($subjectCode instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model)
         {
-            $resource = $resourceCode;
+            $subject = $subjectCode;
         }
-        else if (is_numeric($resourceCode))
+        else if (is_numeric($subjectCode))
         {
-			$resource = \App\Model\Telenok\Object\Sequence::find($resourceCode); 
+			$subject = \App\Model\Telenok\Object\Sequence::find($subjectCode); 
         }
-		else if (is_string($resourceCode))
+		else if (is_string($subjectCode))
 		{
-            $resource = \App\Model\Telenok\Security\Resource::where('code', $resourceCode)->orWhere('id', $resourceCode)->first();
+            $subject = \App\Model\Telenok\Security\Resource::where('code', $subjectCode)->orWhere('id', $subjectCode)->first();
 		}
-        
-        $query = \App\Model\Telenok\Security\SubjectPermissionResource::where('acl_subject_object_sequence', $subject->getKey()); 
+
+        $query = \App\Model\Telenok\Security\SubjectPermissionResource::where('acl_resource_object_sequence', $resource->getKey()); 
 
         if ($permission)
         {
             $query->where('acl_permission_object_sequence', $permission->getKey()); 
         }
 
-        if ($resource)
+        if ($subjectCode)
         {
-            $query->where('acl_resource_object_sequence', $resource->getKey());
+            $query->where('acl_subject_object_sequence', $subject->getKey());
         }
 
 		$list = $query->get();

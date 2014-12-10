@@ -14,7 +14,7 @@
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer" id="ul-field-filter-{{$uniqueId}}">
-                            <li role="presentation" class="dropdown-header">Filter field</li>
+                            <li role="presentation" class="dropdown-header">{{ $controller->LL('title.field.filter') }}</li>
                         
                         <?php
                             $userConfig = \Illuminate\Support\Collection::make(app('auth')->user()->configuration); 

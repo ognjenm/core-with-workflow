@@ -76,7 +76,7 @@
 				<script type="text/javascript">
 					jQuery('ul#field-tabs-{{$jsUnique}}-permission a:first').tab('show'); 
 
-					jQuery("#permission-tabs-{{$jsUnique}}").ajaxChosen({ 
+					jQuery("#permission-{{$permission->code . $jsUnique}}").ajaxChosen({ 
 						keepTypingMsg: "{{ $controller->LL('notice.typing') }}",
 						lookingForMsg: "{{ $controller->LL('notice.looking-for') }}",
 						type: "GET",

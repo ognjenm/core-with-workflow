@@ -86,6 +86,7 @@ return [
 	'error.access' => 'Sorry, access denied',
 	
     'title.view' => 'View',
+    'title.field.filter' => 'Filtering fields',
     
     'error' => [
         'undefined' => 'Sorry, an error occurred',

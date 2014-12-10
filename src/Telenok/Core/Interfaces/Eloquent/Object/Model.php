@@ -40,7 +40,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				\App\Model\Telenok\Object\Version::add($model);
 			}
 
-    		if (!($this instanceof \Telenok\Core\Model\Object\Sequence))
+    		if (!($model instanceof \Telenok\Core\Model\Object\Sequence))
             {
                 $model->deleteSequence();
             }
@@ -678,7 +678,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 
 		return $query->where(function($query) use ($table, $now)
 		{
-			$query->where($table . '.active', 1)
+			$query->whereNull($table . '.deleted_at')
+                ->where($table . '.active', 1)
 				->where($table . '.active_at_start', '<=', $now)
 				->where($table . '.active_at_end', '>=', $now);
 		}); 
