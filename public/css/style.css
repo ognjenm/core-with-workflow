@@ -280,3 +280,8 @@ body.telenok-backend div.tab-content:empty {
     line-height: 19px;
     cursor: pointer;
 }
+
+/* Fix for dropdown menu in datatable header for background div, which has z-index: 2001 */
+ul.DTTT_dropdown.dropdown-menu {
+  z-index: 2003;
+}

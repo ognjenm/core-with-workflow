@@ -2,13 +2,13 @@
 
 return array( 
     'name' => 'File manager',
-    'header.title' => 'File list',
+    'header.title' => 'List of files',
     'header.description' => 'creating and editing',
     'header.wizard' => 'Management file',
-    'list.name' => 'File list',
-    'list.names' => 'Files list',
-    'list.create.file' => 'Create a file',
-    'list.create.directory' => 'Create a directory',
+    'list.name' => 'List of files',
+    'list.names' => 'List of files',
+    'list.create.file' => 'Create file',
+    'list.create.directory' => 'Create directory',
     'list.edit.file' => 'Edit file',
     'list.edit.directory' => 'Edit directory',
 	

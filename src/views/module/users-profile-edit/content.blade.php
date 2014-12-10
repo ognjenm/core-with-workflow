@@ -2,6 +2,6 @@
  
     $list = new Telenok\Core\Module\Users\ProfileEdit\Controller();
     
-    $data = $list->edit(452);
+    $data = $list->setRequest($controller->getRequest())->edit(app('auth')->user()->getKey());
     
     echo $data['tabContent'];

@@ -17,6 +17,7 @@
         {!! HTML::style('packages/telenok/core/js/bootstrap/css/ace.css') !!}
         {!! HTML::style('packages/telenok/core/js/bootstrap/css/ace-skins.min.css') !!}
         {!! HTML::style('packages/telenok/core/js/bootstrap/lib/datetimepicker/datetimepicker.css') !!}
+        {!! HTML::style('packages/telenok/core/js/jquery.datatables/jquery.datatables.tabletool.css') !!}
 
         {!! HTML::style('packages/telenok/core/js/dropzone/dropzone.css') !!}
 		

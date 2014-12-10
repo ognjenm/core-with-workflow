@@ -20,6 +20,7 @@
                             'locked_by',
                             'group',
                             'active',
+                            'active_at',
                             'configuration',
                         ], true);
                     });
@@ -54,7 +55,7 @@
 
 					@foreach($type->tab()->active()->get()->sortBy('tab_order') as $tab) 
 
-					<div id="{{$uniqueId}}_{{}$tab->code}}" class="tab-pane in">
+					<div id="{{$uniqueId}}_{{$tab->code}}" class="tab-pane in">
 						
                         <?php
                         

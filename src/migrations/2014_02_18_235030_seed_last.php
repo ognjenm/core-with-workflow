@@ -474,8 +474,8 @@ class SeedLast extends Migration {
                 'allow_create' => 1,
                 'allow_update' => 1, 
                 'field_order' => 33,
-                'upload_allow_ext' => ['jpg', 'jpeg', 'png', 'txt', 'doc', 'gif'],
-                'upload_allow_mime' => ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'text/plain'],
+                'upload_allow_ext' => ['jpg', 'jpeg', 'png'],
+                'upload_allow_mime' => ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/png'],
                 'upload_allow_size' => 200000,
             ]
         );

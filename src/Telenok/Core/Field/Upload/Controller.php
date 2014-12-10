@@ -347,7 +347,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 					'field_object_type' => $typeModel->getKey(),
 					'field_object_tab' => 'main',
 					'multilanguage' => 0,
-					'show_in_form' => 1,
+					'show_in_form' => 0,
 					'show_in_list' => 0,
 					'allow_search' => 1,
 					'allow_create' => 0,
