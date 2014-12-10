@@ -144,11 +144,12 @@
 			callMe: function(param)
 			{
 				this.setParam(param); 
-				this.setBreadcrumbs(param); 
-				this.setPageHeader();
 
 				param.addSkeleton===false ? '' : this.showSkeleton();
 				param.addTab===false  ? '' : this.addTabByURL(param); 
+
+				this.setBreadcrumbs(param); 
+				this.setPageHeader();
 
 				return this;
 			}

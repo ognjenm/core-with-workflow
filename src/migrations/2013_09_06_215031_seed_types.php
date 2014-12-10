@@ -17,7 +17,7 @@ class SeedTypes extends Migration {
 						'code' => 'object_type',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Object\Type',
-						'class_controller' => '\Telenok\Core\Module\Objects\Type\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Objects\Type\Controller',
 						'treeable' => 1,
 					]
 			);
@@ -30,7 +30,7 @@ class SeedTypes extends Migration {
 						'code' => 'object_field',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Object\Field',
-						'class_controller' => '\Telenok\Core\Module\Objects\Field\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Objects\Field\Controller',
 					]
 			);
 
@@ -42,7 +42,7 @@ class SeedTypes extends Migration {
 						'code' => 'object_sequence',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Object\Sequence',
-						'class_controller' => '\Telenok\Core\Module\Objects\Sequence\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Objects\Sequence\Controller',
 					]
 			);
 
@@ -76,7 +76,7 @@ class SeedTypes extends Migration {
 						'code' => 'object_version',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Object\Version',
-						'class_controller' => '\Telenok\Core\Module\Objects\Version\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Objects\Version\Controller',
 					]
 			);
 
@@ -99,7 +99,7 @@ class SeedTypes extends Migration {
 						'code' => 'setting',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\System\Setting',
-						'class_controller' => '\Telenok\Core\Module\System\Setting\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\System\Setting\Controller',
 					]
 			);
 
@@ -189,7 +189,7 @@ class SeedTypes extends Migration {
 						'code' => 'workflow_process',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Workflow\Process',
-						'class_controller' => '\Telenok\Core\Module\Workflow\Process\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Workflow\Process\Controller',
 					]
 			);
 
@@ -201,7 +201,7 @@ class SeedTypes extends Migration {
 						'code' => 'workflow_thread',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Workflow\Thread',
-						'class_controller' => '\Telenok\Core\Module\Workflow\Thread\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Workflow\Thread\Controller',
 					]
 			);
 
@@ -213,7 +213,7 @@ class SeedTypes extends Migration {
 						'code' => 'page',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Web\Page',
-						'class_controller' => '\Telenok\Core\Module\Web\Page\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Web\Page\Controller',
 						'treeable' => 1,
 					]
 			);
@@ -270,7 +270,7 @@ class SeedTypes extends Migration {
 						'code' => 'page_controller',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Web\PageController',
-						'class_controller' => '\Telenok\Core\Module\Web\PageController\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Web\PageController\Controller',
 					]
 			);
 
@@ -282,7 +282,7 @@ class SeedTypes extends Migration {
 						'code' => 'widget_on_page',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Web\WidgetOnPage',
-						'class_controller' => '\Telenok\Core\Module\Web\WidgetOnPage\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Web\WidgetOnPage\Controller',
 					]
 			);
 
@@ -338,7 +338,7 @@ class SeedTypes extends Migration {
 						'code' => 'domain',
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Web\Domain', 
-						'class_controller' => '\Telenok\Core\Module\Web\Domain\Controller',
+						'class_controller' => '\App\Http\Controllers\Module\Web\Domain\Controller',
 					]
 			);
 		}

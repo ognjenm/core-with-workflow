@@ -681,7 +681,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 }
                 catch(\Illuminate\Database\Eloquent\ModelNotFoundException $e)
                 {
-                    throw new \Exception("Telenok\Core\Module\Objects\Lists\Controller::save() - Error: 'type of object not found, please, define it'");
+                    throw new \Exception("App\Http\Controllers\Module\Objects\Lists\Controller::save() - Error: 'type of object not found, please, define it'");
                 }
             }
         }

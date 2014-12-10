@@ -650,9 +650,9 @@
 		callMe: function(param)
 		{
 			this.setParam(param); 
-			this.setBreadcrumbs(param); 
 			this.showSkeleton(); 
 			this.setPageHeader(); 
+			this.setBreadcrumbs(param); 
 
 			return this;
 		},

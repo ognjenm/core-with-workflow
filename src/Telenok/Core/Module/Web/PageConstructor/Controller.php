@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Web\PageConstructor;
 
-class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
+class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
 	protected $key = 'web-page-constructor';
 	protected $parent = 'web';

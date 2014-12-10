@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Objects\Lists\Wizard;
 
-class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
+class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
     protected $presentation = 'wizard-model';
     protected $presentationModelView = 'core::module.objects-lists.wizard-model'; 

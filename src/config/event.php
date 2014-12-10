@@ -69,6 +69,7 @@
 \Event::listen('telenok.module.menu.top', function($list)
 {
     $list->push('users-profile-edit@topMenuMain');
+    $list->push('users-profile-edit@topMenuProfileEdit');
     $list->push('users-profile-edit@topMenuLogout');
 });
 
@@ -139,10 +140,10 @@
 });
 */
 
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Dashboard\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Web\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Page\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Users\ProfileEdit\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Dashboard\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Web\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Page\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Users\ProfileEdit\Controller');
 
 
 

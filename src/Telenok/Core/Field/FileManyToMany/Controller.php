@@ -123,7 +123,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
 		\Input::merge(['active' => 1]);
 
-		$file = app('\Telenok\Core\Module\Objects\Lists\Controller');
+		$file = app('\App\Http\Controllers\Module\Objects\Lists\Controller');
 
 		$model = $file->save(null, 'file'); 
 		
