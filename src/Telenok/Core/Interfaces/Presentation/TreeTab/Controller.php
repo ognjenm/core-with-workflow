@@ -587,10 +587,8 @@ abstract class Controller extends Module implements IPresentation {
         }
         else
         {
-            $types = [];
-
-            $types[] = \App\Model\Telenok\Object\Type::where('code', 'folder')->firstOrFail()->getKey();
-
+            $types = \App\Model\Telenok\Object\Type::where('treeable', 1)->get()->fetch('id')->toArray();
+            
             if ($model !== null)
             {
                 $types[] = $model->type()->getKey();

@@ -27,7 +27,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		$value = $value === null || $value === "" ? '[]' : $value;
         
 		$v = json_decode($value, true);
-		
+        
 		if (is_array($v))
 		{
 			return \Illuminate\Support\Collection::make($v);
@@ -46,7 +46,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		}
 		else
 		{
-			$value_ = $value;
+			$value_ = $value === null ? [] : $value;
 		}
 
 		$model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));

@@ -200,7 +200,8 @@ class SeedTypes extends Migration {
 						'title_list' => json_encode(['ru' => 'Выполняющийся бизнес-процесс', 'en' => 'Launched business-process'], JSON_UNESCAPED_UNICODE),
 						'code' => 'workflow_thread',
 						'active' => 1,
-						'class_model' => '\App\Model\Telenok\Workflow\Thread'
+						'class_model' => '\App\Model\Telenok\Workflow\Thread',
+						'class_controller' => '\Telenok\Core\Module\Workflow\Thread\Controller',
 					]
 			);
 

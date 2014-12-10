@@ -21,13 +21,15 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
         
         if ($key)
         {
-            $userConfig = app('auth')->user()->configuration;
+            $user = app('auth')->user();
+            
+            $userConfig = $user->configuration;
 
             $userConfig->put($key, $value);
+        
+            $user->configuration = $userConfig;
             
-            app('auth')->user()->configuration = $userConfig;
-            
-            app('auth')->user()->update();
+            $user->update();
         }
     }    
     

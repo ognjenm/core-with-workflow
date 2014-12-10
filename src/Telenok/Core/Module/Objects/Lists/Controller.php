@@ -21,11 +21,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         if ($typeId = $this->getRequest()->input('typeId', 0))
         {
             $type = $this->getType($typeId); 
-
+            
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getActionParam();
-			} 
+			}
         }
         else
         {

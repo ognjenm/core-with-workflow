@@ -493,6 +493,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		} 
 		catch (\InvalidArgumentException $ex) 
 		{
+            $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+
 			return \URL::route("cmf.module.objects-lists.action.param", $param);
 		}
     } 

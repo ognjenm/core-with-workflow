@@ -181,6 +181,10 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
 \Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "Telenok\Core\Module\Workflow\Process\Controller@applyDiagram"));
 
+
+// Module Workflow Thread
+//\Route::get('telenok/module/workflow-thread/action-param', array('as' => 'cmf.module.workflow-thread.action.param', 'uses' => "Telenok\Core\Module\Workflow\Thread\Controller@getActionParam"));
+
 \Route::get('telenok/module/workflow/element/start/point-model/property', array('as' => 'cmf.workflow.point-model.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Model@getPropertyContent"));
 \Route::get('telenok/module/workflow/element/start/point-form/property', array('as' => 'cmf.workflow.point-form.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Form@getPropertyContent"));
 \Route::get('telenok/module/workflow/element/end/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
