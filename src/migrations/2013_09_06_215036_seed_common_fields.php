@@ -100,7 +100,7 @@ class SeedCommonFields extends Migration {
                     'allow_create' => 1,
                     'allow_update' => 1,
                     'required' => 1,
-                    'field_order' => 3,
+                    'field_order' => 2,
                 ]
         );
     }

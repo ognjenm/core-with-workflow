@@ -274,3 +274,9 @@ body.telenok-backend ul.nav-tabs:empty {
 body.telenok-backend div.tab-content:empty {
     border: 0;
 } 
+
+.help-button {
+    margin-top: 5px;
+    line-height: 19px;
+    cursor: pointer;
+}

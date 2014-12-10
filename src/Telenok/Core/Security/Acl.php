@@ -227,19 +227,19 @@ class Acl
     /* 
      * Add resource 
      * 
-     * \Telenok\Core\Security\Acl::addResource(['en' => 'File'], 'file')
-     * \Telenok\Core\Security\Acl::addResource('File', 'file')
+     * \Telenok\Core\Security\Acl::addResource('file', ['en' => 'File'])
+     * \Telenok\Core\Security\Acl::addResource('file', 'File')
      * 
      */
-    public static function addResource($title = [], $code = null)
+    public static function addResource($code = null, $title = [])
     {
         if (!$code)
         {
             throw new \Exception('Code should be set');
         }
-        
+
         (new \App\Model\Telenok\Security\Resource())->storeOrUpdate([
-            'title' => $title,
+            'title' => (empty($title) ? 'Resource ' . $code : $title),
             'code' => $code,
             'active' => 1,
         ]);

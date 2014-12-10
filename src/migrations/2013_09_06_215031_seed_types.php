@@ -213,6 +213,7 @@ class SeedTypes extends Migration {
 						'active' => 1,
 						'class_model' => '\App\Model\Telenok\Web\Page',
 						'class_controller' => '\Telenok\Core\Module\Web\Page\Controller',
+						'treeable' => 1,
 					]
 			);
 

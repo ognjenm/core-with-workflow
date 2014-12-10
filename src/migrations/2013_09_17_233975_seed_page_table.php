@@ -62,7 +62,7 @@ class SeedPageTable extends Migration {
 				[
                     'title' => ['ru' => "Описание in <meta> tag", 'en' => "Description in <meta> tag"],
                     'title_list' => ['ru' => "Описание in <meta> tag", 'en' => "Description in <meta> tag"],
-                    'key' => 'text',
+                    'key' => 'string',
                     'code' => 'description_ceo',
                     'active' => 1,
                     'field_object_type' => $modelTypeId,
@@ -156,6 +156,17 @@ class SeedPageTable extends Migration {
                     'allow_update' => 1,
                     'field_order' => 9,
                 ]
+        );
+        
+        (new \App\Model\Telenok\Object\Field())->storeOrUpdate(
+            [
+                'key' => 'tree',
+                'field_object_type' => $modelTypeId,
+                'field_object_tab' => 'main',
+                'allow_create' => 1,
+                'allow_update' => 1,
+                'field_order' => 20,
+            ]
         );
     }
 }

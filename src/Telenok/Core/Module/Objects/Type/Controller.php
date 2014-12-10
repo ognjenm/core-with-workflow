@@ -11,7 +11,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-type.form-field-list';
 
-	public function createResource($model, $input)
+	public function createResource($model, $type = null, $input = [])
 	{
 		$resCode = 'object_type.'.$model->code;
 
@@ -25,11 +25,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
 		try
 		{
-			\App\Model\Telenok\Security\Resource::create([
-				'title' => $title,
-				'code' => $resCode,
-				'active' => 1
-			]);
+            \Telenok\Core\Security\Acl::addResource($resCode, $title);
 		} 
 		catch (\Exception $ex) {}
 
@@ -55,7 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 		catch (\Exception $ex) {}
 	}
 
-    public function validateClassModel($model, $type, $input = [])
+    public function validateClassModel($model, $type = null, $input = [])
     { 
         if ($model->exists && $model->class_model)
         {
@@ -88,7 +84,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         }
 	}
 
-    public function validateClassController($model, $type, $input = [])
+    public function validateClassController($model, $type = null, $input = [])
     {
         if (!$input->get('class_controller'))
         {
@@ -121,7 +117,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         }
 	}
 
-    public function preProcess($model, $type, $input)
+    public function preProcess($model, $type = null, $input = [])
     { 
 		$input->put('code', trim($input->get('code')));
 
@@ -135,17 +131,17 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     {
         parent::postProcess($model, $type, $input); 
 
-		$this->createResource($model, $input);
-		$this->createModelFile($model, $input); 
-		$this->createModelTable($model, $input);
-		$this->createControllerFile($model, $input);
-		$this->createControllerLocalizationFile($model, $input);
-        $this->createObjectField($model, $input);
+		$this->createResource($model, $type, $input);
+		$this->createModelFile($model, $type, $input); 
+		$this->createModelTable($model, $type, $input);
+		$this->createControllerFile($model, $type, $input);
+		$this->createControllerLocalizationFile($model, $type, $input);
+        $this->createObjectField($model, $type, $input);
 
 		return $this;
 	}
 
-    public function createControllerLocalizationFile($model, $input)
+    public function createControllerLocalizationFile($model, $type = null, $input = [])
     {    
         if ($model->code)
         {
@@ -185,7 +181,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         }
     }
     
-    public function createModelFile($model, $input)
+    public function createModelFile($model, $type = null, $input = [])
     {
         $class = class_basename($model->class_model);
 
@@ -224,7 +220,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         } 
     }
 
-    public function createControllerFile($model, $input)
+    public function createControllerFile($model, $type = null, $input = [])
     {
         $class = class_basename($model->class_controller);
 
@@ -267,7 +263,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         } 
     }
 
-    public function createModelTable($model, $input)
+    public function createModelTable($model, $type = null, $input = [])
     {  
         $table = $model->code;
 
@@ -290,7 +286,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         }
     }
 
-    public function createObjectField($model, $input)
+    public function createObjectField($model, $type = null, $input = [])
     { 
 		$multilanguage = $input->get('multilanguage');
 
@@ -423,11 +419,17 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 					'field_object_tab' => $tabMain->getKey(),
 					'field_order' => 10,
 				]);
+                
+                \App\Model\Telenok\Object\Sequence::where('sequences_object_type', $model->getKey())
+                        ->update(['treeable' => 1]);
 			}
 		}
 		else
 		{
 			\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->forceDelete();
+ 
+            \App\Model\Telenok\Object\Sequence::where('sequences_object_type', $model->getKey())
+                        ->update(['treeable' => 0]);
 		}
 
 		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'active')->count())

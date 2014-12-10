@@ -33,6 +33,8 @@ class SeedLast extends Migration {
 
 		\App\Model\Telenok\Object\Type::all()->each(function($type) use ($user)
 		{
+            (new \Telenok\Core\Module\Objects\Type\Controller())->createResource($type);
+            
 			$class = $type->class_model;
 			
 			$model = new $class;
@@ -45,23 +47,11 @@ class SeedLast extends Migration {
 				]);
 			});
 
-			try
-			{
-				\Telenok\Core\Security\Acl::addResource('Type of object: ' . $type->code, "object_type.{$type->code}");
-			}
-			catch (\Exception $exc) {}
-			
-			try
-			{
-				\Telenok\Core\Security\Acl::addResource('Own records with object: ' . $type->code, "object_type.{$type->code}.own");
-			}
-			catch (\Exception $exc) {}
-
 			$type->field()->get()->each(function($field) use ($type)
 			{
 				try
 				{
-					\Telenok\Core\Security\Acl::addResource('Object ' . $type->code . '. Field ' . $field->code , "object_field.{$type->code}.{$field->code}");
+					\Telenok\Core\Security\Acl::addResource("object_field.{$type->code}.{$field->code}", 'Object ' . $type->code . '. Field ' . $field->code);
 				}
 				catch (\Exception $exc) {}
 			});
@@ -594,7 +584,7 @@ class SeedLast extends Migration {
 		\App\Model\Telenok\Object\Type::all()->each(function($item)
 		{
 			if ($item->treeable && !$item->field()->where('code', 'tree_parent')->count())
-			{
+			{ 
 				$modelField = new \App\Model\Telenok\Object\Field();
 				
 				$modelField->storeOrUpdate([
@@ -632,7 +622,6 @@ class SeedLast extends Migration {
 		{
 			$item->makeRoot();
 		});
-		
 		
 		//Group
 		(new \App\Model\Telenok\User\Group())->storeOrUpdate([
