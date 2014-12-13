@@ -130,7 +130,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         {
             return view($this->getPresentationTreeView(), array(
                     'controller' => $this, 
-                    'treeChoose' => $this->LL('header.tree.choose'),
+                    'treeChoose' => $this->LL('title.tree'),
                     'typeId' => 0,
                     'id' => str_random()
                 ))->render();

@@ -464,7 +464,7 @@ abstract class Controller extends Module implements IPresentation {
     {
         return view($this->getPresentationTreeView(), [
                 'controller' => $this, 
-                'treeChoose' => $this->LL('header.tree.choose'), 
+                'treeChoose' => $this->LL('title.tree'), 
                 'id' => str_random(),
             ])->render();
     }
@@ -603,69 +603,6 @@ abstract class Controller extends Module implements IPresentation {
         catch (\Exception $e)
         {     
             return $e->getMessage(); 
-        }
-
-        return $tree->all();
-    } 
-    
-    public function getTreeList111111111111111111111111111111111()
-    {
-        $tree = \Illuminate\Support\Collection::make();
-        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
-
-        $id = $input->get('treeId', 0);
-        $searchStr = $input->get('search_string');
-            
-        if ($id == -1 && !$searchStr)
-        {
-            $tree->push([
-                'data' => $this->LL('tree.root'),
-                'attr' => ['id' => 0, 'rel' => 'folder', 'title' => 'ID: 0'],
-                'metadata' => ['id' => 0, 'gridId' => $this->getGridId()],
-                'state' => 'closed'
-            ]);
-        }
-        else
-        {
-            try
-            {
-                $list = $this->getTreeListModel($id, $searchStr);
-                $folderId = \App\Model\Telenok\Object\Type::where('code', 'folder')->pluck('id');
-
-                if ($searchStr)
-                {
-                    foreach ($list->all() as $l)
-                    {
-                        foreach($l->parents()->get()->all() as $l_)
-                        {
-                           $tree->push("#{$l_->getKey()}");
-                        }
-                        
-                        $tree->push("#{$l->getKey()}");
-                    }
-                } 
-                else
-                {
-                    $parents = $list->lists('id', 'tree_pid');
-
-                    foreach ($list as $key => $item)
-                    {
-                        if ($item->tree_pid == $id)
-                        {
-                            $tree->push([
-                                "data" => $item->translate('title'), 
-                                'attr' => ['id' => $item->getKey(), 'rel' => ($folderId == $item->sequences_object_type ? 'folder' : ''), 'title' => 'ID: ' . $item->getKey()],
-                                "state" => (isset($parents[$item->getKey()]) ? 'closed' : ''),
-                                "metadata" => array_merge( ['id' => $item->getKey(), 'gridId' => $this->getGridId() ], $this->getTreeListItemProcessed($item)),
-                            ]);
-                        }
-                    }                
-                }
-            }
-            catch (\Exception $e)
-            {     
-                return $e->getMessage(); 
-            }
         }
 
         return $tree->all();

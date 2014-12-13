@@ -6,7 +6,7 @@ return array(
     'header.title' => 'List of object',
     'header.description' => 'creating and editing',
     'header.wizard' => 'Management object',
-    'header.tree.choose' => "List: Records", 
+    'title.tree' => "List: Records", 
 
     'list.name' => 'Field of objects',
     'list.names' => 'Field of objects',

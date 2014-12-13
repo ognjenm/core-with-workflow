@@ -5,7 +5,7 @@ return array(
     'header.title' => 'Field of object',
     'header.description' => 'creating and editing',
     'header.wizard' => 'Management field',
-    'header.tree.choose' => 'Field: select the type',
+    'title.tree' => 'Field: select the type',
     'list.name' => 'Fields of objects',
     'list.names' => 'Fields of objects',
     'list.create' => 'Create a field',

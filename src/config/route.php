@@ -82,10 +82,10 @@ if (!\Request::is('telenok', 'telenok/*'))
 
 // Module Objects\Field 
 //\Route::any('telenok/module/objects-field/get/namespace-by-path', array('as' => 'cmf.module.objects-field.get.namespace-by-path', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getNamespaceContent"));
-\Route::get('telenok/module/objects-field/action-param', array('as' => 'cmf.module.objects-field.action.param', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getActionParam"));
-\Route::get('telenok/module/objects-field/list/tree', array('as' => 'cmf.module.objects-field.list.tree', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getTreeList"));
-\Route::get('telenok/module/objects-field', array('as' => 'cmf.module.objects-field', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getContent"));
-\Route::get('telenok/module/objects-field/list', array('as' => 'cmf.module.objects-field.list', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getList"));
+//\Route::get('telenok/module/objects-field/action-param', array('as' => 'cmf.module.objects-field.action.param', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getActionParam"));
+//\Route::get('telenok/module/objects-field/list/tree', array('as' => 'cmf.module.objects-field.list.tree', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getTreeList"));
+//\Route::get('telenok/module/objects-field', array('as' => 'cmf.module.objects-field', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getContent"));
+//\Route::get('telenok/module/objects-field/list', array('as' => 'cmf.module.objects-field.list', 'uses' => "App\Http\Controllers\Module\Objects\Field\Controller@getList"));
 
 
 // Module Objects\Sequence

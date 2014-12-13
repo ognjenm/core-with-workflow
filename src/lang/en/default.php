@@ -51,9 +51,7 @@ return [
     'notice.looking-for' => 'Looking for', 
     'notice.locked' => 'Record is locked by :by at :at', 
     'notice.locked.by.myself' => 'Warning! I locked record ', 
-	
-    'tree.root' => 'Tree',
-
+	  
     'home' => 'Main',
     'action' => 'Action',
 
@@ -87,6 +85,7 @@ return [
 	
     'title.view' => 'View',
     'title.field.filter' => 'Filtering fields',
+    'title.tree' => 'Tree',
     
     'error' => [
         'undefined' => 'Sorry, an error occurred',
