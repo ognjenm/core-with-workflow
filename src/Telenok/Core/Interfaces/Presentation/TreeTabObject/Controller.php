@@ -6,47 +6,16 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     protected $key = '';
     protected $parent = '';
-    protected $typeList = '';
-    protected $typeTree = '';
 
     protected $presentationTreeView = 'core::presentation.tree-tab-object.tree';
     protected $presentationContentView = 'core::presentation.tree-tab-object.content';
     protected $presentationModelView = 'core::presentation.tree-tab-object.model';
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
-    protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
-
-    public function setTypeListKey($key)
-    {
-        $this->typeList = $key;
-        
-        return $this;
-    }
-
-    public function setTypeTreeKey($key)
-    {
-        $this->typeTree = $key;
-        
-        return $this;
-    }
-
-    public function getModelList()
-    {
-        return app(\App\Model\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeList)->orWhere('code', $this->typeList); })->active()->firstOrFail()->class_model);
-    }
-
-    public function getModelTree()
-    {
-        return app(\App\Model\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeTree)->orWhere('code', $this->typeTree); })->active()->firstOrFail()->class_model);
-    }
-
-    public function getTypeList()
-    {
-        return \App\Model\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeList)->orWhere('code', $this->typeList); })->active()->firstOrFail();
-    } 
+    protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list'; 
 	
     public function getGridId($key = 'gridId')
     {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->getTypeList()->code}";
     }  
 
     public function getActionParam()
@@ -59,7 +28,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'presentationContent' => $this->getPresentationContent(),
                 'key' => $this->getKey(),
                 'treeContent' => $this->getTreeContent(),
-                'url' => $this->getRouterContent(['treePid' => $this->getTypeList()->getKey()]),
+                'url' => $this->getRouterContent(['typeId' => $this->getTypeList()->getKey(), 'treeId' => 0]),
                 'breadcrumbs' => $this->getBreadcrumbs(),
                 'pageHeader' => $this->getPageHeader(),
             ];
@@ -102,7 +71,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
     public function getTreeContent()
     {
-        if (!$this->typeTree) 
+        if (!$this->getModelTreeClass()) 
 		{
 			return;
 		}
@@ -110,6 +79,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return view($this->getPresentationTreeView(), array(
                 'controller' => $this, 
                 'treeChoose' => $this->LL('header.tree.choose'),
+                'typeId' => $this->getTypeList()->getKey(),
                 'id' => str_random()
             ))->render();
     } 
@@ -161,7 +131,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     public function getList()
     {
         $content = [];
-        
+
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
         
         $total = $input->get('iDisplayLength', $this->displayLength);
@@ -220,8 +190,20 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         $this->getFilterQuery($model, $query); 
 
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
-    }
+    } 
     
+    public function getTreeListTypes()
+    { 
+        $types = [];
+
+        if ($this->getModelTreeClass())
+        {
+            $types[] = $this->getTypeTree()->getKey();
+        }
+        
+        return $types;
+    }
+
     public function getFilterQueryLike($str, $query, $model, $field)
     {
         $query->where(function($query) use ($str, $query, $model, $field)
@@ -494,6 +476,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		catch (\InvalidArgumentException $ex) 
 		{
             $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+            $param['treeId'] = array_get($param, 'treeId', 0);
 
 			return \URL::route("cmf.module.objects-lists.action.param", $param);
 		}
@@ -519,6 +502,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		} 
 		catch (\InvalidArgumentException $ex) 
 		{
+            $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+
 			return \URL::route("cmf.module.objects-lists", $param);
 		}
     }
@@ -642,4 +627,27 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 			return \URL::route("cmf.module.objects-lists.list.unlock", $param);
 		} 
     }
+	
+    public function setRouterListTree($param)
+    {
+		$this->routerListTree = $param;
+		
+		return $this;
+    }       
+
+    public function getRouterListTree($param = [])
+    {
+		try
+		{
+			return \URL::route($this->routerListTree ?: "cmf.module.{$this->getKey()}.list.tree", $param);
+		} 
+		catch (\InvalidArgumentException $ex) 
+		{
+            $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+            $param['treeId'] = array_get($param, 'treeId', 0);
+
+			return \URL::route("cmf.module.objects-lists.list.tree", $param);
+		} 
+    }
+
 }

@@ -30,15 +30,50 @@
 		{
 			telenok.getPresentation('{{$controller->getPresentationModuleKey()}}')
                 .addTabByURL({
-                    url: '{!! URL::route("cmf.module.{$controller->getKey()}") !!}?' + jQuery.param({ "treePid": data.rslt.obj.data('id') }),
+                    url: '{!! $controller->getRouterContent(['typeId' => '__typeId__']) !!}'.replace('__typeId__', data.rslt.obj.data('id')),
                     after: function() 
                     {
                         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').reloadDataTableOnClick({
                             "url": '{!! $controller->getRouterList() !!}', 
-                            "data": { "treePid": data.rslt.obj.data("id") },
+                            "data": { "typeId": data.rslt.obj.data("id") },
                             "gridId": data.rslt.obj.data("gridId")
                         });
                     }});
 		}
 		
 	@stop 
+    
+    
+    @section("json_data")
+    "json_data": {
+        "progressive_render": true,
+        "ajax" : {
+            "type": 'GET',
+            "url": function (node) 
+            {
+                var nodeId = "", url = "";
+
+                if (!jQuery(node).attr('id')) 
+                {
+                    url = '{!! $controller->getRouterListTree() !!}';
+                }
+                else
+                {
+                    nodeId = jQuery(node).attr('id');
+                    url = '{!! $controller->getRouterListTree(['typeId' => '__typeId__']) !!}'.replace('__typeId__', nodeId);
+                }
+
+                return url;
+            }
+        }
+    },
+    @stop
+
+    @section("search")
+    "search" : {
+        "case_insensitive": true,
+        "ajax": {
+            "url": '{!! $controller->getRouterListTree() !!}'
+        }
+    },
+    @stop

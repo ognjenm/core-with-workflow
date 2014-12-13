@@ -103,7 +103,7 @@
                 presentation.addDataTable({
                     aoColumns : aoColumns,
 					aaSorting: [],
-                    sAjaxSource : '{!! $controller->getRouterList() !!}',
+                    sAjaxSource : '{!! $controller->getRouterList(['typeId' => $type->getKey()]) !!}',
                     domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}",
                     btnCreateUrl : '{!! $controller->getRouterCreate(['id' => $type->getKey()]) !!}',
                     btnCreateTitle : '{{ $controller->LL('list.btn.create') }}',
@@ -133,7 +133,7 @@
             
             jQuery('#telenok-{{$controller->getPresentation()}}-presentation-grid-{{$gridId}}')
                 .dataTable()
-                .fnReloadAjax('{!! URL::route("cmf.module.{$controller->getKey()}.list") !!}?treePid={{$type->getKey()}}&' + (erase ? '' : jQuery.param($form.serializeArray())));
+                .fnReloadAjax('{!! URL::route("cmf.module.{$controller->getKey()}.list") !!}?treeId={{$type->getKey()}}&' + (erase ? '' : jQuery.param($form.serializeArray())));
         }
     </script>
 </div>

@@ -105,6 +105,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         
         $fields = []; 
         
+        $fields['rule'] = [];
+
         if ($input->get('required'))
         {
             $fields['rule'][] = 'required';

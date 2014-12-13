@@ -171,7 +171,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::post('telenok/module/web-page-constructor/view/page/widget/buffer/delete/{id}', array('as' => 'cmf.module.web-page-constructor.view.buffer.delete.widget', 'uses' => "App\Http\Controllers\Module\Web\PageConstructor\Controller@deleteBufferWidget"));
 
 // Module Web\Page
-\Route::any('telenok/module/web-page/action-param', array('as' => 'cmf.module.web-page.action.param', 'uses' => "App\Http\Controllers\Module\Web\Page\Controller@getActionParam"));
+//\Route::any('telenok/module/web-page/action-param', array('as' => 'cmf.module.web-page.action.param', 'uses' => "App\Http\Controllers\Module\Web\Page\Controller@getActionParam"));
   
 
 // Module Workflow Process

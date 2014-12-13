@@ -6,7 +6,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     protected $key = 'objects-type';
     protected $parent = 'objects';
-    protected $typeList = 'object_type';
+    protected $modelListClass = '\App\Model\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-type.form-field-list';
@@ -243,8 +243,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                     'key' => "objects-{$model->code}",
                     'parent' => 'objects',
                     'presentation' => 'tree-tab-object',
-                    'typeList' => "{$model->code}",
-                    'typeTree' => "",
+                    'classList' => "{$model->class_model}",
+                    'classTree' => "",
                 ];
 
                 $stub = \File::get(__DIR__.'/stubs/controller.stub');

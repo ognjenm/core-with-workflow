@@ -35,6 +35,8 @@
                 }
             }
         },
+        
+        @section("json_data")
         "json_data": {
             "progressive_render": true,
             "ajax" : {
@@ -45,24 +47,29 @@
                     
                     if (!jQuery(node).attr('id')) 
 					{
-                        url = '{!! URL::route("cmf.module.{$controller->getKey()}.list.tree") !!}';
+                        url = '{!! $controller->getRouterListTree() !!}';
                     }
                     else
                     {
                         nodeId = jQuery(node).attr('id');
-                        url = '{!! URL::route("cmf.module.{$controller->getKey()}.list.tree") !!}?id=' + nodeId;
+                        url = '{!! $controller->getRouterListTree(['id' => '__id__']) !!}'.replace('__id__', nodeId);
                     }
 
                     return url;
                 }
             }
         },
+        @show
+        
+        @section("search")
         "search" : {
             "case_insensitive": true,
             "ajax": {
-                "url": '{!! URL::route("cmf.module.{$controller->getKey()}.list.tree") !!}'
+                "url": '{!! $controller->getRouterListTree() !!}'
             }
         },
+        @show
+        
         "plugins": ["themes", "json_data", "ui", "crrm", "search", "types", "state"]
     })
     .bind("select_node.jstree", function(event, data) 
@@ -73,12 +80,12 @@
 
         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}')
                 .addTabByURL({
-                    url: '{!! URL::route("cmf.module.{$controller->getKey()}") !!}?' + jQuery.param({ "treePid": data.rslt.obj.data('id') }),
+                    url: '{!! $controller->getRouterContent() !!}',
                     after: function() 
                     {
                         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').reloadDataTableOnClick({
                             "url": '{!! $controller->getRouterList() !!}', 
-                            "data": { "treePid": data.rslt.obj.data("id") },
+                            "data": { "treeId": data.rslt.obj.data("id") },
                             "gridId": data.rslt.obj.data("gridId")
                         });
                     }});

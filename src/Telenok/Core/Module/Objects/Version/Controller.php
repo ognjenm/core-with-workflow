@@ -7,7 +7,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $key = 'objects-version';
     protected $parent = 'objects';
 
-    protected $typeList = 'object_version';
+    protected $modelListClass = '\App\Model\Telenok\Object\Version';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationModelView = 'core::module.objects-version.model';

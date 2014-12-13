@@ -13,26 +13,14 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
 	public function getContent($structure = null)
 	{ 
-		$content = [];
-
-		$listWidget = app('telenok.config')->getWidget();
-
-        if ($structure === null)
+        if (!($model = $this->getWidgetModel()))
         {
-            if ($m = $this->getWidgetModel())
-            {
-                $structure = $m->structure;
-            }
-            else 
-            {
-                return;
-            }
-        } 
-        
-        if ($structure !== null && $structure->has('cache_time'))
-        {
-            $this->setCacheTime($structure->get('cache_time'));
+            return;
         }
+
+        $structure = $structure === null ? $model->structure : $structure;
+        
+        $this->setCacheTime($model->cache_time);
 
         if (($content = $this->getCachedContent()) !== false)
         {
@@ -63,7 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
             }
         }
 
-        $content = view($this->getFrontendView(), [
+        $content = view('widget.' . $model->getKey(), [
                             'widget' => $this->getWidgetModel(),
                             'id' => $this->getWidgetModel()->getKey(),
                             'key' => $this->getKey(),
@@ -347,13 +335,13 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
             return;
         }
 
-        $row = $model->structure->get('row');
-        $col = $model->structure->get('col');
+        $row = intval($model->structure->get('row'));
+        $col = intval($model->structure->get('col'));
 
         $structure = $input->get('structure');
         
-        $inputRow = array_get($structure, 'row', 0);
-        $inputCol = array_get($structure, 'col', 0);
+        $inputRow = intval(array_get($structure, 'row', 0));
+        $inputCol = intval(array_get($structure, 'col', 0));
         
         if ($row > $inputRow || $col > $inputCol)
         {
@@ -386,10 +374,10 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
         $ids = [];
 
         $structure = $model->structure;
-        
-        for ($row = 0; $row < $structure->get('row'); $row++)
+
+        for ($row = 0; $row < intval($structure->get('row')); $row++)
         {
-            for ($col = 0; $col < $structure->get('col'); $col++)
+            for ($col = 0; $col < intval($structure->get('col')); $col++)
             {
                 $ids["$row:$col"] = isset($ids["$row:$col"]) ? $ids["$row:$col"] : 'container-' . $model->id . '-' . $row . '-' . $col;
             }
@@ -401,7 +389,4 @@ class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
         return parent::postProcess($model, $type, $input);
     }
-
 }
-
-?>

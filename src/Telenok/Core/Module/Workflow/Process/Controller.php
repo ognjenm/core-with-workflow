@@ -6,7 +6,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     protected $key = 'workflow-process';
     protected $parent = 'workflow';
-    protected $typeList = 'workflow_process';
+    protected $modelListClass = '\App\Model\Telenok\Workflow\Process';
 
     protected $presentation = 'tree-tab-object';
 

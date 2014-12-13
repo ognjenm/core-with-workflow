@@ -81,7 +81,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         );
     }
 
-    public function getTreeList()
+    public function getTreeList($id = null)
     {
         $basePath = base_path();
         $basePathLength = \Str::length($basePath);

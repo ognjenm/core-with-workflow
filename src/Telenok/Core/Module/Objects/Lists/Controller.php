@@ -62,6 +62,33 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 					->setAdditionalViewParam($this->getAdditionalViewParam());
     }    
 
+    public function getTreeListTypes()
+    { 
+        $types = \App\Model\Telenok\Object\Type::whereIn('code', ['folder', 'object_type'])->active()->get()->fetch('id')->toArray();
+        
+        return $types;
+    }
+
+    public function getTreeList($id = null)
+    {
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+        $typeId = $input->get('typeId', 0);
+            
+        if ($input->has('treeId'))
+        {
+            $type = $this->getType($typeId); 
+
+			if ($type->classController())
+			{
+				return $this->typeForm($type)->getTreeList();
+			}
+        }
+        else
+        {
+            return parent::getTreeList($typeId);
+        }
+    }
+    
     public function getTreeListItemProcessed($item)
     {
         $typeObjectId = \App\Model\Telenok\Object\Type::where('code', 'object_type')->pluck('id');
@@ -90,19 +117,32 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 
     public function getTreeContent()
     {
-        return view($this->getPresentationTreeView(), array(
-                'controller' => $this, 
-                'treeChoose' => $this->LL('header.tree.choose'),
-                'id' => str_random()
-            ))->render();
+        if ($typeId = $this->getRequest()->input('typeId', 0))
+        {
+            $type = $this->getType($typeId); 
+            
+			if ($type->classController())
+			{ 
+				return $this->typeForm($type)->getTreeContent();
+			}
+        }
+        else
+        {
+            return view($this->getPresentationTreeView(), array(
+                    'controller' => $this, 
+                    'treeChoose' => $this->LL('header.tree.choose'),
+                    'typeId' => 0,
+                    'id' => str_random()
+                ))->render();
+        }
     }
 
     public function getContent()
     {  
         try 
         {
-            $model = $this->modelByType($this->getRequest()->input('treePid', 0));
-            $type = $this->getType($this->getRequest()->input('treePid', 0)); 
+            $model = $this->getModelByTypeId($this->getRequest()->input('typeId', 0));
+            $type = $this->getType($this->getRequest()->input('typeId', 0)); 
 
 			if ($type->classController())
 			{
@@ -201,8 +241,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $content = [];
         
         $fields = $this->getRequest()->input('fields', ['id', 'title']);
-        $type = $this->getType($this->getRequest()->input('treePid', 0));
-        $model = $this->modelByType($this->getRequest()->input('treePid', 0));
+        $type = $this->getType($this->getRequest()->input('treeId', 0));
+        $model = $this->getModelByTypeId($this->getRequest()->input('treeId', 0));
         
         $items = $this->getListItem($model)->get();
 
@@ -225,27 +265,36 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         
         return json_encode($content);
     }
-    
+
     public function getList()
     {
         $content = [];
-        
+
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
-        
+
         $total = $input->get('iDisplayLength', $this->displayLength);
         $sEcho = $input->get('sEcho');
         $iDisplayStart = $input->get('iDisplayStart', 0); 
 
         try
         {
-            $type = $this->getType($input->get('treePid', 0));
-            $model = $this->modelByType($input->get('treePid', 0)); 
-			
+            if ($typeId = $input->get('typeId', 0))
+            {
+                $type = $this->getType($typeId);
+            }
+            else 
+            {
+                //$type = $this->getTypeByModelId($input->get('treeId', 0));
+                throw new \Exception();
+            } 
+
 			if ($type->classController())
 			{
 				return $this->typeForm($type)->getList();
 			}
 
+            $model = $this->getModelByTypeId($input->get('typeId', 0)); 
+            
             $items = $this->getListItem($model)->get();
 
 			$config = app('telenok.config')->getObjectFieldController();
@@ -319,7 +368,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		
         $id = $input->get('id');
 		
-        $model = $this->modelByType($id);
+        $model = $this->getModelByTypeId($id);
         $type = $this->getType($id);
         $fields = $model->getFieldForm();
 
@@ -368,7 +417,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		$id = $id ?: $input->get('id');
 		
         $model = $this->getModel($id);
-        $type = $this->getTypeByModel($id);
+        $type = $this->getTypeByModelId($id);
         $fields = $model->getFieldForm();
 
         if (!\Auth::can('read', $id))
@@ -415,7 +464,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function delete($id = 0, $force = false)
     { 
         $model = $this->getModel($id);
-        $type = $this->getTypeByModel($id);
+        $type = $this->getTypeByModelId($id);
 
         if (!\Auth::can('delete', $id))
         {
@@ -460,7 +509,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         
         $content = [];
         
-        $model = $this->modelByType($input->get('id'));
+        $model = $this->getModelByTypeId($input->get('id'));
         $type = $this->getType($input->get('id'));
         $fields = $model->getFieldForm();
 
@@ -510,7 +559,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             return \Response::json(['message' => 'Expectation Failed'], 417 /* Expectation Failed */);
         }
 
-        $type = $this->getTypeByModel($id);
+        $type = $this->getTypeByModelId($id);
 
         if (!\Auth::can('delete', "object_type.{$type->code}"))
         {
@@ -686,7 +735,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             }
         }
 
-        $model = $this->modelByType($type->getKey());
+        $model = $this->getModelByTypeId($type->getKey());
 
         $this->preProcess($model, $type, $input);
 		

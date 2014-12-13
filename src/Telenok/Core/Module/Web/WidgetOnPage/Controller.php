@@ -6,13 +6,13 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
 	protected $key = 'web-page-wop';
     protected $presentation = 'tree-tab-object';
-	protected $typeList = 'widget_on_page';
+    protected $modelListClass = '\App\Model\Telenok\Web\WidgetOnPage';
     protected $presentationFormFieldListView = 'core::module.web-page-wop.form-field-list';
     protected $presentationModuleKey = 'web-page-widget-web-page-constructor';
 
     public function getGridId($key = 'gridId')
     {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->getTypeList()->code}";
     }  
         
     public function preProcess($model, $type, $input)
@@ -29,9 +29,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     { 
         if ($input->get('key'))
         {
-            \File::makeDirectory(app_path("views/widget/"), 0777, true, true);
+            \File::makeDirectory(base_path("resources/views/widget/"), 0777, true, true);
 
-            $templateFile = app_path("views/widget/") . $model->getKey() . '.blade.php';
+            $templateFile = base_path("resources/views/widget/") . $model->getKey() . '.blade.php';
 
             if ($t = trim($input->get('template_content')))
             {

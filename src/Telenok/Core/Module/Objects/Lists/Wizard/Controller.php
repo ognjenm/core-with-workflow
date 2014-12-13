@@ -95,7 +95,7 @@ class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 				$id = \App\Model\Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
 			}
 			
-            $model = $this->modelByType($id);
+            $model = $this->getModelByTypeId($id);
             $type = $this->getType($id); 
             $fields = $model->getFieldList(); 
         } 
@@ -146,7 +146,7 @@ class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 			}
 
             $type = $this->getType($id);
-            $model = $this->modelByType($id);  
+            $model = $this->getModelByTypeId($id);  
 			$query = $this->getListItem($model);
 
 			if (!empty($typeList))

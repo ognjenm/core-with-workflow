@@ -104,7 +104,7 @@
                     dataCallback: function(data) 
                     {
                         data.fields = ['id', 'title'];
-                        data.treePid = jQuery("#input-model-type{{$uniqueId}}").val();
+                        data.treeId = jQuery("#input-model-type{{$uniqueId}}").val();
 
                         return data;
                     },

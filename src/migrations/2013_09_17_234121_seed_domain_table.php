@@ -30,6 +30,8 @@ class SeedDomainTable extends Migration {
                     'multilanguage' => 0,
                     'show_in_form' => 1,
                     'show_in_list' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'allow_search' => 1,
                     'field_order' => 3,
                     'string_list_size' => 150,

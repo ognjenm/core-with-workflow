@@ -15,6 +15,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	protected $dates = [];
 
 	protected static $listField = [];
+	protected static $listRule = [];
 	protected static $listFieldController = [];
 	protected static $listMultilanguage = [];
 	protected static $listFieldDate = [];
@@ -165,7 +166,8 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	public static function eraseStatic($model)
 	{
 		$class = get_class($model);
-		
+
+		static::$listRule[$class] = null; 
 		static::$listField[$class] = null; 
 		static::$listFieldController[$class] = null;
 		static::$listMultilanguage[$class] = null;
@@ -174,6 +176,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 		$model->getFillable();
 		$model->getMultilanguage();
         $model->getDates();
+        $model->getRule();
 	}
 	
 	public function fill(array $attributes)
@@ -608,20 +611,18 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 	}
 
 	public function getRule()
-	{
-		static $rule = [];
-
+	{ 
 		$class = get_class($this);
 
-		if (!isset($rule[$class]))
+		if (!isset(static::$listRule[$class]))
 		{
-			$rule[$class] = [];
+			static::$listRule[$class] = [];
 
 			foreach ($this->ruleList as $key => $value)
 			{
 				foreach ($value as $key_ => $value_)
 				{
-					$rule[$class][$key][head(explode(':', $value_))] = $value_;
+					static::$listRule[$class][$key][head(explode(':', $value_))] = $value_;
 				}
 			}
 
@@ -631,13 +632,13 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				{ 
 					foreach ($field->rule->all() as $key => $value)
 					{
-						$rule[$class][$field->code][head(explode(':', $value))] = $value;
+						static::$listRule[$class][$field->code][head(explode(':', $value))] = $value;
 					}
 				}
 			}
 		}
 
-		return $rule[$class];
+		return static::$listRule[$class];
 	}
 
 	public function translate($field, $locale = '')

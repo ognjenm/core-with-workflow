@@ -30,6 +30,7 @@ abstract class Controller extends Module implements IPresentation {
     protected $routerLock = '';
     protected $routerListLock = '';
     protected $routerListUnlock = '';
+    protected $routerListTree = '';
 
     protected $modelListClass = '';
     protected $modelTreeClass = ''; 
@@ -320,11 +321,62 @@ abstract class Controller extends Module implements IPresentation {
     {
 		return \URL::route($this->routerListUnlock ?: "cmf.module.{$this->getKey()}.list.unlock", $param);
     }
+	
+    public function setRouterListTree($param)
+    {
+		$this->routerListTree = $param;
+		
+		return $this;
+    }       
 
+    public function getRouterListTree($param = [])
+    {
+		return \URL::route($this->routerListTree ?: "cmf.module.{$this->getKey()}.list.tree", $param);
+    }
+
+    public function setModelListClass($param)
+    {
+        $this->modelListClass = $param;
+        
+        return $this;
+    }
+
+    public function getModelListClass()
+    {
+        return $this->modelListClass;
+    }
+    
+    public function setModelTreeClass($param)
+    {
+        $this->modelTreeClass = $param;
+        
+        return $this;
+    }
+
+    public function getModelTreeClass()
+    {
+        return $this->modelTreeClass;
+    }
+    
     public function getModelList()
     {
-        return app($this->modelListClass);
-    }    
+        return app($this->getModelListClass());
+    }
+
+    public function getModelTree()
+    {
+        return app($this->getModelTreeClass());
+    }
+
+    public function getTypeList()
+    {
+        return $this->getModelList()->type();
+    } 
+
+    public function getTypeTree()
+    {
+        return $this->getModelTree()->type();
+    } 
     
     public function getModel($id)
     {
@@ -336,20 +388,15 @@ abstract class Controller extends Module implements IPresentation {
         return \App\Model\Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->active()->firstOrFail();
     } 
 
-    public function getTypeByModel($id)
+    public function getTypeByModelId($id)
     {
         return \App\Model\Telenok\Object\Sequence::findOrFail($id)->sequencesObjectType;
     }
     
-    public function modelByType($id)
+    public function getModelByTypeId($id)
     {
         return app($this->getType($id)->class_model);
     }
-
-    public function getModelTree()
-    {
-        return app($this->modelTreeClass);
-    }    
 
     public function validate($model = null, $input = null, $message = [])
     { 
@@ -417,7 +464,7 @@ abstract class Controller extends Module implements IPresentation {
     {
         return view($this->getPresentationTreeView(), [
                 'controller' => $this, 
-                'treeChoose' => $this->LL('header.tree.choose'),
+                'treeChoose' => $this->LL('header.tree.choose'), 
                 'id' => str_random(),
             ])->render();
     }
@@ -481,7 +528,7 @@ abstract class Controller extends Module implements IPresentation {
 
     public function getListItem($model)
     {
-        $id = $this->getRequest()->input('treePid', 0);
+        $id = $this->getRequest()->input('treeId', 0);
 
         $query = $model->newQuery();
 
@@ -511,14 +558,64 @@ abstract class Controller extends Module implements IPresentation {
         return $item->translate($field->code);
     }
 
-    public function getTreeList()
+    public function getTreeList($id = null)
     {
         $tree = \Illuminate\Support\Collection::make();
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
-        $id = $input->get('id', 0);
+        $id = $id === null ? $input->get('treeId', 0) : $id;
         $searchStr = $input->get('search_string');
+            
+        try
+        {
+            $list = $this->getTreeListModel($id, $searchStr);
 
+            if ($searchStr)
+            {
+                foreach ($list->all() as $l)
+                {
+                    foreach($l->parents()->get()->all() as $l_)
+                    {
+                       $tree->push("#{$l_->getKey()}");
+                    }
+
+                    $tree->push("#{$l->getKey()}");
+                }
+            } 
+            else
+            {
+                $parents = $list->lists('id', 'tree_pid');
+
+                foreach ($list as $key => $item)
+                {
+                    if ($item->tree_pid == $id)
+                    {
+                        $tree->push([
+                            "data" => $item->translate('title'), 
+                            'attr' => ['id' => $item->getKey(), 'rel' => '', 'title' => 'ID: ' . $item->getKey()],
+                            "state" => (isset($parents[$item->getKey()]) ? 'closed' : ''),
+                            "metadata" => array_merge( ['id' => $item->getKey(), 'gridId' => $this->getGridId() ], $this->getTreeListItemProcessed($item)),
+                        ]);
+                    }
+                }                
+            }
+        }
+        catch (\Exception $e)
+        {     
+            return $e->getMessage(); 
+        }
+
+        return $tree->all();
+    } 
+    
+    public function getTreeList111111111111111111111111111111111()
+    {
+        $tree = \Illuminate\Support\Collection::make();
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+
+        $id = $input->get('treeId', 0);
+        $searchStr = $input->get('search_string');
+            
         if ($id == -1 && !$searchStr)
         {
             $tree->push([
@@ -574,9 +671,22 @@ abstract class Controller extends Module implements IPresentation {
         return $tree->all();
     } 
 
-    public function getTreeListModel($treePid = 0, $str = '', $input = [])
-    {
-        $model = $this->getModelTree();
+    public function getTreeListTypes()
+    { 
+        $types = [];
+
+        $types[] = \App\Model\Telenok\Object\Type::where('code', 'folder')->active()->pluck('id');
+
+        if ($this->getModelTreeClass())
+        {
+            $types[] = $this->getTypeTree()->getKey();
+        }
+        
+        return $types;
+    }
+
+    public function getTreeListModel($treeId = 0, $str = '')
+    { 
         $sequence = app('\App\Model\Telenok\Object\Sequence');
 
         if ($str)
@@ -587,20 +697,15 @@ abstract class Controller extends Module implements IPresentation {
         }
         else
         {
-            $types = \App\Model\Telenok\Object\Type::where('treeable', 1)->get()->fetch('id')->toArray();
-            
-            if ($model !== null)
-            {
-                $types[] = $model->type()->getKey();
-            }
-            
-            if ($treePid == 0)
+            $types = $this->getTreeListTypes(); 
+
+            if ($treeId == 0)
             {
                 $query = \App\Model\Telenok\Object\Sequence::withChildren(2)->orderBy('pivot_tree_children.tree_order')->active();
             }
             else
             {
-                $query = \App\Model\Telenok\Object\Sequence::find($treePid)->children(2)->orderBy('pivot_tree_attr.tree_order')->active();
+                $query = \App\Model\Telenok\Object\Sequence::find($treeId)->children(2)->orderBy('pivot_tree_attr.tree_order')->active();
             }
 
             $query->whereIn('object_sequence.sequences_object_type', $types);

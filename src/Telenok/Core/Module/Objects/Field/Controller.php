@@ -7,19 +7,26 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $key = 'objects-field';
     protected $parent = 'objects';
 
-    protected $typeList = 'object_field';
-    protected $typeTree = 'object_type';
+    protected $modelListClass = '\App\Model\Telenok\Object\Field';
+    protected $modelTreeClass = '\App\Model\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
 	
+    public function getTreeListTypes()
+    {  
+        $types = \App\Model\Telenok\Object\Type::whereIn('code', ['folder', 'object_type'])->active()->get()->fetch('id')->toArray();
+
+        return $types;
+    }
+    
     public function getListItem($model)
     {
         $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
         {
-            if (!$this->getRequest()->input('multifield_search', false) && ($treePid = $this->getRequest()->input('treePid', 0)))
+            if (!$this->getRequest()->input('multifield_search', false) && ($treeId = $this->getRequest()->input('treeId', 0)))
             { 
-                $query->where($model->getTable().'.field_object_type', $treePid);
+                $query->where($model->getTable().'.field_object_type', $treeId);
             }
         });
 

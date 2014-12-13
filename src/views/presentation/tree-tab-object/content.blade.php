@@ -104,7 +104,7 @@
                 @if (isset($sSearch))
                 oSearch: {"sSearch": "{{$sSearch}}"},
                 @endif
-				sAjaxSource : '{!! $controller->getRouterList(['treePid' => $type->getKey()]) !!}',
+				sAjaxSource : '{!! $controller->getRouterList(['typeId' => $type->getKey(), 'treeId' => 0]) !!}',
 				domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}",
 				btnCreateUrl : '{!! $controller->getRouterCreate(['id' => $type->getKey()]) !!}',
 				btnListEditUrl : '{!! $controller->getRouterListEdit(['id' => $type->getKey()]) !!}',
@@ -133,6 +133,6 @@
             
             jQuery('#telenok-{{$controller->getPresentation()}}-presentation-grid-{{$gridId}}')
                 .dataTable()
-                .fnReloadAjax('{!! $controller->getRouterList(['treePid' => $type->getKey()]) !!}&' + (erase ? '' : jQuery.param($form.serializeArray())));
+                .fnReloadAjax('{!! $controller->getRouterList(['treeId' => $type->getKey()]) !!}&' + (erase ? '' : jQuery.param($form.serializeArray())));
         }
     </script>

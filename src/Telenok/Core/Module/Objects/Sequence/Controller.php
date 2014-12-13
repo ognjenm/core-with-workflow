@@ -6,7 +6,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     protected $key = 'objects-sequence';
     protected $parent = 'objects';
-    protected $typeList = 'object_sequence';
+    protected $modelListClass = '\App\Model\Telenok\Object\Sequence';
     protected $presentation = 'tree-tab-object';
     protected $presentationView = 'core::module.objects-sequence.presentation';
 

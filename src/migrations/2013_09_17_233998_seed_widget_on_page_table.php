@@ -113,7 +113,7 @@ class SeedWidgetOnPageTable extends Migration {
                     'allow_search' => 1,
                     'allow_create' => 1,
                     'allow_update' => 1,
-                    'field_order' => 7,
+                    'field_order' => 9,
                 ]
         );
 

@@ -93,7 +93,6 @@ class SeedPageTable extends Migration {
                     'allow_search' => 1,
                     'allow_create' => 1,
                     'allow_update' => 1,
-                    'required' => 1,
                     'field_order' => 6,
                 ]
         );
