@@ -74,7 +74,7 @@ class Setting {
 
     public function passes()
     {
-        $this->validator = \Validator::make($this->getInput()->all(), $this->getRuleList(), $this->getMessage());
+        $this->validator = \Validator::make($this->getInput()->toArray(), $this->getRuleList(), $this->getMessage());
 
         if ($this->validator->passes()) return true;
         

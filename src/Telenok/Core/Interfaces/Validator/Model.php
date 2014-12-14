@@ -93,7 +93,7 @@ class Model {
     {  
         if ($this->model instanceof \Telenok\Core\Interfaces\Eloquent\Object\Model && $this->model->exists)
         {
-            $this->ruleList = array_intersect_key($this->ruleList, $this->getInput()->all());
+            $this->ruleList = array_intersect_key($this->ruleList, $this->getInput()->toArray());
 
             if (empty($this->ruleList))
             {
@@ -102,10 +102,10 @@ class Model {
         }
 
         $this->validator = \Validator::make(
-                                $this->getInput()->all(), 
+                                $this->getInput()->toArray(), 
                                 $this->getRuleList(), 
                                 $this->getMessage(), 
-                                $this->getInput()->merge($this->getCustomAttribute())->all()
+                                $this->getInput()->merge($this->getCustomAttribute())->toArray()
                             )
                             ->setModel($this->getModel());
 
