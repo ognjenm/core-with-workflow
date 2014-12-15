@@ -2,7 +2,7 @@
     "name": "telenok/core",
     "description": "Telenok CMS Core engine",
     "version": "0.0.2",
-    "keywords": ["cms", "telenok", "core", "laravel"],
+    "keywords": ["telenok", "core"],
     "homepage": "http://telenok.com",
     "minimum-stability": "dev",
     "license": [
@@ -11,17 +11,17 @@
     ],
     "support": {
         "email": "support@telenok.com",
-        "issues": "https://github.com/telenok/telenok/issues"
+        "issues": "https://github.com/telenok/core/issues"
     },
     "authors": [
         {
-            "name": "Telenok Company",
+            "name": "Kiselevich Konstantin",
             "email": "support@telenok.com"
         }
     ],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "dev-master#8022bdc29b37c62e932cb38b5c11c65906ee0288"
+        "illuminate/support": "5.0.*"
     },
     "autoload": {
         "classmap": [
