@@ -41,17 +41,17 @@
 
                                                 {!! Form::open(['route' => 'cmf.login', 'method' => 'post']) !!}
                                                     <fieldset>
-                                                        <label>
+                                                        <label class="block clearfix">
                                                             <span class="block input-icon input-fa fa-right">
-                                                                <input type="text" name="username" class="col-md-12" placeholder="{{ $controller->LL('username') }}" />
-                                                                <i class="fa fa-user"></i>
+                                                                <input type="text" name="username" class="form-control" placeholder="{{ $controller->LL('username') }}" />
+                                                                <i class="ace-icon fa fa-user"></i>
                                                             </span>
                                                         </label>
 
-                                                        <label>
+                                                        <label class="block clearfix">
                                                             <span class="block input-icon input-fa fa-right">
-                                                                <input type="password" name="password" autocomplete="off" class="col-md-12" placeholder="{{ $controller->LL('password') }}" />
-                                                                <i class="fa fa-lock"></i>
+                                                                <input type="password" name="password" autocomplete="off" class="form-control" placeholder="{{ $controller->LL('password') }}" />
+                                                                <i class="ace-icon fa fa-lock"></i>
                                                             </span>
                                                         </label>
 
@@ -73,23 +73,6 @@
                                                     </fieldset>
                                                 {!! Form::close() !!}
 
-                                                <div class="social-or-login center">
-                                                    <span class="bigger-110">{{ $controller->LL('login-social') }}</span>
-                                                </div>
-
-                                                <div class="social-login center">
-                                                    <a class="btn btn-primary">
-                                                        <i class="fa fa-facebook"></i>
-                                                    </a>
-
-                                                    <a class="btn btn-info">
-                                                        <i class="fa fa-twitter"></i>
-                                                    </a>
-
-                                                    <a class="btn btn-danger">
-                                                        <i class="fa fa-google-plus"></i>
-                                                    </a>
-                                                </div>
                                             </div><!--/widget-main-->
 
                                             <div class="toolbar clearfix">
@@ -118,10 +101,10 @@
 
                                                 <form>
                                                     <fieldset>
-                                                        <label>
+                                                        <label class="block clearfix">
                                                             <span class="block input-icon input-fa fa-right">
                                                                 <input type="email" class="col-md-12" placeholder="Email" />
-                                                                <i class="fa fa-envelope"></i>
+                                                                <i class="ace-icon fa fa-envelope"></i>
                                                             </span>
                                                         </label>
 
@@ -144,81 +127,6 @@
                                         </div><!--/widget-body-->
                                     </div><!--/forgot-box-->
 
-                                    <div id="signup-box" class="signup-box widget-box no-border">
-                                        <div class="widget-body">
-                                            <div class="widget-main">
-                                                <h4 class="header green lighter bigger">
-                                                    <i class="fa fa-users blue"></i>
-                                                    New User Registration
-                                                </h4>
-
-                                                <div class="space-6"></div>
-                                                <p> Enter your details to begin: </p>
-
-                                                <form>
-                                                    <fieldset>
-                                                        <label>
-                                                            <span class="block input-icon input-fa fa-right">
-                                                                <input type="email" class="col-md-12" placeholder="Email" />
-                                                                <i class="fa fa-envelope"></i>
-                                                            </span>
-                                                        </label>
-
-                                                        <label>
-                                                            <span class="block input-icon input-fa fa-right">
-                                                                <input type="text" class="col-md-12" placeholder="Username" />
-                                                                <i class="fa fa-user"></i>
-                                                            </span>
-                                                        </label>
-
-                                                        <label>
-                                                            <span class="block input-icon input-fa fa-right">
-                                                                <input type="password" class="col-md-12" placeholder="Password" />
-                                                                <i class="fa fa-lock"></i>
-                                                            </span>
-                                                        </label>
-
-                                                        <label>
-                                                            <span class="block input-icon input-fa fa-right">
-                                                                <input type="password" class="col-md-12" placeholder="Repeat password" />
-                                                                <i class="fa fa-retweet"></i>
-                                                            </span>
-                                                        </label>
-
-                                                        <label>
-                                                            <input type="checkbox" />
-                                                            <span class="lbl">
-                                                                I accept the
-                                                                <a href="#">User Agreement</a>
-                                                            </span>
-                                                        </label>
-
-                                                        <div class="space-24"></div>
-
-                                                        <div class="clearfix">
-                                                            <button type="reset" class="width-30 pull-left btn btn-sm">
-                                                                <i class="fa fa-refresh"></i>
-                                                                Reset
-                                                            </button>
-
-                                                            <button onclick="return false;" class="width-65 pull-right btn btn-sm btn-success">
-                                                                Register
-                                                                <i class="fa fa-arrow-right fa fa-on-right"></i>
-                                                            </button>
-                                                        </div>
-                                                    </fieldset>
-                                                </form>
-                                            </div>
-
-                                            <div class="toolbar center">
-                                                <a href="#" onclick="show_box('login-box');
-    return false;" class="back-to-login-link">
-                                                    <i class="fa fa-arrow-left"></i>
-                                                    Back to login
-                                                </a>
-                                            </div>
-                                        </div><!--/widget-body-->
-                                    </div><!--/signup-box-->
                                 </div><!--/position-relative-->
                             </div>
                         </div>
