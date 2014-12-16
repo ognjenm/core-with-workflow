@@ -2,11 +2,11 @@
 
 namespace Telenok\Core\Module\Workflow\Process;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
     protected $key = 'workflow-process';
     protected $parent = 'workflow';
-    protected $typeList = 'workflow_process';
+    protected $modelListClass = '\App\Model\Telenok\Workflow\Process';
 
     protected $presentation = 'tree-tab-object';
 
@@ -53,11 +53,11 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function applyDiagram()
     { 
-		$id = \Input::get('id', 0);
-		$clear = \Input::get('clear', false);
-		$clearOnly = \Input::get('clearOnly', false);
-		$diagramData = json_decode(\Input::get('diagram', ''), true);
-		$sessionDiagramId = \Input::get('sessionDiagramId');
+		$id = $this->getRequest()->input('id', 0);
+		$clear = $this->getRequest()->input('clear', false);
+		$clearOnly = $this->getRequest()->input('clearOnly', false);
+		$diagramData = json_decode($this->getRequest()->input('diagram', ''), true);
+		$sessionDiagramId = $this->getRequest()->input('sessionDiagramId');
 
 		if ($clear || $clearOnly)
 		{
@@ -85,7 +85,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
             if ($id)
             {
-                $process = \Telenok\Workflow\Process::find($id);
+                $process = \App\Model\Telenok\Workflow\Process::find($id);
                 
                 if ($process && !empty($process->process->get('stencil')))
                 {
@@ -117,16 +117,16 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function diagramShow()
     { 
-        $id = \Input::get('diagramId');
+        $id = $this->getRequest()->input('diagramId');
         
-		$model = \Telenok\Workflow\Process::find($id);
+		$model = \App\Model\Telenok\Workflow\Process::find($id);
 		
-        return \View::make($this->diagramBody, [
+        return view($this->diagramBody, [
                 'controller' => $this,
                 'model' => $model,
                 'stencilData' => ($model ? $model->process->get('diagram', []) : false),
                 'uniqueId' => str_random(), 
-				'sessionDiagramId' => \Input::get('sessionDiagramId'),
+				'sessionDiagramId' => $this->getRequest()->input('sessionDiagramId'),
             ])->render();
     }
 
@@ -255,7 +255,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function getElements()
     {
-        return \App::make('telenok.config')->getWorkflowElement();
+        return app('telenok.config')->getWorkflowElement();
     }
 	
     public function preProcess($model, $type, $input)
@@ -276,7 +276,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     {
         $isValid = true;
 
-        $elements = \App::make('telenok.config')->getWorkflowElement();
+        $elements = app('telenok.config')->getWorkflowElement();
         $processCollection = \Illuminate\Support\Collection::make($process);
         
         $stencilData = $processCollection->get('stencil', []);

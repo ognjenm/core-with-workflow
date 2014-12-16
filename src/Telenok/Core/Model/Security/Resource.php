@@ -10,13 +10,7 @@ class Resource extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	public function setCodeAttribute($value)
 	{
 		$this->attributes['code'] = str_replace(' ', '', strtolower($value));
-	}
-
-	public function resourceWorkflowEventResource()
-	{
-		return $this->belongsToMany('\Telenok\Workflow\EventResource', 'pivot_relation_m2m_resource_workflow_event_resource', 'resource', 'resource_workflow_event_resource')->withTimestamps();
-	}
-
+	} 
 }
 
 ?>

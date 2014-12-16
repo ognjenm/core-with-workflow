@@ -2,20 +2,16 @@
 
 namespace Telenok\Core\Module\Objects\Type;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
     protected $key = 'objects-type';
     protected $parent = 'objects';
-    protected $typeList = 'object_type';
-
-    protected $pathModel = '\models';
-    protected $pathController = '\controllers';
-    protected $nsDefault = '\\';
+    protected $modelListClass = '\App\Model\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-type.form-field-list';
 
-	public function createResource($model, $input)
+	public function createResource($model, $type = null, $input = [])
 	{
 		$resCode = 'object_type.'.$model->code;
 
@@ -29,16 +25,12 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		try
 		{
-			\Telenok\Security\Resource::create([
-				'title' => $title,
-				'code' => $resCode,
-				'active' => 1
-			]);
+            \Telenok\Core\Security\Acl::addResource($resCode, $title);
 		} 
 		catch (\Exception $ex) {}
 
 		$resCodeOwn = 'object_type.'.$model->code.'.own';
-		
+
 		$title = $model->title->all();
 		$toAdd = ['ru' => 'Тип объекта', 'en' => 'Type of object'];
 		$toAddAfter = ['ru' => 'Собственные записи', 'en' => 'Own records'];
@@ -50,7 +42,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		try
 		{
-			(new \Telenok\Security\Resource())->storeOrUpdate([
+			(new \App\Model\Telenok\Security\Resource())->storeOrUpdate([
 				'title' => $title,
 				'code' => $resCodeOwn,
 				'active' => 1
@@ -59,100 +51,146 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		catch (\Exception $ex) {}
 	}
 
-    public function validateClassModel($model, $type, $input)
+    public function validateClassModel($model, $type = null, $input = [])
     { 
+        if ($model->exists && $model->class_model)
+        {
+			\Session::flash('warning.class_model_exists', $this->LL('error.class_model_exists'));
+
+            $input->forget('class_model');
+
+            return;
+        }
+
 		$input->put('class_model', strtolower(trim($input->get('class_model'), '\\ ')));
 
-		$classNameCollection = \Illuminate\Support\Collection::make(explode('\\', $input->get('class_model')))->each(function($item)
+		$classNameCollection = \Illuminate\Support\Collection::make(explode('\\', $input->get('class_model')))
+            ->filter(function($i) { return trim($i); })->each(function($item)
 		{
 			if (!preg_match('/^[a-z][\w]*$/i', $item))
 			{
 				throw new \Exception($this->LL('error.class_model.name'));
 			}
 		})
-		->transform(function($item)
-		{
-			return ucfirst($item);
-		});
+		->transform(function($item) { return ucfirst($item); });
 
 		$input->put('class_model', '\\' . implode($classNameCollection->all(), '\\'));
 
-		if (class_exists($input->get('class_model')))
-		{
-			\Session::flash('warning.class_model_exists', $this->LL('error.class_model_exists'));
-		}
+        $classModel = $input->get('class_model');
 
-		if ($model->exists)
-		{
-			$input->forget('class_model');
-		}
+        if (preg_match('/^\\\\App\\\\Model\\\\.+/', $classModel) !== 1 && !class_exists($classModel))
+        {
+            throw new \Exception($this->LL('error.class_model.store'));
+        }
 	}
 
-    public function validateClassController($model, $type, $input)
+    public function validateClassController($model, $type = null, $input = [])
     {
-		if (!$input->get('class_controller'))
-		{
-			return;
-		}
+        if (!$input->get('class_controller'))
+        {
+            return;
+        }
 
-		$input->put('class_controller', trim($input->get('class_controller'), '\\ '));
+		$input->put('class_controller', strtolower(trim($input->get('class_controller'), '\\ ')));
 
-		$classNameCollection = \Illuminate\Support\Collection::make(explode('\\', $input->get('class_controller')))->each(function($item)
+		$classNameCollection = \Illuminate\Support\Collection::make(explode('\\', $input->get('class_controller')))
+                ->filter(function($i) { return trim($i); })->each(function($item)
 		{
 			if (!preg_match('/^[a-z][\w]*$/i', $item))
 			{
 				throw new \Exception($this->LL('error.class_controller.name'));
 			}
 		})
-		->transform(function($item)
-		{
-			return ucfirst($item);
-		});
+		->transform(function($item) { return ucfirst($item); });
 
 		$input->put('class_controller', '\\' . implode($classNameCollection->all(), '\\'));
 
-		if (class_exists($input->get('class_controller')))
+        $classModel = $input->get('class_controller');
+        
+		if (class_exists($classModel))
 		{
 			\Session::flash('warning.class_controller_exists', $this->LL($this->LL('error.class_controller_exists')));
 		}
+        else if (preg_match('/^\\\\App\\\\Http\\\\Controllers\\\\.+/', $classModel) !== 1)
+        {
+            throw new \Exception($this->LL('error.class_controller.store'));
+        }
 	}
 
-    public function preProcess($model, $type, $input)
+    public function preProcess($model, $type = null, $input = [])
     { 
 		$input->put('code', trim($input->get('code')));
+
+		$this->validateClassModel($model, $type, $input);
+		$this->validateClassController($model, $type, $input);
 
         return parent::preProcess($model, $type, $input); 
 	}
 
     public function postProcess($model, $type, $input)
-    { 
-		$this->validateClassModel($model, $type, $input);
-		$this->validateClassController($model, $type, $input);
-		
+    {
         parent::postProcess($model, $type, $input); 
 
-		$this->createResource($model, $input);
-		$this->createModelFile($model, $input); 
-		$this->createModelTable($model, $input);
-		$this->createControllerFile($model, $input);
-		$this->createObjectField($model, $input);
+		$this->createResource($model, $type, $input);
+		$this->createModelFile($model, $type, $input); 
+		$this->createModelTable($model, $type, $input);
+		$this->createControllerFile($model, $type, $input);
+		$this->createControllerLocalizationFile($model, $type, $input);
+        $this->createObjectField($model, $type, $input);
 
-		if ($input->get('class_controller'))
-		{
-			$this->createControllerFile($model, $input); 
-		}
-		
 		return $this;
 	}
 
-    public function createModelFile($model, $input)
+    public function createControllerLocalizationFile($model, $type = null, $input = [])
+    {    
+        if ($model->code)
+        {
+            $locales = \Config::get('app.locales');
+
+            foreach ($locales as $locale)
+            {
+                $dir = base_path('resources' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . 'module');
+                $file = base_path('resources' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR . $locale . DIRECTORY_SEPARATOR . 'module' . DIRECTORY_SEPARATOR . 'objects-' . $model->code . '.php');
+            
+                if (!\File::exists($file)) 
+                {
+                    try 
+                    {
+                        \File::makeDirectory($dir, 0775, true, true);
+
+                        $param = [
+                            'name' => $model->translate('title', $locale),
+                            'title' => $model->translate('title', $locale),
+                        ];
+
+                        $stub = \File::get(__DIR__.'/stubs/locale.stub');
+
+                        foreach($param as $k => $v)
+                        {
+                            $stub = str_replace('{{'.$k.'}}', $v, $stub);
+                        }
+
+                        \File::put($file, $stub);
+                    } 
+                    catch (\Exception $e) 
+                    {
+                        \Exception($this->LL('error.file.create', array('path' => $file)));
+                    }
+                } 
+            }
+        }
+    }
+    
+    public function createModelFile($model, $type = null, $input = [])
     {
         $class = class_basename($model->class_model);
 
 		$ns = trim(preg_replace('/\\\\'.$class.'$/', '', $model->class_model), '\\');
 
-		$file = str_replace('\\', DIRECTORY_SEPARATOR, app_path() . $this->pathModel . $model->class_model . '.php');
-		$dir = str_replace('\\', DIRECTORY_SEPARATOR, app_path() . $this->pathModel . DIRECTORY_SEPARATOR . $ns);
+        $path = preg_replace('/^(App)(.+)$/', '${2}', $ns);
+        
+		$dir = str_replace('\\', DIRECTORY_SEPARATOR, app_path() . $path);
+		$file = $dir . DIRECTORY_SEPARATOR . $class . '.php';
 
         if (!\File::exists($file)) 
         {
@@ -182,14 +220,16 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         } 
     }
 
-    public function createControllerFile($model, $input)
+    public function createControllerFile($model, $type = null, $input = [])
     {
         $class = class_basename($model->class_controller);
 
 		$ns = trim(preg_replace('/\\\\'.$class.'$/', '', $model->class_controller), '\\');
 
-		$file = str_replace('\\', DIRECTORY_SEPARATOR, app_path() . $this->pathController . $model->class_controller . '.php');
-		$dir = str_replace('\\', DIRECTORY_SEPARATOR, app_path() . $this->pathController . DIRECTORY_SEPARATOR . $ns);
+        $path = preg_replace('/^(App)(.+)$/', '${2}', $ns);
+        
+		$dir = str_replace('\\', DIRECTORY_SEPARATOR, app_path() . $path);
+		$file = $dir . DIRECTORY_SEPARATOR . $class . '.php';
 
         if (!\File::exists($file)) 
         {
@@ -203,8 +243,8 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
                     'key' => "objects-{$model->code}",
                     'parent' => 'objects',
                     'presentation' => 'tree-tab-object',
-                    'typeList' => "{$model->code}",
-                    'typeTree' => "",
+                    'classList' => "{$model->class_model}",
+                    'classTree' => "",
                 ];
 
                 $stub = \File::get(__DIR__.'/stubs/controller.stub');
@@ -223,7 +263,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         } 
     }
 
-    public function createModelTable($model, $input)
+    public function createModelTable($model, $type = null, $input = [])
     {  
         $table = $model->code;
 
@@ -246,19 +286,22 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
         }
     }
 
-    public function createObjectField($model, $input)
-    {
+    public function createObjectField($model, $type = null, $input = [])
+    { 
 		$multilanguage = $input->get('multilanguage');
-		
-		$tabMain = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
-		$tabVisible = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
-		$tabAdditionally = \Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
-		
+
+		$tabMain = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'main')->first();
+		$tabVisible = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'visibility')->first();
+		$tabAdditionally = \App\Model\Telenok\Object\Tab::where('tab_object_type', $model->getKey())->where('code', 'additionally')->first();
+
 		$translationSeed = $this->translationSeed();
-		
+
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+
 		if (!$tabMain)
 		{
-			$tabMain = (new \Telenok\Object\Tab())->storeOrUpdate(
+			$tabMain = (new \App\Model\Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.main'),
 						'code' => 'main',
@@ -271,7 +314,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (!$tabVisible)
 		{
-			$tabVisible = (new \Telenok\Object\Tab())->storeOrUpdate(
+			$tabVisible = (new \App\Model\Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.visibility'),
 						'code' => 'visibility',
@@ -284,7 +327,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
 		if (!$tabAdditionally)
 		{
-			$tabAdditionally = (new \Telenok\Object\Tab())->storeOrUpdate(
+			$tabAdditionally = (new \App\Model\Telenok\Object\Tab())->storeOrUpdate(
 					[
 						'title' => array_get($translationSeed, 'tab.additionally'),
 						'code' => 'additionally',
@@ -295,9 +338,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'id')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'id')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'title' => array_get($translationSeed, 'model.№'),
 				'title_list' => array_get($translationSeed, 'model.№'),
 				'key' => 'integer-unsigned',
@@ -315,9 +358,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'title')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'title')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'title' => array_get($translationSeed, 'model.title'),
 				'title_list' => array_get($translationSeed, 'model.title'),
 				'key' => 'string',
@@ -336,9 +379,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'created-by')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'created-by')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'created-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -346,9 +389,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 		
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'updated-by')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'updated-by')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'updated-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -356,9 +399,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			]);
 		}
 		
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'locked-by')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'locked-by')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'locked-by',
 				'field_object_type' => $model->getKey(),
 				'field_object_tab' => $tabAdditionally->getKey(),
@@ -368,34 +411,79 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		
 		if ($model->treeable)
 		{
-			if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())
+			if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->count())
 			{
-				(new \Telenok\Object\Field())->storeOrUpdate([
+				(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 					'key' => 'tree',
 					'field_object_type' => $model->getKey(),
 					'field_object_tab' => $tabMain->getKey(),
 					'field_order' => 10,
 				]);
+                
+                \App\Model\Telenok\Object\Sequence::where('sequences_object_type', $model->getKey())
+                        ->update(['treeable' => 1]);
 			}
 		}
 		else
 		{
-			\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->delete();
+			\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'tree')->forceDelete();
+ 
+            \App\Model\Telenok\Object\Sequence::where('sequences_object_type', $model->getKey())
+                        ->update(['treeable' => 0]);
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'active')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'active')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
-				'key' => 'active',
-				'field_object_type' => $model->getKey(),
-				'field_object_tab' => $tabVisible->getKey(),
-				'field_order' => 3,
-			]); 
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
+                'title' => array_get($translationSeed, 'model.active'),
+                'title_list' => array_get($translationSeed, 'model.active'),
+                'key' => 'select-one',
+                'code' => 'active',
+                'select_one_data' => [
+                    'title' => \SeedCommonFields::llYesNo(),
+                    'key' => [0, 1],
+                    'default' => 0,
+                ],
+                'active' => 1,
+                'field_view' => 'core::field.select-one.model-toggle-button',
+                'field_object_type' => $model->getKey(),
+                'field_object_tab' => $tabVisible->getKey(),
+                'multilanguage' => 0,
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'allow_create' => 1,
+                'allow_update' => 1,
+                'field_order' => 3,
+            ]);
+        }
+        
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('code', 'active_at')->count())
+        {
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
+                'title' => array_get($translationSeed, 'model.active_at'),
+                'title_list' => array_get($translationSeed, 'model.active_at'),
+                'key' => 'datetime-range',
+                'code' => 'active_at',
+                'datetime_range_default_start' => $now,
+                'datetime_range_default_end' => $plus15Year,
+                'active' => 1,
+                'field_object_type' => $model->getKey(),
+                'field_object_tab' => $tabVisible->getKey(),
+                'multilanguage' => 0,
+                'show_in_form' => 1,
+                'show_in_list' => 0,
+                'allow_search' => 1,
+                'allow_create' => 1,
+                'allow_update' => 1,
+                'field_order' => 10,
+            ]);
+  
 		}
 
-		if (!\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'permission')->count())
+		if (!\App\Model\Telenok\Object\Field::where('field_object_type', $model->getKey())->where('key', 'permission')->count())
 		{
-			(new \Telenok\Object\Field())->storeOrUpdate([
+			(new \App\Model\Telenok\Object\Field())->storeOrUpdate([
 				'key' => 'permission',
 				'field_object_type' => $model->getKey(),
 			]); 
@@ -427,6 +515,8 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 			'model' => [
 				'№' => ['en' => '№', 'ru' => '№'],
 				'title' => ['en' => 'Title', 'ru' => 'Заголовок'],
+				'active' => ['en' => 'Active', 'ru' => 'Активно'],
+				'active_at' => ['en' => 'Active time', 'ru' => 'Период активности'],
 			],
 		];
 	}

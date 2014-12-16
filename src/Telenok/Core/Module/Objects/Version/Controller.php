@@ -2,31 +2,25 @@
 
 namespace Telenok\Core\Module\Objects\Version;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller { 
 
     protected $key = 'objects-version';
     protected $parent = 'objects';
 
-    protected $typeList = 'object_version';
+    protected $modelListClass = '\App\Model\Telenok\Object\Version';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationModelView = 'core::module.objects-version.model';
     protected $presentationView = 'core::module.objects-version.presentation';
 
-	public function save($input = [], $type = null)
-	{
-		if ($input === null)
-		{
-			$input = \Input::all();
-		}
-
-		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
-  
-		$model = \Telenok\Object\Version::findOrFail($input->get('id'));
+    public function save($input = null, $type = null)
+    {   
+        $input = $input instanceof  \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array)$input);
+		$model = \App\Model\Telenok\Object\Version::findOrFail($input->get('id'));
 		
 		try
 		{
-			return \Telenok\Object\Version::toRestore($model);
+			return \App\Model\Telenok\Object\Version::toRestore($model);
 		} 
 		catch (\Telenok\Core\Interfaces\Exception\ObjectTypeNotFound $ex) 
 		{

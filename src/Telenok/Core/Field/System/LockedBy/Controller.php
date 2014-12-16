@@ -44,7 +44,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		$input->put('allow_create', 0);
 		$input->put('allow_update', 1); 
 		$input->put('relation_one_to_many_belong_to', \DB::table('object_type')->where('code', 'user')->pluck('id'));
-		$input->put('field_order', 10);
+		$input->put('field_order', 14);
 
 		if (!$input->get('field_object_tab'))
 		{
@@ -55,7 +55,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 
 		$input->put('field_object_tab', $tab->getKey());  
 
-		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
+		$table = \App\Model\Telenok\Object\Type::find($input->get('field_object_type'))->code;
 
 		$fieldName = 'locked_by_user';
 
@@ -73,7 +73,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 		{
 			\Schema::table($table, function(Blueprint $table) use ($fieldName)
 			{
-				$table->timestamp($fieldName);
+				$table->timestamp($fieldName)->nullable();
 			});
 		}
 		

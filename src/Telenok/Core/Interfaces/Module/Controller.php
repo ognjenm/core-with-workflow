@@ -2,15 +2,20 @@
 
 namespace Telenok\Core\Interfaces\Module;
 
-abstract class Controller extends \Illuminate\Routing\Controller {
+abstract class Controller extends \Illuminate\Routing\Controller implements \Telenok\Core\Interfaces\Module\IModule {
 
+    use \Telenok\Core\Support\PackageLoad;
+    
     protected $key = '';
     protected $permissionKey = '';
     protected $parent = '';
     protected $group = '';
-    protected $package = '';
     protected $icon = 'fa fa-desktop'; 
-    protected $moduleModel; 
+    protected $package = '';
+    protected $languageDirectory = 'module';
+    protected $modelModule; 
+    protected $modelRepository;
+    protected $request; 
 
     public function __construct()
     {
@@ -24,7 +29,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
                     return \Redirect::route('error.access-denied');
                 }
             });
-        }
+        } 
     }
 	
     public function getName()
@@ -60,6 +65,18 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
         return $this;
     }	
+    
+    public function setRequest(\Illuminate\Http\Request $param = null)
+    {
+        $this->request = $param;
+        
+        return $this;
+    }
+
+    public function getRequest()
+    {
+        return $this->request;
+    }
 
     public function getPermissionKey()
     {
@@ -71,15 +88,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this->parent;
     }  
 
-    public function getPackage()
-    {
-        if ($this->package) return $this->package;
-        
-        $list = explode('\\', __NAMESPACE__);
-        
-        return strtolower(array_get($list, 1));
-    }
-
     public function getIcon()
     {
         return $this->icon;
@@ -90,25 +98,23 @@ abstract class Controller extends \Illuminate\Routing\Controller {
         return $this->group;
     }  
     
-    public function setModuleModel($model)
+    public function setModelModule($model)
     {
-        $this->moduleModel = $model;
+        $this->modelModule = $model;
         
         return $this;
     }
     
-    public function getModuleModel()
+    public function getModelModule()
     {
-        return $this->moduleModel;
+        return $this->modelModule;
     }
 
     public function children()
     {
-        $list = \App::make('telenok.config')->getModule();
-        $key = $this->getKey();
-
-        return $list->filter(function($item) use ($key) {
-            return $key == $item->getParent();
+        return app('telenok.config')->getModule()->filter(function($item) 
+        {
+            return $this->getKey() == $item->getParent();
         });
     }
 
@@ -116,20 +122,16 @@ abstract class Controller extends \Illuminate\Routing\Controller {
     {
         if (!$this->getParent()) return false;
         
-        return \App::make('telenok.config')->getModule()->get($this->getParent());
+        return app('telenok.config')->getModule()->get($this->getParent());
     }
 
     public function isParentAndSingle()
     {
-        $list = \App::make('telenok.config')->getModule()->all();
-        
-        $key = $this->getKey();
-
-        $arr = array_filter($list, function($item) use ($key) {
-            return $item->getParent() == $key;
+        $collection = app('telenok.config')->getModule()->filter(function($item) {
+            return $item->getParent() == $this->getKey();
         });
-
-        return !$this->getParent() && empty($arr);
+        
+        return !$this->getParent() && $collection->isEmpty();
     }  
 
     public function getRouterActionParam($param = [])
@@ -163,30 +165,10 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 
     public function getPageHeader()
     {
-        return array($this->getHeader(), $this->getHeaderDescription());
+        return [$this->getHeader(), $this->getHeaderDescription()];
     }
 
-    public function LL($key = '', $param = [])
-    {
-        $key_ = "{$this->getPackage()}::module/{$this->getKey()}.$key";
-        $key_default_ = "{$this->getPackage()}::default.$key";
-        
-        $word = \Lang::get($key_, $param);
-        
-        // not found in current wordspace
-        if ($key_ === $word)
-        {
-            $word = \Lang::get($key_default_, $param);
-            
-            // not found in default wordspace
-            if ($key_default_ === $word)
-            {
-                return $key_;
-            }
-        } 
-        
-        return $word;
-    }
+
 }
 
 ?>

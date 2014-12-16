@@ -1,18 +1,13 @@
-<?php
+<?php {{namespace}}
 
-{{namespace}}
-
-use \Illuminate\Database\Eloquent\ModelNotFoundException as ModelNotFoundException;
-use \Telenok\Core\Interfaces\Exception\Validate as ValidateException;
-
-class {{class}} extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
+class {{class}} extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller { 
     
     protected $key = '{{key}}';
     protected $parent = '{{parent}}';
-    protected $presentation = '{{presentation}}';
-    
-    protected $typeList = '{{typeList}}';
-    protected $typeTree = '{{typeTree}}';
+    protected $presentation = '{{presentation}}'; 
+
+    protected $modelListClass = '{{classList}}';
+    protected $modelTreeClass = '{{classTree}}';
 
 }
 

@@ -1,40 +1,30 @@
-<?php
-
-namespace Telenok\Core\Widget\Html;
+<?php namespace Telenok\Core\Widget\Html;
 
 class Controller extends \Telenok\Core\Interfaces\Widget\Controller {
 
     protected $key = 'html';
     protected $parent = 'standart';
 
-	public function getContent(\Illuminate\Support\Collection $structure = null)
+	public function getContent($structure = null)
 	{
-        $content = '';
-
-        if ($structure !== null && $structure->has('cache_time'))
+        if (!($model = $this->getWidgetModel()))
         {
-            $this->setCacheTime($structure->get('cache_time'));
+            return;
         }
         
+        $structure = $structure === null ? $model->structure : $structure;
+        
+        $this->setCacheTime($model->cache_time);
+
         if (($content = $this->getCachedContent()) !== false)
         {
             return $content;
         }
 
-        if ($structure !== null && ($view = $structure->get('view')))
-        {
-            $content = \View::make($view, ['controller' => $this])->render();
-        }
-        else if ($m = $this->getWidgetModel())
-        {
-            $content = \View::make('widget.' . $m->getKey(), ['controller' => $this, 'frontendController' => $this->getFrontendController()])->render();
-        }
+        $content = view('widget.' . $model->getKey(), ['controller' => $this, 'frontendController' => $this->getFrontendController()])->render();
 
         $this->setCachedContent($content);
 
         return $content;
 	}
-
 }
-
-?>

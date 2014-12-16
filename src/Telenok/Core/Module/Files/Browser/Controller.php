@@ -36,7 +36,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         return [
             'tabKey' => "{$this->getTabKey()}-{$this->getParent()}",
             'tabLabel' => 'File manager',
-            'tabContent' => \View::make($this->getPresentationContentView(), array(
+            'tabContent' => view($this->getPresentationContentView(), array(
                 'controller' => $this,
 				'currentDirectory' => addslashes(base_path()),
                 'fields' => $this->tableColumn,
@@ -50,8 +50,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function getList()
     {
         $content = []; 
-		
-		$currentDirectory = \Input::get('currentDirectory');
+        
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+        
+		$currentDirectory = $input->get('currentDirectory');
 		
 		if (strstr($currentDirectory, base_path()) === FALSE)
 		{
@@ -60,13 +62,13 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		
 		$directory = new \SplFileInfo($currentDirectory);
         
-		$sEcho = \Input::get('sEcho');
-        $uniqueId = \Input::get('uniqueId');
-        $iDisplayStart = \Input::get('iDisplayStart', 0);
+		$sEcho = $input->get('sEcho');
+        $uniqueId = $input->get('uniqueId');
+        $iDisplayStart = $input->get('iDisplayStart', 0);
 		
         $collection = \Symfony\Component\Finder\Finder::create()->in($directory->getPathname())->depth(0)->sortByType();
 
-        if ($title = trim(\Input::get('sSearch')))
+        if ($title = trim($input->get('sSearch')))
         {
 			$collection->name("*{$title}*");
         }  
@@ -144,12 +146,12 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
                 </div>';
     }
 
-    public function create($id = null)
+    public function create()
 	{
 		try
 		{ 
-			$modelType = \Input::get('modelType');
-			$currentDirectory = realpath(\Input::get('currentDirectory'));
+			$modelType = $this->getRequest()->input('modelType');
+			$currentDirectory = realpath($this->getRequest()->input('currentDirectory'));
 
 			if (strstr($currentDirectory, base_path()) === FALSE)
 			{
@@ -160,8 +162,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			
 			return [
 				'tabKey' => $this->getTabKey() . '-new-' . $tabKey,
-				'tabLabel' => $this->LL('list.create.' . (in_array($modelType, ['file', 'directory']) ? $modelType : "")),
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabLabel' => $this->LL('list.create.' . (in_array($modelType, ['file', 'directory'], true) ? $modelType : "")),
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory),
 					'modelType' => $modelType,
@@ -172,7 +174,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 					'uniqueId' => str_random(),  
 				), $this->getAdditionalViewParam()))->render()
 			];
-		} 
+		}
 		catch (\Exception $ex) 
 		{
 			return [
@@ -181,9 +183,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 
-    public function edit($id = null)
+    public function edit($id = 0)
 	{
-		$id = $id ?: \Input::get('id');
+		$id = $id ?: $this->getRequest()->input('id');
 
 		try
 		{
@@ -202,13 +204,13 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			{
 				$modelType = 'directory';
 			}
-			
-            $tabKey = md5($id);
-            
+
+            $tabKey = str_random();
+
 			return [
 				'tabKey' => $this->getTabKey() . '-edit-' . $tabKey,
 				'tabLabel' => $this->LL('list.edit.' . $modelType),
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($model->getPath()),
 					'modelType' => $modelType,
@@ -231,14 +233,16 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 	
-    public function store($id = null, $input = array())
+    public function store($id = null)
 	{
 		try
 		{
-			$modelType = \Input::get('modelType');
-			$name = trim(\Input::get('name'));
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
-			$currentDirectory = new \SplFileInfo(\Input::get('directory'));
+			$modelType = $input->get('modelType');
+			$name = trim($input->get('name'));
+
+			$currentDirectory = new \SplFileInfo($this->getRequest()->input('directory'));
 
 			if (strstr($currentDirectory->getRealPath(), base_path()) === FALSE)
 			{
@@ -267,7 +271,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			}
 			else if ($modelType == 'file')
 			{
-				\File::put($modelPath, \Input::get('content', ''));
+				\File::put($modelPath, $this->getRequest()->input('content', ''));
 			}
 			else
 			{
@@ -275,7 +279,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			}
 			
 			return [
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory->getRealPath()),
                     'success' => true,
@@ -297,14 +301,16 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
 	}
 	
-    public function update($id = null, $input = array())
+    public function update($id = null)
 	{
 		try
 		{
-			$modelType = \Input::get('modelType');
-			$modelPath = \Input::get('modelPath');
-			$directory = trim(\Input::get('directory'));
-			$name = trim(\Input::get('name'));
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+            
+			$modelType = $input->get('modelType');
+			$modelPath = $input->get('modelPath');
+			$directory = trim($input->get('directory'));
+			$name = trim($input->get('name'));
 
 			$currentDirectory = new \SplFileInfo($directory);
 			$model = new \SplFileInfo($modelPath);
@@ -338,9 +344,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			{
 				$pathNew = $currentDirectory->getPathname() . DIRECTORY_SEPARATOR . $name; 
 
-				if (strlen(\Input::get('content', "")) && \File::size($modelPath) < $this->getMaxSizeToView())
+				if (strlen($this->getRequest()->input('content', '')) && \File::size($modelPath) < $this->getMaxSizeToView())
 				{
-					\File::put($model->getRealPath(), \Input::get('content'));
+					\File::put($model->getRealPath(), $this->getRequest()->input('content'));
 				}
 
 				if ($model->getRealPath() != $pathNew)
@@ -354,7 +360,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			}
 			
 			return [
-				'tabContent' => \View::make("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
+				'tabContent' => view("{$this->getPackage()}::module.{$this->getKey()}.model", array_merge(array( 
 					'controller' => $this,
 					'currentDirectory' => addslashes($currentDirectory->getRealPath()),
                     'success' => true,
@@ -380,7 +386,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     { 
 		try
 		{
-			$model = new \SplFileInfo(\Input::get('id'));
+			$model = new \SplFileInfo($this->getRequest()->input('id'));
 			
 			if (strstr($model->getPath(), base_path()) === FALSE)
 			{
@@ -422,27 +428,26 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		switch ($action)
 		{
 			case 'create':
-				return [ $this->getRouterStore(['saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false), 'tabKey' => $tabKey]) ];
+				return [ $this->getRouterStore(['saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', false), 'tabKey' => $tabKey]) ];
 				break;
 
 			case 'edit':
-				return [ $this->getRouterUpdate(['id' => $filePath, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'tabKey' => $tabKey]) ];
+				return [ $this->getRouterUpdate(['id' => $filePath, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'tabKey' => $tabKey]) ];
 				break;
 
 			case 'store':
-				return [ $this->getRouterUpdate(['saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'tabKey' => $tabKey]) ];
+				return [ $this->getRouterUpdate(['saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'tabKey' => $tabKey]) ];
 				break;
 
 			case 'update':
-				return [ $this->getRouterUpdate(['id' => $filePath, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true), 'tabKey' => $tabKey]) ];
+				return [ $this->getRouterUpdate(['id' => $filePath, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true), 'tabKey' => $tabKey]) ];
 				break;
 
 			default:
 				return [];
 				break;
 		}
-	} 
-
+	}
 	
 	
 	
@@ -452,7 +457,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
     public function getWizardListContent111()
     {
         return array(
-            'content' => \View::make("core::module/files-browser.wizard", array(
+            'content' => view("core::module/files-browser.wizard", array(
                     'controller' => $this,
                     'route' => $this->getRouterEdit(),
                     'uniqueId' => str_random(),
@@ -465,7 +470,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         $basePath = base_path();
         $basePathLength = \Str::length($basePath);
         
-        $id = $basePath.\Input::get('id');
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+        
+        $id = $basePath . $input->get('id');
         
         $listTree = [];
                 
@@ -481,7 +488,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
             );
         }
         
-        if (!\Input::get('id'))
+        if (!$input->get('id'))
         {
             $listTree = array(
                 'data' => array(
@@ -494,8 +501,5 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
         }
         
         return $listTree;
-    }
-    
-}
-
-?>
+    } 
+} 

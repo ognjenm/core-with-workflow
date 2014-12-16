@@ -5,7 +5,6 @@ return [
     'list.btn.create' => 'Create',
     'list.btn.refresh' => 'Refresh',
     'list.btn.select' => 'Selected',
-    'list.save.success' => 'Widget updated',
     'list.btn.choose' => 'Choose',
     'list.btn.delete.all' => 'Delete all',
     'list.btn.edit' => 'Edit',
@@ -35,6 +34,8 @@ return [
     'btn.unlock' => 'Unlock',
     'btn.yes' => 'Yes',
     'btn.no' => 'No',
+    'btn.empty' => 'Not matter',
+    'btn.continue' => 'Continue',
 
     'notice.title' => 'Notice',
     'notice.saved' => 'Saved',
@@ -50,9 +51,7 @@ return [
     'notice.looking-for' => 'Looking for', 
     'notice.locked' => 'Record is locked by :by at :at', 
     'notice.locked.by.myself' => 'Warning! I locked record ', 
-	
-    'tree.root' => 'Tree',
-
+	  
     'home' => 'Main',
     'action' => 'Action',
 
@@ -63,10 +62,9 @@ return [
     'table.empty' => 'Отсутствуют доступные данные для таблицы',
     'table.empty.showed' => 'Отсутствуют данные для показа',
     'table.empty.filtered' => 'Отсутствуют данные под условиями поиска',
-    'table.search' => 'Search',
     'table.showed' => 'Показаны записи с _START_ до _END_',
     'table.filter.header' => 'Search filter',
-    'table.filter.btn' => 'Search',
+    'table.placeholder.search' => 'ID or title',
 
     'tooltip.description' => "Field description",
 
@@ -86,6 +84,8 @@ return [
 	'error.access' => 'Sorry, access denied',
 	
     'title.view' => 'View',
+    'title.field.filter' => 'Filtering fields',
+    'title.tree' => 'Tree',
     
     'error' => [
         'undefined' => 'Sorry, an error occurred',

@@ -1,53 +1,21 @@
 <?php
 
-namespace Telenok\Core\Interfaces\Module\Objects;
-  
+namespace Telenok\Core\Interfaces\Presentation\TreeTabObject;
 
 abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controller {
-    
+
     protected $key = '';
     protected $parent = '';
-    protected $typeList = '';
-    protected $typeTree = '';
-    
+
     protected $presentationTreeView = 'core::presentation.tree-tab-object.tree';
     protected $presentationContentView = 'core::presentation.tree-tab-object.content';
     protected $presentationModelView = 'core::presentation.tree-tab-object.model';
     protected $presentationFormModelView = 'core::presentation.tree-tab-object.form';
-    protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list';
-
-    public function setTypeList($key)
-    {
-        $this->typeList = $key;
-        
-        return $this;
-    }
-
-    public function setTypeTree($key)
-    {
-        $this->typeTree = $key;
-        
-        return $this;
-    }
-
-    public function getModelList()
-    {
-        return \App::build(\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeList)->orWhere('code', $this->typeList); })->active()->firstOrFail()->class_model);
-    }
-
-    public function getModelTree()
-    {
-        return \App::build(\Telenok\Object\Type::where(function($query) { $query->whereId($this->typeTree)->orWhere('code', $this->typeTree); })->active()->firstOrFail()->class_model);
-    }
-
-    public function getTypeList()
-    {
-        return \Telenok\Object\Type::where(function($query) { $query->whereId($this->typeList)->orWhere('code', $this->typeList); })->active()->firstOrFail();
-    } 
+    protected $presentationFormFieldListView = 'core::presentation.tree-tab-object.form-field-list'; 
 	
     public function getGridId($key = 'gridId')
     {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->getTypeList()->code}";
     }  
 
     public function getActionParam()
@@ -60,7 +28,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'presentationContent' => $this->getPresentationContent(),
                 'key' => $this->getKey(),
                 'treeContent' => $this->getTreeContent(),
-                'url' => $this->getRouterContent(['treePid' => $this->getTypeList()->getKey()]),
+                'url' => $this->getRouterContent(['typeId' => $this->getTypeList()->getKey(), 'treeId' => 0]),
                 'breadcrumbs' => $this->getBreadcrumbs(),
                 'pageHeader' => $this->getPageHeader(),
             ];
@@ -83,13 +51,13 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         } 
         catch (\Exception $e) 
         {  
-            return ['message' => 'Empty required'];
+            return ['message' => $e->getMessage()];
         } 
         
         return [
             'tabKey' => "{$this->getTabKey()}-{$model->getTable()}",
             'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationContentView(), array(
+            'tabContent' => view($this->getPresentationContentView(), array_merge([
                 'controller' => $this,  
                 'model' => $model,
                 'type' => $type,
@@ -97,27 +65,28 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 'fieldsFilter' => $this->getModelFieldFilter(),
                 'gridId' => $this->getGridId(),
                 'uniqueId' => str_random(),
-            ))->render()
+            ], $this->getAdditionalViewParam()))->render()
         ];
     }
 
     public function getTreeContent()
     {
-        if (!$this->typeTree) 
+        if (!$this->getModelTreeClass()) 
 		{
 			return;
 		}
-		
-        return \View::make($this->getPresentationTreeView(), array(
+
+        return view($this->getPresentationTreeView(), array(
                 'controller' => $this, 
-                'treeChoose' => $this->LL('header.tree.choose'),
+                'treeChoose' => $this->LL('title.tree'),
+                'typeId' => $this->getTypeList()->getKey(),
                 'id' => str_random()
             ))->render();
     } 
 
     public function getFormContent($model, $type, $fields, $uniqueId)
     {
-        return \View::make($this->getPresentationFormModelView(), array_merge(array( 
+        return view($this->getPresentationFormModelView(), array_merge(array( 
                 'controller' => $this,
                 'model' => $model, 
                 'type' => $type, 
@@ -126,25 +95,17 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
             ), $this->getAdditionalViewParam()))->render();
     }
 
-    public function getModelFieldFilter()
+    public function getModelFieldFilter($model = null)
     {
-		$model = $this->getModelList();
-        $fields = [];
-
-        $model->getFieldForm()->each(function($field) use (&$fields)
+        return $this->getModelList()->getFieldForm()->filter(function($field)
 		{
-			if ($field->allow_search)
-            {
-                $fields[] = $field;
-            }
+            return $field->allow_search;
         }); 
-
-        return $fields;
     }
 
     public function getFilterSubQuery($input, $model, $query)
     {
-        $fieldConfig = \App::make('telenok.config')->getObjectFieldController();
+        $fieldConfig = app('telenok.config')->getObjectFieldController();
 
 		if (!$input instanceof \Illuminate\Support\Collection)
 		{
@@ -171,9 +132,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     {
         $content = [];
 
-        $total = \Input::get('iDisplayLength', 10);
-        $sEcho = \Input::get('sEcho');
-        $iDisplayStart = \Input::get('iDisplayStart', 0);
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+        
+        $total = $input->get('iDisplayLength', $this->displayLength);
+        $sEcho = $input->get('sEcho');
+        $iDisplayStart = $input->get('iDisplayStart', 0); 
 
         try
         {
@@ -182,7 +145,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
             $items = $this->getListItem($model)->get();
 
-            $config = \App::make('telenok.config')->getObjectFieldController();
+            $config = app('telenok.config')->getObjectFieldController();
 
 			$fields = $model->getFieldList();
 			
@@ -226,26 +189,84 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 
         $this->getFilterQuery($model, $query); 
 
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
+    } 
+    
+    public function getTreeListTypes()
+    { 
+        $types = [];
+
+        if ($this->getModelTreeClass())
+        {
+            $types[] = $this->getTypeTree()->getKey();
+        }
+        
+        return $types;
     }
 
-    public function create($id = null)
+    public function getFilterQueryLike($str, $query, $model, $field)
+    {
+        $query->where(function($query) use ($str, $query, $model, $field)
+        {
+            $f = $model->getObjectField()->get($field);
+            app('telenok.config')
+                    ->getObjectFieldController()->get($f->key)
+                    ->getFilterQuery($f, $model, $query, $f->code, $str);
+        });
+    }
+    
+    public function getFilterQuery($model, $query)
+    {
+        $translate = new \App\Model\Telenok\Object\Translation();
+        
+        if ($title = trim($this->getRequest()->input('sSearch')))
+        {
+            $this->getFilterQueryLike($title, $query, $model, 'title');
+        } 
+
+		if ($this->getRequest()->input('multifield_search', false))
+		{
+			$this->getFilterSubQuery($this->getRequest()->input('filter', []), $model, $query);
+		}
+        
+        $orderByField = $this->getRequest()->input('mDataProp_' . $this->getRequest()->input('iSortCol_0'));
+        
+        if ($this->getRequest()->input('iSortCol_0', 0))
+        {
+            if (in_array($orderByField, $model->getMultilanguage(), true))
+            { 
+                $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $orderByField)
+                {
+                    $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
+                            ->on($translate->getTable().'.translation_object_field_code', '=', \DB::raw("'{$orderByField}'"))
+                            ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
+                });
+
+                $query->orderBy($translate->getTable().'.translation_object_string', $this->getRequest()->input('sSortDir_0'));
+            }
+            else
+            {
+                $query->orderBy($model->getTable() . '.' . $orderByField, $this->getRequest()->input('sSortDir_0'));
+            }
+        }
+    }
+    
+    public function create()
     { 
-		$id = $id ?: \Input::get('id');
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
 		$model = $this->getModelList();
         $type = $this->getTypeList();
         $fields = $model->getFieldForm();
 
         $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
-        $eventInput = \Illuminate\Support\Collection::make([]);
 
-        \Event::fire('workflow.form.create', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));
+        \Event::fire('workflow.form.create', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($input));
             
         return [
             'tabKey' => $this->getTabKey() . '-new-' . str_random(),
             'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationModelView(), array_merge([
+            'tabContent' => view($this->getPresentationModelView(), array_merge([
                 'controller' => $this,
                 'model' => $eventResource->get('model'), 
                 'type' => $eventResource->get('type'), 
@@ -257,25 +278,25 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         ];
     }
 
-    public function edit($id = null)
+    public function edit($id = 0)
     { 
-		$id = $id ?: \Input::get('id');
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+		$id = $id ?: $input->get('id');
 		
         $model = $this->getModelList()->findOrFail($id);
         $type = $this->getTypeList();
         $fields = $model->getFieldForm();
             
         $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
-        $eventInput = \Illuminate\Support\Collection::make([]);
 
-        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));  
+        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($input));  
 
 		$model->lock();
         
         return [
             'tabKey' => $this->getTabKey() . '-edit-' . $id,
             'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationModelView(), array_merge(array( 
+            'tabContent' => view($this->getPresentationModelView(), array_merge(array( 
 				'controller' => $this,
 				'model' => $eventResource->get('model'), 
 				'type' => $eventResource->get('type'), 
@@ -288,16 +309,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         ];
     }
 
-    public function store($id = null, $input = [])
+    public function store($id = null)
     {
         try 
         {
-			if (empty($input))
-			{
-				$input = \Input::all();
-			}
-
-			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input());  
 
             $type = $this->getTypeList();
 
@@ -311,13 +327,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		$fields = $model->getFieldForm();
             
         $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
-        $eventInput = \Illuminate\Support\Collection::make([]);
 
-        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));   
+        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($input));   
 
         $return = [];
 
-        $return['tabContent'] = \View::make($this->getPresentationModelView(), array_merge(array(
+        $return['tabContent'] = view($this->getPresentationModelView(), array_merge(array(
                     'controller' => $this,
                     'model' => $eventResource->get('model'), 
                     'type' => $eventResource->get('type'), 
@@ -333,16 +348,11 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         return $return;
     }
 
-    public function update($id = NULL, $input = [])
+    public function update($id = null)
     {
         try 
         {
-			if (empty($input))
-			{
-				$input = \Input::all();
-			}
-
-			$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+            $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
 
             $type = $this->getTypeList();
 			
@@ -356,13 +366,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		$fields = $model->getFieldForm();
             
         $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
-        $eventInput = \Illuminate\Support\Collection::make([]);
 
-        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));   
+        \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($input));   
 
         $return = [];
 
-        $return['tabContent'] = \View::make($this->getPresentationModelView(), array_merge(array(
+        $return['tabContent'] = view($this->getPresentationModelView(), array_merge(array(
                     'controller' => $this,
                     'model' => $eventResource->get('model'),
                     'type' => $eventResource->get('type'), 
@@ -379,14 +388,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
     }
 	
     public function save($input = [], $type = null)
-    {
-		if ($input === null)
-		{
-			$input = \Input::all();
-		}
-
-		$input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array) $input);
-
+    {   
+        $input = $input instanceof  \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array)$input);
         $model = $this->getModelList();
         
         if (!($type instanceof \Telenok\Core\Model\Object\Type))
@@ -397,11 +400,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		return $model->storeOrUpdate($input, true);
     }
 
-    public function editList($id = null)
+    public function editList()
     {
         $content = [];
-
-        $ids = (array)\Input::get('tableCheckAll');
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+        
+        $ids = $input->get('tableCheckAll', []);
         
         if (empty($ids))
 		{
@@ -413,14 +417,12 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         $fields = $type->field()->get();
 
         foreach ($ids as $id)
-        {
-            
+        { 
             $eventResource = \Illuminate\Support\Collection::make(['model' => $model::find($id), 'type' => $type, 'fields' => $fields]);
-            $eventInput = \Illuminate\Support\Collection::make([]);
 
-            \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($eventInput));  
+            \Event::fire('workflow.form.edit', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($input));  
             
-            $content[] = \View::make($this->getPresentationModelView(), array_merge(array( 
+            $content[] = view($this->getPresentationModelView(), array_merge(array( 
                 'controller' => $this,
                 'model' => $eventResource->get('model'), 
                 'type' => $eventResource->get('type'), 
@@ -444,19 +446,19 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		switch ($action)
 		{
 			case 'create':
-				return [ $this->getRouterStore(['id' => $type->getKey(), 'files' => true,  'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', false)]) ];
+				return [ $this->getRouterStore(['id' => $type->getKey(), 'files' => true,  'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', false)]) ];
 				break;
 
 			case 'edit':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true)]) ];
 				break;
 
 			case 'store':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true)]) ];
 				break;
 
 			case 'update':
-				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => \Input::get('saveBtn', true), 'chooseBtn' => \Input::get('chooseBtn', true)]) ];
+				return [ $this->getRouterUpdate(['id' => $type->getKey(), 'files' => true, 'saveBtn' => $this->getRequest()->input('saveBtn', true), 'chooseBtn' => $this->getRequest()->input('chooseBtn', true)]) ];
 				break;
 
 			default:
@@ -473,6 +475,9 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		} 
 		catch (\InvalidArgumentException $ex) 
 		{
+            $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+            $param['treeId'] = array_get($param, 'treeId', 0);
+
 			return \URL::route("cmf.module.objects-lists.action.param", $param);
 		}
     } 
@@ -497,6 +502,8 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 		} 
 		catch (\InvalidArgumentException $ex) 
 		{
+            $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+
 			return \URL::route("cmf.module.objects-lists", $param);
 		}
     }
@@ -620,6 +627,27 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 			return \URL::route("cmf.module.objects-lists.list.unlock", $param);
 		} 
     }
+	
+    public function setRouterListTree($param)
+    {
+		$this->routerListTree = $param;
+		
+		return $this;
+    }       
 
+    public function getRouterListTree($param = [])
+    {
+		try
+		{
+			return \URL::route($this->routerListTree ?: "cmf.module.{$this->getKey()}.list.tree", $param);
+		} 
+		catch (\InvalidArgumentException $ex) 
+		{
+            $param['typeId'] = array_get($param, 'typeId', $this->getTypeList()->getKey());
+            $param['treeId'] = array_get($param, 'treeId', 0);
+
+			return \URL::route("cmf.module.objects-lists.list.tree", $param);
+		} 
+    }
 
 }

@@ -14,12 +14,12 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
 	public function getChooseTypeId($field, $linkedField)
 	{
-		return \Telenok\Object\Type::withPermission()->where('treeable', 1)->get(['id'])->fetch('id')->all();
+		return \App\Model\Telenok\Object\Type::withPermission()->where('treeable', 1)->get(['id'])->fetch('id')->all();
 	}
 
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Object\Type::where('code', 'object_sequence')->first();
+		return \App\Model\Telenok\Object\Type::where('code', 'object_sequence')->first();
 	}
 	
     public function saveModelField($field, $model, $input)
@@ -33,11 +33,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
         $idsParentDelete = array_unique((array)$input->get("tree_parent_delete", []));
         
 		$idsChildAdd = array_unique((array)$input->get("tree_child_add", []));
-        $idsChildelete = array_unique((array)$input->get("tree_child_delete", []));
-		
+        $idsChilDelete = array_unique((array)$input->get("tree_child_delete", []));
+		  
         if (!empty($idsParentDelete))
         {
-            if (in_array('*', $idsParentDelete))
+            if (in_array('*', $idsParentDelete, true))
             {
                 $model->treeParent()->detach();
             }
@@ -55,19 +55,22 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
                 {
                     $model->makeLastChildOf($id);
                 }
-                catch(\Exception $e) {}
+                catch(\Exception $e) {
+                    
+                    throw $e;
+                }
             }
 		}
-		
-        if (!empty($idsChildelete))
+
+        if (!empty($idsChilDelete))
         {
-            if (in_array('*', $idsChildelete))
+            if (in_array('*', $idsChilDelete, true))
             {
                 $model->treeChild()->detach();
             }
-            else if (!empty($idsChildelete))
+            else if (!empty($idsChilDelete))
             {
-                $model->treeChild()->detach($idsChildelete);
+                $model->treeChild()->detach($idsChilDelete);
             }
 		}
 
@@ -77,7 +80,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
             {
                 try
                 {
-					$child = \Telenok\Object\Sequence::findOrFail($id);
+					$child = \App\Model\Telenok\Object\Sequence::findOrFail($id);
 
                     $child->makeLastChildOf($model);
                 }
@@ -168,11 +171,11 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			'field_order' => $input->get('field_order'),
 		];  
  
-		$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
+		$validator = $this->validator(new \App\Model\Telenok\Object\Field(), $toSave, []);
 
 		if ($input->get('create_belong') !== false && $validator->passes()) 
 		{
-			\Telenok\Object\Field::create($toSave);
+			\App\Model\Telenok\Object\Field::create($toSave);
 		}
 		
         return $this;

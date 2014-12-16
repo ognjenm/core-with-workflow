@@ -74,7 +74,7 @@ jQuery(function($) {
 		if($.fn.ace_sidebar_scroll) $sidebar.ace_sidebar_scroll({
 			//'scroll_style': 'scroll-dark scroll-thin',
 			'scroll_to_active': true, //scroll to selected item? (one time only on page load)
-			'include_shortcuts': true, //true = include shortcut buttons in the scrollbars
+			'include_shortcuts': false, //true = include shortcut buttons in the scrollbars
 			'include_toggle': false || ace.vars['safari'] || ace.vars['ios_safari'], //true = include toggle button in the scrollbars
 			'smooth_scroll': 150, //> 0 means smooth_scroll, time in ms, used in first approach only, better to be almost half the amount of submenu transition time
 			'outside': false//true && ace.vars['touch'] //used in first approach only, true means the scrollbars should be outside of the sidebar
@@ -1584,12 +1584,13 @@ ace.helper.hasClass =
 		
 		
 		var initiate = function(on_page_load) {
+                    
 			if( _initiated ) return;
 			if( !self.sidebar_fixed ) return;//eligible??
 			//return if we want scrollbars only on "fixed" sidebar and sidebar is not "fixed" yet!
 
 			//initiate once
-			$nav.wrap('<div class="nav-wrap-up pos-rel" />');
+			$nav.wrap('<div class="nav-wrap-up pos-rel" />'); 
 			$nav.after('<div><div></div></div>');
 
 			$nav.wrap('<div class="nav-wrap" />');
@@ -1607,12 +1608,12 @@ ace.helper.hasClass =
 				touchDrag: false//disable touch drag event on scrollbars, we'll add a custom one later
 			})
 			.closest('.ace-scroll').addClass('nav-scroll');
-			
+
 			ace_scroll = scroll_div.data('ace_scroll');
 
 			scroll_content = scroll_div.find('.scroll-content').eq(0);
 			scroll_content_div = scroll_content.find(' > div').eq(0);
-			
+
 			track = $(ace_scroll.get_track());
 			bar = track.find('.scroll-bar').eq(0);
 

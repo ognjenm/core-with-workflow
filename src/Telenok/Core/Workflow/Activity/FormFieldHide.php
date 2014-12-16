@@ -61,13 +61,13 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
         {
             $newFields = $eventResource->get('fields')->reject(function($f) use ($fields)
             {
-                if (!in_array($f->getKey(), $fields))
+                if (in_array($f->getKey(), $fields, true))
                 {
-                    return false;
+                    return true;
                 }
                 else 
                 {
-                    return true;
+                    return false;
                 }
             });
             

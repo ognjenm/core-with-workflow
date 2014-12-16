@@ -18,11 +18,20 @@ class SeedSubjectPermissionResourceTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		\DB::table('object_type')->update(['active_at_start' => \DB::raw('NOW()'), 'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
-		\DB::table('object_field')->update(['active_at_start' => \DB::raw('NOW()'), 'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
-		\DB::table('object_tab')->update(['active_at_start' => \DB::raw('NOW()'), 'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR')]);
-
-		(new \Telenok\Object\Field())->storeOrUpdate(
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+        
+        foreach(['object_type', 'object_field', 'object_tab', 'setting', 'object_sequence'] as $table)
+        {
+            \DB::table($table)->update([
+                'active_at_start' => $now, 
+                'active_at_end' => $plus15Year,
+                'created_at' => $now,
+                'updated_at' => $now, 
+            ]);
+        }
+ 
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('field.code'),
 					'title_list' => SeedObjectPermissionResourceTableTranslation::get('field.code'),
@@ -41,7 +50,7 @@ class SeedSubjectPermissionResourceTable extends Migration {
 				]
 		);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('field.resource'),
 					'title_list' => SeedObjectPermissionResourceTableTranslation::get('field.resource'),
@@ -61,7 +70,7 @@ class SeedSubjectPermissionResourceTable extends Migration {
 				]
 		);
 		
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('field.subject'),
 					'title_list' => SeedObjectPermissionResourceTableTranslation::get('field.subject'),
@@ -80,7 +89,7 @@ class SeedSubjectPermissionResourceTable extends Migration {
 				]
 		);
 		
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
 					'title' => SeedObjectPermissionResourceTableTranslation::get('field.permission'),
 					'title_list' => SeedObjectPermissionResourceTableTranslation::get('field.permission'),

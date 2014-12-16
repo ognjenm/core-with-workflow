@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Web\PageConstructor;
 
-class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
+class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
 	protected $key = 'web-page-constructor';
 	protected $parent = 'web';
@@ -25,7 +25,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 	public function getPresentationContent()
 	{
-		return \View::make($this->getPresentationView(), [
+		return view($this->getPresentationView(), [
 					'presentation' => $this->getPresentation(),
 					'presentationModuleKey' => $this->getPresentationModuleKey(),
 					'controller' => $this,
@@ -38,8 +38,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		try
 		{
-			$page = \Telenok\Web\Page::findOrFail($id);
-			$controllerClass = \App::build($page->pagePageController->controller_class);
+			$page = \App\Model\Telenok\Web\Page::findOrFail($id);
+			$controllerClass = app($page->pagePageController->controller_class);
 
 			return [
 				'pageId' => $id,
@@ -62,11 +62,11 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		$return = \Illuminate\Support\Collection::make([]);
 
-		$query = \Telenok\Web\Page::query();
+		$query = \App\Model\Telenok\Web\Page::query();
 
-		if (\Input::get('term'))
+		if ($this->getRequest()->input('term'))
 		{
-			$query->where('title', 'like', '%' . trim(\Input::get('term')) . '%');
+			$query->where('title', 'like', '%' . trim($this->getRequest()->input('term')) . '%');
 		}
 
 		$query->get()->each(function($item) use ($return)
@@ -84,7 +84,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			return \Response::json('Empty page id or widget key', 403);
 		}
 		
-		$widget = \App::make('telenok.config')->getWidget()->get($key); 
+		$widget = app('telenok.config')->getWidget()->get($key); 
 		
 		if (intval($bufferId))
 		{
@@ -102,9 +102,9 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 	{
 		try
 		{
-			$widget = \Telenok\Web\WidgetOnPage::findOrFail($id);
+			$widget = \App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 
-			\App::make('telenok.config')->getWidget()->get($widget->key)->removeFromPage($id);
+			app('telenok.config')->getWidget()->get($widget->key)->removeFromPage($id);
 
 			return ['success' => 1];
 		}
@@ -120,16 +120,16 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 
 	public function addBufferWidget($id = 0, $key = 'copy')
 	{
-		$widget = \Telenok\Web\WidgetOnPage::findOrFail($id);
+		$widget = \App\Model\Telenok\Web\WidgetOnPage::findOrFail($id);
 
-		$buffer = \Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $widget->getKey(), 'web-page', $key);
+		$buffer = \App\Model\Telenok\System\Buffer::addBuffer(\Auth::user()->getKey(), $widget->getKey(), 'web-page', $key);
 
 		return ['widget' => $widget, 'buffer' => $buffer];
 	}
 
 	public function deleteBufferWidget($id = 0)
 	{
-		$w = \Telenok\System\Buffer::find($id);
+		$w = \App\Model\Telenok\System\Buffer::find($id);
 
 		if ($w)
 		{

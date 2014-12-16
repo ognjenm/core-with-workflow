@@ -18,7 +18,7 @@ class SeedFolderTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => SeedFolderTableTranslation::get('field.code'),
                     'title_list' => SeedFolderTableTranslation::get('field.code'),

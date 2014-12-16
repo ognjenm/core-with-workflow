@@ -1,7 +1,7 @@
 <?php
 
 return array(
-    'name' => 'Time',
+    'name' => 'Datetime range',
 
-    'property.datetimerange_default' => "Time range default",
+    'property.datetimerange_default' => "Datetime range default",
 );

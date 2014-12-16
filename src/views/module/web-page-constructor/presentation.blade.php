@@ -62,27 +62,27 @@
 
 		<h3 class="header smaller lighter blue">
 			<i class="fa fa-th-large"></i>
-			{{{$controller->LL('page.widget.title')}}}
+			{{$controller->LL('page.widget.title')}}
 		</h3>
 
 
 		<div class="clearfix">
-			<select class="chosen" data-placeholder="{{{$controller->LL('page.select')}}}" id="module-web-page-widget-list-page-list" 
+			<select class="chosen" data-placeholder="{{$controller->LL('page.select')}}" id="module-web-page-widget-list-page-list" 
 					onchange="telenok.getPresentation('{{$presentationModuleKey}}').addTabByURL({
-									url:'{{\URL::route("cmf.module.web-page-constructor.view.page.container", ['id' => '--id--', 'languageId' => ':languageId:'])}}'
+									url:'{!! \URL::route("cmf.module.web-page-constructor.view.page.container", ['id' => '--id--', 'languageId' => ':languageId:']) !!}'
 											.replace(/--id--/gi, parseInt(this.value, 10))
 											.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10)),
 									after: function() { updateContainer(); }
 								});">
 				<option value=""></option>
 				<?php
-				$pages = \Telenok\Web\Page::all();
+				$pages = \App\Model\Telenok\Web\Page::all();
 
 				foreach ($pages as $page)
 				{
 					?>
 
-					<option value="{{$page->id}}">{{{$page->translate('title')}}} [{{{$page->url_pattern}}}]</option>
+					<option value="{{$page->id}}">{{$page->translate('title')}} [{{$page->url_pattern}}]</option>
 
 					<?php
 				}
@@ -99,20 +99,20 @@
 			<ul class="nav nav-tabs widget-choosing">
 				<li class="active">
 					<a data-toggle="tab" href="#menu-list-{{$uniqueId}}">
-						{{{$controller->LL('tab.widget.list')}}}
+						{{$controller->LL('tab.widget.list')}}
 					</a>
 				</li>
 
 				<li class="widget-buffer">
 					<a data-toggle="tab" href="#menu-buffer-{{$uniqueId}}">
-						{{{$controller->LL('tab.widget.buffer')}}}
+						{{$controller->LL('tab.widget.buffer')}}
 						<span class="badge badge-important" id="menu-buffer-fa-{{$uniqueId}}">0</span>
 					</a>
 				</li>
 
 				<li class="dropdown">
 					<a data-toggle="tab" href="#menu-command-{{$uniqueId}}">
-						{{{$controller->LL('tab.widget.command')}}}
+						{{$controller->LL('tab.widget.command')}}
 					</a>
 				</li>
 			</ul>
@@ -121,8 +121,8 @@
 				<div id="menu-list-{{$uniqueId}}" class="tab-pane active">
 					<ul class="dropdown-menu" style="position: inherit; display: block;">
 						<?php
-						$group = \App::make('telenok.config')->getWidgetGroup();
-						$widget = \App::make('telenok.config')->getWidget();
+						$group = app('telenok.config')->getWidgetGroup();
+						$widget = app('telenok.config')->getWidget();
 
 						foreach ($group as $g)
 						{
@@ -130,7 +130,7 @@
 
 							<li class="dropup dropdown-hover">
 
-								<a href="javascript:void(0)" class="dropdown-toggle"><i class="{{$g->getIcon()}}"></i> {{{ $g->getName() }}}</a>
+								<a href="javascript:void(0)" class="dropdown-toggle"><i class="{{$g->getIcon()}}"></i> {{ $g->getName() }}</a>
 
 								<ul id="module-web-page-widget-list-item" class="dropdown-menu dropdown-success">
 
@@ -140,7 +140,7 @@
 						?>
 
 									<li>
-										<a href="javascript:void(0)" class="dragabble" data-widget-key="{{{$w->getKey()}}}" data-widget-id="0" data-widget-buffer-id="0" data-widget-buffer-key="0"><i class="{{$w->getIcon()}}"></i> {{{ $w->getName() }}}</a>
+										<a href="javascript:void(0)" class="dragabble" data-widget-key="{{$w->getKey()}}" data-widget-id="0" data-widget-buffer-id="0" data-widget-buffer-key="0"><i class="{{$w->getIcon()}}"></i> {{ $w->getName() }}</a>
 									</li>
 
 						<?php
@@ -161,7 +161,7 @@
 					<ul class="dropdown-menu" style="position: inherit; display: block;" id="widget-menu-buffer">	
 					<?php
 
-						$widgetBufferedList = \Telenok\System\Buffer::with("sequence")->where(function($query) 
+						$widgetBufferedList = \App\Model\Telenok\System\Buffer::with("sequence")->where(function($query) 
 							{
 								$query->where('user_id', \Auth::user()->getKey());
 								$query->where('place', 'web-page');
@@ -173,10 +173,10 @@
 						@foreach($widgetBufferedList as $li) 
 							<li>
 								<a href="javascript:void(0)" class="dragabble" 
-								   data-widget-key="{{{$li->sequence->model->key}}}" 
-								   data-widget-buffer-id="{{{$li->getKey()}}}"
-								   data-widget-buffer-key="{{{$li->key}}}"
-								   data-widget-id="{{{$li->sequence->model->getKey()}}}"><i class="fa fa-times"></i> {{{$li->sequence->model->translate('title')}}}</a> 
+								   data-widget-key="{{$li->sequence->model->key}}" 
+								   data-widget-buffer-id="{{$li->getKey()}}"
+								   data-widget-buffer-key="{{$li->key}}"
+								   data-widget-id="{{$li->sequence->model->getKey()}}"><i class="fa fa-times"></i> {{$li->sequence->model->translate('title')}}</a> 
 							</li>
 						@endforeach
 
@@ -190,14 +190,14 @@
 
 				<div id="menu-command-{{$uniqueId}}" class="tab-pane">
 
-					<select class="chosen" data-placeholder="{{{$controller->LL('language.select')}}}" id="module-web-page-widget-list-language-list"
+					<select class="chosen" data-placeholder="{{$controller->LL('language.select')}}" id="module-web-page-widget-list-language-list"
 							onchange="telenok_module_web_language_id = this.options[this.selectedIndex].value; reloadWebPageContainer();">
 						<?php
 
 						$localeDefault = \Config::get('app.localeDefault');
 						$localeDefaultId = 0;
 
-						$languages = \Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
+						$languages = \App\Model\Telenok\System\Language::whereIn('locale', \Config::get('app.locales')->all())
 										->get()->sortBy(function($item) use ($localeDefault, &$localeDefaultId)
 						{
 							if ($item->locale == $localeDefault)
@@ -216,7 +216,7 @@
 						{
 							?>
 
-							<option value="{{$language->id}}">{{{$language->translate('title')}}}</option>
+							<option value="{{$language->id}}">{{$language->translate('title')}}</option>
 
 							<?php
 						}
@@ -249,7 +249,7 @@
 		function reloadWebPageContainer()
 		{
 			telenok.getPresentation('{{$presentationModuleKey}}').addTabByURL({
-					url:'{{\URL::route("cmf.module.web-page-constructor.view.page.container", ['id' => '--id--', 'languageId' => ':languageId:'])}}'
+					url:'{!! \URL::route("cmf.module.web-page-constructor.view.page.container", ['id' => '--id--', 'languageId' => ':languageId:']) !!}'
 							.replace(/--id--/gi, parseInt(telenok_module_web_page_pid, 10))
 							.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10)),
 					after: function() { updateContainer(); }
@@ -274,7 +274,7 @@
 					{
 						jQuery.ajax(
 							{
-								'url' : '{{\URL::route("cmf.module.web-page-constructor.view.page.insert.widget", ['languageId' => ':languageId:', 'key' => ':key:', 'bufferId' => ':bufferId:', 'container' => ':container:', 'id' => '--id--', 'pageId' => ':pageId:', 'order' => ':order:'])}}'
+								'url' : '{!! \URL::route("cmf.module.web-page-constructor.view.page.insert.widget", ['languageId' => ':languageId:', 'key' => ':key:', 'bufferId' => ':bufferId:', 'container' => ':container:', 'id' => '--id--', 'pageId' => ':pageId:', 'order' => ':order:']) !!}'
 									.replace(/:container:/gi, jQuery(ui.item).closest(".frontend-container").data('container-id'))
 									.replace(/:key:/gi, jQuery(ui.item).data('widget-key'))
 									.replace(/:languageId:/gi, parseInt(telenok_module_web_language_id, 10))
@@ -346,7 +346,7 @@
 					var this_ = this;
 
 					jQuery.ajax({
-						url: '{{\URL::route("cmf.module.web-page-constructor.view.page.remove.widget", ['id' => '--id--'])}}'
+						url: '{!! \URL::route("cmf.module.web-page-constructor.view.page.remove.widget", ['id' => '--id--']) !!}'
 							.replace(/--id--/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id')),
 						context: document.body
 					})
@@ -378,19 +378,19 @@
 				.click(function(event)
 				{	
 					jQuery.ajax({
-						url: '{{\URL::route("cmf.module.objects-lists.wizard.edit", ['id' => '--id--', 'chooseBtn' => 0, 'saveBtn' => 1])}}'
+						url: '{!! \URL::route("cmf.module.objects-lists.wizard.edit", ['id' => '--id--', 'chooseBtn' => 0, 'saveBtn' => 1]) !!}'
 								.replace(/--id--/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id')),					
 						method: 'get',
 						dataType: 'json'
 					})
 					.done(function(data) 
 					{
-						if (!jQuery('div#widget-setting-{{{$uniqueId}}}').size())
+						if (!jQuery('div#widget-setting-{{$uniqueId}}').size())
 						{
-							jQuery('body').append('<div id="widget-setting-{{{$uniqueId}}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+							jQuery('body').append('<div id="widget-setting-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
 						}
 
-						jQuery('div#widget-setting-{{{$uniqueId}}}').data('model-data', function(data) {})
+						jQuery('div#widget-setting-{{$uniqueId}}').data('model-data', function(data) {})
                             .html(data.tabContent)
                             .modal('show')
                             .on('hidden', function() 
@@ -422,7 +422,7 @@
 					var this_ = this;
 
 					jQuery.ajax({
-						url: '{{\URL::route("cmf.module.web-page-constructor.view.buffer.add.widget", ['id' => '--id--', 'key' => ':key:'])}}'
+						url: '{!! \URL::route("cmf.module.web-page-constructor.view.buffer.add.widget", ['id' => '--id--', 'key' => ':key:']) !!}'
 							.replace(/--id--/gi, jQuery(this).closest(".telenok-widget-box").data('widget-id'))
 							.replace(/:key:/gi, jQuery(this).data('action')),
 						context: document.body
@@ -483,7 +483,7 @@
 					this_ = this;
 
 					jQuery.ajax({
-						url: '{{\URL::route("cmf.module.web-page-constructor.view.buffer.delete.widget", ['id' => '--id--'])}}'
+						url: '{!! \URL::route("cmf.module.web-page-constructor.view.buffer.delete.widget", ['id' => '--id--']) !!}'
 							.replace(/--id--/gi, jQuery(this).closest("a").data('widget-buffer-id')),
 						context: document.body
 					})
@@ -510,10 +510,10 @@
 
 		jQuery("#module-web-page-widget-list-page-list").ajaxChosen(
 			{
-				keepTypingMsg: "{{{$controller->LL('notice.typing')}}}",
-				lookingForMsg: "{{{$controller->LL('notice.looking-for')}}}",
+				keepTypingMsg: "{{$controller->LL('notice.typing')}}",
+				lookingForMsg: "{{$controller->LL('notice.looking-for')}}",
 				type: "GET",
-				url: "{{\URL::route("cmf.module.web-page-constructor.list.page")}}",
+				url: "{!! \URL::route("cmf.module.web-page-constructor.list.page") !!}",
 				dataType: "json",
 				minTermLength: 1,
 				afterTypeDelay: 1000
@@ -528,7 +528,7 @@
 			},
 			{
 				width: "200px",
-				no_results_text: "{{{$controller->LL('notice.not-found')}}}",
+				no_results_text: "{{$controller->LL('notice.not-found')}}",
 				allow_single_deselect: true
 			});
 
@@ -650,9 +650,9 @@
 		callMe: function(param)
 		{
 			this.setParam(param); 
-			this.setBreadcrumbs(param); 
 			this.showSkeleton(); 
 			this.setPageHeader(); 
+			this.setBreadcrumbs(param); 
 
 			return this;
 		},

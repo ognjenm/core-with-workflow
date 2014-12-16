@@ -5,10 +5,10 @@
     return new \Telenok\Core\Interfaces\Validator\Validator($translator, $data, $rules, $messages, $customAttributes);
 });
 
-Validator::extend('valid_regex', function($attribute, $value, $parameters)
+\Validator::extend('valid_regex', function($attribute, $value, $parameters)
 {
     return (@preg_match($value, NULL) !== FALSE);
-}); 
+});  
 
 \Event::listen('telenok.setting.add', function($list) 
 {
@@ -69,6 +69,7 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 \Event::listen('telenok.module.menu.top', function($list)
 {
     $list->push('users-profile-edit@topMenuMain');
+    $list->push('users-profile-edit@topMenuProfileEdit');
     $list->push('users-profile-edit@topMenuLogout');
 });
 
@@ -90,7 +91,6 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('Telenok\Core\Field\IntegerUnsigned\Controller');
     $list->push('Telenok\Core\Field\Text\Controller');
     $list->push('Telenok\Core\Field\String\Controller');
-    $list->push('Telenok\Core\Field\Checkbox\Controller');
 	$list->push('Telenok\Core\Field\ComplexArray\Controller');
     $list->push('Telenok\Core\Field\RelationOneToOne\Controller');
     $list->push('Telenok\Core\Field\RelationOneToMany\Controller');
@@ -103,10 +103,8 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
     $list->push('Telenok\Core\Field\System\UpdatedBy\Controller');
     $list->push('Telenok\Core\Field\System\DeletedBy\Controller');
     $list->push('Telenok\Core\Field\System\LockedBy\Controller');
-    $list->push('Telenok\Core\Field\System\Active\Controller');
     $list->push('Telenok\Core\Field\System\Permission\Controller');
     $list->push('Telenok\Core\Field\FileManyToMany\Controller');
-    $list->push('Telenok\Core\Field\System\WorkflowStatus\Controller');
     $list->push('Telenok\Core\Field\Upload\Controller');
     $list->push('Telenok\Core\Field\SelectOne\Controller');
     $list->push('Telenok\Core\Field\SelectMany\Controller');
@@ -138,14 +136,14 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 /*
 \Event::listen('telenok.module.profile.add', function($param){
-    \App::make('telenok.config')->addModule($param);
+    app('telenok.config')->addModule($param);
 });
 */
 
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Dashboard\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Web\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Page\Controller');
-//\Event::fire('telenok.module.add', 'Telenok\Core\Module\Users\ProfileEdit\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Dashboard\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Web\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Page\Controller');
+//\Event::fire('telenok.module.add', 'App\Http\Controllers\Module\Users\ProfileEdit\Controller');
 
 
 
@@ -155,19 +153,19 @@ Validator::extend('valid_regex', function($attribute, $value, $parameters)
 
 \Event::listen('telenok.compile.route', function()
 {
-    \App::make('telenok.config')->compileRouter();
+    app('telenok.config')->compileRouter();
 });
 
 
 
 \Event::listen('telenok.compile.setting', function()
 {
-    \App::make('telenok.config')->compileSetting();
+    app('telenok.config')->compileSetting();
 });
 
 
 
-\App::make('telenok.config')->runWorkflowListener();
+app('telenok.config')->runWorkflowListener();
 
 
 Event::listen('illuminate.query', function($sql, $bindings, $time) {
@@ -176,7 +174,7 @@ Event::listen('illuminate.query', function($sql, $bindings, $time) {
 	{
 		$sql = vsprintf(str_replace(array('%', '?'), array('%%', '"%s"'), $sql), $bindings);
 
-		var_dump($sql);
+		echo $sql . PHP_EOL;
 	}
 });
 

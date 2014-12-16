@@ -1,3 +1,9 @@
+<?php
+
+    $jsUnique = str_random();
+
+?>
+
 <script type="text/javascript">
   
 	if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
@@ -27,8 +33,8 @@
 			},
 			setParam: function(param)
 			{
-				this.presentationParam = param;
-				this.presentationDomId = telenok.getPresentationDomId(param.presentation);
+				this.presentationParam = param; 
+                this.presentationDomId = telenok.getPresentationDomId(param.presentation); 
 				this.moduleKey = param.key;
 				return this;
 			},
@@ -159,7 +165,7 @@
 					{
 						aButtons.push({
 							"sExtends": "text",
-							"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
+							"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{ $controller->LL('list.btn.create') }}",
 							'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
 							"fnClick": function(nButton, oConfig, oFlash) {
 								if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
@@ -178,7 +184,7 @@
 					{
 						aButtons.push({
 								"sExtends": "text",
-								"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
+								"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{ $controller->LL('list.btn.refresh') }}",
 								'sButtonClass': 'btn-sm',
 								"fnClick": function(nButton, oConfig, oFlash) {
 									jQuery('#' + param.domId).dataTable().fnReloadAjax();
@@ -197,11 +203,11 @@
 						aButtons.push({
 							"sExtends": "collection",
 							'sButtonClass': 'btn btn-sm btn-light',
-							"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
+							"sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{ $controller->LL('list.btn.select') }}",
 							"aButtons": [ 
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
+									"sButtonText": "<i class='fa fa-pencil-square-o'></i> {{ $controller->LL('btn.edit') }}",
 									"fnClick": function(nButton, oConfig, oFlash) 
 										{
 											if (param.btnListEditUrl)
@@ -215,36 +221,62 @@
 								},
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-lock'></i> {{{ $controller->LL('btn.lock') }}}",
+									"sButtonText": "<i class='fa fa-lock'></i> {{ $controller->LL('btn.lock') }}",
 									"fnClick": function(nButton, oConfig, oFlash) 
-										{
-											if (param.btnListLockUrl)
-											{
-												this_.addTabByURL({
-													url: param.btnListLockUrl, 
-													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-												});
-											}
+                                    {
+                                        if (param.btnListLockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
+                                        {
+                                            jQuery.ajax({
+                                                url: param.btnListLockUrl, 
+                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                                method: 'get',
+                                                dataType: 'json',
+                                            }).done(function(data) 
+                                            {
+                                                if (data.success == 1)
+                                                {
+                                                    jQuery.gritter.add({
+                                                        title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                        text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                        class_name: 'gritter-success gritter-light',
+                                                        time: 3000,
+                                                    });
+                                                }
+                                            }); 
+                                        }
 									}
 								},
 								{
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-unlock'></i> {{{ $controller->LL('btn.unlock') }}}",
+									"sButtonText": "<i class='fa fa-unlock'></i> {{ $controller->LL('btn.unlock') }}",
 									"fnClick": function(nButton, oConfig, oFlash) 
-										{
-											if (param.btnListUnlockUrl)
-											{
-												this_.addTabByURL({
-													url: param.btnListUnlockUrl, 
-													data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-												});
-											}
+                                    {
+                                        if (param.btnListUnlockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
+                                        {
+                                            jQuery.ajax({
+                                                url: param.btnListUnlockUrl, 
+                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                                method: 'get',
+                                                dataType: 'json'
+                                            }).done(function(data) 
+                                            {
+                                                if (data.success == 1)
+                                                {
+                                                    jQuery.gritter.add({
+                                                        title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                        text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                        class_name: 'gritter-success gritter-light',
+                                                        time: 3000,
+                                                    });
+                                                }
+                                            }); 
+                                        }
 									}
 								},
 								{
 									"sExtends": "text",
 									'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
-									"sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
+									"sButtonText": "<i class='fa fa-trash-o'></i> {{ $controller->LL('btn.delete') }}",
 									"fnClick": function(nButton, oConfig, oFlash) {
 										if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
 										else {
@@ -280,7 +312,7 @@
 						aButtons.push({
 								"sExtends": "text",
 								'sButtonClass': 'btn btn-sm btn-light',
-								"sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
+								"sButtonText": "<i class='fa fa-search'></i> {{ $controller->LL('btn.filter') }}",
 								"fnClick": function(nButton, oConfig, oFlash) {
 									jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
 								}
@@ -289,6 +321,7 @@
 				@show 				
 
 				param = jQuery.extend({}, {
+                    "searchDelay": 1000,
 					"multipleSelection": true,
 					"aoColumns": [],
 					"autoWidth": false,
@@ -305,14 +338,15 @@
 					},
 					"oLanguage": {
 						"oPaginate": {
-							"sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
-							"sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}", 
+							"sNext": "{{ \Lang::get('core::default.btn.next') }}",
+							"sPrevious": "{{ \Lang::get('core::default.btn.prev') }}", 
 						},
-						"sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
-						"sSearch": "{{{ \Lang::get('core::default.table.search') }}} ",
-						"sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
-						"sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
-						"sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
+						"sEmptyTable": "{{ \Lang::get('core::default.table.empty') }}",
+						"sSearch": "{{ \Lang::get('core::default.btn.search') }} ",
+						"sSearchPlaceholder": "{{ \Lang::get('core::default.table.placeholder.search') }} ",
+						"sInfo": "{{ \Lang::get('core::default.table.showed') }}",
+						"sInfoEmpty": "{{ \Lang::get('core::default.table.empty.showed') }}",
+						"sZeroRecords": "{{ \Lang::get('core::default.table.empty.filtered') }}",
 						"sInfoFiltered": "",
 					}
 				}, param);
@@ -373,14 +407,15 @@
 				return this;
 			},
 			callMe: function(param)
-			{
-				this.setParam(param); 
-				this.setBreadcrumbs(param); 
-				this.setPageHeader();
+			{ 
+				this.setParam(param);  
 
 				param.addSkeleton===false ? '' : this.showSkeleton();
 				param.addTree===false  ? '' : this.addTree(); 
-				param.addTab===false  ? '' : this.addTabByURL(param); 
+                param.addTab===false  ? '' : this.addTabByURL(param); 
+
+				this.setBreadcrumbs(param); 
+				this.setPageHeader();
 
 				return this;
 			}

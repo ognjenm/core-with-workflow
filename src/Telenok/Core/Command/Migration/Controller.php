@@ -38,7 +38,7 @@ class Controller extends Command {
 			
 			$this->call('migrate', array('--package' => 'telenok/core'));
 
-			$user = \Telenok\User\User::where('username', 'admin')->first();
+			$user = \App\Model\Telenok\User\User::where('username', 'admin')->first();
 			
 			$user->storeOrUpdate([
 				'username' => $this->processingController->getSuperuserLogin(),

@@ -44,7 +44,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
     {
         try
         {
-			if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime']))
+			if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime'], true))
 			{
 				$value = $value ? : '[]';
 
@@ -72,7 +72,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
     public function setModelSpecialAttribute($model, $key, $value)
     {
-		if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime']))
+		if (in_array($key, ['file_many_to_many_allow_ext', 'file_many_to_many_allow_mime'], true))
 		{
 			$default = [];
 
@@ -99,12 +99,12 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 			parent::setModelSpecialAttribute($model, $key, $value);
 		}
         
-        return true;
+        return $this;
     }
 
     public function preProcess($model, $type, $input)
     {
-		$input->put('relation_many_to_many_has', \Telenok\Object\Type::whereCode('file')->pluck('id'));
+		$input->put('relation_many_to_many_has', \App\Model\Telenok\Object\Type::whereCode('file')->pluck('id'));
 
 		if (!$input->get('show_in_form_belong'))
 		{
@@ -123,7 +123,7 @@ class Controller extends \Telenok\Core\Field\RelationManyToMany\Controller {
 
 		\Input::merge(['active' => 1]);
 
-		$file = new \Telenok\Core\Module\Objects\Lists\Controller();
+		$file = app('\App\Http\Controllers\Module\Objects\Lists\Controller');
 
 		$model = $file->save(null, 'file'); 
 		

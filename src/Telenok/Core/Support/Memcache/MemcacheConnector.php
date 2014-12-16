@@ -12,7 +12,7 @@ class MemcacheConnector {
      *
      * @throws \RuntimeException
      */
-    public function connect(array $servers)
+    public function connect($servers = [])
     {
         $memcached = $this->getMemcache();
 

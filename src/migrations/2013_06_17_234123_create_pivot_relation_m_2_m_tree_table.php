@@ -18,7 +18,8 @@ class CreatePivotRelationM2MTreeTable extends Migration {
 				$table->integer('tree_depth')->unsigned()->nullable()->default(0);
 				$table->string('tree_path')->nullable();
 
-				$table->unique(['tree_id', 'tree_pid'], 'uniq_key');
+				$table->unique(['tree_id'], 'uniq_id');
+				$table->unique(['tree_id', 'tree_pid'], 'uniq_cp');
 				
 				$table->foreign('tree_id')->references('id')->on('object_sequence')->onDelete('cascade');
 			});

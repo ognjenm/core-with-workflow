@@ -3,15 +3,6 @@
     $domAttr = ['class' => $field->css_class?: ''];
     $disabled = false;
 
-    if (!$model->exists) 
-    {
-        $value = $field->translate('string_default');
-    }
-    else
-    {
-        $value = $model->{$field->code};
-    }
-
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
     {
         $domAttr['disabled'] = 'disabled';
@@ -36,7 +27,7 @@
 ?>
 
 <div class="form-group">
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+	{!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 	<div class="col-sm-9">
         <div>
             <div class="btn-group btn-overlap" data-toggle="buttons">
@@ -45,13 +36,13 @@
                     $checked = ($model->exists && strcmp($k, $model->{$field->code}) === 0) || (!$model->exists && strcmp($k, $default) === 0) ? 1 : 0;
                 ?>
                 <label class="btn btn-white btn-sm btn-primary @if ($checked) active @endif" @if ($disabled) disabled="disabled" @endif>
-                    <input type="radio" @if ($checked) checked="checked" @endif name="{{{$field->code}}}" value="{{{$k}}}" @if ($disabled) disabled="disabled" @endif /> {{{$v}}}
+                    <input type="radio" @if ($checked) checked="checked" @endif name="{{$field->code}}" value="{{$k}}" @if ($disabled) disabled="disabled" @endif /> {{$v}}
                 </label>
                 @endforeach
             </div>
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
             @endif
         </div>
     </div>

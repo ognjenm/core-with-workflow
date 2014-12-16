@@ -14,14 +14,33 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		}
 	}
 
+	public function updateBackendUISetting($key = null, $value = null)
+	{
+        $key = $key ?: $this->getRequest()->input('key');
+        $value = $value ?: $this->getRequest()->input('value');
+        
+        if ($key)
+        {
+            $user = app('auth')->user();
+            
+            $userConfig = $user->configuration;
+
+            $userConfig->put($key, $value);
+        
+            $user->configuration = $userConfig;
+            
+            $user->update();
+        }
+    }    
+    
 	public function login()
 	{
-		$username = trim(\Input::get('username'));
-		$password = trim(\Input::get('password'));
-		$remember = intval(\Input::get('remember'));
+		$username = trim($this->getRequest()->input('username'));
+		$password = trim($this->getRequest()->input('password'));
+		$remember = intval($this->getRequest()->input('remember'));
 
-		if ($username && $password && (\Auth::attempt(['username' => $username, 'password' => $password], $remember) || \Auth::attempt(['email' => $username, 'password' => $password], $remember)))
-		{
+		if ($username && $password && (app('auth')->attempt(['username' => $username, 'password' => $password], $remember) || app('auth')->attempt(['email' => $username, 'password' => $password], $remember)))
+		{ 
 			if (\Auth::can('read', 'control_panel'))
 			{
 				return \Redirect::route('cmf.content');
@@ -31,8 +50,8 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 				return \Redirect::route('error.access-denied');
 			}
 		}
-
-		return \View::make('core::controller.backend-login', ['controller' => $this]);
+        
+		return view('core::controller.backend-login', ['controller' => $this]);
 	}
 
 	public function logout()
@@ -44,17 +63,17 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 	public function errorAccessDenied()
 	{
-		return \View::make('core::controller.backend-denied', ['controller' => $this]);
+		return view('core::controller.backend-denied', ['controller' => $this]);
 	}
 
 	public function frontendAreaWidgetList()
 	{
-		return \View::make('core::controller.backend-frontend-iframe-widget-list', ['controller' => $this]);
+		return view('core::controller.backend-frontend-iframe-widget-list', ['controller' => $this]);
 	}
 
 	public function frontendArea()
 	{
-		return \View::make('core::controller.backend-frontend-iframe-content', ['controller' => $this]);
+		return view('core::controller.backend-frontend-iframe-content', ['controller' => $this]);
 	}
 
 	public function getContent()
@@ -62,7 +81,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$listModuleMenuLeft = \Illuminate\Support\Collection::make([]);
 		\Event::fire('telenok.module.menu.left', $listModuleMenuLeft);
 
-		$config = \App::make('telenok.config');
+		$config = app('telenok.config');
 
 		$setArray = [];
 
@@ -81,7 +100,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 				})
 				->sortBy(function($item) use ($listModuleMenuLeft)
                 {
-                    return $item->getModuleModel()->module_order;
+                    return $item->getModelModule()->module_order;
                 });
 
 
@@ -139,7 +158,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$setArray['listModuleMenuTop'] = $listModuleMenuTop;
 		$setArray['controller'] = $this;
 
-		return \View::make('core::controller.backend', $setArray);
+		return view('core::controller.backend', $setArray);
 	}
 
 }

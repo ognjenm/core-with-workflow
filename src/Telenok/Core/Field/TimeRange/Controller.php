@@ -32,7 +32,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function setModelAttribute($model, $key, $value, $field)
     {   
-        if (in_array($key, [$field->code . '_start', $field->code . '_end']))
+        if (in_array($key, [$field->code . '_start', $field->code . '_end'], true))
         {
             if ($value === null)
             {
@@ -51,7 +51,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['time_range_default_start', 'time_range_default_end']) && $value === null)
+			if (in_array($key, ['time_range_default_start', 'time_range_default_end'], true) && $value === null)
 			{ 
                 return \Carbon\Carbon::now();
             }
@@ -68,7 +68,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {
-        if (in_array($key, ['time_range_default_start', 'time_range_default_end']))
+        if (in_array($key, ['time_range_default_start', 'time_range_default_end'], true))
 		{
             if ($value === null)
             {
@@ -79,12 +79,37 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 $value = \Carbon\Carbon::createFromFormat('H:i:s', $value);
             }
 		}
-			
-        parent::setModelSpecialAttribute($model, $key, $value);
 
-        return true;
+        return parent::setModelSpecialAttribute($model, $key, $value);
     }
     
+    public function getFilterContent($field = null)
+    {
+        return view($this->getViewFilter(), [
+            'controller' => $this,
+            'field' => $field,
+        ]);
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null)
+		{
+			$query->where(function($query) use ($value, $name, $model)
+			{
+                if ($v = trim(array_get($value, 'start')))
+                {
+                    $query->where(\DB::raw('TIME(' . $model->getTable() . '.' . $name . '_end)'), '>=', $v);
+                }
+
+                if ($v = trim(array_get($value, 'end')))
+                {
+                    $query->where(\DB::raw('TIME(' . $model->getTable() . '.' . $name . '_start)'), '<=', $v);
+                }
+			});
+		}
+    }
+
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

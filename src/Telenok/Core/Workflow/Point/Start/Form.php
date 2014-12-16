@@ -22,9 +22,9 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
 		$typeId = $this->getInput()->get('model_type', 0);
 		$modelIds = $this->getInput()->get('model_list', []);
 
-        return in_array($event->getEventCode(), $eventList) 
+        return in_array($event->getEventCode(), $eventList, true) 
                 && $event->getResource()->get('type')->getKey() == $typeId 
-                && (empty($modelIds) || (!empty($modelIds) && in_array($event->getResource()->get('model')->getKey(), $modelIds)));
+                && (empty($modelIds) || (!empty($modelIds) && in_array($event->getResource()->get('model')->getKey(), $modelIds, true)));
     }
 
     public function log($data = [])
@@ -55,21 +55,21 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
 
         if (isset($log['type']))
         {
-            $data['type'] = \Telenok\Object\Type::find($log['type']);
+            $data['type'] = \App\Model\Telenok\Object\Type::find($log['type']);
         }
 
         if (isset($log['model']))
         {
             try
             {
-                $data['model'] = \Telenok\Object\Sequence::getModel($log['model']);
+                $data['model'] = \App\Model\Telenok\Object\Sequence::getModel($log['model']);
             } 
             catch (\Exception $ex) {}
         }
 
         if (isset($log['fields']) && !empty($log['fields']))
         {
-            $data['fields'] = \Telenok\Object\Field::whereIn('id', $log['fields'])->get();
+            $data['fields'] = \App\Model\Telenok\Object\Field::whereIn('id', $log['fields'])->get();
         }
 
         return \Illuminate\Support\Collection::make($data);

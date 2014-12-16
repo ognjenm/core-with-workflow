@@ -20,20 +20,20 @@
 
     ?>
 	
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) }}
+	{!! Form::label("{$field->code}", $field->translate('title'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 	
     <div class="col-sm-9">
         @if ($field->icon_class)
         <span class="input-group-addon">
-            <i class="{{{ $field->icon_class }}}"></i>
+            <i class="{{ $field->icon_class }}"></i>
         </span>
         @endif 
 		
-        {{ Form::text($disabled ? str_random() : "{$field->code}", $value, $domAttr) }}
+        {!! Form::text($disabled ? str_random() : "{$field->code}", $value, $domAttr) !!}
 		
         @if ($field->translate('description'))
-        <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-              class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+        <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+              class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
         @endif 
     </div>
 </div>

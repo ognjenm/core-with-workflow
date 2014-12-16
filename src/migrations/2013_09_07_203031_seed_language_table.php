@@ -20,7 +20,7 @@ class SeedLanguageTable extends Migration {
 
 		DB::table('object_field')->insertGetId(
 				[
-					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\Object\Field']),
+					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\Object\Field']),
 					'title' => json_encode(['ru' => 'ISO код', 'en' => 'ISO code'], JSON_UNESCAPED_UNICODE),
 					'title_list' => json_encode(['ru' => 'ISO код', 'en' => 'ISO code'], JSON_UNESCAPED_UNICODE),
 					'key' => 'string',
@@ -34,15 +34,18 @@ class SeedLanguageTable extends Migration {
 					'field_order' => 6,
 				]
 		);
- 
+        
+        $now = \Carbon\Carbon::now()->toDateTimeString();
+        $plus15Year = \Carbon\Carbon::now()->addYears(15)->toDateTimeString();
+
 		DB::table('language')->insertGetId(
 				[
-					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\Telenok\System\Language']),
+					'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\System\Language']),
 					'title' => "English",
 					'locale' => 'en',
 					'active' => 1,
-                    'active_at_start' => \DB::raw('NOW()'), 
-                    'active_at_end' => \DB::raw('NOW() + INTERVAL 15 YEAR'),
+                    'active_at_start' => $now, 
+                    'active_at_end' => $plus15Year,
 				]
 		);
 	}

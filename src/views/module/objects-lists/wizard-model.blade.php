@@ -38,7 +38,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                 {
                     aButtons.push({
                         "sExtends": "text",
-                        "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $controller->LL('list.btn.create') }}}",
+                        "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{ $controller->LL('list.btn.create') }}",
                         'sButtonClass': 'btn-success btn-sm' + (param.btnCreateDisabled ? ' disabled ' : ''),
                         "fnClick": function(nButton, oConfig, oFlash) {
                             if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
@@ -57,7 +57,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                 {
                     aButtons.push({
                             "sExtends": "text",
-                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $controller->LL('list.btn.refresh') }}}",
+                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{ $controller->LL('list.btn.refresh') }}",
                             'sButtonClass': 'btn-sm',
                             "fnClick": function(nButton, oConfig, oFlash) {
                                 jQuery('#' + param.domId).dataTable().fnReloadAjax();
@@ -76,11 +76,11 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                     aButtons.push({
                         "sExtends": "collection",
                         'sButtonClass': 'btn btn-sm btn-light',
-                        "sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{{ $controller->LL('list.btn.select') }}}",
+                        "sButtonText": "<i class='fa fa-check-square-o smaller-90'></i> {{ $controller->LL('list.btn.select') }}",
                         "aButtons": [ 
                             {
                                 "sExtends": "text",
-                                "sButtonText": "<i class='fa fa-pencil-square-o'></i> {{{ $controller->LL('btn.edit') }}}",
+                                "sButtonText": "<i class='fa fa-pencil-square-o'></i> {{ $controller->LL('btn.edit') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) 
                                     {
                                         if (param.btnListEditUrl)
@@ -94,36 +94,62 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                             },
                             {
                                 "sExtends": "text",
-                                "sButtonText": "<i class='fa fa-lock'></i> {{{ $controller->LL('btn.lock') }}}",
+                                "sButtonText": "<i class='fa fa-lock'></i> {{ $controller->LL('btn.lock') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) 
+                                {
+                                    if (param.btnListLockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
                                     {
-                                        if (param.btnListLockUrl)
+                                        jQuery.ajax({
+                                            url: param.btnListLockUrl, 
+                                            data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                            method: 'get',
+                                            dataType: 'json'
+                                        }).done(function(data) 
                                         {
-                                            this_.addTabByURL({
-                                                url: param.btnListLockUrl, 
-                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-                                            });
-                                        }
+                                            if (data.success == 1)
+                                            {
+                                                jQuery.gritter.add({
+                                                    title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                    text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                    class_name: 'gritter-success gritter-light',
+                                                    time: 3000,
+                                                });
+                                            }
+                                        }); 
+                                    }
                                 }
                             },
                             {
                                 "sExtends": "text",
-                                "sButtonText": "<i class='fa fa-unlock'></i> {{{ $controller->LL('btn.unlock') }}}",
+                                "sButtonText": "<i class='fa fa-unlock'></i> {{ $controller->LL('btn.unlock') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) 
+                                {
+                                    if (param.btnListUnlockUrl && jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).size())
                                     {
-                                        if (param.btnListUnlockUrl)
+                                        jQuery.ajax({
+                                            url: param.btnListUnlockUrl, 
+                                            data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize(),
+                                            method: 'get',
+                                            dataType: 'json'
+                                        }).done(function(data) 
                                         {
-                                            this_.addTabByURL({
-                                                url: param.btnListUnlockUrl, 
-                                                data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
-                                            });
-                                        }
+                                            if (data.success == 1)
+                                            {
+                                                jQuery.gritter.add({
+                                                    title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+                                                    text: '{{$controller->LL('notice.saved.thank.you')}}!',
+                                                    class_name: 'gritter-success gritter-light',
+                                                    time: 3000,
+                                                });
+                                            }
+                                        }); 
+                                    }
                                 }
                             },
                             {
                                 "sExtends": "text",
                                 'sButtonClass':  (param.btnListDeleteDisabled ? ' disabled ' : ''),
-                                "sButtonText": "<i class='fa fa-trash-o'></i> {{{ $controller->LL('btn.delete') }}}",
+                                "sButtonText": "<i class='fa fa-trash-o'></i> {{ $controller->LL('btn.delete') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) {
                                     if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
                                     else {
@@ -159,7 +185,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                     aButtons.push({
                             "sExtends": "text",
                             'sButtonClass': 'btn btn-sm btn-light',
-                            "sButtonText": "<i class='fa fa-search'></i> {{{ $controller->LL('btn.filter') }}}",
+                            "sButtonText": "<i class='fa fa-search'></i> {{ $controller->LL('btn.filter') }}",
                             "fnClick": function(nButton, oConfig, oFlash) {
                                 jQuery('div.filter', jQuery(this.dom.table).closest('div.container-table')).toggle();
                             }
@@ -184,14 +210,14 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                 },
                 "oLanguage": {
                     "oPaginate": {
-                        "sNext": "{{{ \Lang::get('core::default.btn.next') }}}",
-                        "sPrevious": "{{{ \Lang::get('core::default.btn.prev') }}}", 
+                        "sNext": "{{ \Lang::get('core::default.btn.next') }}",
+                        "sPrevious": "{{ \Lang::get('core::default.btn.prev') }}", 
                     },
-                    "sEmptyTable": "{{{ \Lang::get('core::default.table.empty') }}}",
-                    "sSearch": "{{{ \Lang::get('core::default.table.search') }}} ",
-                    "sInfo": "{{{ \Lang::get('core::default.table.showed') }}}",
-                    "sInfoEmpty": "{{{ \Lang::get('core::default.table.empty.showed') }}}",
-                    "sZeroRecords": "{{{ \Lang::get('core::default.table.empty.filtered') }}}",
+                    "sEmptyTable": "{{ \Lang::get('core::default.table.empty') }}",
+                    "sSearch": "{{ \Lang::get('core::default.btn.search') }} ",
+                    "sInfo": "{{ \Lang::get('core::default.table.showed') }}",
+                    "sInfoEmpty": "{{ \Lang::get('core::default.table.empty.showed') }}",
+                    "sZeroRecords": "{{ \Lang::get('core::default.table.empty.filtered') }}",
                     "sInfoFiltered": "",
                 }
             }, param);
@@ -234,8 +260,8 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 	@section('ajaxDone')
  
 		jQuery.gritter.add({
-			title: '{{{$controller->LL('notice.saved')}}}! {{{$controller->LL('notice.saved.description')}}}',
-			text: '{{{$controller->LL('notice.saved.thank.you')}}}!',
+			title: '{{$controller->LL('notice.saved')}}! {{$controller->LL('notice.saved.description')}}',
+			text: '{{$controller->LL('notice.saved.thank.you')}}!',
 			class_name: 'gritter-success gritter-light',
 			time: 3000,
 		});
@@ -253,7 +279,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 
 		<div class="modal-header table-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>{{{ \Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title') }}}</h4>
+			<h4>{{ \App\Model\Telenok\Object\Type::where('code', $model->getTable())->first()->translate('title') }}</h4>
 		</div>
 
 
@@ -264,14 +290,14 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 
 @section('form') 
 
-{{ Form::model($model, array('url' => $routerParam, 'files' => true, 'id'=>"model-ajax-$uniqueId", 'class'=>'form-horizontal')) }}
+{!! Form::model($model, array('url' => $routerParam, 'files' => true, 'id'=>"model-ajax-$uniqueId", 'class'=>'form-horizontal')) !!}
 	
-		{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
+		{!! Form::hidden($model->getKeyName(), $model->getKey()) !!}
 
 		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
 			<div class="widget-main">
 
-				{{$controller->getFormContent($model, $type, $fields, $uniqueId)}}
+				{!! $controller->getFormContent($model, $type, $fields, $uniqueId) !!}
 					
 			</div>
 		</div>
@@ -283,7 +309,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 				<script type="text/javascript">
 					<?php
 					
-						$config = \App::make('telenok.config')->getObjectFieldController();
+						$config = app('telenok.config')->getObjectFieldController();
 
 						$put = \Illuminate\Support\Collection::make([]); 
 
@@ -302,7 +328,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 						}
 					?>
 					
-					var chooseWizard = {{ $put->toJson() }};
+					var chooseWizard = {!! $put->toJson() !!};
 				</script> 
  
 				<button class="btn btn-success" onclick="
@@ -311,16 +337,16 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 						$modal.modal('hide');
 						return false;">
 					<i class="fa fa-bullseye"></i>
-					{{{ $controller->LL('btn.choose') }}}
+					{{ $controller->LL('btn.choose') }}
 				</button>
 				@endif
 				@if (\Input::get('saveBtn') && ( (!$model->exists && \Auth::can('create', 'object_type.' . $type->code)) || ($model->exists && \Auth::can('update', $model->getKey())) ))
 				<button type="submit" class="btn btn-info">
-					{{{ $controller->LL('btn.save') }}}
+					{{ $controller->LL('btn.save') }}
 				</button>
 				@endif
 				<button class="btn" data-dismiss="modal">
-					{{{ $controller->LL('btn.close') }}}
+					{{ $controller->LL('btn.close') }}
 				</button>
 			</div>
 
@@ -328,5 +354,5 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 		</div>
 	</div>
 </div>
-{{ Form::close() }}
+{!! Form::close() !!}
 @stop

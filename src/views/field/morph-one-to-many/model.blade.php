@@ -26,7 +26,7 @@
 			<h4 class="row">
 				<span class="col-sm-12">
 					<i class="ace-icon fa fa-list-ul"></i>
-					{{{ $field->translate('title_list') }}}
+					{{ $field->translate('title_list') }}
 				</span>
 			</h4>
         </div>
@@ -39,7 +39,7 @@
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
-                            {{{$controller->LL('current')}}}
+                            {{$controller->LL('current')}}
                         </a>
                     </li>
 					@if ( 
@@ -50,7 +50,7 @@
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
-                            {{{$controller->LL('addition')}}}
+                            {{$controller->LL('addition')}}
                         </a>
                     </li>
 					@endif
@@ -84,12 +84,12 @@
                     var aButtons = []; 
 					
 							@foreach($controller->getFormModelTableColumn($field, $model, $jsUnique) as $row)
-                            aoColumns.push({{json_encode($row)}});
+                                aoColumns.push({!! json_encode($row) !!});
 							@endforeach
 
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{ $parentController->LL('list.btn.refresh') }}",
                                             'sButtonClass': 'btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
@@ -99,7 +99,7 @@
 							@if ($model->exists && $field->allow_update && $permissionUpdate)
 								aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
+                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{ $parentController->LL('list.btn.delete.all') }}",
                                             'sButtonClass': 'btn-sm btn-danger',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 removeMorphAllO2MHas{{$jsUnique}}();
@@ -115,7 +115,7 @@
 									aoColumns : aoColumns,
 									aaSorting: [],
 									iDisplayLength : {{$displayLength}},
-									sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
+									sAjaxSource : '{!! URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) !!}', 
 									oTableTools: {
 										aButtons : aButtons
 									}
@@ -131,20 +131,20 @@
 								)
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
+                                            "sButtonText": "<i class='fa fa-plus smaller-90'></i> {{ $parentController->LL('list.btn.create') }}",
                                             'sButtonClass': 'btn-success btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                createMorphO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
+                                                createMorphO2MHas{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->morph_one_to_many_has, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}');
                                             }
                                         });
 							@endif	
 							 
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{ $parentController->LL('list.btn.choose') }}",
                                             'sButtonClass': 'btn-yellow btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
-                                                chooseMorphO2MHas{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}');
+                                                chooseMorphO2MHas{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}');
                                             }
                                         }); 
 
@@ -208,16 +208,16 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{$controller->LL('list.btn.delete')}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 					
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -238,57 +238,51 @@
             });
         }
 
-        if (typeof editTableRow{{$jsUnique}} == "undefined")
+        function editTableRow{{$jsUnique}}(obj, url) 
         {
-            function editTableRow{{$jsUnique}}(obj, url) 
-            {
-                jQuery.ajax({
-                    url: url,
-                    method: 'get',
-                    dataType: 'json'
-                }).done(function(data) {
+            jQuery.ajax({
+                url: url,
+                method: 'get',
+                dataType: 'json'
+            }).done(function(data) {
 
-                    if (!jQuery('#modal-{{$uniqueId}}').size())
-                    {
-                        jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
-                    }
+                if (!jQuery('#modal-{{$jsUnique}}').size())
+                {
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                }
 
-                    var $modal = jQuery('#modal-{{$uniqueId}}');
+                var $modal = jQuery('#modal-{{$jsUnique}}');
 
-                    $modal.data('model-data', function(data)
-                    {  
-                        var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
-                        var $dt = $table.dataTable();
-                        var $tr = jQuery(obj).closest('tr');
-                            $dt.fnUpdate({title: data.title}, $tr[0], 1);
+                $modal.data('model-data', function(data)
+                {  
+                    var $table = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}");
+                    var $dt = $table.dataTable();
+                    var $tr = jQuery(obj).closest('tr');
+                        $dt.fnUpdate({title: data.title}, $tr[0], 1);
 
-                    });
-
-                    $modal.html(data.tabContent);
-
-                    $modal.modal('show').on('hidden', function() 
-                    { 
-                        jQuery(this).html(""); 
-                    });
                 });
-            }
+
+                $modal.html(data.tabContent);
+
+                $modal.modal('show').on('hidden', function() 
+                { 
+                    jQuery(this).html(""); 
+                });
+            });
         }
 
-        if (typeof deleteTableRow{{$jsUnique}} == "undefined")
+        function deleteTableRow{{$jsUnique}}(obj) 
         {
-            function deleteTableRow{{$jsUnique}}(obj) 
-            {
-                var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
-                var $tr = jQuery(obj).closest("tr");
+            var $dt = jQuery("#telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable();
+            var $tr = jQuery(obj).closest("tr");
 
-                var data = $dt.fnGetData($tr[0]);
+            var data = $dt.fnGetData($tr[0]);
 
-                $tr.toggleClass('line-through red');
-                jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
-                jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
+            $tr.toggleClass('line-through red');
+            jQuery('button.trash-it i', $tr).toggleClass('fa fa-trash-o').toggleClass('fa fa-power-off');
+            jQuery('button.trash-it', $tr).toggleClass('btn-danger').toggleClass('btn-success');
 
-                removeMorphO2MHas{{$jsUnique}}(data.id);
-            }
+            removeMorphO2MHas{{$jsUnique}}(data.id);
         }
             
         function deleteMorphO2MHasAddition{{$jsUnique}}(obj) 
@@ -311,16 +305,16 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{$controller->LL('list.btn.delete')}}" onclick="deleteMorphO2MHasAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 				
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -369,19 +363,19 @@
     ?>
 
     <div class="form-group">
-        {{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+        {!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
         <div class="col-sm-9"> 
-            {{ Form::hidden("{$field->code}", $id) }}
-            {{ Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) }}
+            {!! Form::hidden("{$field->code}", $id) !!}
+            {!! Form::text(str_random(), ($id ? "[{$id}] " : "") . $title, $domAttr ) !!}
 
 			@if ( 
 					((!$model->exists && $field->allow_create && $permissionCreate) 
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="chooseMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="chooseMorphO2MBelongTo{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $controller->getChooseTypeId($field, $linkedField)]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-bullseye"></i>
-                {{{ $controller->LL('btn.choose') }}}
+                {{ $controller->LL('btn.choose') }}
             </button> 
 			@endif
 
@@ -390,9 +384,9 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate)) && !$disabledCreateLinkedType
 				)
-            <button onclick="createMorphO2O{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $controller->getChooseTypeId($field, $linkedField), 'saveBtn' => 1, 'chooseBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
+            <button onclick="createMorphO2O{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $controller->getChooseTypeId($field, $linkedField), 'saveBtn' => 1, 'chooseBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm" type="button">
                 <i class="fa fa-plus"></i>
-                {{{ $controller->LL('btn.create') }}}
+                {{ $controller->LL('btn.create') }}
             </button>
             @endif
 
@@ -401,9 +395,9 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="editMorphO2MBelongTo{{$uniqueId}}(this, '{{ URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) }}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
+            <button onclick="editMorphO2MBelongTo{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardEdit(), ['id' => '--id--', 'saveBtn' => 1]) !!}'); return false;" data-toggle="modal" class="btn btn-sm btn-success" type="button">
                 <i class="fa fa-pencil"></i>
-                {{{ $controller->LL('btn.edit') }}}
+                {{ $controller->LL('btn.edit') }}
             </button>
 			@endif
 
@@ -412,15 +406,15 @@
 						|| 
 					($model->exists && $field->allow_update && $permissionUpdate))
 				)
-            <button onclick="deleteMorphO2MBelongTo{{$uniqueId}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
+            <button onclick="deleteMorphO2MBelongTo{{$jsUnique}}(this); return false;" data-toggle="modal" class="btn btn-sm btn-danger" type="button">
                 <i class="fa fa-trash-o"></i>
-                {{{ $controller->LL('btn.delete') }}}
+                {{ $controller->LL('btn.delete') }}
             </button>
 			@endif
 
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
             @endif
 
         </div>
@@ -428,7 +422,7 @@
 
     <script type="text/javascript">
         
-        function createMorphO2MBelongTo{{$uniqueId}}(obj, url) 
+        function createMorphO2MBelongTo{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -438,12 +432,12 @@
                 dataType: 'json'
             }).done(function(data) {
 
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -461,7 +455,7 @@
             });
         }
 
-        function editMorphO2MBelongTo{{$uniqueId}}(obj, url) 
+        function editMorphO2MBelongTo{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -477,12 +471,12 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {  
@@ -500,7 +494,7 @@
             });
         }
 
-        function deleteMorphO2MBelongTo{{$uniqueId}}(obj) 
+        function deleteMorphO2MBelongTo{{$jsUnique}}(obj) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -508,7 +502,7 @@
             jQuery('input[type="hidden"]', $block).val(0);
         }
 
-        function chooseMorphO2MBelongTo{{$uniqueId}}(obj, url) 
+        function chooseMorphO2MBelongTo{{$jsUnique}}(obj, url) 
         {
             var $block = jQuery(obj).closest('div.form-group');
 
@@ -518,12 +512,12 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
@@ -540,7 +534,6 @@
                 });
             });
         }
-        
     </script>
 
 @endif

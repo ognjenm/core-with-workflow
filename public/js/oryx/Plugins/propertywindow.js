@@ -56,7 +56,7 @@ ORYX.Plugins.PropertyWindow = {
 
         jQuery.ajax({
             url: shape.getStencil().urlPropertyContent(),
-            method: 'post',
+            method: 'get',
             dataType: 'json',
             data: {
                     'sessionDiagramId': ORYX.Utils.getParamFromUrl('sessionDiagramId'),
@@ -80,7 +80,7 @@ ORYX.Plugins.PropertyWindow = {
                 
                 jQuery.ajax({
                     url: shape.getStencil().urlStoreProperty(),
-                    method: 'post',
+                    method: 'get',
                     dataType: 'json',
                     data: $form.serialize()
                 }).done(function(data) 

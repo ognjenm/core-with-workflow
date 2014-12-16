@@ -8,9 +8,9 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 	
     public function filterCan($queryCommon, $queryWhere, $resource, $permission, $subject)
     {
-		$resourceType = new \Telenok\Security\Resource();
-		$sequence = new \Telenok\Object\Sequence();
-		$spr = new \Telenok\Security\SubjectPermissionResource();
+		$resourceType = new \App\Model\Telenok\Security\Resource();
+		$sequence = new \App\Model\Telenok\Object\Sequence();
+		$spr = new \App\Model\Telenok\Security\SubjectPermissionResource();
 		$now = \Carbon\Carbon::now();
 
 		$queryCommon->leftJoin($resourceType->getTable() . ' as resource_type_permission_user_filter_object_type_own', function($join) use ($now, $resourceType)
@@ -25,8 +25,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 		// verify user's right via SubjectPermissionResource on resource with code like "object.some_object_type_code" eg "object.object_type"
 		if ($subject instanceof \Telenok\Core\Model\User\User)
 		{
-			$role = new \Telenok\Security\Role();
-			$group = new \Telenok\User\Group();
+			$role = new \App\Model\Telenok\Security\Role();
+			$group = new \App\Model\Telenok\User\Group();
  
 			$queryCommon->leftJoin($spr->getTable() . ' as spr_permission_user_filter_object_type_own', function($join) use ($spr, $permission, $now)
 			{
@@ -98,9 +98,9 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 
     public function filter($queryCommon, $queryWhere, $resource, $permission, $subject)
     {
-		$resourceType = new \Telenok\Security\Resource();
-		$sequence = new \Telenok\Object\Sequence();
-		$spr = new \Telenok\Security\SubjectPermissionResource();
+		$resourceType = new \App\Model\Telenok\Security\Resource();
+		$sequence = new \App\Model\Telenok\Object\Sequence();
+		$spr = new \App\Model\Telenok\Security\SubjectPermissionResource();
 		$now = \Carbon\Carbon::now();
 
 		$queryCommon->leftJoin($resourceType->getTable() . ' as resource_type_permission_user_filter_object_type_own', function($join) use ($now, $resourceType)
@@ -115,8 +115,8 @@ class Controller extends \Telenok\Core\Interfaces\Filter\Acl\Resource\Controller
 		// verify user's right via SubjectPermissionResource on resource with code like "object.some_object_type_code" eg "object.object_type"
 		if ($subject instanceof \Telenok\Core\Model\User\User)
 		{
-			$role = new \Telenok\Security\Role();
-			$group = new \Telenok\User\Group();
+			$role = new \App\Model\Telenok\Security\Role();
+			$group = new \App\Model\Telenok\User\Group();
  
 			$queryCommon->leftJoin($spr->getTable() . ' as spr_permission_user_filter_object_type_own', function($join) use ($spr, $permission, $now)
 			{

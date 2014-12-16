@@ -134,7 +134,7 @@ class Controller {
 	
 	public function setDbDriver($param = '')
 	{
-		if (in_array($param, ['sqlite', 'mysql', 'pgsql', 'sqlsrv']))
+		if (in_array($param, ['sqlite', 'mysql', 'pgsql', 'sqlsrv'], true))
 		{
 			$this->dbDriver = $param;
 		}

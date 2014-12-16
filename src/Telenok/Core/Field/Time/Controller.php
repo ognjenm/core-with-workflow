@@ -69,12 +69,37 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
                 $value = \Carbon\Carbon::createFromFormat('H:i:s', $value);
             }
 		}
-			
-        parent::setModelSpecialAttribute($model, $key, $value);
 
-        return true;
+        return parent::setModelSpecialAttribute($model, $key, $value);
     }
     
+    public function getFilterContent($field = null)
+    {
+        return view($this->getViewFilter(), [
+            'controller' => $this,
+            'field' => $field,
+        ]);
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null)
+		{
+			$query->where(function($query) use ($value, $name, $model)
+			{
+                if ($v = trim(array_get($value, 'start')))
+                {
+                    $query->where(\DB::raw("TIME(" . $model->getTable() . ".{$name})"), '>=', $v);
+                }
+
+                if ($v = trim(array_get($value, 'end')))
+                {
+                    $query->where(\DB::raw("TIME(" . $model->getTable() . ".{$name})"), '<=', $v);
+                }
+			});
+		}
+    }
+
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;

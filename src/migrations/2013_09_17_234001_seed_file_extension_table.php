@@ -18,7 +18,7 @@ class SeedFileExtensionTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Расширение", 'en' => "Extension"],
                     'title_list' => ['ru' => "Расширение", 'en' => "Extension"],

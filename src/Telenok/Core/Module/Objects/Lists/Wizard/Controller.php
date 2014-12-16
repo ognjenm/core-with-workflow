@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Module\Objects\Lists\Wizard;
 
-class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
+class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
     protected $presentation = 'wizard-model';
     protected $presentationModelView = 'core::module.objects-lists.wizard-model'; 
@@ -56,46 +56,46 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 				->setRouterUpdate("cmf.module.{$this->getKey()}.wizard.update");
     }    
 	
-    public function create($id = null)
+    public function create()
     { 
-		$id = $id ?: \Input::get('id');
+		$id = $this->getRequest()->input('id');
   
 		if (is_array($id))
 		{
 			return $this->chooseType($id);
 		}
 
-        return parent::create($id);
+        return parent::create();
     }
 	
     public function chooseType($id = [])
     { 
-		$id = (array)$id;
-		
 		return [
-				'tabContent' => \View::make('core::module.objects-lists.wizard-choose-type', 
+				'tabContent' => view(
+                    'core::module.objects-lists.wizard-choose-type', 
 					[
 						'controller' => $this,
-						'typeId' => $id,
+						'typeId' => (array)$id,
 						'uniqueId' => str_random(),
 					])->render()
-			];
+            ];
     }
     
     public function choose()
     {
 		$typeList = [];
-		$id = \Input::get('id', 0);
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
+		$id = $input->get('id', 0);
 		
 		try
 		{
 			if (is_array($id))
 			{
 				$typeList = $id;
-				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
+				$id = \App\Model\Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
 			}
 			
-            $model = $this->modelByType($id);
+            $model = $this->getModelByTypeId($id);
             $type = $this->getType($id); 
             $fields = $model->getFieldList(); 
         } 
@@ -107,7 +107,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         return array(
             'tabKey' => "{$this->getTabKey()}-{$model->getTable()}",
             'tabLabel' => $type->translate('title'),
-            'tabContent' => \View::make($this->getPresentationListWizardView(), array(
+            'tabContent' => view($this->getPresentationListWizardView(), array(
                 'controller' => $this,  
 				'presentation' => $this->getPresentation(),
                 'model' => $model,
@@ -116,8 +116,8 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
                 'fields' => $fields,
                 'uniqueId' => ($uniqueId = str_random()),
                 'gridId' => str_random(),
-				'saveBtn' => \Input::get('saveBtn', true), 
-				'chooseBtn' => \Input::get('chooseBtn', true),  
+				'saveBtn' => $input->get('saveBtn', true), 
+				'chooseBtn' => $input->get('chooseBtn', true),  
                 'contentForm' => ( $model->classController() ? $this->typeForm($model)->getFormContent($model, $type, $fields, $uniqueId) : FALSE),
             ))->render()
         );
@@ -130,21 +130,23 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
         $content = [];
 		$typeList = [];
 
-        $iDisplayStart = intval(\Input::get('iDisplayStart', 10));
-        $sEcho = \Input::get('sEcho');
-		$id = \Input::get('id', 0);
-		$sSearch = trim(\Input::get('sSearch', 0));
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());  
+        
+        $iDisplayStart = intval($input->get('iDisplayStart', 10));
+        $sEcho = $input->get('sEcho');
+		$id = $input->get('id', 0);
+		$sSearch = trim($input->get('sSearch', 0));
 		
         try
         {
 			if (is_array($id))
 			{
 				$typeList = $id;
-				$id = \Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
+				$id = \App\Model\Telenok\Object\Type::where('code', 'object_sequence')->pluck('id');
 			}
 
             $type = $this->getType($id);
-            $model = $this->modelByType($id);  
+            $model = $this->getModelByTypeId($id);  
 			$query = $this->getListItem($model);
 
 			if (!empty($typeList))
@@ -175,7 +177,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
 			
 			$items = $query->get();
 			
-			$config = \App::make('telenok.config')->getObjectFieldController();
+			$config = app('telenok.config')->getObjectFieldController();
 
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
             {
@@ -223,10 +225,7 @@ class Controller extends \Telenok\Core\Module\Objects\Lists\Controller {
                             return false;
 					});
 				</script>
-				<button id="btnfield' . $uniq . '" type="button" class="btn btn-xs btn-success">'.$this->LL('btn.choose').'</button>
-
+				<button id="btnfield' . $uniq . '" type="button" class="btn btn-xs btn-success">'.$this->LL('btn.choose').'</button> 
 		';
-    }
-	
-	
+    } 
 }

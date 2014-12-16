@@ -1,10 +1,10 @@
 <div class="widget-box telenok-widget-box draggable @if (!$widgetOnPage->active) widget-color-red @elseif ($widgetOnPage->isWidgetLink()) widget-color-blue @else widget-color-green @endif" 
-	 data-widget-key="{{{$key}}}" 
-	 data-widget-id="{{{$id}}}" 
+	 data-widget-key="{{$key}}" 
+	 data-widget-id="{{$id}}" 
 	 data-widget-buffer-id="0"
 	 data-widget-buffer-key="0">
     <div class="widget-header widget-header-small">
-		<h5 class="widget-title lighter">{{{$header}}}. {{{$widgetOnPage->translate('title')}}}</h5>
+		<h5 class="widget-title lighter">{{$header}}. {{$widgetOnPage->translate('title')}}</h5>
 
 		<div class="widget-toolbar no-border">
 			<a data-action="cut" href="#">

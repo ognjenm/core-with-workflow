@@ -35,6 +35,8 @@
                 }
             }
         },
+        
+        @section("json_data")
         "json_data": {
             "progressive_render": true,
             "ajax" : {
@@ -45,40 +47,45 @@
                     
                     if (!jQuery(node).attr('id')) 
 					{
-                        url = '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}';
+                        url = '{!! $controller->getRouterListTree() !!}';
                     }
                     else
                     {
                         nodeId = jQuery(node).attr('id');
-                        url = '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}?id=' + nodeId;
+                        url = '{!! $controller->getRouterListTree(['id' => '__id__']) !!}'.replace('__id__', nodeId);
                     }
 
                     return url;
                 }
             }
         },
+        @show
+        
+        @section("search")
         "search" : {
             "case_insensitive": true,
             "ajax": {
-                "url": '{{ URL::route("cmf.module.{$controller->getKey()}.list.tree") }}'
+                "url": '{!! $controller->getRouterListTree() !!}'
             }
         },
+        @show
+        
         "plugins": ["themes", "json_data", "ui", "crrm", "search", "types", "state"]
     })
     .bind("select_node.jstree", function(event, data) 
     {
 		@section("select_node")
 		
-        data.inst.toggle_node(data.rslt.obj);
+        //data.inst.toggle_node(data.rslt.obj);
 
         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}')
                 .addTabByURL({
-                    url: '{{ URL::route("cmf.module.{$controller->getKey()}") }}?' + jQuery.param({ "treePid": data.rslt.obj.data('id') }),
+                    url: '{!! $controller->getRouterContent() !!}',
                     after: function() 
                     {
                         telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').reloadDataTableOnClick({
-                            "url": '{{ $controller->getRouterList() }}', 
-                            "data": { "treePid": data.rslt.obj.data("id") },
+                            "url": '{!! $controller->getRouterList() !!}', 
+                            "data": { "treeId": data.rslt.obj.data("id") },
                             "gridId": data.rslt.obj.data("gridId")
                         });
                     }});
@@ -88,29 +95,29 @@
 
 <div class="widget-box span">
     <div class="widget-header widget-header-flat">
-        <h4 class="lighter widget-title smaller">{{{$treeChoose}}}</h4>
+        <h4 class="lighter widget-title smaller">{{$treeChoose}}</h4>
         <span class="widget-toolbar">
 
-            
-            <a data-action="settings" href="#" class="dropdown-toggle " data-toggle="dropdown">
+            <a data-action="settings" href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-search"></i>
             </a>
-            
-            <ul class="dropdown-menu extended notification">
+
+            <ul class="dropdown-menu dropdown-caret">
                 <li>
-                    <form>
-                        <div class="form-group"> 
-                            <div class="input-group">
-                                <input type="text" class="form-control" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info btn-sm" type="button" title="{{{$controller->LL('btn.search')}}}" 
-                                            onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).prev().val());return false;">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div> 
-                        </div>
-                    </form>
+                    <div class="input-group" style="margin: 0 6px;">
+                        <input type="text" placeholder="{{ $controller->LL('btn.search') }}..." 
+                                onclick="event.stopPropagation();" 
+                                onkeyup="if (event.keyCode == 13) jQuery('button.search-me', jQuery(this).closest('div')).trigger('click');"
+                                class="form-control" style="float: none; width: 200px;">
+                        <span class="input-group-btn">
+                            <button onclick="jQuery('#tree-{{$id}}').jstree('search', jQuery(this).closest('div').find('input').val());return false;" title="{{$controller->LL('btn.search')}}" type="button" class="search-me btn btn-info btn-sm">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <button onclick="jQuery('#tree-{{$id}}').jstree('clear_search');jQuery(this).closest('div').find('input').val('');return false;" title="{{$controller->LL('btn.clear')}}" type="button" class="btn btn-sm">
+                                <i class="fa fa-times"></i>
+                            </button>					
+                        </span>								
+                    </div>
                 </li>
             </ul>
 

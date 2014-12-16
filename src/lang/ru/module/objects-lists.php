@@ -6,7 +6,7 @@ return array(
     'header.title' => 'Список объектов',
     'header.description' => 'создание и редактирование',
     'header.wizard' => 'Управление объектом',
-    'header.tree.choose' => "Список: Записи", 
+    'title.tree' => "Список: Записи", 
 
     'list.name' => 'Поля объектов',
     'list.names' => 'Поля объектов',

@@ -2,35 +2,47 @@
 
 namespace Telenok\Core\Module\Objects\Field;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller { 
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller { 
 
     protected $key = 'objects-field';
     protected $parent = 'objects';
 
-    protected $typeList = 'object_field';
-    protected $typeTree = 'object_type';
+    protected $modelListClass = '\App\Model\Telenok\Object\Field';
+    protected $modelTreeClass = '\App\Model\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
 	
+    public function getTreeListTypes()
+    {  
+        $types = \App\Model\Telenok\Object\Type::whereIn('code', ['folder', 'object_type'])->active()->get()->fetch('id')->toArray();
+
+        return $types;
+    }
+    
     public function getListItem($model)
     {
         $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
         {
-            if (!\Input::get('filter_want_search', false) && ($treePid = \Input::get('treePid', 0)))
+            if (!$this->getRequest()->input('multifield_search', false) && ($treeId = $this->getRequest()->input('treeId', 0)))
             { 
-                $query->where($model->getTable().'.field_object_type', $treePid);
+                $query->where($model->getTable().'.field_object_type', $treeId);
             }
         });
 
         $this->getFilterQuery($model, $query); 
 
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip(\Input::get('iDisplayStart', 0))->take($this->displayLength + 1);
+        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
 
-    public function validate($model = null, $input = null, $message = [])
+    public function validate($model = null, $input = [], $message = [])
     {
-        \App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->validate();
+        $key = $model->exists && $model->key ? $model->key : $input->get('key');
+
+        if ($key)
+        {
+            app('telenok.config')->getObjectFieldController()->get($key)->validate($model, $input, $message);
+        }
 
         return $this;
     } 
@@ -59,19 +71,19 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 		}
 		else
 		{
-			$modelType = \Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
+			$modelType = \App\Model\Telenok\Object\Type::where('code', $input->get('field_object_type'))->orWhere('id', $input->get('field_object_type'))->firstOrFail();
 			
 			$input->put('field_object_type', $modelType->getKey());
 		} 
 
 		// preprocessing at field controller
-		if (!\App::make('telenok.config')->getObjectFieldController()->has($input->get('key')))
+		if (!app('telenok.config')->getObjectFieldController()->has($input->get('key')))
 		{
 			throw new \Exception('There are not field with key "' . $input->get('key') . '"');
 		}
 		else
 		{
-			\App::make('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
+			app('telenok.config')->getObjectFieldController()->get($input->get('key'))->preProcess($model, $type, $input);
 		}
 		
         return parent::preProcess($model, $type, $input);
@@ -79,7 +91,7 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
 
     public function postProcess($model, $type, $input)
     {   
-        $field = \App::make('telenok.config')->getObjectFieldController()->get($input->get('key'));
+        $field = app('telenok.config')->getObjectFieldController()->get($input->get('key'));
 
         $field->postProcess($model, $type, $input);  
 

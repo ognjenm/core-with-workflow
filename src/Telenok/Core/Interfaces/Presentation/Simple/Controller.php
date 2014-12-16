@@ -2,7 +2,10 @@
 
 namespace Telenok\Core\Interfaces\Presentation\Simple;
 
-abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
+use \Telenok\Core\Interfaces\Module\Controller as Module;
+use \Telenok\Core\Interfaces\Presentation\IPresentation;
+
+abstract class Controller extends Module implements IPresentation {
 
     protected $presentation = 'simple';
     protected $presentationView = '';
@@ -55,7 +58,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function getPresentationContent()
     {
-        return \View::make($this->getPresentationView(), array(
+        return view($this->getPresentationView(), array(
             'controller' => $this,
             'presentation' => $this->getPresentation(),
             'content' => $this->getContent(),
@@ -67,7 +70,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Module\Controller {
 
     public function getContent()
     {
-        return \View::make($this->getPresentationContentView(), array(
+        return view($this->getPresentationContentView(), array(
             'controller' => $this,
             'uniqueId' => str_random(),                 
             'success' => false, 

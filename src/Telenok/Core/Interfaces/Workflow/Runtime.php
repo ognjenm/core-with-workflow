@@ -8,8 +8,8 @@ class Runtime {
 	{       
         if ($this->canProcessing())
         {
-			$processes = \Telenok\Workflow\Process::active()->get();
-            $elements = \App::make('telenok.config')->getWorkflowElement();
+			$processes = \App\Model\Telenok\Workflow\Process::active()->get();
+            $elements = app('telenok.config')->getWorkflowElement();
 
 			if (!$processes->isEmpty())
 			{
@@ -47,7 +47,7 @@ class Runtime {
         return (bool)\Config::get('app.workflow.enabled');
     }
 
-    public function threadCreateAndRun(\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
+    public function threadCreateAndRun(\App\Model\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
     { 
         if ($this->canProcessing())
         {

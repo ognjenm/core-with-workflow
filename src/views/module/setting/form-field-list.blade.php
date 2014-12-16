@@ -1,22 +1,22 @@
-							@if (!in_array($field->code, ['value']))
+							@if (!in_array($field->code, ['value'], true))
 
-								{{ \App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) }}
+								{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
 							@elseif ($field->code=='value')
 
 								<?php
 
-								$w = \App::make('telenok.config')->getSetting()->get(strtolower($model->code));
+								$w = app('telenok.config')->getSetting()->get(strtolower($model->code));
 
 								?>
 
 								@if ($w)
 
-									{{ $w->getFormSettingContent($field, $model, $uniqueId) }}
+									{!! $w->getFormSettingContent($field, $model, $uniqueId) !!}
 
 								@else
 
-									{{ \App::make('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) }}
+									{!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
 								@endif
 

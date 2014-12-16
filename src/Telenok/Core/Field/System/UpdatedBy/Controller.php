@@ -70,7 +70,7 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 
 		$input->put('field_object_tab', $tab->getKey());  
 
-		$table = \Telenok\Object\Type::find($input->get('field_object_type'))->code;
+		$table = \App\Model\Telenok\Object\Type::find($input->get('field_object_type'))->code;
 		$fieldName = 'updated_by_user';
 		
 		if (!\Schema::hasColumn($table, $fieldName) && !\Schema::hasColumn($table, "`{$fieldName}`"))

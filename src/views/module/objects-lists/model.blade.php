@@ -16,9 +16,9 @@
 			setTimeout(function() { ajaxLock{{$uniqueId}}(); }, {{ $controller->getLockInFormPeriod() * 700}});
 
 			jQuery.ajax({
-				url: '{{{ $controller->getRouterLock() }}}',
+				url: '{{ $controller->getRouterLock() }}',
 				type: 'post',
-				data: { id: {{ intval($model->getKey()) }} },
+				data: { id: {{ intval($model->getKey()) }}, _token: "{{ csrf_token() }}" },
 				dataType: 'json',
 				cache: false
 			});
@@ -42,9 +42,9 @@
         }
 		else if (button_type == 'delete.close')
 		{ 
-			if (confirm('{{{ $controller->LL('notice.sure') }}}'))
+			if (confirm('{{ $controller->LL('notice.sure') }}'))
 			{
-				$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getKey()])}}");
+				$el.attr('action', "{!! $controller->getRouterDelete(['id' => $model->getKey()]) !!}");
 			}
 			else
 			{
@@ -65,7 +65,7 @@
 	@if ($model->locked())
     <div>
 		@if (\Auth::check() && \Auth::user()->id != $model->locked_by_user)
-		<div class="alert alert-danger">{{{$controller->LL('notice.locked', ['at' => $model->locked_at, 'by' => $model->lockedByUser->username])}}}<button data-dismiss="alert" class="close" type="button"><i class="fa fa-times"></i></button></div>
+		<div class="alert alert-danger">{{$controller->LL('notice.locked', ['at' => $model->locked_at, 'by' => $model->lockedByUser->username])}}<button data-dismiss="alert" class="close" type="button"><i class="fa fa-times"></i></button></div>
 		@endif
 	</div>
 	@endif
@@ -74,9 +74,9 @@
 	
 	@section('formField')
 	
-	{{ Form::hidden($model->getKeyName(), $model->getKey()) }}
+	{!! Form::hidden($model->getKeyName(), $model->getKey()) !!}
 	 
-    {{ $controller->getFormContent($model, $type, $fields, $uniqueId) }}
+    {!! $controller->getFormContent($model, $type, $fields, $uniqueId) !!}
 
 	@stop
   
@@ -85,21 +85,21 @@
 		
 		@if ( (isset($canCreate) && $canCreate) || (isset($canUpdate) && $canUpdate) )
         <button type="submit" class="btn btn-success" onclick="jQuery(this).closest('form').data('btn-clicked', 'save');">
-            {{{ $controller->LL('btn.save') }}}
+            {{ $controller->LL('btn.save') }}
         </button>
         <button type="submit" class="btn btn-info" onclick="jQuery(this).closest('form').data('btn-clicked', 'save.close');">
-            {{{ $controller->LL('btn.save.close') }}}
+            {{ $controller->LL('btn.save.close') }}
         </button>
 		@endif
 		
 		@if (isset($canDelete) && $canDelete)
         <button type="submit" class="btn btn-danger" onclick="jQuery(this).closest('form').data('btn-clicked', 'delete.close');">
-            {{{ $controller->LL('btn.delete') }}}
+            {{ $controller->LL('btn.delete') }}
         </button>
         @endif
 		
 		<button type="submit" class="btn" onclick="jQuery(this).closest('form').data('btn-clicked', 'close');">
-            {{{ $controller->LL('btn.close') }}}
+            {{ $controller->LL('btn.close') }}
         </button>
 		
     </div>

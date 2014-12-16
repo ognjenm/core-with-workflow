@@ -1,15 +1,15 @@
 <?php 
     $disabled = false;
     
-    $domAttr = ['class' => $field->css_class?: 'col-sm-8'];
+    $domAttr = ['class' => $field->css_class?: 'col-sm-4'];
     
-    if ($model->exists)
+    if ($model->exists && $model->{$field->code})
     {
-        $value = $model->{$field->code};
+        $value = $model->{$field->code}->setTimezone(\Config::get('app.timezone'));
     }
     else
     {
-        $value = $field->datetime_default;
+        $value = $field->datetime_default->setTimezone(\Config::get('app.timezone'));
     }
 
 	if ((!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)))
@@ -23,22 +23,22 @@
 ?>
 
 <div class="form-group">
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+	{!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 	<div class="col-sm-8">
         <div class="input-group" id="datetime-picker-time-{{$random}}">
             @if ($field->icon_class)
             <span class="input-group-addon datepickerbutton">
-                <i class="{{$field->icon_class}}"></i>
+                <i class="{{ $field->icon_class }}"></i>
             </span>
             @else
 			<span class="input-group-addon datepickerbutton">
 				<i class="fa fa-clock-o bigger-110"></i>
 			</span>
             @endif
-			{{ Form::text($field->code, $value ? : '', $domAttr) }}
+			{!! Form::text($field->code, $value ? : '', $domAttr) !!}
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
             @endif
 		</div>
 	</div>

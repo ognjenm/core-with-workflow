@@ -23,14 +23,14 @@ class Controller {
     {
         $table = $resource instanceof \Telenok\Core\Model\Object\Sequence ? $resource->type()->getTable() : $resource->getTable();
 
-        $resourceFilter = \Telenok\Security\Resource::where('code', "object_type.{$table}.{$this->getKey()}")->active()->first();
+        $resourceFilter = \App\Model\Telenok\Security\Resource::where('code', "object_type.{$table}.{$this->getKey()}")->active()->first();
         
         if (!$resourceFilter)
         {
             return false;
         }
         
-        $spr = new \Telenok\Security\SubjectPermissionResource();
+        $spr = new \App\Model\Telenok\Security\SubjectPermissionResource();
         
         $spr->where('acl_permission_object_sequence', $permission->getKey());
         $spr->where('acl_resource_object_sequence', $resourceFilter->getKey());
@@ -44,10 +44,10 @@ class Controller {
         
         if ($subject instanceof \Telenok\Core\Model\User\User)
         {
-            $group = new \Telenok\User\Group();
-            $role = new \Telenok\Security\Role();
-            $user = new \Telenok\User\User();
-            $spr = new \Telenok\Security\SubjectPermissionResource();
+            $group = new \App\Model\Telenok\User\Group();
+            $role = new \App\Model\Telenok\Security\Role();
+            $user = new \App\Model\Telenok\User\User();
+            $spr = new \App\Model\Telenok\Security\SubjectPermissionResource();
             
             $query = $spr->where('acl_resource_object_sequence', $resourceFilter->getKey());
             $spr->where('acl_permission_object_sequence', $permission->getKey());

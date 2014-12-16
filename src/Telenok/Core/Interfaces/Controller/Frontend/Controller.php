@@ -3,7 +3,9 @@
 namespace Telenok\Core\Interfaces\Controller\Frontend;
 
 abstract class Controller extends \Illuminate\Routing\Controller {
-
+ 
+    use \Telenok\Core\Support\PackageLoad;
+      
 	protected $key = '';
 	protected $package = '';
 	protected $controllerModel;
@@ -13,6 +15,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	protected $cssCode = array();
 	protected $jsCode = array();
 	protected $cacheTime = 3600;
+    protected $languageDirectory = 'controller';
 
 	protected $frontendView = 'core::controller.frontend';
 	protected $backendView = 'core::controller.frontend-container';
@@ -33,20 +36,20 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	{
 		$content = ['controller' => $this];
 
-		$wop = \Telenok\Web\WidgetOnPage::where('widget_page', $pageId)->whereHas('widgetLanguageLanguage', function($query) use ($languageId)
+		$wop = \App\Model\Telenok\Web\WidgetOnPage::where('widget_page', $pageId)->whereHas('widgetLanguageLanguage', function($query) use ($languageId)
 			{
 				$query->where('id', $languageId);
 			})
 			->orderBy('widget_order')->get(); 
 
-		$widgetConfig = \App::make('telenok.config')->getWidget();
+		$widgetConfig = app('telenok.config')->getWidget();
 
 		$wop->each(function($w) use (&$content, $widgetConfig)
 		{
             $content[$w->container][] = $widgetConfig->get($w->key)->getInsertContent($w->getKey());
 		});
 
-		return \View::make($this->backendView, $content)->render();
+		return view($this->backendView, $content)->render();
 	}
 
 	public function getContiner()
@@ -82,12 +85,12 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	{ 
 		$content = [];
 
-		$listWidget = \App::make('telenok.config')->getWidget();
+		$listWidget = app('telenok.config')->getWidget();
 		$pageId = intval(str_replace('page_', '', \Route::currentRouteName()));
 
 		try
 		{
-			$page = \Telenok\Web\Page::findOrFail($pageId);
+			$page = \App\Model\Telenok\Web\Page::findOrFail($pageId);
 
             $this->setCacheTime($page->cache_time);
 
@@ -110,7 +113,7 @@ abstract class Controller extends \Illuminate\Routing\Controller {
             \App::abort(404);
 		}
 
-		return \View::make($this->getFrontendView(), [
+		return view($this->getFrontendView(), [
 			'page' => $page,
 			'controller' => $this,
 			'content' => $content,
@@ -172,16 +175,6 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		return $header;
 	}
 
-	public function getAdminArea()
-	{
-		if (\Auth::can('read', 'control_panel'))
-		{
-			$this->addCssFile('packages/telenok/core/css/backend-for-frontend.css');
-
-			return \View::make('core::controller.backend-frontend-iframe');
-		}
-	}
-
 	public function getName()
 	{
 		return $this->LL('name');
@@ -199,45 +192,10 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 		return $this->controllerModel;
 	}
 
-	public function getPackage()
-	{
-		if ($this->package)
-		{
-			return $this->package;
-		}
-
-		$list = explode('\\', __NAMESPACE__);
-
-		return strtolower(array_get($list, 1));
-	}
-
 	public function getKey()
 	{
 		return '';
 	}
-
-	public function LL($key = '', $param = [])
-	{
-		$key_ = "{$this->getPackage()}::controller/{$this->getKey()}.$key";
-		$key_default_ = "{$this->getPackage()}::default.$key";
-
-		$word = \Lang::get($key_, $param);
-
-		// not found in current wordspace
-		if ($key_ === $word)
-		{
-			$word = \Lang::get($key_default_, $param);
-
-			// not found in default wordspace
-			if ($key_default_ === $word)
-			{
-				return $key_;
-			}
-		}
-
-		return $word;
-	}
-
 }
 
 ?>

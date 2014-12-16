@@ -44,7 +44,7 @@ input[type="search"], input[type="tel"], input[type="color"] {
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, 
 input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, 
 input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus {
-  color: #333333;
+    color: #333333;
 }
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], 
 input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], 
@@ -67,7 +67,7 @@ div.hover { border: 2px solid blue; }
 
 
 .form-horizontal .controls span.lbl {
-     margin-top: 5px;
+    margin-top: 5px;
 }
 
 [class*="header-color-"] > .widget-toolbar > [data-action="copy"] {
@@ -177,9 +177,27 @@ div.widget-header.widget-header-green { background: linear-gradient(to bottom, #
     font-family: "Open Sans" !important;
 }
 
-.jstree.jstree-proton {
+.telenok-tree .jstree.jstree-proton {
     font-family: inherit !important;
     text-align: left;
+}
+
+.telenok-tree .jstree.jstree-proton a.jstree-search {
+    color: red;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.telenok-tree .jstree.jstree-proton a.jstree-search.jstree-clicked {
+    color: white;
+}
+
+.telenok-tree .jstree.jstree-proton a.jstree-search.jstree-hovered {
+    color: white;
+}
+
+.telenok-tree .jstree .jstree-open > ins, .telenok-tree .jstree .jstree-closed > ins {
+    cursor: pointer;
 }
 
 
@@ -188,6 +206,7 @@ div.widget-header.widget-header-green { background: linear-gradient(to bottom, #
     position: absolute;
     right: 30px;
     top: 25px;
+    color: white;
 }
 
 .dataTables_wrapper .pagination li {display: none;}
@@ -255,3 +274,19 @@ body.telenok-backend ul.nav-tabs:empty {
 body.telenok-backend div.tab-content:empty {
     border: 0;
 } 
+
+.help-button {
+    margin-top: 5px;
+    line-height: 19px;
+    cursor: pointer;
+}
+
+/* Fix for dropdown menu in datatable header for background div, which has z-index: 2001 */
+ul.DTTT_dropdown.dropdown-menu {
+    z-index: 2003;
+}
+
+div.DTTT_collection_background {
+    background: none !important;
+    z-index: 2001;
+}

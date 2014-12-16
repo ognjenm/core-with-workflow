@@ -18,7 +18,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 	
 	public function getLinkedModelType($field)
 	{
-		return \Telenok\Object\Type::whereIn('id', [$field->relation_one_to_many_has, $field->relation_one_to_many_belong_to])->first();
+		return \App\Model\Telenok\Object\Type::whereIn('id', [$field->relation_one_to_many_has, $field->relation_one_to_many_belong_to])->first();
 	}
 	
     public function getFormModelContent($controller = null, $model = null, $field = null, $uniqueId = null)
@@ -69,7 +69,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
         
         $id = $field->relation_one_to_many_has ?: $field->relation_one_to_many_belong_to;
         
-        $class = \Telenok\Object\Sequence::getModel($id)->class_model;
+        $class = \App\Model\Telenok\Object\Sequence::getModel($id)->class_model;
         
 		$model = new $class;
 		
@@ -127,7 +127,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
              
             $relatedField = $field->code . '_' . $model->sequence->sequencesObjectType->code;
 
-            if (in_array('*', $idsDelete))
+            if (in_array('*', $idsDelete, true))
             {
                 $model->$method()->get()->each(function($item) use ($relatedField) 
                 {
@@ -159,7 +159,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			return $model;
 			
 			
-            $relatedModel = \App::build(\Telenok\Object\Type::findOrFail($field->relation_one_to_many_has)->class_model);
+            $relatedModel = app(\App\Model\Telenok\Object\Type::findOrFail($field->relation_one_to_many_has)->class_model);
 
             \Illuminate\Support\Collection::make($idsAdd)->each(function($id) use ($model, $method, $relatedModel) 
             {
@@ -190,7 +190,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 			$input->put('relation_one_to_many_has', $input->get('field_has'));
 		}
 
-		$input->put('relation_one_to_many_has', intval(\Telenok\Object\Type::where('code', $input->get('relation_one_to_many_has'))->orWhere('id', $input->get('relation_one_to_many_has'))->pluck('id')));
+		$input->put('relation_one_to_many_has', intval(\App\Model\Telenok\Object\Type::where('code', $input->get('relation_one_to_many_has'))->orWhere('id', $input->get('relation_one_to_many_has'))->pluck('id')));
 		$input->put('multilanguage', 0);
 		$input->put('allow_sort', 0);
 		
@@ -208,13 +208,13 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				return parent::postProcess($model, $type, $input);
 			} 
 
-            $relatedTypeOfModelField = $model->fieldObjectType()->first();   // eg object \Telenok\Object\Type which DB-field "code" is "author"
+            $relatedTypeOfModelField = $model->fieldObjectType()->first();   // eg object \App\Model\Telenok\Object\Type which DB-field "code" is "author"
 
             $classModelHasMany = $relatedTypeOfModelField->class_model;
             $codeFieldHasMany = $model->code; 
             $codeTypeHasMany = $relatedTypeOfModelField->code; 
 
-            $typeBelongTo = \Telenok\Object\Type::findOrFail($input->get('relation_one_to_many_has')); 
+            $typeBelongTo = \App\Model\Telenok\Object\Type::findOrFail($input->get('relation_one_to_many_has')); 
             $tableBelongTo = $typeBelongTo->code;
             $classBelongTo = $typeBelongTo->class_model;
 
@@ -232,8 +232,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
                     'field' => $relatedSQLField,
                 ];
 
-            $hasManyObject = \App::build($classModelHasMany);
-            $belongToObject = \App::build($classBelongTo);
+            $hasManyObject = app($classModelHasMany);
+            $belongToObject = app($classBelongTo);
 
             if ($input->get('create_belong') !== false) 
             {
@@ -272,11 +272,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 					'field_order' => $input->get('field_order_belong', $model->field_order),
 				];
 				
-				$validator = $this->validator(new \Telenok\Object\Field(), $toSave, []);
+				$validator = $this->validator(new \App\Model\Telenok\Object\Field(), $toSave, []);
 
 				if ($validator->passes()) 
 				{
-					\Telenok\Object\Field::create($toSave);
+					\App\Model\Telenok\Object\Field::create($toSave);
 				}
 
 				if (!\Schema::hasColumn($tableBelongTo, $relatedSQLField) && !\Schema::hasColumn($tableBelongTo, "`{$relatedSQLField}`"))

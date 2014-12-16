@@ -13,7 +13,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	{
 		$data = static::findOrFail($versionId);
 
-		$class = \Telenok\Object\Type::findOrFail($data->object_type_id)->class_model;
+		$class = \App\Model\Telenok\Object\Type::findOrFail($data->object_type_id)->class_model;
 
 		$model = $class::findOrFail($data->object_id);
 		$model->setRawAttributes(json_decode($data->object_data, true));
@@ -34,7 +34,7 @@ class Version extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 		
 		try
 		{
-			$class = \Telenok\Object\Type::findOrFail($versionData->object_type_id)->class_model;
+			$class = \App\Model\Telenok\Object\Type::findOrFail($versionData->object_type_id)->class_model;
 		} 
 		catch (\Exception $ex) 
 		{

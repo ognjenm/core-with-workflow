@@ -17,9 +17,9 @@
 			setTimeout(function() { ajaxLock{{$uniqueId}}(); }, {{ $controller->getLockInFormPeriod() * 700}});
 
 			jQuery.ajax({
-				url: '{{{ $controller->getRouterLock() }}}',
+				url: '{{ $controller->getRouterLock() }}',
 				type: 'post',
-				data: { id: {{ intval($model->getKey()) }} },
+				data: { id: {{ intval($model->getKey()) }}, _token: "{{ csrf_token() }}" },
 				dataType: 'json',
 				cache: false
 			});
@@ -41,7 +41,7 @@
         }
 		else if (button_type == 'delete.close')
 		{ 
-			if (confirm('{{{ $controller->LL('notice.sure') }}}'))
+			if (confirm('{{ $controller->LL('notice.sure') }}'))
 			{
 				$el.attr('action', "{{$controller->getRouterDelete(['id' => $model->getKey()])}}");
 			}

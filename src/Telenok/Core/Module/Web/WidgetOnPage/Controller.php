@@ -2,24 +2,24 @@
 
 namespace Telenok\Core\Module\Web\WidgetOnPage;
 
-class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
+class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Controller {
 
 	protected $key = 'web-page-wop';
     protected $presentation = 'tree-tab-object';
-	protected $typeList = 'widget_on_page';
+    protected $modelListClass = '\App\Model\Telenok\Web\WidgetOnPage';
     protected $presentationFormFieldListView = 'core::module.web-page-wop.form-field-list';
     protected $presentationModuleKey = 'web-page-widget-web-page-constructor';
 
     public function getGridId($key = 'gridId')
     {
-        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->typeList}";
+        return "{$this->getPresentation()}-{$this->getTabKey()}-{$this->getTypeList()->code}";
     }  
         
     public function preProcess($model, $type, $input)
     { 
         if ($input->get('key'))
         {
-            \App::make('telenok.config')->getWidget()->get($input->get('key'))->preProcess($model, $type, $input);
+            app('telenok.config')->getWidget()->get($input->get('key'))->preProcess($model, $type, $input);
         }
         
         return parent::postProcess($model, $type, $input);
@@ -29,9 +29,9 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
     { 
         if ($input->get('key'))
         {
-            \File::makeDirectory(app_path("views/widget/"), 0777, true, true);
+            \File::makeDirectory(base_path("resources/views/widget/"), 0777, true, true);
 
-            $templateFile = app_path("views/widget/") . $model->getKey() . '.blade.php';
+            $templateFile = base_path("resources/views/widget/") . $model->getKey() . '.blade.php';
 
             if ($t = trim($input->get('template_content')))
             {
@@ -39,12 +39,12 @@ class Controller extends \Telenok\Core\Interfaces\Module\Objects\Controller {
             }
             else
             {
-                $viewContent = \App::make('telenok.config')->getWidget()->get($input->get('key'))->getViewContent();
+                $viewContent = app('telenok.config')->getWidget()->get($input->get('key'))->getViewContent();
             }
              
             \File::put($templateFile, $viewContent);
             
-            \App::make('telenok.config')->getWidget()->get($input->get('key'))->postProcess($model, $type, $input);
+            app('telenok.config')->getWidget()->get($input->get('key'))->postProcess($model, $type, $input);
         }
         
         return parent::postProcess($model, $type, $input);

@@ -24,10 +24,10 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 
     public function getModelAttribute($model, $key, $value, $field)
     { 
-		$value = $value === null ? '[]' : $value;
-		
+		$value = $value === null || $value === "" ? '[]' : $value;
+        
 		$v = json_decode($value, true);
-		
+        
 		if (is_array($v))
 		{
 			return \Illuminate\Support\Collection::make($v);
@@ -44,23 +44,12 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		{
 			$value_ = $value->toArray();
 		}
-		else if (is_array($value))
-		{
-			$value_ = $model->{$key};
-
-			foreach($value as $k => $v)
-			{
-				$value_->put($k, $v);
-			}
-			
-			$value_ = $value_->toArray();
-		}
 		else
 		{
-			$value_ = $value;
+			$value_ = $value === null ? [] : $value;
 		}
 
-		$model->setAttribute($key, is_null($value_) ? null : json_encode($value_, JSON_UNESCAPED_UNICODE));
+		$model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));
     }
 
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 

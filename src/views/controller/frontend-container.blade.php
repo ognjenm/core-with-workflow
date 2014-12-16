@@ -7,7 +7,7 @@
 					<div data-container-id="center" class="frontend-container span" style="padding: 0; margin: 0; min-width: 150px; min-height: 150px;" >
 						@if (isset($center))
 						@foreach($center as $widget)
-						{{$widget}}
+						{!! $widget !!}
 						@endforeach
 						@endif
 					</div>

@@ -2,7 +2,7 @@
     "name": "telenok/core",
     "description": "Telenok CMS Core engine",
     "version": "0.1.1",
-    "keywords": ["telenok", "core"],
+    "keywords": ["telenok", "core", "laravel"],
     "homepage": "http://telenok.com",
     "minimum-stability": "dev",
     "license": [

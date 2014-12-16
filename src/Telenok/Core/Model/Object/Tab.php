@@ -14,12 +14,12 @@ class Tab extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 	public function tabObjectType()
 	{
-		return $this->belongsTo('\Telenok\Object\Type', 'tab_object_type');
+		return $this->belongsTo('\App\Model\Telenok\Object\Type', 'tab_object_type');
 	}
 
 	public function field()
 	{
-		return $this->hasMany('\Telenok\Object\Field', 'field_object_tab');
+		return $this->hasMany('\App\Model\Telenok\Object\Field', 'field_object_tab');
 	}
 
     public function preProcess($type, $input)
@@ -28,7 +28,7 @@ class Tab extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
  
         if ($id)
         {
-            $tabType = \Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->first();
+            $tabType = \App\Model\Telenok\Object\Type::where('id', $id)->orWhere('code', $id)->first();
 
             if ($tabType)
             {

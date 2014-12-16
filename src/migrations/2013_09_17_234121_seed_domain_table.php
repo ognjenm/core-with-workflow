@@ -18,7 +18,7 @@ class SeedDomainTable extends Migration {
         \SeedCommonFields::alterActive($modelTypeId, $tabVisibleId);
         \SeedCommonFields::alterCreateUpdateBy($modelTypeId, $tabAdditionallyId);
 
-		(new \Telenok\Object\Field())->storeOrUpdate(
+		(new \App\Model\Telenok\Object\Field())->storeOrUpdate(
 				[
                     'title' => ['ru' => "Домен", 'en' => "Domain"], 
                     'title_list' => ['ru' => "Домен", 'en' => "Domain"], 
@@ -30,13 +30,15 @@ class SeedDomainTable extends Migration {
                     'multilanguage' => 0,
                     'show_in_form' => 1,
                     'show_in_list' => 1,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
                     'allow_search' => 1,
                     'field_order' => 3,
                     'string_list_size' => 150,
                 ]
         );
 
-        (new \Telenok\Object\Field())->storeOrUpdate(
+        (new \App\Model\Telenok\Object\Field())->storeOrUpdate(
                 [
                     'title' => ['en' => 'Page'],
                     'title_list' => ['en' => 'Page'],

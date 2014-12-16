@@ -9,7 +9,7 @@
     <body class="no-skin telenok-backend">
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="navbar-inner">
-				<a class="navbar-brand" href="telenok/"><small>{{{\Config::get('app.backend.brand')}}}</small></a>
+				<a class="navbar-brand" href="telenok/"><small>{{\Config::get('app.backend.brand')}}</small></a>
 				<ul class="nav ace-nav pull-right">
 
 					@foreach($listModuleMenuTop as $itemFirstLevel)
@@ -17,14 +17,14 @@
 					@if (!$itemFirstLevel->get('parent'))
 
 						@if ($itemFirstLevel->get('li'))
-						{{$itemFirstLevel->get('li')}}
+                            {!! $itemFirstLevel->get('li') !!}
 						@else
 						<li>
 						@endif
 
-						{{$itemFirstLevel->get('content')}}
+						{!! $itemFirstLevel->get('content') !!}
 
-							<ul class="pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-closer" id="user_menu">
+							<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" id="user_menu">
 								@foreach($listModuleMenuTop as $itemSecondLevel)
 
 								@if ($itemFirstLevel->get('key') == $itemSecondLevel->get('parent'))
@@ -34,12 +34,12 @@
 									@endif
 
 									@if ($itemFirstLevel->get('li'))
-									{{$itemFirstLevel->get('li')}}
+                                        {!! $itemFirstLevel->get('li') !!}
 									@else
 									<li>
 									@endif
 
-									{{$itemSecondLevel->get('content')}}
+									{!! $itemSecondLevel->get('content') !!}
 
 									@if ($itemSecondLevel->get('devider_after'))
 										<li class="divider"></li>
@@ -80,16 +80,20 @@
         </div>
 
         <div class="main-container">
-            <div id="sidebar" class="sidebar responsive">
+            <div id="sidebar" class="sidebar responsive sidebar-fixed
+                @if (app('auth')->user()->configuration && app('auth')->user()->configuration->get('ui-backend.sidebar-collapse'))
+                menu-min
+                @endif
+                ">
                 <div class="sidebar-shortcuts">
                     <div class="sidebar-shortcuts-large">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <button title='{{{$listModuleGroupItem->getName()}}}' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} {{{ $listModuleGroupItem->getButton() }}}"><i class="{{{ $listModuleGroupItem->getIcon() }}}"></i></button>
+                        <button title='{{$listModuleGroupItem->getName()}}' onclick='jQuery("ul.telenok-sidebar").hide(); jQuery("ul.telenok-sidebar-{{$listModuleGroupItem->getKey()}}").show();' class="btn btn-sm telenok-sidebar-{{ $listModuleGroupItem->getKey() }} {{ $listModuleGroupItem->getButton() }}"><i class="{{ $listModuleGroupItem->getIcon() }}"></i></button>
                         @endforeach
                     </div>
                     <div class="sidebar-shortcuts-mini">
                         @foreach($listModuleGroup as $listModuleGroupItem)
-                        <span class="btn {{{ $listModuleGroupItem->getButton() }}}"></span>
+                        <span class="btn {{ $listModuleGroupItem->getButton() }}"></span>
                         @endforeach
                     </div>
                 </div> 
@@ -103,19 +107,19 @@
                             @if ($listModuleItem->isParentAndSingle()) 
                             <li class="parent-single">
                                 <a href="#" onclick='
-                                    telenok.addModule( "{{ $listModuleItem->getKey() }}", "{{ $listModuleItem->getRouterActionParam() }}", function(moduleKey) {
+                                    telenok.addModule( "{{ $listModuleItem->getKey() }}", "{!! $listModuleItem->getRouterActionParam() !!}", function(moduleKey) {
                                                 telenok.processModuleContent(moduleKey);
                                             }); 
                                             return false;'>
-                                    <i class="menu-icon {{{ $listModuleItem->getIcon() }}}"></i>
-                                    <span class="menu-text">{{{ $listModuleItem->getName() }}}</span>
+                                    <i class="menu-icon {{ $listModuleItem->getIcon() }}"></i>
+                                    <span class="menu-text">{{ $listModuleItem->getName() }}</span>
                                 </a>
                             </li>
                             @elseif (!$listModuleItem->getParent())
                             <li>
                                 <a class="dropdown-toggle" href="#">
-                                    <i class="menu-icon {{{ $listModuleItem->getIcon() }}}"></i>
-                                    <span class="menu-text">{{{ $listModuleItem->getName() }}}</span>
+                                    <i class="menu-icon {{ $listModuleItem->getIcon() }}"></i>
+                                    <span class="menu-text">{{ $listModuleItem->getName() }}</span>
                                     <b class="arrow fa fa-angle-down"></b>
                                 </a>
                                 <ul class="submenu"> 
@@ -124,12 +128,12 @@
                                     @if ($item->getParent() == $listModuleItem->getKey())
 									
 									<li class="">
-										<a href="#" onclick='telenok.addModule("{{ $item->getKey() }}", "{{ $item->getRouterActionParam() }}", function(moduleKey) {
+										<a href="#" onclick='telenok.addModule("{{ $item->getKey() }}", "{!! $item->getRouterActionParam() !!}", function(moduleKey) {
                                                 telenok.processModuleContent(moduleKey);
                                             });
                                             return false;'>
 											<i class="menu-icon fa fa-caret-right"></i>
-											{{{ $item->getName() }}}
+											{{ $item->getName() }}
 										</a>
 										<b class="arrow"></b>
 									</li>
@@ -145,69 +149,64 @@
                 </ul>
                 @endforeach
 				<div id="sidebar-collapse" class="sidebar-toggle sidebar-collapse">
-					<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" class="ace-icon fa fa-angle-double-left"></i>
-				</div>            
+					<i data-icon2="ace-icon fa fa-angle-double-right" data-icon1="ace-icon fa fa-angle-double-left" 
+                        @if (app('auth')->user()->configuration && app('auth')->user()->configuration->get('ui-backend.sidebar-collapse'))
+                        class="ace-icon fa fa-angle-double-right"
+                        @else
+                        class="ace-icon fa fa-angle-double-left"
+                        @endif
+                        data-telenok-sidebar-collapse="{{app('auth')->user()->configuration && app('auth')->user()->configuration->get('ui-backend.sidebar-collapse')}}"
+                        onclick="
+                            jQuery(this).data('telenok-sidebar-collapse', jQuery(this).data('telenok-sidebar-collapse') ? 0 : 1);
+                            telenok.updateUserUISetting('ui-backend.sidebar-collapse', jQuery(this).data('telenok-sidebar-collapse'));"   
+                    ></i>
+				</div>
 			</div>
 
 
             <div class="main-content clearfix">
-                <div class="breadcrumbs">
+                <div class="breadcrumbs breadcrumbs-fixed">
                     <ul class="breadcrumb">
-                        <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{Lang::get('core::default.home')}}</a></li> 
+                        <li><i class="ace-icon fa fa-home home-icon"></i> <a href="telenok/">{{ $controller->LL('home') }}</a></li> 
                     </ul>
 
-                    <div class="nav-search">
-                        <form class="form-inline">
+                    <div class="nav-search"> 
+                        <form class="form-inline" onsubmit="backendCommonSearch(this); return false;">
                             <span class="input-icon">
-                                <input type="text" placeholder="Search ..." class="input-small search-query nav-search-input" autocomplete="off">
+                                <input type="text" placeholder="{{$controller->LL('btn.search')}} ..." class="input-small search-query nav-search-input" />
                                 <i class="fa fa-search nav-search-icon"></i>
                             </span>
                         </form>
+                        
+                        <script type="text/javascript">
+                            function backendCommonSearch(obj)
+                            { 
+                                telenok.addModule(
+                                    "object-sequence", 
+                                    "{!! \URL::route("cmf.module.objects-sequence.action.param", []) !!}", 
+                                    function(moduleKey) 
+                                    {
+                                        param = telenok.getModule(moduleKey);
+
+                                        param.addTree = false;
+                                        param.addTab = true;
+
+                                        param.data = param.data || {};
+                                        
+                                        param.data = jQuery.extend({}, param.data, {sSearch: jQuery('input', obj).val()})
+
+                                        telenok.setModuleParam(moduleKey, param);                                  
+
+                                        telenok.processModuleContent(moduleKey);
+                                    }
+                                );
+                            }
+                        </script>
                     </div>
                 </div>
-
-
-                <div class="clearfix page-content">
-
-					<div id="ace-settings-container" class="ace-settings-container">
-						<div id="ace-settings-btn" class="btn btn-app btn-xs btn-warning ace-settings-btn">
-							<i class="ace-icon fa fa-cog bigger-150"></i>
-						</div>
-
-						<div id="ace-settings-box" class="ace-settings-box clearfix">
-							<div class="pull-left width-100">
-								<div class="ace-settings-item">
-									<div class="pull-left">
-										<select class="hide" id="skin-colorpicker">
-											<option value="#438EB9" data-skin="no-skin">#438EB9</option>
-											<option value="#222A2D" data-skin="skin-1">#222A2D</option>
-											<option value="#C6487E" data-skin="skin-2">#C6487E</option>
-											<option value="#D0D0D0" data-skin="skin-3">#D0D0D0</option>
-										</select>
-									</div>
-									<span>&nbsp; Choose Skin</span>
-								</div>
-								
-								<div class="btn-group">
-									<button class="btn dropdown-toggle btn-sm btn-warning" data-toggle="dropdown">
-										User action
-										<span class="ace-icon fa fa-caret-down icon-on-right"></span>
-									</button>
-
-									<ul class="dropdown-menu dropdown-default pull-right">
-										<li>
-											<a href="#" onclick="jQuery.post('{{ URL::route('cmf.clear.cache') }}'); return false;">Clear cache now</a>
-										</li>
-									</ul>
-								</div>
-
-							</div>
- 
-						</div>
-					</div>
- 
-					
-				</div>
+                
+                <div class="clearfix page-content"></div>
+                
             </div>
         </div>
 
@@ -217,12 +216,12 @@
 				<div class="modal-content">
 					<div class="modal-header table-header">
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h4>{{{$controller->LL("notice.title")}}}</h4>
+						<h4>{{$controller->LL("notice.title")}}</h4>
 					</div>
 					<div class="modal-body">
 					</div>
 					<div class="modal-footer">
-						<button class="btn" data-dismiss="modal">{{{$controller->LL("btn.close")}}}</button> 
+						<button class="btn" data-dismiss="modal">{{$controller->LL("btn.close")}}</button> 
 					</div>
 				</div>
 			</div>

@@ -10,6 +10,41 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 	protected $key = 'text';
 	protected $ruleList = ['text_width' => ['integer', 'between:20,2000'], 'text_height' => ['integer', 'between:20,2000']];
 	protected $specialField = ['text_width', 'text_height', 'text_default'];
+   
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null && trim($value))
+		{
+            $fieldCode = $field->code;
+            $translate = new \App\Model\Telenok\Object\Translation();
+
+            if (in_array($fieldCode, $model->getMultilanguage(), true))
+            {
+                $query->leftJoin($translate->getTable(), function($join) use ($model, $translate, $fieldCode)
+                {
+                    $join   ->on($model->getTable().'.id', '=', $translate->getTable().'.translation_object_model_id')
+                            ->on($translate->getTable().'.translation_object_field_code', '=', \DB::raw("'" . $fieldCode . "'"))
+                            ->on($translate->getTable().'.translation_object_language', '=', \DB::raw("'".\Config::get('app.locale')."'"));
+                });
+
+                $query->where(function($query) use ($value, $model, $translate)
+                {
+                    \Illuminate\Support\Collection::make(explode(' ', $value))
+                            ->filter(function($i) { return trim($i); })
+                            ->each(function($i) use ($query, $translate)
+                    {
+                        $query->orWhere($translate->getTable().'.translation_object_string', 'like', '%' . trim($i) . '%');
+                    });
+
+                    $query->orWhere($model->getTable() . '.id', intval($value));
+                });
+            }
+            else 
+            {
+                parent::getFilterQuery($field, $model, $query, $name, $value);
+            }
+		}
+    }
 
     public function getModelAttribute($model, $key, $value, $field)
     {
@@ -49,7 +84,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['text_default']) && $model->multilanguage)
+			if (in_array($key, ['text_default'], true) && $model->multilanguage)
 			{ 
 				return \Illuminate\Support\Collection::make(json_decode($value, true));
 			}
@@ -66,7 +101,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {  
-		if (in_array($key, ['text_default']) && $model->multilanguage)
+		if (in_array($key, ['text_default'], true) && $model->multilanguage)
 		{
 			$default = [];
 
@@ -93,7 +128,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			parent::setModelSpecialAttribute($model, $key, $value);
 		}
 
-        return true;
+        return $this;
     }
 	
     public function postProcess($model, $type, $input)

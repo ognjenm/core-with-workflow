@@ -3,15 +3,6 @@
     $domAttr = ['class' => $field->css_class?: '', 'multiple' => 'multiple'];
     $disabled = false;
 
-    if (!$model->exists) 
-    {
-        $value = $field->translate('string_default');
-    }
-    else
-    {
-        $value = $model->{$field->code};
-    }
-
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
     {
         $domAttr['disabled'] = 'disabled';
@@ -36,24 +27,24 @@
 
 <div class="form-group">
 
-	{{ Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+	{!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 
 	<div class="col-sm-5">
 
             @if ($field->icon_class)
 		<div class="input-group">
             <span class="input-group-addon">
-                <i class="{{$field->icon_class}}"></i>
+                <i class="{{ $field->icon_class }}"></i>
             </span>
             @else
 		<div>
             @endif	
             
-            {{ Form::select($field->code, $values, $model->exists ? $model->{$field->code} : $default, $domAttr) }}
+            {!! Form::select($field->code, $values, $model->exists ? $model->{$field->code} : $default, $domAttr) !!}
 
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
             @endif
             
 		</div>

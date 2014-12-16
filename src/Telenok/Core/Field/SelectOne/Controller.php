@@ -39,7 +39,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     {
         try
         {
-			if (in_array($key, ['select_one_data']))
+			if (in_array($key, ['select_one_data'], true))
 			{ 
 				return \Illuminate\Support\Collection::make(json_decode($value, true));
 			}
@@ -56,7 +56,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     
     public function setModelSpecialAttribute($model, $key, $value)
     {  
-		if (in_array($key, ['select_one_data']))
+		if (in_array($key, ['select_one_data'], true))
 		{ 
 			$default = [];
 
@@ -104,7 +104,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			parent::setModelSpecialAttribute($model, $key, $value);
 		}
 
-        return true;
+        return $this;
     }
     
     public function getListFieldContent($field, $item, $type = null)
@@ -124,6 +124,22 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
         }
     }
     
+    public function getFilterContent($field = null)
+    {
+        return view($this->getViewFilter(), [
+            'controller' => $this,
+            'field' => $field,
+        ]);
+    }
+
+    public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 
+    {
+		if ($value !== null)
+		{
+            $query->whereIn($model->getTable() . '.' . $name, $value);
+		}
+    }
+
     public function postProcess($model, $type, $input)
     {
 		$table = $model->fieldObjectType()->first()->code;
@@ -138,6 +154,8 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 		}
         
         $fields = []; 
+        
+        $fields['rule'] = [];
         
         if ($input->get('required'))
         {

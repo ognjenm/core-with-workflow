@@ -10,24 +10,24 @@
         $disabled = true; 
     }
     
-    if (!$model->exists && $field->datetime_range_default_start)
+    if ($model->exists && $model->{$field->code . '_start'})
     {
-        $valueStart = $field->datetime_range_default_start;
+        $valueStart = $model->{$field->code . '_start'}->setTimezone(\Config::get('app.timezone'));
     }
-    else 
+    else
     {
-        $valueStart = $model->{$field->code . '_start'};
-    }
-    
-    if (!$model->exists && $field->datetime_range_default_end)
-    {
-        $valueEnd = $field->datetime_range_default_end;
-    }
-    else 
-    {
-        $valueEnd = $model->{$field->code . '_end'};
+        $valueStart = $field->datetime_range_default_start->setTimezone(\Config::get('app.timezone'));
     }
 
+    if ($model->exists && $model->{$field->code . '_end'})
+    {
+        $valueEnd = $model->{$field->code . '_end'}->setTimezone(\Config::get('app.timezone'));
+    }
+    else
+    {
+        $valueEnd = $field->datetime_range_default_end->setTimezone(\Config::get('app.timezone'));
+    }
+    
     $domAttrStart['placeholder'] = ($placeholder = $field->datetime_range_default_start) ? $placeholder : $field->translate('title');
     $domAttrEnd = $domAttrStart;
     $domAttrEnd['placeholder'] = ($placeholder = $field->datetime_range_default_end) ? $placeholder : $field->translate('title');
@@ -35,32 +35,30 @@
     $random = str_random();
 ?>
 
-
-
 <div class="form-group">
-	{{ Form::label("{$field->code}_start" , $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) }}
+	{!! Form::label("{$field->code}_start" , $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
 	<div class="col-sm-3">
         <div class="input-daterange input-group">
             <div class="input-group" id="datetime-picker-time-start-{{$random}}">
                 @if ($field->icon_class)
                 <span class="input-group-addon datepickerbutton">
-                    <i class="{{$field->icon_class}}"></i>
+                    <i class="{{ $field->icon_class }}"></i>
                 </span>
                 @else
                 <span class="input-group-addon datepickerbutton">
                     <i class="fa fa-clock-o bigger-110"></i>
                 </span>
                 @endif
-                {{ Form::text($field->code . '_start', $valueStart, $domAttrStart) }}
+                {!! Form::text($field->code . '_start', $valueStart, $domAttrStart) !!}
             </div>           
             <span class="input-group-addon">
                 <i class="fa fa-arrow-right"></i>
             </span>
             <div class="input-group" id="datetime-picker-time-end-{{$random}}">
-                {{ Form::text($field->code . '_end', $valueEnd, $domAttrEnd) }}
+                {!! Form::text($field->code . '_end', $valueEnd, $domAttrEnd) !!}
                 @if ($field->icon_class)
                 <span class="input-group-addon datepickerbutton">
-                    <i class="{{$field->icon_class}}"></i>
+                    <i class="{{ $field->icon_class }}"></i>
                 </span>
                 @else
                 <span class="input-group-addon datepickerbutton">
@@ -69,8 +67,8 @@
                 @endif
             </div>
             @if ($field->translate('description'))
-            <span title="" data-content="{{{ $field->translate('description') }}}" data-placement="right" data-trigger="hover" data-rel="popover" 
-                  class="help-button" data-original-title="{{{\Lang::get('core::default.tooltip.description')}}}">?</span>
+            <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
+                  class="help-button" data-original-title="{{$controller->LL('tooltip.description')}}">?</span>
             @endif
         </div>
     </div>

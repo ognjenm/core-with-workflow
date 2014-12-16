@@ -2,13 +2,13 @@
     <div class="row">
 		<div class="col-xs-12"> 
 			<div class="tabbable">
-				<ul class="nav nav-tabs" id='form-nav-{{{$uniqueId}}}'>
+				<ul class="nav nav-tabs" id='form-nav-{{$uniqueId}}'>
 
                     <?php
                     
-                    $fields = $fields->filter(function($item) 
+                    $fields = $fields->reject(function($item) 
                     { 
-                        return !in_array($item->code, [
+                        return in_array($item->code, [
                             'id', 
                             'permission', 
                             'locked_by_user', 
@@ -20,8 +20,9 @@
                             'locked_by',
                             'group',
                             'active',
+                            'active_at',
                             'configuration',
-                        ]);
+                        ], true);
                     });
                     
                     ?>
@@ -30,11 +31,11 @@
 
 					@if ($tab->field()->active()->get()->filter(function($item) use ($fields) { return $fields->contains($item->getKey()); })->count())
 					<li>
-						<a data-toggle="tab" href="#{{{$uniqueId}}}_{{{$tab->code}}}">
+						<a data-toggle="tab" href="#{{$uniqueId}}_{{$tab->code}}">
 							@if ($tab->icon_class)
-							<i class="{{{$tab->icon_class}}}"></i>
+							<i class="{{$tab->icon_class}}"></i>
 							@endif
-							{{{$tab->translate('title')}}}
+							{{$tab->translate('title')}}
 						</a>
 					</li>
 					@endif
@@ -45,7 +46,7 @@
 				<script type="text/javascript">
 					@section('scriptForm')
 				
-					jQuery("ul#form-nav-{{{$uniqueId}}} li:first a").click();
+					jQuery("ul#form-nav-{{$uniqueId}} li:first a").click();
 				
 					@show
 				</script>
@@ -54,7 +55,7 @@
 
 					@foreach($type->tab()->active()->get()->sortBy('tab_order') as $tab) 
 
-					<div id="{{{$uniqueId}}}_{{{$tab->code}}}" class="tab-pane in">
+					<div id="{{$uniqueId}}_{{$tab->code}}" class="tab-pane in">
 						
                         <?php
                         
@@ -76,13 +77,13 @@
 
                             <div class="col-xs-12 col-sm-8">
                                 <div class="form-group">
-                                    @foreach($fieldInForm->filter(function($item) { return in_array($item->code, ['firstname', 'lastname', 'middlename']); }) as $field) 
+                                    @foreach($fieldInForm->filter(function($item) { return in_array($item->code, ['firstname', 'lastname', 'middlename'], true); }) as $field) 
                                         @include($controller->getPresentationFormFieldListView()) 
                                     @endforeach
                                 </div>
                             </div>
                         </div>
-						@foreach($fieldInForm->filter(function($item) { return !in_array($item->code, ['avatar', 'firstname', 'lastname', 'middlename']); }) as $field) 
+						@foreach($fieldInForm->filter(function($item) { return !in_array($item->code, ['avatar', 'firstname', 'lastname', 'middlename'], true); }) as $field) 
                             @include($controller->getPresentationFormFieldListView()) 
                         @endforeach
 							

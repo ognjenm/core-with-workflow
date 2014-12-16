@@ -4,24 +4,69 @@ namespace Telenok\Core\Interfaces\Validator;
 
 class Setting {
 
-    protected $ruleList;
-    protected $input;
+    protected $ruleList = [];
+    protected $input = [];
     protected $validator;
-    protected $message;
-
-    public function __construct($rule = [], $input = null, $message = [])
+    protected $message = [];
+    protected $customAttribute = [];
+    
+    public function setInput($param = [])
     {
-        $input = $input instanceof \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make($input);
+        $this->input = \Illuminate\Support\Collection::make($param);
 
-        $this->input = !$input->isEmpty() ? $input : \Illuminate\Support\Collection::make(\Input::all());
-        $this->message = array_merge(\Lang::get('core::default.error'), (array)$message);
-        $this->ruleList = $this->processRule($rule);
+        return $this;
+    }
+    
+    public function getInput()
+    {
+        return $this->input;
+    }
+    
+    public function setMessage($param = [])
+    {
+        $this->message = array_merge(\Lang::get('core::default.error'), (array)$param);
+
+        return $this;
+    }
+    
+    public function getMessage()
+    {
+        return $this->message;
+    }
+    
+    public function setRuleList($param = [])
+    {
+        $this->ruleList = $this->processRule($param);
+
+        return $this;
+    }
+    
+    public function getRuleList()
+    {
+        if (empty($this->ruleList))
+        {
+            $this->ruleList = $this->processRule($this->getModel()->getRule());
+        }
+        
+        return $this->ruleList;
+    } 
+    
+    public function setCustomAttribute($param = [])
+    {
+        $this->customAttribute = $param;
+
+        return $this;
+    }
+    
+    public function getCustomAttribute()
+    {
+        return $this->customAttribute;
     }
 
     protected function processRule($rule)
     {
         array_walk_recursive($rule, function(&$el, $key, $this_) {
-            $el = str_replace('{{id}}', array_get($this_->input, 'id'), $el);
+            $el = str_replace('{{id}}', $this_->getInput()->get('id'), $el);
         }, $this);
         
         return $rule;
@@ -29,29 +74,10 @@ class Setting {
 
     public function passes()
     {
-        $this->validator = \Validator::make($this->input->all(), $this->ruleList, $this->message);
+        $this->validator = \Validator::make($this->getInput()->toArray(), $this->getRuleList(), $this->getMessage());
 
         if ($this->validator->passes()) return true;
         
         return false;
     }
-
-    public function fails()
-    {
-        return !$this->passes();
-    }
-
-    public function messages()
-    {
-        $messages = $this->validator->messages()->all();
-        
-        return empty($messages) ? ['undefined' => $this->message['undefined']] : $messages;
-    }
-
-    public function validator()
-    {
-        return $this->validator;
-    }
 }
-
-?>

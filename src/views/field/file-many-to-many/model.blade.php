@@ -16,7 +16,7 @@
         <div class="widget-header widget-header-small">
             <h4>
                 <i class="fa fa-list-ul"></i>
-                {{{ $field->translate('title_list') }}}
+                {{ $field->translate('title_list') }}
             </h4> 
         </div>
         <div class="widget-body"> 
@@ -27,7 +27,7 @@
                     <li class="active">
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-current">
                             <i class="fa fa-list bigger-110"></i>
-                            {{{$controller->LL('current')}}}
+                            {{$controller->LL('current')}}
                         </a>
                     </li>
                     @if ( 
@@ -38,7 +38,7 @@
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-addition">
                             <i class="green fa fa-plus bigger-110"></i>
-                            {{{$controller->LL('addition')}}}
+                            {{$controller->LL('addition')}}
                         </a>
                     </li>
                     @endif
@@ -51,7 +51,7 @@
                     <li>
                         <a data-toggle="tab" href="#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload">
                             <i class="green fa fa-upload bigger-110"></i>
-                            {{{$controller->LL('upload')}}}
+                            {{$controller->LL('upload')}}
                         </a>
                     </li>
                     @endif
@@ -96,12 +96,12 @@
                     var aButtons = []; 
 					
 							@foreach($controller->getFormModelTableColumn($field, $model, $jsUnique) as $row)
-                            aoColumns.push({{json_encode($row)}});
+                                aoColumns.push({!! json_encode($row) !!});
 							@endforeach 
 
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.refresh') }}}",
+                                            "sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{ $parentController->LL('list.btn.refresh') }}",
                                             'sButtonClass': 'btn-sm',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 jQuery('#' + "telenok-{{$controller->getKey()}}-{{$jsUnique}}").dataTable().fnReloadAjax();
@@ -111,7 +111,7 @@
 							@if ($model->exists && $field->allow_update && $permissionUpdate)
 							aButtons.push({
                                             "sExtends": "text",
-                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{{ $parentController->LL('list.btn.delete.all') }}}",
+                                            "sButtonText": "<i class='fa fa-trash-o smaller-90'></i> {{ $parentController->LL('list.btn.delete.all') }}",
                                             'sButtonClass': 'btn-sm btn-danger',
                                             "fnClick": function(nButton, oConfig, oFlash) {
                                                 removeAllM2M{{$jsUnique}}();
@@ -127,7 +127,7 @@
 									aoColumns : aoColumns,
 									aaSorting: [],
 									iDisplayLength : {{$displayLength}},
-									sAjaxSource : '{{ URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) }}', 
+									sAjaxSource : '{!! URL::route($controller->getRouteListTable(), ["id" => (int)$model->getKey(), "fieldId" => $field->getKey(), "uniqueId" => $jsUnique]) !!}', 
 									oTableTools: {
 										aButtons : aButtons
 									}
@@ -143,10 +143,10 @@
 								)
 							aButtons.push({
 								"sExtends": "text",
-								"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{{ $parentController->LL('list.btn.create') }}}",
+								"sButtonText": "<i class='fa fa-plus smaller-90'></i> {{ $parentController->LL('list.btn.create') }}",
 								'sButtonClass': 'btn-success btn-sm',
 								"fnClick": function(nButton, oConfig, oFlash) {
-									createM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) }}');
+									createM2M{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardCreate(), [ 'id' => $field->{$linkedField}, 'saveBtn' => 1, 'chooseBtn' => 1]) !!}');
 								}
 							});
 							@endif	
@@ -158,10 +158,10 @@
 								)
 							aButtons.push({
 									"sExtends": "text",
-									"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{{ $parentController->LL('list.btn.choose') }}}",
+									"sButtonText": "<i class='fa fa-refresh smaller-90'></i> {{ $parentController->LL('list.btn.choose') }}",
 									'sButtonClass': 'btn-yellow btn-sm',
 									"fnClick": function(nButton, oConfig, oFlash) {
-										chooseM2M{{$jsUnique}}(this, '{{ URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) }}');
+										chooseM2M{{$jsUnique}}(this, '{!! URL::route($controller->getRouteWizardChoose(), ['id' => $field->{$linkedField}]) !!}');
 									}
 							});
 							@endif
@@ -191,7 +191,7 @@
 		try
 		{
 			jQuery("div#telenok-{{$controller->getKey()}}-{{$jsUnique}}-tab-upload-dropzone").dropzone({
-					url: "{{ URL::route($controller->getRouteUpload()) }}",
+					url: "{!! URL::route($controller->getRouteUpload()) !!}",
 					paramName: "upload", // The name that will be used to transfer the file
 					maxFilesize: 2.5, // MB
 					addRemoveLinks : true,
@@ -258,16 +258,16 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{$controller->LL('list.btn.delete')}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 					
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();
@@ -296,12 +296,12 @@
                 dataType: 'json'
             }).done(function(data) { 
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				var $modal = jQuery('#modal-{{$uniqueId}}');
+				var $modal = jQuery('#modal-{{$jsUnique}}');
 				
                 $modal.data('model-data', function(data)
                 {  
@@ -355,16 +355,16 @@
                 dataType: 'json'
             }).done(function(data) {
 				
-                if (!jQuery('#modal-{{$uniqueId}}').size())
+                if (!jQuery('#modal-{{$jsUnique}}').size())
                 {
-                    jQuery('body').append('<div id="modal-{{$uniqueId}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
+                    jQuery('body').append('<div id="modal-{{$jsUnique}}" class="modal fade" role="dialog" aria-labelledby="label"></div>');
                 }
 				
-				$modal = jQuery('#modal-{{$uniqueId}}');
+				$modal = jQuery('#modal-{{$jsUnique}}');
 
                 $modal.data('model-data', function(data)
                 {
-					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{{$controller->LL('list.btn.delete')}}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
+					data.tableManageItem = '<button class="btn btn-minier btn-danger trash-it" title="{{$controller->LL('list.btn.delete')}}" onclick="deleteM2MAddition{{$jsUnique}}(this); return false;">'
                         + '<i class="fa fa-trash-o"></i></button>';
 				
                     var $dt = jQuery("table#telenok-{{$controller->getKey()}}-{{$jsUnique}}-addition").dataTable();

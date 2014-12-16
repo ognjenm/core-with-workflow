@@ -16,7 +16,7 @@ class Thread {
     {
         if ($this->getModelThread())
         {
-            $elements = \App::make('telenok.config')->getWorkflowElement();
+            $elements = app('telenok.config')->getWorkflowElement();
             $this->actions = \Illuminate\Support\Collection::make([]);
 
             foreach(array_get($this->getModelThread()->original_process->all(), 'diagram.childShapes', []) as $action)
@@ -88,7 +88,7 @@ class Thread {
 
         if (!$this->getModelThread() && $this->modelProcess)
         {
-            $this->modelThread = (new \Telenok\Workflow\Thread())->storeOrUpdate([
+            $this->modelThread = (new \App\Model\Telenok\Workflow\Thread())->storeOrUpdate([
 				'title' => $this->modelProcess->title,
 				'original_process' => $this->modelProcess->process,
 				'active' => 1,
@@ -230,7 +230,7 @@ class Thread {
         return $this->modelThread;
     }
 	
-    public function setModelProcess(\Telenok\Workflow\Process $param)
+    public function setModelProcess(\App\Model\Telenok\Workflow\Process $param)
     {
         $this->modelProcess = $param;
         

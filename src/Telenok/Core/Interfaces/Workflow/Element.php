@@ -4,6 +4,8 @@ namespace Telenok\Core\Interfaces\Workflow;
 
 class Element extends \Illuminate\Routing\Controller {
 
+    use \Telenok\Core\Support\PackageLoad; 
+
     protected $linkOut = [];
     protected $linkIn = [];
 
@@ -18,6 +20,7 @@ class Element extends \Illuminate\Routing\Controller {
     protected $id = '';
     protected $key = '';
     protected $package = '';
+    protected $languageDirectory = 'workflow-element';
 
     protected $thread;
     protected $action;
@@ -73,7 +76,7 @@ class Element extends \Illuminate\Routing\Controller {
         return $this->stencilConfig;
     }
 
-    public function setStencilSetConfig(array $param = [])
+    public function setStencilSetConfig($param = [])
     {
         $this->stencilConfig = array_merge($this->stencilConfig, $param);
 
@@ -112,7 +115,7 @@ class Element extends \Illuminate\Routing\Controller {
 
 		if (empty($stencilData))
 		{
-            $model = \Telenok\Workflow\Process::find($diagramId);
+            $model = \App\Model\Telenok\Workflow\Process::find($diagramId);
             
             if ($model)
             {
@@ -144,7 +147,7 @@ class Element extends \Illuminate\Routing\Controller {
 			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
 		}
 
-		return ['tabContent' => \View::make($this->getPropertyView(), [
+		return ['tabContent' => view($this->getPropertyView(), [
 				'controller' => $this,
 				'uniqueId' => str_random(),
 				'sessionDiagramId' => $sessionDiagramId,
@@ -206,7 +209,7 @@ class Element extends \Illuminate\Routing\Controller {
 
     public function setInput($param = [])
     {
-        $this->input = is_array($param) ? \Illuminate\Support\Collection::make($param) : $param;
+        $this->input = $param instanceof \Illuminate\Support\Collection ? $param : \Illuminate\Support\Collection::make($param);
 
         return $this;
     }
@@ -376,36 +379,6 @@ class Element extends \Illuminate\Routing\Controller {
         return true;
     }
 
-    public function getPackage()
-    {
-        if ($this->package) return $this->package;
-        
-        $list = explode('\\', __NAMESPACE__);
-        
-        return strtolower(array_get($list, 1));
-    }
-
-    public function LL($key='', $param=[])
-    {
-        $key_ = "{$this->getPackage()}::workflow-element/{$this->getKey()}.$key";
-        $key_default_ = "{$this->getPackage()}::default.$key";
-        
-        $word = \Lang::get($key_, $param);
-        
-        // not found in current wordspace
-        if ($key_ === $word)
-        {
-            $word = \Lang::get($key_default_, $param);
-            
-            // not found in default wordspace
-            if ($key_default_ === $word)
-            {
-                return $key_;
-            }
-        } 
-
-        return $word;
-    }
 }
 
 ?>
