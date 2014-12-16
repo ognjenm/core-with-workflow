@@ -1,7 +1,0 @@
-/vendor
-/src/Temp
-/composer.phar
-/composer.lock
-/src/Telenok/Core/composer-example.php
-/src/views/module/objects-lists/wizard-model.blade_1.php
-/src/views/module/web-page-constructor/presentation.blade_1.php
