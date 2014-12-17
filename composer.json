@@ -22,7 +22,6 @@
     "require": {
         "php": ">=5.4.0",
         "laravel/framework": "dev-master#8022bdc29b37c62e932cb38b5c11c65906ee0288",
-        "filp/whoops": "1.1.*",
         "illuminate/html": "5.*"   
     },
     "autoload": {
