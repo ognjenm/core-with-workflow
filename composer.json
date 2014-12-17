@@ -1,7 +1,7 @@
 {
     "name": "telenok/core",
     "description": "Telenok CMS Core engine",
-    "version": "0.1.1",
+    "version": "1.0.0",
     "keywords": ["telenok", "core", "laravel"],
     "homepage": "http://telenok.com",
     "minimum-stability": "dev",
@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "dev-master#8022bdc29b37c62e932cb38b5c11c65906ee0288",
+        "laravel/framework": "5.*",
         "filp/whoops": "1.1.*",
         "illuminate/html": "5.*"   
     },
