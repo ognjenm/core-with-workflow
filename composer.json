@@ -1,7 +1,7 @@
 {
     "name": "telenok/core",
     "description": "Telenok CMS Core engine",
-    "version": "1.0.0",
+    "version": "1.0",
     "keywords": ["telenok", "core", "laravel"],
     "homepage": "http://telenok.com",
     "minimum-stability": "dev",
