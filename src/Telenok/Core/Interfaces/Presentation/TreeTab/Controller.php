@@ -830,7 +830,7 @@ abstract class Controller extends Module implements IPresentation {
         ];
     }
 
-    public function delete($id = 0, $force = false)
+    public function delete($id = null, $force = false)
     { 
         try
         {

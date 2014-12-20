@@ -62,8 +62,8 @@
                     domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}",
                     btnCreateUrl : '{!! $controller->getRouterCreate() }}',
                     btnListEditUrl : '{!! $controller->getRouterListEdit() !!}',
-                    btnListDeleteUrl : '{!! $controller->getRouterListDelete() !!}'
-                    btnListLockUrl : '{!! $controller->getRouterListLock() !!}'
+                    btnListDeleteUrl : '{!! $controller->getRouterListDelete() !!}',
+                    btnListLockUrl : '{!! $controller->getRouterListLock() !!}',
                     btnListUnlockUrl : '{!! $controller->getRouterListUnlock() !!}'
                 });
     </script>

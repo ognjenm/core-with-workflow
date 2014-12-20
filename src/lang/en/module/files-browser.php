@@ -31,6 +31,11 @@ return array(
 	
     'wizard.file.header' => 'Choose folder',
     
+    'filter.name' => 'Name',
+    'filter.size' => 'Size',
+    'filter.last.modify' => 'Last modify',
+    'filter.contain' => 'Contain',
+
     'error.path' => 'Wrong path ":dir"',
     'error.directory.create' => 'Error creating directory ":dir"',
 	'error.create.unknown-file-type' => 'Cant create non directory or file',

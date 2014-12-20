@@ -143,6 +143,8 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::post('telenok/module/files/browser/store', array('as' => 'cmf.module.files-browser.store', 'uses' => "App\Http\Controllers\Module\Files\Browser\Controller@store"));
 \Route::post('telenok/module/files/browser/update', array('as' => 'cmf.module.files-browser.update', 'uses' => "App\Http\Controllers\Module\Files\Browser\Controller@update"));
 \Route::post('telenok/module/files/browser/delete', array('as' => 'cmf.module.files-browser.delete', 'uses' => "App\Http\Controllers\Module\Files\Browser\Controller@delete"));
+\Route::get('telenok/module/files/browser/list/edit', array('as' => 'cmf.module.files-browser.list.edit', 'uses' => "App\Http\Controllers\Module\Files\Browser\Controller@editList"));
+\Route::get('telenok/module/files/browser/list/delete', array('as' => 'cmf.module.files-browser.list.delete', 'uses' => "App\Http\Controllers\Module\Files\Browser\Controller@deleteList"));
 
 
 

@@ -152,7 +152,9 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                                 "sButtonText": "<i class='fa fa-trash-o'></i> {{ $controller->LL('btn.delete') }}",
                                 "fnClick": function(nButton, oConfig, oFlash) {
                                     if (param.btnListDeleteDisabled || !param.btnListDeleteUrl) return false;
-                                    else {
+                                    else 
+                                    {
+                                        var this_ = this;
 
                                         jQuery.ajax({
                                             url: param.btnListDeleteUrl,
@@ -161,7 +163,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
                                             data: jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).serialize() 
                                         }).done(function(data) {
                                             if (data.success) {
-                                                jQuery('input[name=tableCheckAll\\[\\]]:checked', this.dom.table).closest("tr").remove();
+                                                jQuery('input[name=tableCheckAll\\[\\]]:checked', this_.dom.table).closest("tr").remove();
                                             }
                                             else {
                                                 //

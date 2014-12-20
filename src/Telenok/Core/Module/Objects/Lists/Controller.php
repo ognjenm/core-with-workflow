@@ -461,7 +461,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 		}
     }
 
-    public function delete($id = 0, $force = false)
+    public function delete($id = null, $force = false)
     { 
         $model = $this->getModel($id);
         $type = $this->getTypeByModelId($id);

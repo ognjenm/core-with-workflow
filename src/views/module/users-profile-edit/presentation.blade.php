@@ -108,7 +108,7 @@
 				{
 					jQuery.gritter.add({
 						title: 'Error',
-						text: xhr.responseText,
+						text: jqXHR.responseText,
 						class_name: 'gritter-error gritter-light',
 						time: 3000,
 					});
