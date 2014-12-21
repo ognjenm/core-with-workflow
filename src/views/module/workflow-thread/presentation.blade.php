@@ -3,3 +3,7 @@
     @section('tableListBtnCreate')
 
 	@stop
+    
+    @section('tableListBtnSelected')
+
+	@stop

@@ -100,9 +100,11 @@
         <button type="submit" class="btn btn-info" onclick="jQuery(this).closest('form').data('btn-clicked', 'save.close');">
             {{$controller->LL('btn.save.close')}}
         </button>
+        @if ($model)
         <button type="submit" class="btn btn-danger" onclick="jQuery(this).closest('form').data('btn-clicked', 'delete.close');">
             {{$controller->LL('btn.delete')}}
         </button>
+        @endif
         <button type="submit" class="btn" onclick="jQuery(this).closest('form').data('btn-clicked', 'close');">
             {{$controller->LL('btn.close')}}
         </button>

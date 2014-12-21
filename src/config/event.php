@@ -85,6 +85,11 @@
     //$list->push('Telenok\Core\Workflow\Activity\Log');
 });
 
+\Event::listen('telenok.workflow.parameter.add', function($list) 
+{
+    $list->push('Telenok\Core\Workflow\Parameter\Integer');
+});
+
 \Event::listen('telenok.objects-field.add', function($list) 
 {
     $list->push('Telenok\Core\Field\Integer\Controller');

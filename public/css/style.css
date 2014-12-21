@@ -39,17 +39,17 @@ form {
 textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], 
 input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], 
 input[type="search"], input[type="tel"], input[type="color"] {
-    color: #333333;
+    color: #333333 !important;
 }
 textarea:focus, input[type="text"]:focus, input[type="password"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, 
 input[type="date"]:focus, input[type="month"]:focus, input[type="time"]:focus, input[type="week"]:focus, input[type="number"]:focus, 
 input[type="email"]:focus, input[type="url"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="color"]:focus {
-    color: #333333;
+    color: #333333 !important;
 }
 select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], 
 input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], 
 input[type="tel"], input[type="color"], .uneditable-input {
-    color: #333333;
+    color: #333333 !important;
 }
 
 

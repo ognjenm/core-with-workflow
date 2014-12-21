@@ -330,15 +330,15 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
     public function validate($model = null, $input = [], $messages = [])
     {
         $validator = $this->validator($this, $input, array_merge($messages, $this->LL('error')));
-        
+
         if ($validator->fails()) 
         {
             throw $this->validateException()->setMessageError($validator->messages());
         }
-        
+
         return $this;
     } 
-	
+
     public function validateMethodExists($object, $method)
     {
         $reflector = new \ReflectionClass($object);
@@ -346,7 +346,10 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
 
         try 
         {
-            return preg_match("/function\s+{$method}\s*\(/", \File::get($file));
+            if (method_exists($object, $method) || preg_match("/function\s+{$method}\s*\(/", \File::get($file)))
+            {
+                return true;
+            }
         }
         catch (\Exception $e) {}
         

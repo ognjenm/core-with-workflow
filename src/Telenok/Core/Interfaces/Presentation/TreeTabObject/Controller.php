@@ -250,7 +250,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
             }
         }
     }
-    
+
     public function create()
     { 
         $input = \Illuminate\Support\Collection::make($this->getRequest()->input()); 
@@ -262,7 +262,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
         $eventResource = \Illuminate\Support\Collection::make(['model' => $model, 'type' => $type, 'fields' => $fields]);
 
         \Event::fire('workflow.form.create', (new \Telenok\Core\Workflow\Event())->setResource($eventResource)->setInput($input));
-            
+
         return [
             'tabKey' => $this->getTabKey() . '-new-' . str_random(),
             'tabLabel' => $type->translate('title'),

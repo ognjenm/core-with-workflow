@@ -11,8 +11,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $presentation = 'tree-tab-object';
 
     protected $presentationFormFieldListView = 'core::module.workflow-process.form-field-list';
-    protected $diagramStensilSet = 'core::module.workflow-process.stensilset'; 
-    protected $diagramBody = 'core::module.workflow-process.diagram'; 
+    protected $diagramStensilSetView = 'core::module.workflow-process.stensilset'; 
+    protected $diagramView = 'core::module.workflow-process.diagram'; 
 
     public function getStartEventObject($process)
     {	
@@ -121,7 +121,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         
 		$model = \App\Model\Telenok\Workflow\Process::find($id);
 		
-        return view($this->diagramBody, [
+        return view($this->diagramView, [
                 'controller' => $this,
                 'model' => $model,
                 'stencilData' => ($model ? $model->process->get('diagram', []) : false),

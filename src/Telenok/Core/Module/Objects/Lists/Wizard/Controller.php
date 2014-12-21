@@ -52,7 +52,7 @@ class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
     { 
 		return parent::typeForm($type)
 				->setPresentationModelView($this->getPresentationModelView())
-				->setRouterStore("cmf.module.{$this->getKey()}.wizard.create")
+				->setRouterStore("cmf.module.{$this->getKey()}.wizard.store")
 				->setRouterUpdate("cmf.module.{$this->getKey()}.wizard.update");
     }    
 	

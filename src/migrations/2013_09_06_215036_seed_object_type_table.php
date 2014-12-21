@@ -144,7 +144,7 @@ class SeedObjectTypeTable extends Migration {
 						'show_in_list' => 0,
 						'allow_search' => 1,
 						'allow_create' => 1,
-						'allow_update' => 0,
+						'allow_update' => 1,
 						'field_order' => 10,
 					]
 			); 

@@ -112,7 +112,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::get('telenok/module/objects-lists/list/tree', array('as' => 'cmf.module.objects-lists.list.tree', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Controller@getTreeList"));
 //\Route::get('telenok/module/objects-lists/get/namespace-by-path', array('as' => 'cmf.module.objects-lists.get.namespace-by-path', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Controller@getNamespaceContent"));
 
-\Route::get('telenok/module/objects-lists/wizard/create/type', array('as' => 'cmf.module.objects-lists.wizard.create', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Wizard\Controller@create"));
+\Route::any('telenok/module/objects-lists/wizard/create/type', array('as' => 'cmf.module.objects-lists.wizard.create', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Wizard\Controller@create"));
 \Route::get('telenok/module/objects-lists/wizard/edit', array('as' => 'cmf.module.objects-lists.wizard.edit', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Wizard\Controller@edit"));
 \Route::post('telenok/module/objects-lists/wizard/store/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.store', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Wizard\Controller@store"));
 \Route::post('telenok/module/objects-lists/wizard/update/type/{id}', array('as' => 'cmf.module.objects-lists.wizard.update', 'uses' => "App\Http\Controllers\Module\Objects\Lists\Wizard\Controller@update"));
@@ -179,6 +179,7 @@ if (!\Request::is('telenok', 'telenok/*'))
 // Module Workflow Process
 \Route::get('telenok/module/workflow-process/action-param', array('as' => 'cmf.module.workflow-process.action.param', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@getActionParam"));
 \Route::get('telenok/module/workflow-process/diagram/show', array('as' => 'cmf.module.workflow-process.diagram.show', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@diagramShow"));
+\Route::any('telenok/module/workflow/parameter/show', array('as' => 'cmf.workflow.parameter.show', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@parameterShow"));
 \Route::get('telenok/module/workflow-process/diagram/stensilset', array('as' => 'cmf.module.workflow-process.diagram.stensilset', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@diagramStencilSet"));
 \Route::any('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
 \Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@applyDiagram"));

@@ -336,6 +336,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\Controlle
 			
 			$modelPath = $currentDirectory->getRealPath() . DIRECTORY_SEPARATOR . $name;
 
+            if (file_exists($modelPath))
+            {
+				throw new \Exception($this->LL('error.file.exists'));
+            }
+            
 			if ($modelType == 'directory')
 			{
 				\File::makeDirectory($modelPath, 0775, true, true);

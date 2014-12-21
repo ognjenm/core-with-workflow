@@ -752,6 +752,8 @@ class SeedLast extends Migration {
 
 		\App\Model\Telenok\Object\Type::where('code', 'workflow_process')->first()->makeLastChildOf($folderBusinessProcess);
 		\App\Model\Telenok\Object\Type::where('code', 'workflow_thread')->first()->makeLastChildOf($folderBusinessProcess);
+		\App\Model\Telenok\Object\Type::where('code', 'workflow_process_parameter')->first()->makeLastChildOf($folderBusinessProcess);
+		\App\Model\Telenok\Object\Type::where('code', 'workflow_process_variable')->first()->makeLastChildOf($folderBusinessProcess);
 
 		//Module group
 		(new \App\Model\Telenok\Web\ModuleGroup())->storeOrUpdate([

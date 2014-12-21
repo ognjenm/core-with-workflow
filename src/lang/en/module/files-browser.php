@@ -39,7 +39,8 @@ return array(
     'error.path' => 'Wrong path ":dir"',
     'error.directory.create' => 'Error creating directory ":dir"',
 	'error.create.unknown-file-type' => 'Cant create non directory or file',
-	
+	'error.file.exists' => 'Cant create. Already exists',
+
 	'error.access-denied-over-base-directory' => 'Access denied outside /app directory',
     
 );

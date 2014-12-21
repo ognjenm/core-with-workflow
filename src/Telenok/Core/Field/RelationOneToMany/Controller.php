@@ -120,11 +120,11 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 		$idsAdd = array_unique((array)$input->get("{$field->code}_add", []));
         $idsDelete = array_unique((array)$input->get("{$field->code}_delete", []));
-         
+
         if ( (!empty($idsAdd) || !empty($idsDelete)) && $field->relation_one_to_many_has)
         { 
             $method = camel_case($field->code);
-             
+
             $relatedField = $field->code . '_' . $model->sequence->sequencesObjectType->code;
 
             if (in_array('*', $idsDelete, true))
@@ -155,24 +155,6 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 				}
 			}
 			catch (\Exception $e) {}
-			
-			return $model;
-			
-			
-            $relatedModel = app(\App\Model\Telenok\Object\Type::findOrFail($field->relation_one_to_many_has)->class_model);
-
-            \Illuminate\Support\Collection::make($idsAdd)->each(function($id) use ($model, $method, $relatedModel) 
-            {
-                if (intval($id)) 
-                {
-                    try
-                    {
-                        $linked = $relatedModel::findOrFail($id);
-                        $model->$method()->save( $linked );
-                    } 
-                    catch(\Exception $e) {}
-                }
-            });
         }
 
         return $model;

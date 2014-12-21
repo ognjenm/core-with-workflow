@@ -196,6 +196,30 @@ class SeedTypes extends Migration {
 			DB::table('object_type')->insertGetId(
 					[
 						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\Object\Type']),
+						'title' => json_encode(['ru' => 'Переменная', 'en' => 'Variable'], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['ru' => 'Переменная', 'en' => 'Variable'], JSON_UNESCAPED_UNICODE),
+						'code' => 'workflow_process_variable',
+						'active' => 1,
+						'class_model' => '\App\Model\Telenok\Workflow\Variable',
+						'class_controller' => '\App\Http\Controllers\Module\Workflow\Variable\Controller',
+					]
+			);
+
+			DB::table('object_type')->insertGetId(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\Object\Type']),
+						'title' => json_encode(['ru' => 'Параметр', 'en' => 'Parameter'], JSON_UNESCAPED_UNICODE),
+						'title_list' => json_encode(['ru' => 'Параметр', 'en' => 'Parameter'], JSON_UNESCAPED_UNICODE),
+						'code' => 'workflow_process_parameter',
+						'active' => 1,
+						'class_model' => '\App\Model\Telenok\Workflow\Parameter',
+						'class_controller' => '\App\Http\Controllers\Module\Workflow\Parameter\Controller',
+					]
+			);
+
+			DB::table('object_type')->insertGetId(
+					[
+						'id' => DB::table('object_sequence')->insertGetId(['id' => null, 'class_model' => '\App\Model\Telenok\Object\Type']),
 						'title' => json_encode(['ru' => 'Выполняющийся бизнес-процесс', 'en' => 'Launched business-process'], JSON_UNESCAPED_UNICODE),
 						'title_list' => json_encode(['ru' => 'Выполняющийся бизнес-процесс', 'en' => 'Launched business-process'], JSON_UNESCAPED_UNICODE),
 						'code' => 'workflow_thread',

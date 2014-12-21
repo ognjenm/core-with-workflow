@@ -296,7 +296,7 @@ if (!telenok.hasPresentation('{{$presentationModuleKey}}'))
 	
 		{!! Form::hidden($model->getKeyName(), $model->getKey()) !!}
 
-		<div class="modal-body" style="max-height: 400px; overflow-y: auto; padding: 15px; position: relative;">
+		<div class="modal-body" style="max-height: 80vh; overflow-y: auto; padding: 15px; position: relative;">
 			<div class="widget-main">
 
 				{!! $controller->getFormContent($model, $type, $fields, $uniqueId) !!}
