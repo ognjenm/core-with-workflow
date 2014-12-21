@@ -1,6 +1,6 @@
 <?php
 
-    $jsUnique = str_random();
+    $jsChooseUnique = str_random();
 
 ?>
 
@@ -15,7 +15,7 @@
 		<div class="modal-body" style="height: 80vh; overflow-y: auto; padding: 15px; position: relative;">
 			<div class="widget-main">
 
-				<select class="chosen-type{{$jsUnique}}" data-placeholder="{{$controller->LL('notice.choose')}}" id="input{{$jsUnique}}" name="id">
+				<select class="chosen-type{{$jsChooseUnique}}" data-placeholder="{{$controller->LL('notice.choose')}}" id="input{{$jsChooseUnique}}" name="id">
 
 					<?php
 
@@ -45,7 +45,7 @@
 		<div class="modal-footer">
 
 			<div class="center no-margin">
-				<button class="btn btn-success" onclick="createWizard{{$jsUnique}}(this, '{!! $controller->getRouterCreate(['id' => '_id_', 'saveBtn' => \Input::get('saveBtn'), 'chooseBtn' => \Input::get('chooseBtn'), 'chooseSequence' => 1]) !!}');">
+				<button class="btn btn-success" onclick="createWizard{{$jsChooseUnique}}(this, '{!! $controller->getRouterCreate(['id' => '_id_', 'saveBtn' => \Input::get('saveBtn'), 'chooseBtn' => \Input::get('chooseBtn'), 'chooseSequence' => 1]) !!}');">
 					{{ $controller->LL('btn.continue') }}
 				</button>
 			</div>
@@ -56,7 +56,7 @@
 
 
 <script type="text/javascript">
-	jQuery("#input{{$jsUnique}}").chosen({ 
+	jQuery("#input{{$jsChooseUnique}}").chosen({ 
 		keepTypingMsg: "{{$controller->LL('notice.typing')}}",
 		lookingForMsg: "{{$controller->LL('notice.looking-for')}}",
 		type: "GET",
@@ -68,13 +68,13 @@
 	});
 	
 	
-	function createWizard{{$jsUnique}}(obj, url) 
+	function createWizard{{$jsChooseUnique}}(obj, url) 
 	{
 		var $block = jQuery(obj).closest('div.modal-dialog');
 		var $modal = jQuery(obj).closest('div.modal'); 
 
 		jQuery.ajax({
-			url: url.replace('_id_', jQuery('#input{{$jsUnique}}').val()),
+			url: url.replace('_id_', jQuery('#input{{$jsChooseUnique}}').val()),
 			method: 'get',
 			dataType: 'json'
 		}).done(function(data) 

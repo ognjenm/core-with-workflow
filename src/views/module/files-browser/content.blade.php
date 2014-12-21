@@ -1,6 +1,6 @@
 <?php
 
-    $jsUnique = str_random();
+    $jsContentUnique = str_random();
 
 ?>
 
@@ -68,7 +68,7 @@
                             <label class="col-sm-3 control-label no-padding-right">{{$controller->LL('filter.last.modify')}}</label>
                             <div class="col-sm-9">
                                 <div class="input-group col-sm-1">
-                                    <div id="datetime-picker-last-modify-start-{{$jsUnique}}" class="input-group">
+                                    <div id="datetime-picker-last-modify-start-{{$jsContentUnique}}" class="input-group">
                                         <span class="input-group-addon datepickerbutton">
                                             <i class="fa fa-clock-o bigger-110"></i>
                                         </span>
@@ -77,7 +77,7 @@
                                     <span class="input-group-addon">
                                         <i class="fa fa-arrow-right"></i>
                                     </span>
-                                    <div id="datetime-picker-last-modify-end-{{$jsUnique}}" class="input-group">
+                                    <div id="datetime-picker-last-modify-end-{{$jsContentUnique}}" class="input-group">
                                         <input type="text" value="" name="filter[last_modify][end]">
                                         <span class="input-group-addon datepickerbutton">
                                             <i class="fa fa-clock-o bigger-110"></i>
@@ -86,7 +86,7 @@
                                 </div>
 
                                 <script type="text/javascript">
-                                    jQuery("#datetime-picker-last-modify-start-{{$jsUnique}}, #datetime-picker-last-modify-end-{{$jsUnique}}").datetimepicker(
+                                    jQuery("#datetime-picker-last-modify-start-{{$jsContentUnique}}, #datetime-picker-last-modify-end-{{$jsContentUnique}}").datetimepicker(
                                     {
                                         format: "YYYY-MM-DD HH:mm:ss",
                                         useSeconds: true,
@@ -101,11 +101,11 @@
                          
                         <div class="form-group center">
 							<div class="hr hr-8 dotted"></div>
-							<button onclick="presentationTableFilter{{$jsUnique}}(this);" class="btn btn-sm btn-info">
+							<button onclick="presentationTableFilter{{$jsContentUnique}}(this);" class="btn btn-sm btn-info">
 								<i class="fa fa-search bigger-110"></i>
                             {{ $controller->LL('btn.search') }}
 							</button>
-							<button onclick="presentationTableFilter{{$jsUnique}}(this, true);" type="reset" class="btn btn-sm">
+							<button onclick="presentationTableFilter{{$jsContentUnique}}(this, true);" type="reset" class="btn btn-sm">
 								<i class="fa fa-eraser bigger-110"></i>
                                 {{ $controller->LL('btn.clear') }}
 							</button>
@@ -124,7 +124,7 @@
 
     <script type="text/javascript">
 
-		var currentDirectory{{$jsUnique}} = '{!! $currentDirectory !!}';
+		var currentDirectory{{$jsContentUnique}} = '{!! $currentDirectory !!}';
 
         var presentation = telenok.getPresentation('{{$controller->getPresentationModuleKey()}}');
         var aoColumns = []; 
@@ -145,7 +145,7 @@
                 presentation.addDataTable({
                     aoColumns : aoColumns,
 					aaSorting: [],
-                    sAjaxSource : '{!! $controller->getRouterList(['uniqueId' => $jsUnique]) !!}',
+                    sAjaxSource : '{!! $controller->getRouterList(['uniqueId' => $jsContentUnique]) !!}',
                     domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}", 
 					tableListBtnCreate: {
 							"sExtends": "collection",
@@ -160,7 +160,7 @@
 										telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').addTabByURL({
 											url: '{!! $controller->getRouterCreate() !!}',
 											data: {
-												currentDirectory: currentDirectory{{$jsUnique}},
+												currentDirectory: currentDirectory{{$jsContentUnique}},
 												modelType : 'directory'
 											}
 										}); 
@@ -174,7 +174,7 @@
 										telenok.getPresentation('{{$controller->getPresentationModuleKey()}}').addTabByURL({
 											url: '{!! $controller->getRouterCreate() !!}', 
 											data: {
-												currentDirectory: currentDirectory{{$jsUnique}},
+												currentDirectory: currentDirectory{{$jsContentUnique}},
 												modelType : 'file'
 											}
 										}); 
@@ -226,7 +226,7 @@
                 });
                 
                 
-        function presentationTableFilter{{$jsUnique}}(dom_obj, erase)
+        function presentationTableFilter{{$jsContentUnique}}(dom_obj, erase)
         {
 			var $form = jQuery(dom_obj).closest('form');
 			

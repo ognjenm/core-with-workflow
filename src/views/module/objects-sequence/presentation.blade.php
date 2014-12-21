@@ -2,7 +2,7 @@
 
 <?php
 
-    $jsUnique = str_random();
+    $jsPresentationUnique = str_random();
 
 ?> 
 
@@ -16,7 +16,7 @@
                 if (param.btnCreateDisabled || !param.btnCreateUrl) return false;
                 else
                 { 
-                    jQuery('#modal-{{$jsUnique}}').append('body').modal('show').data('model-data', function(id)
+                    jQuery('#modal-{{$jsPresentationUnique}}').append('body').modal('show').data('model-data', function(id)
                     {
                         var url = "{!! \URL::route("cmf.module.objects-lists.action.param", ['typeId' => '__typeId__']) !!}".replace("__typeId__", id);
 
@@ -45,7 +45,7 @@
 
                                     this_.addTabByURL({url : url});
 
-                                    jQuery('#modal-{{$jsUnique}}').modal('hide');
+                                    jQuery('#modal-{{$jsPresentationUnique}}').modal('hide');
                                 }
                             );
                         })
@@ -67,7 +67,7 @@
     
     
     
-<div class="modal fade" id="modal-{{$jsUnique}}">
+<div class="modal fade" id="modal-{{$jsPresentationUnique}}">
     <div class="modal-dialog">
         <div class="modal-content">
 
@@ -79,7 +79,7 @@
             <div class="modal-body">
                 <div class="widget-main">
 
-                    <select class="chosen-type{{$jsUnique}}" data-placeholder="{{$controller->LL('notice.choose')}}" id="input{{$jsUnique}}" name="id">
+                    <select class="chosen-type{{$jsPresentationUnique}}" data-placeholder="{{$controller->LL('notice.choose')}}" id="input{{$jsPresentationUnique}}" name="id">
 
                         <?php
 
@@ -106,7 +106,7 @@
             <div class="modal-footer">
 
                 <div class="center no-margin">
-                    <button class="btn btn-success" onclick="openTab{{$jsUnique}}(this);">
+                    <button class="btn btn-success" onclick="openTab{{$jsPresentationUnique}}(this);">
                         {{ $controller->LL('btn.continue') }}
                     </button>
                 </div>
@@ -116,7 +116,7 @@
     </div>
 </div>
 <script type="text/javascript">
-    jQuery("#input{{$jsUnique}}").chosen({ 
+    jQuery("#input{{$jsPresentationUnique}}").chosen({ 
         keepTypingMsg: "{{$controller->LL('notice.typing')}}",
         lookingForMsg: "{{$controller->LL('notice.looking-for')}}",
         type: "GET",
@@ -128,8 +128,8 @@
     });
 
 
-    function openTab{{$jsUnique}}(obj) 
+    function openTab{{$jsPresentationUnique}}(obj) 
     {
-        jQuery(obj).closest('div.modal').data('model-data')(jQuery('#input{{$jsUnique}}').val()); 
+        jQuery(obj).closest('div.modal').data('model-data')(jQuery('#input{{$jsPresentationUnique}}').val()); 
     }
 </script>

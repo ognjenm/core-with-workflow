@@ -8,7 +8,8 @@ class Parameter {
 
     protected $key = '';
     protected $languageDirectory = 'workflow-parameter';
-    protected $view = '';
+    protected $package = '';
+    protected $formFieldView = '';
 
     public function getKey()
     {
@@ -22,18 +23,32 @@ class Parameter {
         return $this;
     }
 
-    public function getView()
+    public function getName()
     {
-        return $this->view ?: "core::workflow-parameter.{$this->getKey()}";
+        return $this->LL('name');
     }
 
-    public function setView($param = '')
+    public function getFormFieldView()
     {
-        $this->view = $param;
+        return $this->formFieldView ?: "core::workflow-parameter.{$this->getKey()}";
+    }
+
+    public function setFormFieldView($param = '')
+    {
+        $this->formFieldView = $param;
         
         return $this;
     }
-    
-    
+
+    public function getFormFieldContent($controller = null, $model = null, $uniqueId = null)
+    { 
+        return view($this->getFormFieldView(), array(
+                'parentController' => $controller,
+                'controller' => $this,
+                'model' => $model,
+                'uniqueId' => $uniqueId,
+            ))->render();
+    }
+
     
 }
