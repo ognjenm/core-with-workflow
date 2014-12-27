@@ -174,11 +174,11 @@ class Element extends \Illuminate\Routing\Controller {
 
     public function storeProperty()
     {
-		if (!($sessionDiagramId = \Input::get('sessionDiagramId')) || !($stencilId = \Input::get('stencilId')))
+		if (!($sessionDiagramId = trim(\Input::get('sessionDiagramId'))) || !($stencilId = trim(\Input::get('stencilId'))))
 		{
 			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
 		}
-
+        
 		$stencilData = \Input::get('stencil', []);
 
 		\Session::put('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, $stencilData);

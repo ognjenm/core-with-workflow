@@ -30,7 +30,7 @@ class Parameter {
 
     public function getFormFieldView()
     {
-        return $this->formFieldView ?: "core::workflow-parameter.{$this->getKey()}";
+        return $this->formFieldView ?: "core::workflow-parameter.{$this->getKey()}.field";
     }
 
     public function setFormFieldView($param = '')

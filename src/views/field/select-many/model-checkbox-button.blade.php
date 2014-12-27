@@ -1,6 +1,6 @@
 <?php 
     
-    $domAttr = ['class' => $field->css_class?: ''];
+    $domAttr = ['id' => $field->code . '-' . $uniqueId, 'class' => 'ace ' . ($field->css_class?: '')];
     $disabled = false;
 
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
@@ -26,26 +26,37 @@
 ?>
 
 <div class="form-group">
-	{!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
-	<div class="col-sm-9">
+
+    {!! Form::label("{$field->code}", $field->translate('title'), array('class' => 'col-sm-3 control-label no-padding-right')) !!}
+
+    <div class="col-sm-9">
         <div>
             <div class="control-group">
+
                 @foreach($values as $k => $v)
+
                 <?php
+
                     $checked = ($model->exists && $model->{$field->code}->search($k) !== false) || (!$model->exists && in_array($k, $default, true)) ? 1 : 0;
+
                 ?>
+
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" class="ace" name="{{$field->code}}[]" value="{{$k}}" @if ($checked) checked="checked" @endif @if ($disabled) disabled="disabled" @endif  />
+                        {!! Form::checkbox($field->code . '[]', $k, $checked, $domAttr); !!}
                         <span class="lbl"> {{$v}}</span>
                     </label>
                 </div>
+
                 @endforeach
+
             </div>
+
             @if ($field->translate('description'))
             <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 
                   class="help-button" data-original-title="{{\Lang::get('core::default.tooltip.description')}}">?</span>
             @endif
+
         </div>
     </div>
 </div>

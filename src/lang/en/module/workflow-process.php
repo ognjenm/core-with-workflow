@@ -16,6 +16,8 @@ return array(
 
 	'btn.open-process-editor' => 'Open process editor',
 	
+    'modal-template-marker.title' => 'Please, choose template marker',
+    
     'diagram.title' => 'Process diagram',
     'diagram.description' => 'Business process optimally achieve the goals and conserve resources',
 

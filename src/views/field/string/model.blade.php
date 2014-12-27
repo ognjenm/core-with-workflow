@@ -47,11 +47,10 @@
 			</ul>
 			<div class="tab-content">
 				<?php 
-				
-					$domAttr['class'] = $field->css_class?: 'col-xs-12 col-sm-12';
 
+					$domAttr['class'] = $field->css_class?: 'col-xs-12 col-sm-12';
 				?>
-				
+
 				@foreach($languages as $language)
 				<div id="{{$jsUnique}}-language-{{$language->locale}}-{{$field->code}}" class="tab-pane in @if ($language->locale == $localeDefault) active @endif">
 
@@ -62,6 +61,7 @@
 					@endif
 
 					<?php
+                        $domAttr['id'] = $field->code . '-' . $uniqueId . '-' . $language->locale; 
 						$domAttr['placeholder'] = ($placeholder = $field->translate('string_default', $language->locale)) ? $placeholder : $field->translate('title', $language->locale);
 					?>
 
@@ -91,12 +91,13 @@
 
 	<?php
 
+        $domAttr['id'] = $field->code . '-' . $uniqueId;
 		$domAttr['class'] = $field->css_class ?: 'form-control';
 		$domAttr['placeholder'] = ($placeholder = $field->string_default) ? $placeholder : $field->translate('title');
 
 	?>
 
-	<div class="col-sm-5">
+	<div class="col-sm-9">
 
             @if ($field->icon_class)
 		<div class="input-group">

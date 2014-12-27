@@ -1,6 +1,6 @@
 <?php 
     
-    $domAttrStart = ['class' => $field->css_class?: ''];
+    $domAttrStart = ['id' => $field->code . '-start-' . $uniqueId, 'class' => $field->css_class?: ''];
     $disabled = false;
      
 	
@@ -31,7 +31,8 @@
     $domAttrStart['placeholder'] = ($placeholder = $field->time_range_default_start->toTimeString()) ? $placeholder : $field->translate('title');
     $domAttrEnd = $domAttrStart;
     $domAttrEnd['placeholder'] = ($placeholder = $field->time_range_default_end->toTimeString()) ? $placeholder : $field->translate('title');
-
+    $domAttrEnd['id'] = $field->code . '-end-' . $uniqueId;
+    
     $random = str_random();
 ?>
 

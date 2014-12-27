@@ -34,6 +34,36 @@ class Config {
 		return $list;
 	}
 
+	public function getWorkflowTemplateMarker($flush = false)
+	{
+		static $list = null;
+
+		if ($list === null || $flush)
+		{
+			try
+			{
+				$collection = \Illuminate\Support\Collection::make();
+
+				\Event::fire('telenok.workflow.template-marker.add', $collection);
+
+				$list = \Illuminate\Support\Collection::make();
+
+				foreach ($collection as $class)
+				{
+					$object = app($class);
+
+					$list->put($object->getKey(), $object);
+				}
+			}
+			catch (\Exception $e)
+			{
+				throw new \RuntimeException('Failed to get workflow template marker. Error: ' . $e->getMessage());
+			}
+		}
+
+		return $list;
+	}
+
 	public function getWorkflowParameter($flush = false)
 	{
 		static $list = null;

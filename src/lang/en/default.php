@@ -71,6 +71,7 @@ return [
     'property.default' => "Default value",
     'property.required' => "Required",
     'property.title' => 'Title',
+    'property.stencil.id' => 'Stencil ID',
     'property.description' => 'Description',
     'property.bordercolor' => 'Border color',
     'property.bgcolor' => 'Background color',

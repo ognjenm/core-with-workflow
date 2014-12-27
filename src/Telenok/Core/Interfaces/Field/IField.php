@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Field;
 
-interface IField {
+interface IField extends \Telenok\Core\Interfaces\IRequest {
     
     public function getName();
 
@@ -85,9 +85,5 @@ interface IField {
 
 	public function getFieldTab($typeId, $tabCode);
 	
-	public function getFieldTabBelongTo($typeId, $tabHasId);
-    
-    public function setRequest(\Illuminate\Http\Request $request = null);
-
-    public function getRequest();
+	public function getFieldTabBelongTo($typeId, $tabBelongCode, $tabHasId);
 }

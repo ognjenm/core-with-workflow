@@ -1,7 +1,7 @@
 <?php 
     $disabled = false;
     
-    $domAttr = ['class' => $field->css_class?: 'col-sm-4'];
+    $domAttr = ['id' => $field->code . '-' . $uniqueId, 'class' => $field->css_class?: 'col-sm-4'];
     
     if ($model->exists && $model->{$field->code})
     {

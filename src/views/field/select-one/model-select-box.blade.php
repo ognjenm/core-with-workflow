@@ -1,6 +1,6 @@
 <?php 
     
-    $domAttr = ['class' => $field->css_class?: ''];
+    $domAttr = ['id' => $field->code . '-' . $uniqueId, 'class' => $field->css_class?: ''];
     $disabled = false;
 
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )

@@ -44,4 +44,22 @@
 
     {!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
-@endif 
+    @if ($field->code == 'default_value')
+    
+    {!! (new \Telenok\Core\Module\Workflow\Process\Controller())->getScriptModalContent([
+                'fieldId' => $field->code . '-' . $uniqueId,
+                'buttonId' => $field->code . '-button-' . $uniqueId,
+            ],
+            $uniqueId) !!}
+    
+    <button id="{{ $field->code . '-button-' . $uniqueId }}" type="button" class="btn btn-sm" data-toggle="modal"><i class="fa fa-align-justify"></i></button>
+    
+    <script type="text/javascript">
+        jQuery('#{{ $field->code . '-' . $uniqueId }}', '#model-ajax-{{$uniqueId}}')
+            .removeClass('form-control')
+            .addClass('col-xs-5 col-sm-5').after(jQuery('#{{ $field->code . '-button-' . $uniqueId }}'));
+    </script>
+    
+    @endif
+    
+@endif

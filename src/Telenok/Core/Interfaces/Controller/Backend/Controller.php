@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Controller\Backend;
 
-abstract class Controller extends \Illuminate\Routing\Controller {
+abstract class Controller extends \Illuminate\Routing\Controller implements \Telenok\Core\Interfaces\IRequest {
 
     use \Telenok\Core\Support\PackageLoad;
     

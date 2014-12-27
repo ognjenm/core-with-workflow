@@ -463,25 +463,32 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
 		return $tabTo;
 	}
 	
-	public function getFieldTabBelongTo($typeId, $tabHasId)
+	public function getFieldTabBelongTo($typeId, $tabBelongCode, $tabHasId)
 	{
-		try
-		{
-			$tabHas = \App\Model\Telenok\Object\Tab::firstOrFail('id', $tabHasId);
-			
-			$tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->whereCode($tabHas->code);
-		} 
-		catch (\Exception $ex) 
-		{
-			try
-			{
-				$tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
-			} 
-			catch (\Exception $ex) 
-			{
-				throw new \Exception($this->LL('error.tab.field.key'));
-			}
-		}
+        try
+        {
+            $tabTo = $this->getFieldTab($typeId, $tabBelongCode);
+        } 
+        catch (\Exception $ex) 
+        {
+            try
+            {
+                $tabHas = \App\Model\Telenok\Object\Tab::firstOrFail('id', $tabHasId);
+
+                $tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->whereCode($tabHas->code);
+            } 
+            catch (\Exception $ex) 
+            {
+                try
+                {
+                    $tabTo = \App\Model\Telenok\Object\Tab::where('tab_object_type', $typeId)->where('code', 'main')->firstOrFail();
+                } 
+                catch (\Exception $ex) 
+                {
+                    throw new \Exception($this->LL('error.tab.field.key'));
+                }
+            }
+        }
 
 		return $tabTo;
 	}

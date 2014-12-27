@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Module;
 
-interface IModule {
+interface IModule extends \Telenok\Core\Interfaces\IRequest {
 
     public function getName();
     
@@ -16,10 +16,6 @@ interface IModule {
 
     public function setPermissionKey($key = ''); 
     
-    public function setRequest(\Illuminate\Http\Request $request = null);
-
-    public function getRequest();
-
     public function getPermissionKey();
 
     public function getParent();

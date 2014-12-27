@@ -85,6 +85,11 @@
     //$list->push('Telenok\Core\Workflow\Activity\Log');
 });
 
+\Event::listen('telenok.workflow.template-marker.add', function($list) 
+{
+    $list->push('Telenok\Core\Workflow\TemplateMarker\System');
+});
+
 \Event::listen('telenok.workflow.parameter.add', function($list) 
 {
     $list->push('Telenok\Core\Workflow\Parameter\Integer');

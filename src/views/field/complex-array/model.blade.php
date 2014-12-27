@@ -1,6 +1,6 @@
 
 <?php
-$domAttr = ['class' => $field->css_class?: 'col-xs-5 col-sm-5'];
+$domAttr = ['id' => $field->code . '-' . $uniqueId, 'class' => $field->css_class?: 'col-xs-5 col-sm-5'];
 $disabled = false;
 
 $value = $model->{$field->code};

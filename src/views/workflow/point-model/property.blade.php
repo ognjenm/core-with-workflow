@@ -15,7 +15,6 @@
                         <form action="#" onsubmit="return false;" class="form-horizontal">
 
                             {!! Form::hidden('sessionDiagramId', $sessionDiagramId) !!}
-                            {!! Form::hidden('stencilId', $stencilId) !!}
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>
@@ -23,6 +22,13 @@
                                     <input type="text" name="stencil[title]" value="{{$property->get('title')}}" />
                                 </div>
                             </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label" for="stencilIdNew">{{$controller->LL('property.stencil.id')}}</label>
+                                <div class="col-sm-8">
+                                    {!! Form::text('stencilId', $stencilId, ['class' => 'col-sm-8', 'readonly' => 'readonly']) !!}
+                                </div>
+                            </div> 
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[bgcolor]">{{$controller->LL('property.bgcolor')}}</label>

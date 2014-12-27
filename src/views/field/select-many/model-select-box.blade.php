@@ -1,6 +1,6 @@
 <?php 
     
-    $domAttr = ['class' => $field->css_class?: '', 'multiple' => 'multiple'];
+    $domAttr = ['id' => $field->code . '-' . $uniqueId, 'class' => $field->css_class?: '', 'multiple' => 'multiple'];
     $disabled = false;
 
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
@@ -40,7 +40,7 @@
 		<div>
             @endif	
             
-            {!! Form::select($field->code, $values, $model->exists ? $model->{$field->code} : $default, $domAttr) !!}
+            {!! Form::select($field->code . '[]', $values, $model->exists ? $model->{$field->code} : $default, $domAttr) !!}
 
             @if ($field->translate('description'))
             <span title="" data-content="{{ $field->translate('description') }}" data-placement="right" data-trigger="hover" data-rel="popover" 

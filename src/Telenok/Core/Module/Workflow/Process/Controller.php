@@ -334,7 +334,16 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         return $isValid; 
     }
-    
-}
+ 
+    public function getScriptModalContent($attr = [], $uniqueId = '')
+    {
+        $attr = \Illuminate\Support\Collection::make($attr);
 
-?>
+        return view('core::module/workflow-process.modal-template-marker', [
+            'controller' => $this,
+            'fieldId' => $attr->get('fieldId'),
+            'buttonId' => $attr->get('buttonId'),
+            'uniqueId' => $uniqueId,
+        ])->render();
+    }
+}

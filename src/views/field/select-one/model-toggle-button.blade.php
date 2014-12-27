@@ -1,6 +1,6 @@
 <?php 
     
-    $domAttr = ['class' => $field->css_class?: ''];
+    $domAttr = ['id' => $field->code . '-' . $uniqueId, 'class' => $field->css_class?: ''];
     $disabled = false;
 
 	if ( (!$model->exists && (!$field->allow_create || !$permissionCreate)) || ($model->exists && (!$field->allow_update || !$permissionUpdate)) )
@@ -36,6 +36,9 @@
                     $checked = ($model->exists && strcmp($k, $model->{$field->code}) === 0) || (!$model->exists && strcmp($k, $default) === 0) ? 1 : 0;
                 ?>
                 <label class="btn btn-white btn-sm btn-primary @if ($checked) active @endif" @if ($disabled) disabled="disabled" @endif>
+                   
+                    {!! Form::radio($field->code, $k, $checked, $domAttr) !!}
+                       
                     <input type="radio" @if ($checked) checked="checked" @endif name="{{$field->code}}" value="{{$k}}" @if ($disabled) disabled="disabled" @endif /> {{$v}}
                 </label>
                 @endforeach

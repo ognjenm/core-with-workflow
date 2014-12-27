@@ -1,6 +1,6 @@
 <div class="form-group">
     <?php 
-        $domAttr = ['placeholder' => $field->integer_default, 'class' => 'col-xs-10 col-sm-5'];
+        $domAttr = ['id' => $field->code . '-' . $uniqueId, 'placeholder' => $field->integer_default, 'class' => 'col-xs-10 col-sm-5'];
         $disabled = false;
 
         if (!$model->exists) 

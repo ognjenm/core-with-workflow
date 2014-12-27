@@ -47,8 +47,7 @@
 							'diagram': window.frames['frame-process-{{$uniqueId}}'].oryxEditor.getSerializedJSON(),
 							'clear': clear ? 1 : 0,
 							'clearOnly': clearOnly ? 1 : 0,
-							'id': '{{$model->getKey()}}',
-                            '_token': '{{csrf_token()}}'
+							'id': '{{$model->getKey()}}'
 						}
 					}).done(function(data) 
 					{

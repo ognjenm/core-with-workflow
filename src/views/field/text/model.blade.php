@@ -47,6 +47,13 @@
 			</ul>
 			<div class="tab-content">
 				@foreach($languages as $language)
+                
+                <?php
+                    
+                    $domAttr['id'] = $field->code . '-' . $uniqueId . '-' . $language->locale; 
+                
+                ?>
+                
 				<div id="{{$jsUnique}}-language-{{$language->locale}}-{{$field->code}}" class="tab-pane in <?php if ($language->locale == $localeDefault) echo "active"; ?>">
 					{!! Form::textarea("{$field->code}[{$language->locale}]", $model->translate($field->code, $language->locale), $domAttr ) !!}
 				</div>
@@ -58,6 +65,13 @@
 	</div>
 </div>
 @else
+
+<?php
+
+    $domAttr['id'] = $field->code . '-' . $uniqueId; 
+
+?>
+
 <div class="form-group">
 	{!! Form::label("{$field->code}", $field->translate('title'), array('class'=>'control-label')) !!}
 	<div class="controls">
