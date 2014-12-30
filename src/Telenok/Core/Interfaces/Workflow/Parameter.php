@@ -10,6 +10,7 @@ class Parameter {
     protected $languageDirectory = 'workflow-parameter';
     protected $package = '';
     protected $formFieldView = '';
+    protected $formModelView = '';
 
     public function getKey()
     {
@@ -33,6 +34,11 @@ class Parameter {
         return $this->formFieldView ?: "core::workflow-parameter.{$this->getKey()}.field";
     }
 
+    public function getFormModelView()
+    {
+        return $this->formModelView ?: "core::workflow-parameter.{$this->getKey()}.model";
+    }
+
     public function setFormFieldView($param = '')
     {
         $this->formFieldView = $param;
@@ -50,5 +56,22 @@ class Parameter {
             ))->render();
     }
 
+    public function getFormModelContent($controller = null, $process = null, $parameter = null, $uniqueId = null)
+    { 
+        return view($this->getFormModelView(), array(
+                'parentController' => $controller,
+                'controller' => $this,
+                'process' => $process,
+                'parameter' => $parameter,
+                'uniqueId' => $uniqueId,
+            ))->render();
+    }
+
+    public function processDefault($controller = null, $model = null)
+    {
+    }
     
+    public function processValue($controller = null, $model = null, $value = null)
+    {
+    }
 }

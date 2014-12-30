@@ -54,10 +54,9 @@
             </div>
 
             <div class="modal-footer">
-
                 <div class="center no-margin">
-                    <button class="btn btn-success" onclick="openTab(this);">
-                        {{ $controller->LL('btn.continue') }}
+                    <button type="button" class="btn" data-dismiss="modal">
+                        {{ $controller->LL('btn.close') }}
                     </button>
                 </div>
             </div>

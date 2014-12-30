@@ -67,14 +67,7 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
                             </svg>',
 				'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/flow/" . $this->getKey() . ".png",
 				'roles' => ["controlflow"],
-				'properties' => [
-					[
-						"id" => "title",
-						"type" => "string",
-                        "value" => $this->LL('title'),
-						"refToView" => "title",
-					]
-				]
+				'properties' => []
 			];
 		}
 

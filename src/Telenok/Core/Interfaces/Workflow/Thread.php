@@ -9,6 +9,7 @@ class Thread {
     protected $process;
     protected $modelProcess;
     protected $modelThread;
+    protected $parameter = [];
     protected $result = [];
     protected $event;
 
@@ -80,21 +81,23 @@ class Thread {
     }
 
     public function run(\Telenok\Core\Interfaces\Workflow\Runtime $runtime)
-    { 
-        if (!$this->getModelThread() && !$this->modelProcess)
+    {
+        if (!$this->getModelThread() && !$this->getModelProcess())
         {
             throw new \Exception('Please, set modelProcess');
         }
 
-        if (!$this->getModelThread() && $this->modelProcess)
+        if (!$this->getModelThread() && $this->getModelProcess())
         {
-            $this->modelThread = (new \App\Model\Telenok\Workflow\Thread())->storeOrUpdate([
-				'title' => $this->modelProcess->title,
-				'original_process' => $this->modelProcess->process,
+            $this->setModelThread((new \App\Model\Telenok\Workflow\Thread())->storeOrUpdate([
+				'title' => $this->getModelProcess()->title,
+				'original_process' => $this->getModelProcess()->process,
+				'original_parameter' => $this->getModelProcess()->parameter()->get()->lists('code', 'key'),
+				'parameter' => $this->getParameter(),
 				'active' => 1,
-				'thread_workflow_process' => $this->modelProcess->getKey(),
+				'thread_workflow_process' => $this->getModelProcess()->getKey(),
 				'processing_stage' => 'started',
-			], false, false);
+			], false, false));
         }
 
         $this->initActions();
@@ -241,6 +244,19 @@ class Thread {
     {
         return $this->modelProcess;
     }
+    
+	
+    public function setParameter($param = [])
+    {
+        $this->parameter = $param;
+        
+        return $this;
+    }
+
+    public function getParameter()
+    {
+        return $this->parameter;
+    } 
 	
     public function setEvent(\Telenok\Core\Workflow\Event $param)
     {

@@ -662,29 +662,42 @@ abstract class Controller extends Module implements IPresentation {
 
     public function getListButton($item)
     {
-        return '
-                <div class="hidden-phone visible-lg btn-group">
-                    <button class="btn btn-minier btn-info disable" title="'.$this->LL('list.btn.edit').'" 
+        $collection = \Illuminate\Support\Collection::make();
+        
+        $collection->put('open', ['order' => 0 , 'content' => '<div class="hidden-phone visible-lg btn-group">']);
+        $collection->put('close', ['order' => PHP_INT_MAX, 'content' => '</div>']);
+        
+        $collection->put('edit', ['order' => 1000, 'content' => '<button class="btn btn-minier btn-info disable" title="'.$this->LL('list.btn.edit').'" 
                         onclick="telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').addTabByURL({url : \'' 
                         . $this->getRouterEdit(['id' => $item->getKey()]) . '\'});">
                         <i class="fa fa-pencil"></i>
-                    </button>
-					
-                    <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->active ? 'active' : 'inactive')) . '">
+                    </button>']);
+        
+        $collection->put('active', ['order' => 2000, 'content' => '<button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->active ? 'active' : 'inactive')) . '">
                         <i class="fa fa-check ' . ($item->active ? 'green' : 'white'). '"></i>
-                    </button>
-
-                    <button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->locked() ? 'locked' : 'unlocked')) . '">
+                    </button>']);
+        
+        $collection->put('locked', ['order' => 3000, 'content' => '<button class="btn btn-minier btn-light" onclick="return false;" title="' . $this->LL('list.btn.' . ($item->locked() ? 'locked' : 'unlocked')) . '">
                         <i class="fa fa-' . ($item->locked() ? 'lock ' . (\Auth::user()->id == $item->locked_by_user ? 'green' : 'red') : 'unlock green'). '"></i>
-                    </button>
-
-                    <button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
+                    </button>']);
+        
+        $collection->put('deleted', ['order' => 4000, 'content' => '<button class="btn btn-minier btn-danger" title="'.$this->LL('list.btn.delete').'" 
                         onclick="if (confirm(\'' . $this->LL('notice.sure') . '\')) telenok.getPresentation(\''.$this->getPresentationModuleKey().'\').deleteByURL(this, \'' 
                         . $this->getRouterDelete(['id' => $item->getKey()]) . '\');">
                         <i class="fa fa-trash-o"></i>
-                    </button>
-                </div>';
+                    </button>']); 
+        
+        
+        return $this->getAdditionalListButton($item, $collection)->sort(function($a, $b)
+                    {
+                        return array_get($a, 'order', 0) > array_get($b, 'order', 0) ? 1 : -1;
+                    })->implode('content');
     }
+    
+    public function getAdditionalListButton($item, $collection)
+    {
+        return $collection;
+    }    
 
     public function getAdditionalViewParam()
     {
@@ -730,7 +743,7 @@ abstract class Controller extends Module implements IPresentation {
                 $put[$field->code] = $this->getListItemProcessed($field, $item);
             }
 
-            $put['tableManageItem'] = $this->getListButton($item);
+            $put['tableManageItem'] = $this->getListButton($item); 
 
             $content[] = $put;
         }

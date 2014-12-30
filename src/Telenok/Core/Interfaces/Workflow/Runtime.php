@@ -17,41 +17,51 @@ class Runtime {
 				{
                     //$this->runExistingThread($p);
                     
-					foreach($p->event_object as $permanentId)
-					{ 
-                        foreach(array_get($p->process->all(), 'diagram.childShapes', []) as $action)
-                        { 
-                            if ($permanentId == $action['permanentId'])
-                            {
-                                $a = $elements->get($action['stencil']['id'])
-                                                            ->make()
-                                                            ->setInput(array_get($p->process->all(), 'stencil.' . $action['permanentId'], []))
-                                                            ->setStencil($action);
-
-                                if ($a->isEventForMe($event))
-                                {
-                                    $this->threadCreateAndRun($p, $event);
-
-                                    break 2;
-                                }
-                            }
-                        }
-					}
+                    if ($this->isEventForProcess($p, $event, $elements))
+                    {
+                        $this->threadCreateAndRun($p, $event);
+                        
+                        break;
+                    }
 				}
 			}
 		}
 	}
 
+    public function isEventForProcess(\Telenok\Core\Model\Workflow\Process $process = null, 
+                                    \Telenok\Core\Interfaces\Workflow\Event $event = null, 
+                                    \Illuminate\Support\Collection $elements = null)
+    {
+        foreach($process->event_object as $permanentId)
+        { 
+            foreach(array_get($process->process->all(), 'diagram.childShapes', []) as $action)
+            { 
+                if ($permanentId == $action['permanentId'])
+                {
+                    $a = $elements->get($action['stencil']['id'])
+                                                ->make()
+                                                ->setInput(array_get($process->process->all(), 'stencil.' . $action['permanentId'], []))
+                                                ->setStencil($action);
+
+                    if ($a->isEventForMe($event))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    
     public function canProcessing()
     {
         return (bool)\Config::get('app.workflow.enabled');
     }
 
-    public function threadCreateAndRun(\App\Model\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null)
+    public function threadCreateAndRun(\App\Model\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null, $parameter = [])
     { 
         if ($this->canProcessing())
         {
-            \Telenok\Core\Workflow\Thread::make()->setEvent($event)->setModelProcess($process)->run($this); 
+            \Telenok\Core\Workflow\Thread::make()->setEvent($event)->setModelProcess($process)->setParameter($parameter)->run($this); 
         }
 
         return $this;

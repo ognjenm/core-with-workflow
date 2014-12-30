@@ -275,6 +275,9 @@ body.telenok-backend div.tab-content:empty {
     border: 0;
 } 
 
+body.telenok-backend div.error-container:empty { display: none; }
+
+
 .help-button {
     margin-top: 5px;
     line-height: 19px;

@@ -45,13 +45,13 @@
     {!! app('telenok.config')->getObjectFieldController()->get($field->key)->getFormModelContent($controller, $model, $field, $uniqueId) !!}
 
     @if ($field->code == 'default_value')
-    
-    {!! (new \Telenok\Core\Module\Workflow\Process\Controller())->getScriptModalContent([
+
+    {!! (new \Telenok\Core\Module\Workflow\Process\Controller())->getMarkerModalContent([
                 'fieldId' => $field->code . '-' . $uniqueId,
                 'buttonId' => $field->code . '-button-' . $uniqueId,
             ],
             $uniqueId) !!}
-    
+
     <button id="{{ $field->code . '-button-' . $uniqueId }}" type="button" class="btn btn-sm" data-toggle="modal"><i class="fa fa-align-justify"></i></button>
     
     <script type="text/javascript">

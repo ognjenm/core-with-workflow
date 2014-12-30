@@ -246,10 +246,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         {
             $connectionStencilRules[] = ['role' => $role, 'connects' => $connects];
         }
-        
+
         array_set($data, 'rules.connectionRules', $connectionStencilRules);
         array_set($data, 'rules.cardinalityRules', $cardinalityStencilRules);
-        
+
         return $data;
     }
 
@@ -257,14 +257,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     {
         return app('telenok.config')->getWorkflowElement();
     }
-	
+
     public function preProcess($model, $type, $input)
     {
         $process = json_decode($input->get('process', "[]"), true);
- 
+
 		$input->put('is_valid', $this->validateBusinessProcessScheme($process));
 		$input->put('process', $process);
-        
+
 		$eventObject = $this->getStartEventObject($process);
 
 		$input->put('event_object', $eventObject);
@@ -278,12 +278,12 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         $elements = app('telenok.config')->getWorkflowElement();
         $processCollection = \Illuminate\Support\Collection::make($process);
-        
+
         $stencilData = $processCollection->get('stencil', []);
         $diagramData = array_get($processCollection->all(), 'diagram.childShapes', []);
 
         $actions = \Illuminate\Support\Collection::make([]);
-        
+
         foreach($diagramData as $action)
         {
             $el = $elements->get($action['stencil']['id']);
@@ -295,7 +295,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                         ->setId($action['resourceId'])
                         ->setInput(array_get($stencilData, 'stencil.' . $action['permanentId'], []))
                         ->setLinkOut(\Illuminate\Support\Collection::make(array_get($action, 'outgoing'))->flatten())
-                        ->setLinkIn(\Illuminate\Support\Collection::make([]))); 
+                        ->setLinkIn(\Illuminate\Support\Collection::make())); 
             }
             else 
             {
@@ -334,8 +334,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         return $isValid; 
     }
- 
-    public function getScriptModalContent($attr = [], $uniqueId = '')
+
+    public function getMarkerModalContent($attr = [], $uniqueId = '')
     {
         $attr = \Illuminate\Support\Collection::make($attr);
 
@@ -346,4 +346,185 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
             'uniqueId' => $uniqueId,
         ])->render();
     }
+
+    public function processMarkerString($string = '')
+    {
+        $collection = app('telenok.config')->getWorkflowTemplateMarker()->all();
+        
+        foreach($collection as $c)
+        {
+            $string = $c->processMarkerString($string);
+        }
+        
+        $filename = str_random();
+        
+        try
+        {
+            \File::makeDirectory(storage_path('tmp'), 0777, true, true);
+            
+            \File::put(storage_path('tmp/') . $filename, '<?php return ' . $string . ';');
+
+            $string = include(storage_path('tmp/') . $filename);
+        } 
+        catch (\Exception $ex) 
+        {
+            throw $ex;
+        }
+        finally
+        {
+            if (\File::exists(storage_path('tmp/') . $filename))
+            {
+                \File::delete(storage_path('tmp/') . $filename);
+            }
+        }
+
+        return $string;
+    }
+
+    public function getRouterProcessManualStart($param = [])
+    {
+        return \URL::route("cmf.module.{$this->getKey()}.manual.start", $param);
+    }
+
+    public function getAdditionalListButton($item, $collection)
+    {
+        $elements = app('telenok.config')->getWorkflowElement();
+        $event = new \Telenok\Core\Workflow\Event();
+
+        if (\Telenok\Core\Workflow\Runtime::make()->isEventForProcess($item, $event->setEventCode('workflow.manual.start'), $elements))
+        {
+            $collection->put('workflow-play', ['order' => 2400, 'content' => '<button class="btn btn-minier btn-light" title="' . e($this->LL('list.btn.play')). '" onclick="telenok.getPresentation(\''
+                        . $this->getPresentationModuleKey().'\').addTabByURL({url : \'' 
+                        . $this->getRouterProcessManualStart(['id' => $item->getKey()]) . '\'});"><i class="fa fa-play ' . ($item->active ? 'green' : 'white'). '"></i>
+                    </button>']);
+        }
+
+        $event = null;
+        $elements = null;
+
+        return $collection;
+    }
+
+    public function getProcessStartModelView()
+    {
+        return 'core::module.workflow-process.model-process-start';
+    }
+
+    public function getManualStartContent($id = null)
+    {
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+
+		$id = $id ?: $input->get('id');
+
+        if (!$id)
+        {
+            throw new \Exception('Please, define ID of process to start');
+        }
+
+        $model = $this->getModelList()->findOrFail($id);
+        $type = $this->getTypeList();
+        $fields = $model->getFieldForm();
+
+        return [
+            'tabKey' => $this->getTabKey() . '-start-' . $id,
+            'tabLabel' => $this->LL('label.title.start'),
+            'tabContent' => view($this->getProcessStartModelView(), array_merge(array( 
+				'controller' => $this,
+				'model' => $model, 
+				'type' => $type, 
+				'fields' => $fields, 
+				'routerParam' => $this->getRouterParam('start', $type, $model),
+				'canStart' => \Auth::can('start', $model),
+				'uniqueId' => str_random(), 
+            ), $this->getAdditionalViewParam()))->render()
+        ];
+    }
+
+    public function manualStarting($id = 0)
+    {
+        $input = \Illuminate\Support\Collection::make($this->getRequest()->input());
+
+		$id = $id ?: $input->get('id');
+
+        if (!$id)
+        {
+            throw new \Exception('Please, define ID of process to start');
+        }
+
+        $model = $this->getModelList()->findOrFail($id);
+
+        $runtime = \Telenok\Core\Workflow\Runtime::make();
+
+        $event = (new \Telenok\Core\Workflow\Event())->setEventCode('workflow.manual.start')->setRuntime($runtime);
+
+        $modelParameter = $model->parameter()->active()->get(); 
+        $modelParameterKeyByCode = $modelParameter->keyBy('code');
+        $collectionParameters = app('telenok.config')->getWorkflowParameter();
+        $parameter = $input->get('parameter', []);
+        
+        $processedParameter = \Illuminate\Support\Collection::make();
+        
+        foreach($parameter as $key => $v)
+        {
+            $param = $modelParameterKeyByCode->get($key, false);
+            
+            if ($param === false)
+            {
+                throw new \Exception('Cant to run process. Not defined parameter with code "' . $key . '"');
+            }
+            
+            $v = trim($v);
+            
+            if ($param->required && !strlen($v))
+            {
+                $processedParameter->put($key, $collectionParameters->get($param->key)->processDefault($this, $param));
+            }
+            else
+            {
+                $processedParameter->put($key, $collectionParameters->get($param->key)->processValue($this, $param, $v));
+            }
+        }
+        
+        try
+        {
+            $runtime->threadCreateAndRun($model, $event, $processedParameter);
+            
+            return [
+                'tabKey' => $this->getTabKey() . '-start-' . $id,
+                'tabLabel' => $this->LL('label.title.start'),
+                'tabContent' => view($this->getProcessStartModelView(), array_merge(array( 
+                    'controller' => $this,
+                    'model' => $model,
+                    'routerParam' => '',
+                    'success' => true,
+                    'warning' => \Session::get('warning'),
+                    'canStart' => false,
+                    'uniqueId' => str_random(), 
+                ), $this->getAdditionalViewParam()))->render()
+            ];
+        } 
+        catch (\Exception $ex) 
+        {
+			throw $ex;
+        }
+    }
+    
+    public function getRouterManualStarting($param = [])
+    {
+        return \URL::route('cmf.module.workflow-process.manual.starting', $param);
+    }
+
+	public function getRouterParam($action = '', $type = null, $model = null)
+	{
+		switch ($action)
+		{
+			case 'start':
+				return [ $this->getRouterManualStarting(['id' => $model->getKey(), 'files' => true]) ];
+				break;
+
+			default:
+				return parent::getRouterParam($action, $type, $model);
+				break;
+		}
+	}
 }

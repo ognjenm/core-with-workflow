@@ -33,20 +33,22 @@
 
 		<script type="text/javascript">
 
-			var diagramData{{$uniqueId}} = {{ $model->{$field->code}->has('diagram') ? "'" . json_encode($model->{$field->code}->get('diagram')) . "'" : 'false' }};
+			var diagramData{{$uniqueId}} = {!! $model->{$field->code}->has('diagram') ? "'" . json_encode($model->{$field->code}->get('diagram')) . "'" : 'false' !!};
 
 			function applyDiagram{{$uniqueId}}(clear, hide, clearOnly)
 			{
 				if (window.frames['frame-process-{{$uniqueId}}'] && window.frames['frame-process-{{$uniqueId}}'].oryxEditor)
 				{
 					jQuery.ajax({
-						url: '{!! URL::route("cmf.workflow.apply-diagram", ['sessionDiagramId' => $sessionDiagramId]) !!}',
+						url: '{!! URL::route("cmf.workflow.apply-diagram") !!}',
 						method: 'post',
 						dataType: 'json',
 						data: {
 							'diagram': window.frames['frame-process-{{$uniqueId}}'].oryxEditor.getSerializedJSON(),
 							'clear': clear ? 1 : 0,
 							'clearOnly': clearOnly ? 1 : 0,
+							'sessionDiagramId': "{{ $sessionDiagramId }}",
+							'_token': "{{ csrf_token() }}",
 							'id': '{{$model->getKey()}}'
 						}
 					}).done(function(data) 

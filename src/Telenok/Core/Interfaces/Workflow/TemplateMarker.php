@@ -63,7 +63,8 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
         return [];
     }
     
-    public function processMaker($maker = '')
+    public function processMarkerString($string = '')
     {
+        return $string;
     }
 }

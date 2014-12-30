@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Workflow\Activity;
 
-class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
+class ModelFieldUpdate extends \Telenok\Core\Interfaces\Workflow\Activity {
  
     protected $minIn = 1;
     protected $minOut = 0;
@@ -12,9 +12,9 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
    
     protected $total = 1;
 
-    protected $key = 'form-field-hide';
-    protected $propertyView = 'core::workflow.form-field-hide.property';
-    protected $routerPropertyContent = 'cmf.workflow.form-field-hide.property';
+    protected $key = 'model-field-update';
+    protected $propertyView = 'core::workflow.model-field-update.property';
+    protected $routerPropertyContent = 'cmf.workflow.model-field-update.property';
 
     protected $stencilCardinalityRules = [
             [
@@ -57,7 +57,7 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
 
         $eventResource = $this->getThread()->getEventResource();
         
-        if ($eventResource && $eventResource->get('type') && $eventResource->get('type')->getKey() == $typeId)
+        if ($eventResource->get('type') && $eventResource->get('type')->getKey() == $typeId)
         {
             $newFields = $eventResource->get('fields')->reject(function($f) use ($fields)
             {
@@ -158,6 +158,4 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
 
         return $this->stencilConfig;
     }
-}
-
-?>
+} 

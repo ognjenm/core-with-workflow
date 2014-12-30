@@ -29,6 +29,8 @@
     
     $list->push('workflow.form.create');
     $list->push('workflow.form.edit');
+
+    $list->push('workflow.manual.start');
 });
 
 \Event::listen('telenok.acl.filter.resource.add', function($list)
@@ -77,9 +79,11 @@
 {
     $list->push('Telenok\Core\Workflow\Point\Start\Model');
     $list->push('Telenok\Core\Workflow\Point\Start\Form');
+    $list->push('Telenok\Core\Workflow\Point\Start\Manual');
 	$list->push('Telenok\Core\Workflow\Point\End\End');
     $list->push('Telenok\Core\Workflow\Flow\Standart');
 	$list->push('Telenok\Core\Workflow\Activity\FormFieldHide');
+	$list->push('Telenok\Core\Workflow\Activity\ModelFieldUpdate');
     //$list->push('Telenok\Core\Workflow\Activity\ValidateField');
 	//$list->push('Telenok\Core\Workflow\Activity\SendMessage');
     //$list->push('Telenok\Core\Workflow\Activity\Log');

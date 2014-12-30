@@ -36,6 +36,22 @@ class SeedWorkflowThreadTable extends Migration {
 
         (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
                 [
+                    'title' => ['ru' => 'Параметры', 'en' => 'Parameter'],
+                    'title_list' => ['ru' => 'Параметры', 'en' => 'Parameter'],
+                    'key' => 'complex-array',
+                    'code' => 'parameter',
+                    'active' => 1,
+                    'field_object_type' => $modelTypeId,
+                    'field_object_tab' => $tabMainId,
+                    'show_in_form' => 1,
+                    'show_in_list' => 0,
+                    'allow_search' => 0,
+                    'field_order' => 6,
+                ]
+        );
+
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+                [
                     'title' => ['ru' => "Поток", 'en' => "Thread"],
                     'title_list' => ['ru' => "Поток", 'en' => "Thread"],
                     'key' => 'relation-one-to-many',

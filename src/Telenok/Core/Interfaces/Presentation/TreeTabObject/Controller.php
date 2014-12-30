@@ -159,7 +159,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
                 }
 
                 $put['tableManageItem'] = $this->getListButton($item);
-
+                        
                 $content[] = $put;
             }
         }
