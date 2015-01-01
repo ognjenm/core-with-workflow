@@ -35,9 +35,29 @@ class Thread {
         }
     }
     
+    public function getParameterByCode($code = '')
+    {
+        $parameterModel = $this->getModelProcess()->parameter()->get()->keyBy($code)->get($code);
+        
+        if ($parameterModel)
+        {
+            $parameterValue = $this->getModelThread()->parameter->get($code);
+        }
+        
+        if ($parameterModel)
+        {
+            $controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key);
+            
+            if ($controller)
+            {
+                $controller->getValue($this, $parameterModel, $parameterValue);
+            }
+        }
+    }
+
     public function getActionByResourceId($resourceId = '')
     {
-        return $this->actions->get($resourceId);
+        return $this->getActions()->get($resourceId);
     }
     
     public function getActions()

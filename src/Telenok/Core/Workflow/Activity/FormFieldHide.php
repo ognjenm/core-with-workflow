@@ -159,5 +159,3 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
         return $this->stencilConfig;
     }
 }
-
-?>

@@ -183,17 +183,8 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/workflow-process/manual-start/content', array('as' => 'cmf.module.workflow-process.manual.start', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@getManualStartContent"));
 \Route::any('telenok/module/workflow-process/manual-start/launch', array('as' => 'cmf.module.workflow-process.manual.starting', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@manualStarting"));
 \Route::any('telenok/module/workflow/parameter/show', array('as' => 'cmf.workflow.parameter.show', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@parameterShow"));
+\Route::any('telenok/module/workflow/show/property', array('as' => 'cmf.workflow.show-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@propertyContent"));
 \Route::any('telenok/module/workflow/store/property', array('as' => 'cmf.workflow.store-property', 'uses' => "Telenok\Core\Interfaces\Workflow\Element@storeProperty"));
 \Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@applyDiagram"));
 \Route::any('telenok/module/workflow/modal-template-marker/content', array('as' => 'cmf.workflow.modal-template-marker.content', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@getModalTemplateMarkerContent"));
 
-
-// Module Workflow Thread
-//\Route::get('telenok/module/workflow-thread/action-param', array('as' => 'cmf.module.workflow-thread.action.param', 'uses' => "App\Http\Controllers\Module\Workflow\Thread\Controller@getActionParam"));
-
-\Route::get('telenok/module/workflow/element/start/point-model/property', array('as' => 'cmf.workflow.point-model.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Model@getPropertyContent"));
-\Route::get('telenok/module/workflow/element/start/point-form/property', array('as' => 'cmf.workflow.point-form.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Form@getPropertyContent"));
-\Route::get('telenok/module/workflow/element/start/point-manual/property', array('as' => 'cmf.workflow.point-manual.property', 'uses' => "Telenok\Core\Workflow\Point\Start\Manual@getPropertyContent"));
-\Route::get('telenok/module/workflow/element/end/point-end/property', array('as' => 'cmf.workflow.point-end.property', 'uses' => "Telenok\Core\Workflow\Point\End\End@getPropertyContent"));
-\Route::get('telenok/module/workflow/element/form-field-hide/property', array('as' => 'cmf.workflow.form-field-hide.property', 'uses' => "Telenok\Core\Workflow\Activity\FormFieldHide@getPropertyContent"));
-\Route::get('telenok/module/workflow/element/model-field-update/property', array('as' => 'cmf.workflow.model-field-update.property', 'uses' => "Telenok\Core\Workflow\Activity\ModelFieldUpdate@getPropertyContent"));

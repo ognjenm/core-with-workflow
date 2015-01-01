@@ -20,7 +20,7 @@ return array(
 	
     'modal-template-marker.title' => 'Please, choose template marker',
     
-    'diagram.title' => 'Process diagram',
+    'diagram.title' => 'Diagrams\'s elements',
     'diagram.description' => 'Business process optimally achieve the goals and conserve resources',
 
     'label.title.start' => 'Running a business process',

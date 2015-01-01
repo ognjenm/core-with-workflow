@@ -18,6 +18,9 @@
 
         {!! HTML::style('packages/telenok/core/js/dropzone/dropzone.css') !!}
 
+        {!! HTML::style('packages/telenok/core/js/ext-2.0.2/resources/css/ext-all.css') !!}
+        {!! HTML::style('packages/telenok/core/js/ext-2.0.2/resources/css/xtheme-gray.css') !!}
+        
         {!! HTML::style('packages/telenok/core/css/style.css') !!}
 
         {!! HTML::script('packages/telenok/core/js/jquery.js') !!}
@@ -34,7 +37,9 @@
 
         <script type="text/javascript">
 			if ("ontouchend" in document)
-				document.write("<script src='packages/telenok/core/js/bootstrap/js/jquery.mobile.custom.min.js' type='text/javascript'>" + "<" + "/script>");
+            {
+				document.write("<script src='packages/telenok/core/js/jquery.mobile.custom.min.js' type='text/javascript'>" + "<" + "/script>");
+            }
         </script>
 
         {!! HTML::script('packages/telenok/core/js/fuelux/fuelux.wizard.min.js') !!}
@@ -45,11 +50,13 @@
         {!! HTML::script('packages/telenok/core/js/bootstrap/lib/moment.js') !!}
         {!! HTML::script('packages/telenok/core/js/bootstrap/lib/datetimepicker/datetimepicker.js') !!}
  
+        
         {!! HTML::script('packages/telenok/core/js/dropzone/dropzone.js') !!}
         {!! HTML::script('packages/telenok/core/js/script.js') !!} 
 
         {!! HTML::script('packages/telenok/core/js/prototype-1.5.1.js') !!} 
-        {!! HTML::script('packages/telenok/core/js/oryx/path_parser.js') !!}
+        {!! HTML::script('packages/telenok/core/js/oryx/path_parser.js') !!} 
+
         {!! HTML::script('packages/telenok/core/js/ext-2.0.2/adapter/ext/ext-base.js') !!}
         {!! HTML::script('packages/telenok/core/js/ext-2.0.2/ext-all-debug.js') !!}
         {!! HTML::script('packages/telenok/core/js/ext-2.0.2/plugin/color-field.js') !!}
@@ -116,7 +123,7 @@
 
         <script type="text/javascript">
 
-			jQuery.noConflict();
+			jQuery.noConflict(); 
 
 			var allPlugins = {};
 			[
@@ -223,10 +230,12 @@
 
 				window.oryxEditor = new ORYX.Editor(editor_parameters);
 
-				if (importJSONFromTop())
+				if (typeof importJSONFromTop !== 'undefined' && jQuery.isFunction(importJSONFromTop))
 				{
-					setTimeout(function() { oryxEditor.importJSON(importJSONFromTop(), true); }, 1000);
-					
+					setTimeout(function() 
+                    {   
+                        oryxEditor.importJSON(importJSONFromTop(), true);  
+                    }, 10000);
 				}
 			}
             

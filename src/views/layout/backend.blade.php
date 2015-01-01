@@ -35,7 +35,7 @@
         {!! HTML::script('packages/telenok/core/js/jquery.chosen/chosen.js') !!}
 
         <script type="text/javascript">
-            if("ontouchend" in document) document.write("<script src='packages/telenok/core/js/bootstrap/js/jquery.mobile.custom.min.js' type='text/javascript'>"+"<"+"/script>");
+            if("ontouchend" in document) document.write("<script src='packages/telenok/core/js/jquery.mobile.custom.min.js' type='text/javascript'>"+"<"+"/script>");
         </script>
 
         {!! HTML::script('packages/telenok/core/js/fuelux/fuelux.wizard.min.js') !!}

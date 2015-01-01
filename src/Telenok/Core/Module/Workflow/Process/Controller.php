@@ -477,11 +477,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
             
             if ($param->required && !strlen($v))
             {
-                $processedParameter->put($key, $collectionParameters->get($param->key)->processDefault($this, $param));
+                $processedParameter->put($key, $collectionParameters->get($param->key)->processInitDefault($this, $param));
             }
             else
             {
-                $processedParameter->put($key, $collectionParameters->get($param->key)->processValue($this, $param, $v));
+                $processedParameter->put($key, $collectionParameters->get($param->key)->processInitValue($this, $param, $v));
             }
         }
         

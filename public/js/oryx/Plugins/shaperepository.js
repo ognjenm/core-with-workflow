@@ -82,12 +82,12 @@ ORYX.Plugins.ShapeRepository = {
             }
         });
 
-        this.facade.registerOnEvent(ORYX.CONFIG.EVENT_STENCIL_SET_LOADED, this.setStencilSets.bind(this));
+        //this.facade.registerOnEvent(ORYX.CONFIG.EVENT_STENCIL_SET_LOADED, this.setStencilSets.bind(this));
     },
     /**
      * Load all stencilsets in the shaperepository
      */
-    setStencilSets: function() 
+    setStencilSets: function()
     {
         // Remove all childs
         this.shapeList.empty();

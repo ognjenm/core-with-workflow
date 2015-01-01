@@ -152,10 +152,9 @@ class ModelFieldUpdate extends \Telenok\Core\Interfaces\Workflow\Activity {
                                 "refToView" => "title",
                             ],
                         ],
-
                     ];
         }
 
         return $this->stencilConfig;
     }
-} 
+}

@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Workflow;
 
-class Element extends \Illuminate\Routing\Controller {
+class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\Interfaces\IRequest {
 
     use \Telenok\Core\Support\PackageLoad; 
 
@@ -116,15 +116,15 @@ class Element extends \Illuminate\Routing\Controller {
 		if (empty($stencilData))
 		{
             $model = \App\Model\Telenok\Workflow\Process::find($diagramId);
-            
+
             if ($model)
             {
                 $stencil = $model->process->get('stencil');
-                
+
                 $stencilData = array_get($stencil, $stencilId, []);
             }
 		}
-        
+
         return \Illuminate\Support\Collection::make($stencilData);
     }
 
@@ -140,28 +140,41 @@ class Element extends \Illuminate\Routing\Controller {
 		]);
 	}
 
-    public function getPropertyContent()
+    public function propertyContent()
     {
 		if (!($sessionDiagramId = \Input::get('sessionDiagramId')) || !($stencilId = \Input::get('stencilId')))
 		{
 			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
 		}
+        
+        $element = app('telenok.config')->getWorkflowElement()->get($this->getRequest()->input('key'));
 
-		return ['tabContent' => view($this->getPropertyView(), [
-				'controller' => $this,
+		return ['tabContent' => view($element->getPropertyView(), [
+				'controller' => $element,
 				'uniqueId' => str_random(),
 				'sessionDiagramId' => $sessionDiagramId,
 				'stencilId' => $stencilId,
-				'property' => $this->getPropertyValue(\Input::all()),
+				'property' => $element->getPropertyValue(\Input::all()),
 			])->render()];
 	}
 
     public function getRouterPropertyContent($param = [])
     {
-		if ($this->routerPropertyContent)
-		{
-			return \URL::route($this->routerPropertyContent, $param);
-		}
+        try
+        {
+            if ($this->routerPropertyContent === false)
+            {
+                return;
+            }
+            
+            return \URL::route($this->routerPropertyContent, $param);
+        } 
+        catch (\Exception $e) 
+        {
+            $param['key'] = array_get($param, 'key', $this->getKey());
+
+            return \URL::route('cmf.workflow.show-property', $param);
+        }
 	}
 
     public function getRouterStoreProperty($param = [])
@@ -178,7 +191,7 @@ class Element extends \Illuminate\Routing\Controller {
 		{
 			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
 		}
-        
+
 		$stencilData = \Input::get('stencil', []);
 
 		\Session::put('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, $stencilData);
@@ -189,7 +202,7 @@ class Element extends \Illuminate\Routing\Controller {
     public function setStencil($param = [])
     {
         $this->action = $param;  
-         
+
         $this->setId($param['resourceId'])->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
 
         return $this;
@@ -378,7 +391,16 @@ class Element extends \Illuminate\Routing\Controller {
 
         return true;
     }
+    
+    public function setRequest(\Illuminate\Http\Request $request = null)
+    {
+        $this->request = $request;
+        
+        return $this;
+    }
 
+    public function getRequest()
+    {
+        return $this->request;
+    }
 }
-
-?>

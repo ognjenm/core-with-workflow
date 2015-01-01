@@ -1193,7 +1193,7 @@ ace.helper.hasClass =
 			var sub_hidden = (sub.scrollHeight == 0)
 
 			//if not open and visible, let's open it and make it visible
-			if( sub_hidden ) {//being shown now
+			/*if( sub_hidden ) {//being shown now
 			  $(parent_ul).find('> .open > .submenu').each(function() {
 				//close all other open submenus except for the active one
 				if(this != sub && !$(this.parentNode).hasClass('active')) {
@@ -1201,7 +1201,7 @@ ace.helper.hasClass =
 					self.hide(this, duration, false);
 				}
 			  })
-			}
+			}*/
 
 			if( sub_hidden ) {//being shown now
 				self.show(sub, duration);
@@ -1266,10 +1266,7 @@ ace.helper.hasClass =
 				if(wait !== false) submenu_working = false;
 			}
 			
-			if( $duration > 0 && !!$.support.transition.end ) {
-			  $sub.one($.support.transition.end, complete);
-			}
-			else complete();
+			complete();
 			
 			//there is sometimes a glitch, so maybe retry
 			if(ace.vars['android']) {
@@ -1324,11 +1321,7 @@ ace.helper.hasClass =
 				if(wait !== false) submenu_working = false;
 			}
 
-			if( $duration > 0 && !!$.support.transition.end ) {
-			   $sub.one($.support.transition.end, complete);
-			}
-			else complete();
-
+			complete();
 
 			//there is sometimes a glitch, so maybe retry
 			if(ace.vars['android']) {

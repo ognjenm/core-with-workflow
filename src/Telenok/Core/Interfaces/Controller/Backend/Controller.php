@@ -38,5 +38,3 @@ abstract class Controller extends \Illuminate\Routing\Controller implements \Tel
         return $this->request;
     }
 }
-
-?>
