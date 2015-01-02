@@ -83,9 +83,10 @@
 	$list->push('Telenok\Core\Workflow\Point\End\End');
     $list->push('Telenok\Core\Workflow\Flow\Standart');
     $list->push('Telenok\Core\Workflow\Flow\Condition');
+    $list->push('Telenok\Core\Workflow\Flow\ConditionDefault');
 	$list->push('Telenok\Core\Workflow\Activity\FormFieldHide');
 	$list->push('Telenok\Core\Workflow\Activity\ModelFieldUpdate');
-	$list->push('Telenok\Core\Workflow\Gateway\Parallel');
+	$list->push('Telenok\Core\Workflow\Gateway\Standart');
     //$list->push('Telenok\Core\Workflow\Activity\ValidateField');
 	//$list->push('Telenok\Core\Workflow\Activity\SendMessage');
     //$list->push('Telenok\Core\Workflow\Activity\Log');

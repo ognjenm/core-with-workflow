@@ -24,11 +24,7 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
 								],
 								[
 									'from' => 'gateway',
-									'to' => ['sequence_end', 'activity']
-								],
-								[
-									'from' => 'activity',
-									'to' => ['activity']
+									'to' => ['sequence_end', 'activity', 'gateway']
 								]
 							]
 						]

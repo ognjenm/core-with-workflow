@@ -11,6 +11,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $modelTreeClass = '\App\Model\Telenok\Object\Type';
 
     protected $presentation = 'tree-tab-object';
+    protected $presentationTreeView = 'core::module.objects-field.tree';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
 
     public function getTreeListTypes()
@@ -19,10 +20,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         return $types;
     }
-    
-    public function getListItem($model)
+/*
+    public function getListItem111($model)
     {
-        $query = $model::select($model->getTable() . '.*')->withPermission()->where(function($query) use ($model)
+        $query = $model::select($model->getTable() . '.*')->withPermission();->where(function($query) use ($model)
         {
             if (!$this->getRequest()->input('multifield_search', false) && ($treeId = $this->getRequest()->input('treeId', 0)))
             { 
@@ -34,7 +35,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
     }
-
+*/
     public function validate($model = null, $input = [], $message = [])
     {
         $key = $model->exists && $model->key ? $model->key : $input->get('key');

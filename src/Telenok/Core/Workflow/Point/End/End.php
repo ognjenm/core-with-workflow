@@ -17,7 +17,7 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
                     [
                         'role' => 'controlflow',
                         'minimum' => 0
-                    ]
+                    ],
                 ]
             ]
     ];

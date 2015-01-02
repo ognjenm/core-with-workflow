@@ -16,13 +16,13 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                 'outgoingEdges' => [
                     [
                         'role' => 'controlflow',
-                        'maximum' => 1
+                        'maximum' => 10000
                     ]
                 ],
                 'incomingEdges' => [
                     [
                         'role' => 'controlflow',
-                        'maximum' => 1
+                        'maximum' => 10000
                     ]
                 ]
             ]

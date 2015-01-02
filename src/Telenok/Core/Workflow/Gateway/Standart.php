@@ -2,43 +2,26 @@
 
 namespace Telenok\Core\Workflow\Gateway;
 
-class Parallel extends \Telenok\Core\Interfaces\Workflow\Activity {
+class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
  
-    protected $key = 'parallel';
-    protected $propertyView = 'core::workflow.parallel.property';
+    protected $key = 'standart-gateway';
+    protected $propertyView = 'core::workflow.standart-gateway.property';
 
     protected $stencilCardinalityRules = [
             [
-                'role' => 'parallelOut',
-                'minimumOccurrence' => 0,
-                'maximumOccurrence' => 10000,
-                'outgoingEdges' => [
-                    [
-                        'role' => 'conditionflow',
-                        'maximum' => 2000000000
-                    ]
-                ],
-                'incomingEdges' => [
-                    [
-                        'role' => 'controlflow',
-                        'maximum' => 1
-                    ]
-                ]
-            ],
-            [
-                'role' => 'parallelIn',
+                'role' => 'gateway',
                 'minimumOccurrence' => 0,
                 'maximumOccurrence' => 10000,
                 'outgoingEdges' => [
                     [
                         'role' => 'controlflow',
-                        'maximum' => 1
+                        'maximum' => 10000
                     ]
                 ],
                 'incomingEdges' => [
                     [
                         'role' => 'controlflow',
-                        'maximum' => 2000000000
+                        'maximum' => 10000
                     ]
                 ]
             ]
@@ -121,7 +104,7 @@ class Parallel extends \Telenok\Core\Interfaces\Workflow\Activity {
                                         </svg>',
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/gateway/" . $this->getKey() . ".png",
 						'defaultAlign' => "east",
-						'roles' => ["parallelIn", "parallelOut", "gateway"],
+						'roles' => ["gateway"],
 						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [
                             [

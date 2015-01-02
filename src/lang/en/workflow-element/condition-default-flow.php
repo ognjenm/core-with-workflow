@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Standart',
+    'title' => 'Condition default',
     'title.groups' => 'Connecting Objects',
     'description' => '',
 ];

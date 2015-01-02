@@ -48,6 +48,8 @@
                     <form class="form-horizontal telenok-object-field-filter" onsubmit="return false;">
 						
 						<input type="hidden" name="multifield_search" value="1" />
+						<input type="hidden" name="typeId" value="{{$type->getKey()}}" />
+
                         @foreach($fieldsFilter->all() as $key => $field) 
 								
 							<div class="form-group {{$key < 2 || $userConfig->get('field-filter.' . $controller->getKey() . '.' . $field->id) ? '' : 'hidden'}}" id="{{$uniqueId}}-field-filter-{{$field->id}}">
@@ -104,7 +106,7 @@
                 @if (isset($sSearch))
                 oSearch: {"sSearch": "{{$sSearch}}"},
                 @endif
-				sAjaxSource : '{!! $controller->getRouterList(['typeId' => $type->getKey(), 'treeId' => 0]) !!}',
+				sAjaxSource : '{!! $controller->getRouterList(['typeId' => $type->getKey()]) !!}',
 				domId: presentation.getPresentationDomId() + "-grid-{{$gridId}}",
 				btnCreateUrl : '{!! $controller->getRouterCreate(['id' => $type->getKey()]) !!}',
 				btnListEditUrl : '{!! $controller->getRouterListEdit(['id' => $type->getKey()]) !!}',
@@ -133,6 +135,6 @@
             
             jQuery('#telenok-{{$controller->getPresentation()}}-presentation-grid-{{$gridId}}')
                 .dataTable()
-                .fnReloadAjax('{!! $controller->getRouterList(['treeId' => $type->getKey()]) !!}&' + (erase ? '' : jQuery.param($form.serializeArray())));
+                .fnReloadAjax('{!! $controller->getRouterList(['typeId' => $type->getKey()]) !!}&' + (erase ? '' : jQuery.param($form.serializeArray())));
         }
     </script>

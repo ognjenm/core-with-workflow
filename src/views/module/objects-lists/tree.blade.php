@@ -1,7 +1,7 @@
 @extends('core::presentation.tree-tab-object.tree')
 
 	@section('select_node') 
-		
+
         //data.inst.toggle_node(data.rslt.obj);
 
 		if (data.rslt.obj.data("module"))
@@ -20,6 +20,10 @@
 					param.addTree = false;
 
                     telenok.getPresentation(param.presentationModuleKey).callMe(param);
+
+					param.addTree = true;
+
+                    telenok.getPresentation(param.presentationModuleKey).setParam(param);
                 }
 
                 telenok.postCallingPresentation(moduleKey); 

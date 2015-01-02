@@ -35,6 +35,7 @@ ORYX.Plugins.ShapeRepository = {
         this._canAttach = undefined;
         this.shapeList = jQuery("ul.telenok-sidebar");
         this.registry = {};
+        this.dropNotAllowed = false;
 
         /*
          var panel = new Ext.tree.TreePanel({
@@ -64,11 +65,14 @@ ORYX.Plugins.ShapeRepository = {
         this.shapeList.disableSelection();
 
         var me = this; 
-
+        
         jQuery("li.stencil a", this.shapeList).draggable({
             helper: "clone",
             start: function(event, ui)
             {
+                jQuery(this).css("z-index", 10000);
+                
+                me.dropNotAllowed = false;
                 me._lastOverElement = false;
                 return true;
             },
@@ -257,6 +261,11 @@ ORYX.Plugins.ShapeRepository = {
          return
          }
          */
+        
+        if (this.dropNotAllowed == true)
+        {
+            return;
+        }
 
         // Check if there is a current Parent
         if (!this._currentParent) {
@@ -349,7 +358,6 @@ ORYX.Plugins.ShapeRepository = {
                 this.facade.setSelection(this.selection.without(this.shape));
                 this.facade.getCanvas().update();
                 this.facade.updateSelection();
-
             }
         });
 
@@ -368,8 +376,8 @@ ORYX.Plugins.ShapeRepository = {
 
         if (aShapes.length <= 0) {
             /*var pr = dragZone.getProxy();
-             pr.setStatus(pr.dropNotAllowed);
-             pr.sync();*/
+            pr.setStatus(pr.dropNotAllowed);
+            pr.sync();*/
 
             return false;
         }
@@ -464,6 +472,15 @@ ORYX.Plugins.ShapeRepository = {
                     //var pr = dragZone.getProxy();
                     //pr.setStatus(this._currentParent ? pr.dropAllowed : pr.dropNotAllowed);
                     //pr.sync();
+                    
+                    if (this._currentParent)
+                    {
+                        this.dropNotAllowed = false;
+                    }
+                    else
+                    {
+                        this.dropNotAllowed = true;
+                    }
 
                 }
             } else { //Edge

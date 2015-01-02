@@ -122,13 +122,13 @@
 				return this;
 			},
 			addTree: function() 
-			{
-				var key = 'telenok-presentation-' + this.presentationParam.key + '-tree';
-
+			{ 
 				if (!this.presentationParam.treeContent) 
 				{
 					return this;
 				}
+                
+				var key = 'telenok-presentation-' + this.presentationParam.key + '-tree'; 
 
 				jQuery('div.telenok-presentation-tabs', '#' + this.getPresentationDomId()).removeClass('col-xs-12').addClass('col-xs-9');
 				jQuery('div.telenok-presentation-tree', '#' + this.getPresentationDomId()).show();
@@ -412,6 +412,8 @@
 			{ 
 				this.setParam(param);  
 
+                console.log(param);
+
 				param.addSkeleton===false ? '' : this.showSkeleton();
 				param.addTree===false  ? '' : this.addTree(); 
                 param.addTab===false  ? '' : this.addTabByURL(param); 
@@ -426,7 +428,7 @@
 		@section('addPresentation')
 		telenok.addPresentation('{{$presentationModuleKey}}', new presentationTreeTab{{$uniqueId}}());
 		@show
-	}
+	} 
 	
 </script> 
  

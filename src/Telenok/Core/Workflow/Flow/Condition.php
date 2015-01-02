@@ -12,12 +12,20 @@ class Condition extends \Telenok\Core\Interfaces\Workflow\Edge {
 		{
 			$this->stencilConnectionRules = [
 						[
-							'role' => 'conditionflow',
+							'role' => 'controlflow',
 							'connects' => [
 								[
-									'from' => 'parallelOut',
-									'to' => ['activity']
+									'from' => 'sequence_start',
+									'to' => ['sequence_end', 'activity', 'gateway']
 								],
+								[
+									'from' => 'activity',
+									'to' => ['sequence_end', 'activity', 'gateway']
+								],
+								[
+									'from' => 'gateway',
+									'to' => ['sequence_end', 'activity', 'gateway']
+								]
 							]
 						]
 			];
@@ -57,7 +65,7 @@ class Condition extends \Telenok\Core\Interfaces\Workflow\Edge {
                                 </g>
                             </svg>',
 				'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/flow/" . $this->getKey() . ".png",
-				'roles' => ["controlflow", "conditionflow"],
+				'roles' => ["controlflow"],
 				'properties' => []
 			];
 		}
