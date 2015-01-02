@@ -535,11 +535,15 @@ abstract class Controller extends Module implements IPresentation {
         if ($model->treeForming())
         {
             $query->withTreeAttr();
-            $query->where(function($query) use ($model, $id)
+            
+            if ($id)
             {
-                $query->where('pivot_relation_m2m_tree.tree_pid', $id)
-                        ->orWhere($model->getTable() . '.id', $id);
-            });      
+                $query->where(function($query) use ($model, $id)
+                {
+                    $query->where('pivot_relation_m2m_tree.tree_pid', $id)
+                            ->orWhere($model->getTable() . '.id', $id);
+                });
+            }
         }
         else
         {

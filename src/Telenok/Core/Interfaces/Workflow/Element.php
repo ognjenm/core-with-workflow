@@ -9,14 +9,6 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     protected $linkOut = [];
     protected $linkIn = [];
 
-    protected $minIn = 0;
-    protected $minOut = 0;
-
-    protected $maxIn = 0;
-    protected $maxOut = 0;
-
-    protected $total = 2000000000;
-
     protected $id = '';
     protected $key = '';
     protected $package = '';
@@ -319,54 +311,6 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     public function setLinkIn($link)
     {
         $this->linkIn = $link;
-
-        return $this;
-    }
-
-    public function getMinIn()
-    {
-        return $this->minIn;
-    }
-
-    public function setMinIn($min)
-    {
-        $this->minIn = $min;
-
-        return $this;
-    }
-
-    public function getMinOut()
-    {
-        return $this->minOut;
-    }
-
-    public function setMinOut($min)
-    {
-        $this->minOut = $min;
-
-        return $this;
-    }
-
-    public function getMaxIn()
-    {
-        return $this->maxIn;
-    }
-
-    public function setMaxIn($min)
-    {
-        $this->maxIn = $max;
-
-        return $this;
-    }
-
-    public function getMaxOut()
-    {
-        return $this->maxOut;
-    }
-
-    public function setMaxOut($max)
-    {
-        $this->maxOut = $max;
 
         return $this;
     }

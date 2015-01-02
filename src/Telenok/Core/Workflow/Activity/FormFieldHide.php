@@ -4,14 +4,6 @@ namespace Telenok\Core\Workflow\Activity;
 
 class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
  
-    protected $minIn = 1;
-    protected $minOut = 0;
- 
-    protected $maxIn = 2000000000;
-    protected $maxOut = 0;
-   
-    protected $total = 1;
-
     protected $key = 'form-field-hide';
     protected $propertyView = 'core::workflow.form-field-hide.property';
     protected $routerPropertyContent = 'cmf.workflow.form-field-hide.property';

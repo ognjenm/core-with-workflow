@@ -195,7 +195,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                 'containmentRules' => [
                     [
                         "role" => "TelenokDiagram",
-                        "contains" => ["point", "activity"]
+                        "contains" => ["point", "activity", "gateway"]
                     ]
                 ],
                 'cardinalityRules' => [],
@@ -206,7 +206,16 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                         "baseMorphs" => [],
                         "preserveBounds" => false
                     ],
-
+                    [
+                        "role" => "gateway",
+                        "baseMorphs" => [],
+                        "preserveBounds" => false
+                    ],
+                    [
+                        "role" => "point",
+                        "baseMorphs" => [],
+                        "preserveBounds" => false
+                    ],
                 ],
                 'layoutRules' => [],
             ]

@@ -4,14 +4,6 @@ namespace Telenok\Core\Workflow\Activity;
 
 class ModelFieldUpdate extends \Telenok\Core\Interfaces\Workflow\Activity {
  
-    protected $minIn = 1;
-    protected $minOut = 0;
- 
-    protected $maxIn = 2000000000;
-    protected $maxOut = 0;
-   
-    protected $total = 1;
-
     protected $key = 'model-field-update';
     protected $propertyView = 'core::workflow.model-field-update.property';
     protected $routerPropertyContent = 'cmf.workflow.model-field-update.property';

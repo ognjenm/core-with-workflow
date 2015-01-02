@@ -4,14 +4,6 @@ namespace Telenok\Core\Workflow\Point\Start;
 
 class Form extends \Telenok\Core\Interfaces\Workflow\Point {
 
-    protected $minIn = 0;
-    protected $minOut = 1;
-
-    protected $maxIn = 0;
-    protected $maxOut = 1;
-
-    protected $total = 1;
-
     protected $key = 'point-form';
     protected $propertyView = 'core::workflow.point-form.property';
     protected $routerPropertyContent = 'cmf.workflow.point-form.property';

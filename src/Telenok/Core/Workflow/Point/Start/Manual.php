@@ -4,13 +4,6 @@ namespace Telenok\Core\Workflow\Point\Start;
 
 class Manual extends \Telenok\Core\Interfaces\Workflow\Point {
 
-    protected $minIn = 0;
-    protected $minOut = 1;
-
-    protected $maxIn = 0;
-    protected $maxOut = 1;
-
-    protected $total = 1;
     protected $manualStart = true;
 
     protected $key = 'point-manual';
@@ -37,6 +30,13 @@ class Manual extends \Telenok\Core\Interfaces\Workflow\Point {
                 [
                     'role' => 'controlflow',
                     'maximum' => 0
+                ]
+            ],
+            'outgoingEdges' => 
+            [
+                [
+                    'role' => 'controlflow',
+                    'maximum' => 1
                 ]
             ]
         ]

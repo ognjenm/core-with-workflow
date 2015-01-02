@@ -4,14 +4,6 @@ namespace Telenok\Core\Workflow\Point\End;
 
 class End extends \Telenok\Core\Interfaces\Workflow\Point {
  
-    protected $minIn = 1;
-    protected $minOut = 0;
- 
-    protected $maxIn = 2000000000;
-    protected $maxOut = 0;
-   
-    protected $total = 1;
-
     protected $key = 'point-end';
     protected $propertyView = 'core::workflow.point-end.property';
     protected $routerPropertyContent = 'cmf.workflow.point-end.property';

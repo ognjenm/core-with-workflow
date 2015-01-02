@@ -12,7 +12,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     protected $presentation = 'tree-tab-object';
     protected $presentationFormFieldListView = 'core::module.objects-field.form-field-list';
-	
+
     public function getTreeListTypes()
     {  
         $types = \App\Model\Telenok\Object\Type::whereIn('code', ['folder', 'object_type'])->active()->get()->fetch('id')->toArray();

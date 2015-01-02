@@ -235,7 +235,7 @@
 					setTimeout(function() 
                     {   
                         oryxEditor.importJSON(importJSONFromTop(), true);  
-                    }, 10000);
+                    }, 1000);
 				}
 			}
             

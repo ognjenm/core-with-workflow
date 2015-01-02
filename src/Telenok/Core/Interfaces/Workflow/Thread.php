@@ -132,7 +132,7 @@ class Thread {
                 ], false, false);
         }
 
-        $i = 10;
+        $i = 20;
         $sleepAll = [];
         $diff = ['some-value'];
 

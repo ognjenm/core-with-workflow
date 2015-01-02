@@ -4,21 +4,29 @@ namespace Telenok\Core\Workflow\Gateway;
 
 class Parallel extends \Telenok\Core\Interfaces\Workflow\Activity {
  
-    protected $minIn = 1;
-    protected $minOut = 2;
- 
-    protected $maxIn = 1;
-    protected $maxOut = 2000000000;
-   
-    protected $total = 2000000000;
-
     protected $key = 'parallel';
     protected $propertyView = 'core::workflow.parallel.property';
-    protected $routerPropertyContent = 'cmf.workflow.parallel.property';
 
     protected $stencilCardinalityRules = [
             [
-                'role' => 'activity',
+                'role' => 'parallelOut',
+                'minimumOccurrence' => 0,
+                'maximumOccurrence' => 10000,
+                'outgoingEdges' => [
+                    [
+                        'role' => 'conditionflow',
+                        'maximum' => 2000000000
+                    ]
+                ],
+                'incomingEdges' => [
+                    [
+                        'role' => 'controlflow',
+                        'maximum' => 1
+                    ]
+                ]
+            ],
+            [
+                'role' => 'parallelIn',
                 'minimumOccurrence' => 0,
                 'maximumOccurrence' => 10000,
                 'outgoingEdges' => [
@@ -113,7 +121,7 @@ class Parallel extends \Telenok\Core\Interfaces\Workflow\Activity {
                                         </svg>',
 						'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/gateway/" . $this->getKey() . ".png",
 						'defaultAlign' => "east",
-						'roles' => ["parallel"],
+						'roles' => ["parallelIn", "parallelOut", "gateway"],
 						'propertyPackages' => ["bgcolor", "bordercolor"],
                         'properties' => [
                             [
