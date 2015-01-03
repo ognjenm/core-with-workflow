@@ -4,9 +4,9 @@ namespace Telenok\Core\Workflow\Flow;
 
 class ConditionDefault extends \Telenok\Core\Interfaces\Workflow\Edge {
 
-	protected $key = 'condition-default-flow';
+	protected $key = 'flow-condition-default';
 
-	public function getStencilConnectionRules()
+    public function getStencilConnectionRules()
 	{
 		if (empty($this->stencilConnectionRules))
 		{

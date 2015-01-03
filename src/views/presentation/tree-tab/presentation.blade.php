@@ -412,8 +412,6 @@
 			{ 
 				this.setParam(param);  
 
-                console.log(param);
-
 				param.addSkeleton===false ? '' : this.showSkeleton();
 				param.addTree===false  ? '' : this.addTree(); 
                 param.addTab===false  ? '' : this.addTabByURL(param); 
@@ -424,11 +422,10 @@
 				return this;
 			}
 		});
-	
+
 		@section('addPresentation')
 		telenok.addPresentation('{{$presentationModuleKey}}', new presentationTreeTab{{$uniqueId}}());
 		@show
 	} 
-	
+
 </script> 
- 

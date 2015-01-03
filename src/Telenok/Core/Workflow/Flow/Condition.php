@@ -4,7 +4,7 @@ namespace Telenok\Core\Workflow\Flow;
 
 class Condition extends \Telenok\Core\Interfaces\Workflow\Edge {
 
-	protected $key = 'condition-flow';
+	protected $key = 'flow-condition';
 
 	public function getStencilConnectionRules()
 	{

@@ -5,8 +5,6 @@ namespace Telenok\Core\Workflow\Point\End;
 class End extends \Telenok\Core\Interfaces\Workflow\Point {
  
     protected $key = 'point-end';
-    protected $propertyView = 'core::workflow.point-end.property';
-    protected $routerPropertyContent = 'cmf.workflow.point-end.property';
 
     protected $stencilCardinalityRules = [
             [

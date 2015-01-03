@@ -77,7 +77,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function getPropertyView()
     {
-        return $this->propertyView;
+        return $this->propertyView?:'core::workflow.' . $this->getKey() . '.property';
     }
 
     public function setPropertyView($param = '')
@@ -134,19 +134,19 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function propertyContent()
     {
-		if (!($sessionDiagramId = \Input::get('sessionDiagramId')) || !($stencilId = \Input::get('stencilId')))
+		if (!($sessionDiagramId = $this->getRequest()->input('sessionDiagramId')) || !($stencilId = $this->getRequest()->input('stencilId')))
 		{
 			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
 		}
-        
-        $element = app('telenok.config')->getWorkflowElement()->get($this->getRequest()->input('key'));
 
+        $element = app('telenok.config')->getWorkflowElement()->get($this->getRequest()->input('key'));
+        
 		return ['tabContent' => view($element->getPropertyView(), [
 				'controller' => $element,
 				'uniqueId' => str_random(),
 				'sessionDiagramId' => $sessionDiagramId,
 				'stencilId' => $stencilId,
-				'property' => $element->getPropertyValue(\Input::all()),
+				'property' => $element->getPropertyValue($this->getRequest()->all()),
 			])->render()];
 	}
 
@@ -214,7 +214,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function setInput($param = [])
     {
-        $this->input = $param instanceof \Illuminate\Support\Collection ? $param : \Illuminate\Support\Collection::make($param);
+        $this->input = \Illuminate\Support\Collection::make($param);
 
         return $this;
     }
@@ -236,11 +236,14 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     {
         foreach($this->getLinkOut() as $out)
         {
+            $n = $this->getThread()->getActionByResourceId($out);
+            $this->getThread()->addProcessingStencil($n);
+            /*
             // through flows aka connectors to activities --->
             foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $f)
             {
                 $this->getThread()->addProcessingStencil($f);
-            } 
+            }*/
         }
 
         $this->getThread()->removeProcessingStencil($this->getId());

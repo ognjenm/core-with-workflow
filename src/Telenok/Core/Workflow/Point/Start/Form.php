@@ -5,8 +5,6 @@ namespace Telenok\Core\Workflow\Point\Start;
 class Form extends \Telenok\Core\Interfaces\Workflow\Point {
 
     protected $key = 'point-form';
-    protected $propertyView = 'core::workflow.point-form.property';
-    protected $routerPropertyContent = 'cmf.workflow.point-form.property';
 
 	public function isEventForMe(\Telenok\Core\Workflow\Event $event)
     { 

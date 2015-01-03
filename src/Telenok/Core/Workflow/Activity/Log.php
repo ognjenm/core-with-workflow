@@ -2,71 +2,21 @@
 
 namespace Telenok\Core\Workflow\Activity;
 
-class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
- 
-    protected $key = 'activity-form-field-hide';
+class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
 
-    protected $stencilCardinalityRules = [
-            [
-                'role' => 'activity',
-                'minimumOccurrence' => 0,
-                'maximumOccurrence' => 10000,
-                'outgoingEdges' => [
-                    [
-                        'role' => 'controlflow',
-                        'maximum' => 10000
-                    ]
-                ],
-                'incomingEdges' => [
-                    [
-                        'role' => 'controlflow',
-                        'maximum' => 10000
-                    ]
-                ]
-            ]
-    ];
+    protected $key = 'activity-log';
 
-    
-    public function getPropertyValue($data = [])
-    {
-        $stencilData = $this->getStencilData($data);
-        
-		$commonProperty = parent::getPropertyValue($data); 
-        
-        $commonProperty->put('model_type', $stencilData->get('model_type', 0));
-        $commonProperty->put('field_list', $stencilData->get('field_list', []));
-        
-        return $commonProperty;
-	}
-    
     public function process($log = [])
     {
-        $paramProcess = $this->getInput();
-        $typeId = $paramProcess->get('model_type');
-        $fields = $paramProcess->get('field_list', []);
+        //\Log::info('Business Process: Event: ' . $this->getProcess()->getEvent()->getEventCode() . '. Process action with code "activity-log"');
 
-        $eventResource = $this->getThread()->getEventResource();
+        //var_dump($this->getId());
+
+        //\Telenok\Core\Interfaces\Workflow\Thread::make();
         
-        if ($eventResource && $eventResource->get('type') && $eventResource->get('type')->getKey() == $typeId)
-        {
-            $newFields = $eventResource->get('fields')->reject(function($f) use ($fields)
-            {
-                if (in_array($f->getKey(), $fields, true))
-                {
-                    return true;
-                }
-                else 
-                {
-                    return false;
-                }
-            });
-            
-            $eventResource->put('fields', $newFields);
-        }
-
         return parent::process($log);
     }
-
+	
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))

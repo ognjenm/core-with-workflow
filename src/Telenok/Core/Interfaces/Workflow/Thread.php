@@ -57,6 +57,8 @@ class Thread {
 
     public function getActionByResourceId($resourceId = '')
     {
+        dd( $resourceId, $this->getActions()->toArray() );
+        
         return $this->getActions()->get($resourceId);
     }
     
@@ -124,6 +126,8 @@ class Thread {
 
         $activeElements = $this->getActiveElements();
 
+        dd($activeElements);
+        
         if (!$activeElements->isEmpty())
         {
             $this->getModelThread()->storeOrUpdate([
@@ -295,5 +299,3 @@ class Thread {
 		return new static;
 	}
 }
-
-?>

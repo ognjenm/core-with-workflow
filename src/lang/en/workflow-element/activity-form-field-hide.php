@@ -9,5 +9,3 @@ return [
     'property.field.list' => 'Form fields to hide', 
 
 ];
-
-?>

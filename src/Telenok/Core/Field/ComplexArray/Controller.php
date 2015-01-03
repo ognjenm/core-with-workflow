@@ -49,7 +49,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			$value_ = $value === null ? [] : $value;
 		}
 
-		$model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE));
+		$model->setAttribute($key, json_encode($value_, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 
     public function getFilterQuery($field = null, $model = null, $query = null, $name = null, $value = null) 

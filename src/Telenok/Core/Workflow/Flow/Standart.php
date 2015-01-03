@@ -4,9 +4,9 @@ namespace Telenok\Core\Workflow\Flow;
 
 class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
 
-	protected $key = 'standart-flow';
+	protected $key = 'flow-standart';
 
-	public function getStencilConnectionRules()
+    public function getStencilConnectionRules()
 	{
 		if (empty($this->stencilConnectionRules))
 		{
@@ -44,6 +44,8 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
 				'title' => $this->LL('title'),
 				'groups' => [$this->LL('title.groups')],
 				'description' => $this->LL('description'),
+                'urlPropertyContent' => $this->getRouterPropertyContent(),
+                'urlStoreProperty' => $this->getRouterStoreProperty(),
 				'view' => '<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 							<svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -62,7 +64,15 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
                             </svg>',
 				'icon' => \Config::get('app.url') . "/packages/telenok/core/js/oryx/stencilset/telenok/icons/flow/" . $this->getKey() . ".png",
 				'roles' => ["controlflow"],
-				'properties' => []
+                'properties' => [
+                    [
+                        "id" => "title",
+                        "type" => "string",
+                        "value" => $this->LL('title'),
+                        "refToView" => "title",
+                    ],
+                ],
+
 			];
 		}
 

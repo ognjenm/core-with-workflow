@@ -4,8 +4,7 @@ namespace Telenok\Core\Workflow\Gateway;
 
 class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
  
-    protected $key = 'standart-gateway';
-    protected $propertyView = 'core::workflow.standart-gateway.property';
+    protected $key = 'gateway-standart';
 
     protected $stencilCardinalityRules = [
             [
@@ -27,32 +26,18 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
             ]
     ];
 
-    public function process($log = [])
+    protected function setNext()
     {
-        $paramProcess = $this->getInput();
-        $typeId = $paramProcess->get('model_type');
-        $fields = $paramProcess->get('field_list', []);
-
-        $eventResource = $this->getThread()->getEventResource();
-        
-        if ($eventResource && $eventResource->get('type') && $eventResource->get('type')->getKey() == $typeId)
+        foreach($this->getLinkOut() as $out)
         {
-            $newFields = $eventResource->get('fields')->reject(function($f) use ($fields)
+            // through flows aka connectors to activities --->
+            foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $f)
             {
-                if (in_array($f->getKey(), $fields, true))
-                {
-                    return true;
-                }
-                else 
-                {
-                    return false;
-                }
-            });
-            
-            $eventResource->put('fields', $newFields);
+                $this->getThread()->addProcessingStencil($f);
+            } 
         }
 
-        return parent::process($log);
+        $this->getThread()->removeProcessingStencil($this->getId());
     }
 
     public function getStencilConfig()

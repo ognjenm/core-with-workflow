@@ -20,11 +20,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 		$shapes = array_get($process, 'diagram.childShapes', false);
 
 		$startEventObject = [];
-		
+
 		if ($shapes)
 		{
 			$elements = $this->getElements();
-			
+
 			foreach($shapes as $shape)
 			{
 				$id = array_get($shape, 'stencil.id', false);
@@ -98,7 +98,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                     }
                 }
             }
-            
+
 			\Session::put('diagram.' . $sessionDiagramId . '.stencil', $stencilData);
 			\Session::put('diagram.' . $sessionDiagramId . '.diagram', $diagramData);
 		}
