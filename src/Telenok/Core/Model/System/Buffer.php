@@ -47,4 +47,3 @@ class Buffer extends \Illuminate\Database\Eloquent\Model {
 	}
 }
 
-?>

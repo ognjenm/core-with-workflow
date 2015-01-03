@@ -19,15 +19,19 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
                 ]
             ]
     ];
-	
+
     public function setNext()
     {
+        $currentToken = $this->getToken();
+
         $this->getThread()->setProcessingStageFinished();
-        $this->getThread()->removeProcessingStencil($this->getId());
+        $this->getThread()
+                ->removeProcessingToken($currentToken['tokenId'])
+                ->removeActiveToken($currentToken['tokenId']);
 
         return $this;
     }
-    
+
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))
@@ -87,7 +91,4 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
 
         return $this->stencilConfig;
     }
-
 }
-
-?>

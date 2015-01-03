@@ -163,4 +163,3 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 }
 
-?>

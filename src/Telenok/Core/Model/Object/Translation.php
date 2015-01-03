@@ -10,4 +10,3 @@ class Translation extends \Illuminate\Database\Eloquent\Model {
 
 }
 
-?>

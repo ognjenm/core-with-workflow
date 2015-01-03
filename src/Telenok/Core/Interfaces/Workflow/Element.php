@@ -11,6 +11,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     protected $id = '';
     protected $key = '';
+    protected $token;
     protected $package = '';
     protected $languageDirectory = 'workflow-element';
 
@@ -179,12 +180,12 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function storeProperty()
     {
-		if (!($sessionDiagramId = trim(\Input::get('sessionDiagramId'))) || !($stencilId = trim(\Input::get('stencilId'))))
+		if (!($sessionDiagramId = trim($this->getRequest()->input('sessionDiagramId'))) || !($stencilId = trim($this->getRequest()->input('stencilId'))))
 		{
 			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
 		}
 
-		$stencilData = \Input::get('stencil', []);
+		$stencilData = $this->getRequest()->input('stencil', []);
 
 		\Session::put('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, $stencilData);
 
@@ -206,7 +207,13 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
         return $this;
     }
-
+    
+	/**
+	 * Get thread instance.
+	 *
+	 * @return \Telenok\Core\Workflow\Thread
+	 *
+	 */
     public function getThread()
     {
         return $this->thread;
@@ -234,19 +241,32 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     protected function setNext()
     {
-        foreach($this->getLinkOut() as $out)
+        $currentToken = $this->getToken();
+
+        if ($this->getLinkOut()->count() == 1)
         {
-            $n = $this->getThread()->getActionByResourceId($out);
-            $this->getThread()->addProcessingStencil($n);
-            /*
-            // through flows aka connectors to activities --->
-            foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $f)
+            $link = $this->getThread()->getActionByResourceId($this->getLinkOut()->first())->getLinkOut()->first(); 
+
+            $newToken = $this->getThread()->generateToken($currentToken['sourceElementId'], $link);
+
+            $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
+        }
+        else
+        {
+            foreach($this->getLinkOut() as $order => $out)
             {
-                $this->getThread()->addProcessingStencil($f);
-            }*/
+                foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $link)
+                {
+                    $newToken = $this->getThread()->generateToken($this->getId(), $link, $currentToken['tokenId'], $order, $this->getLinkOut()->count());
+
+                    $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
+                }
+            }
         }
 
-        $this->getThread()->removeProcessingStencil($this->getId());
+        $this->getThread()
+                ->removeProcessingToken($currentToken['tokenId'])
+                ->removeActiveToken($currentToken['tokenId']);
     }
 
     public function log($data = [])
@@ -349,5 +369,17 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     public function getRequest()
     {
         return $this->request;
+    } 
+    
+    public function setToken($param = [])
+    {
+        $this->token = \Illuminate\Support\Collection::make($param);
+        
+        return $this;
     }
+
+    public function getToken()
+    {
+        return $this->token;
+    } 
 }

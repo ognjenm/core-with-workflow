@@ -25,7 +25,6 @@ class ModelFieldUpdate extends \Telenok\Core\Interfaces\Workflow\Activity {
                 ]
             ]
     ];
-
     
     public function getPropertyValue($data = [])
     {

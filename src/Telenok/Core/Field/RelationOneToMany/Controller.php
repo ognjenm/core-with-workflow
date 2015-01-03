@@ -298,4 +298,3 @@ class Controller extends \Telenok\Core\Interfaces\Field\Relation\Controller {
 
 }
 
-?>

@@ -10,4 +10,3 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     protected $modelListClass = '\App\Model\Telenok\Web\Domain';
 }
 
-?>

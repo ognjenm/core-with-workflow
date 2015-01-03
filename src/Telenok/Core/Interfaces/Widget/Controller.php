@@ -338,4 +338,3 @@ abstract class Controller {
     }
 }
 
-?>

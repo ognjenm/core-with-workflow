@@ -10,4 +10,3 @@ class Controller extends \Telenok\Core\Interfaces\Module\Group\Controller {
     
 }
 
-?>

@@ -4,8 +4,6 @@ namespace Telenok\Core\Workflow\Point\Start;
 
 class Manual extends \Telenok\Core\Interfaces\Workflow\Point {
 
-    protected $manualStart = true;
-
     protected $key = 'point-manual';
 
 	public function isEventForMe(\Telenok\Core\Workflow\Event $event)

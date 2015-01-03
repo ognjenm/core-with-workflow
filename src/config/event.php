@@ -198,4 +198,3 @@ Event::listen('illuminate.query', function($sql, $bindings, $time) {
 
 
 
-?>

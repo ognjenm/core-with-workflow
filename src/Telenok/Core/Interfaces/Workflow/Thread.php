@@ -57,8 +57,6 @@ class Thread {
 
     public function getActionByResourceId($resourceId = '')
     {
-        dd( $resourceId, $this->getActions()->toArray() );
-        
         return $this->getActions()->get($resourceId);
     }
     
@@ -67,9 +65,9 @@ class Thread {
         return $this->actions;
     }
     
-    public function getActiveElements()
+    public function getProcessedActiveTokens()
     {
-        $activeElements = \Illuminate\Support\Collection::make([]); 
+         $activeTokens = \Illuminate\Support\Collection::make([]); 
 
         foreach($this->getActions() as $action)
         {
@@ -77,19 +75,29 @@ class Thread {
 			{
                 if ($action instanceof \Telenok\Core\Interfaces\Workflow\Point && $action->isEventForMe($this->getEvent()))
                 {
-                    $activeElements->push($action->getId());
+                    $token = \Illuminate\Support\Collection::make($action->fire());
+
+                    $this->addActiveToken($token->get('tokenId'));
+
+                    $activeTokens->put($token->get('tokenId'), $token->toArray());
                 }
 			}
 			else if ($this->getModelThread()->processing_stage == 'processing')
 			{
-                $activeElements = $this->getModelThread()->processing_stencil;
+                $aTokens = $this->getModelThread()->processing_token_active;
+                $tokens = $this->getModelThread()->processing_token;
+
+                foreach ($aTokens->all() as $tokenId)
+                {
+                    $activeTokens->put($tokenId, $tokens->get($tokenId));
+                }
 			} 
 			else if ($this->getModelThread()->processing_stage == 'finished')
 			{
 			} 
         }
 
-        return $activeElements;
+        return $activeTokens;
     }
 
     public function setProcessingStageFinished()
@@ -124,45 +132,52 @@ class Thread {
 
         $this->initActions();
 
-        $activeElements = $this->getActiveElements();
+        $activeTokens = $this->getProcessedActiveTokens();
 
-        dd($activeElements);
-        
-        if (!$activeElements->isEmpty())
+        // save at init
+        if (!$activeTokens->isEmpty())
         {
             $this->getModelThread()->storeOrUpdate([
-                    'processing_stencil' => $activeElements,
+                    'processing_token' => $activeTokens,
                     'processing_stage' => 'processing',
                 ], false, false);
         }
 
-        $i = 20;
-        $sleepAll = [];
-        $diff = ['some-value'];
+        $i = 40;
+        $sleep = [];
+        $isSleepAll = false;
 
-        while(!$this->isProcessingStageFinished() && !empty($diff) && $i--)
+        while(!$this->isProcessingStageFinished() && !$isSleepAll && $i--)
         { 
-            foreach($activeElements as $id)
+            foreach($activeTokens->all() as $token)
             {
-                $el = $this->getActionByResourceId($id);
-                
+                $token = \Illuminate\Support\Collection::make($token);
+
+                $el = $this->getActionByResourceId($token->get('currentElementId'));
+
+                $el->setToken($token);
                 $el->process();
 
                 if ($el->isProcessSleeping())
                 {
-                    $sleepAll[] = $id;
+                    $sleep[] = $token->get('currentElementId');
+                }
+                
+                if ($this->isProcessingStageFinished())
+                {
+                    break;
                 }
             }
 
             // all actions sleeping
-            $diff = array_diff($activeElements->all(), $sleepAll);
+            $isSleepAll = $activeTokens->reject(function($i) use ($sleep) { return in_array($i['currentElementId'], $sleep); })->isEmpty();
 
-            $activeElements = $this->getActiveElements();
+            $activeTokens = $this->getProcessedActiveTokens();
         }
 
         return $this;
     }
-    
+
     public function getEventResource()
     {
         if ($this->getEvent())
@@ -212,29 +227,75 @@ class Thread {
         return $this;
     }
 
-    public function addProcessingStencil($resourceId = '')
+    public function addProcessingToken($token)
     {
-        $list = $this->getModelThread()->processing_stencil;
+        $list = $this->getModelThread()->processing_token;
 
-        $list->push($resourceId);
+        $token = \Illuminate\Support\Collection::make($token);
+        
+        $list->put($token->get('tokenId'), $token->toArray());
 
-        $this->getModelThread()->processing_stencil = $list;
+        $this->getModelThread()->processing_token = $list;
 
         $this->getModelThread()->save();
 
         return $this;
     }    
 
-    public function removeProcessingStencil($resourceId = '')
+    public function removeProcessingToken($tokenId = '')
     {
-        $list = $this->getModelThread()->processing_stencil->reject(function($item) use ($resourceId) { return $item == $resourceId;});
+        $list = $this->getModelThread()->processing_token;
+        
+        /*
+         * Recursive remove token and all its child in depth
+         * 
+         */
+        $function = function(&$list, $id) use (&$function)
+        {
+            $list = $list->reject(function($item) use ($id) { return $item['tokenId'] == $id; });
+           
+            $newList = $list->filter(function($item) use ($id) { return $item['parentTokenId'] == $id; });
+           
+            foreach($newList->all() as $item)
+            {
+                $function($list, $item['tokenId']);
+            }
+        };
 
-        $this->getModelThread()->processing_stencil = $list;
+        $function($list, $tokenId);
+
+        $this->getModelThread()->processing_token = $list;
+
+        $this->getModelThread()->save();
+
+        return $this;
+    }
+
+    public function addActiveToken($tokenId)
+    {
+        $list = $this->getModelThread()->processing_token_active;
+
+        $list->push($tokenId);
+
+        $this->getModelThread()->processing_token_active = $list;
 
         $this->getModelThread()->save();
 
         return $this;
     }    
+
+    public function removeActiveToken($tokenId = '')
+    {
+        $list = $this->getModelThread()->processing_token_active;
+        
+        $list = $list->reject(function($item) use ($tokenId) { return $item == $tokenId; });
+
+        $this->getModelThread()->processing_token_active = $list;
+
+        $this->getModelThread()->save();
+
+        return $this;
+    }
 
     public function setProcessingStage($param)
     {
@@ -298,4 +359,16 @@ class Thread {
 	{
 		return new static;
 	}
+
+    public function generateToken($sourceElementId, $currentElementId, $parentTokenId = '', $tokenOrder = 1, $totalToken = 1, $tokenId = null)
+    {
+        return \Illuminate\Support\Collection::make([
+            'sourceElementId' => $sourceElementId,
+            'tokenId' => ($tokenId ?: str_random(32)),
+            'tokenOrder' => $tokenOrder,
+            'totalToken' => $totalToken,
+            'parentTokenId' => $parentTokenId,
+            'currentElementId' => $currentElementId,
+        ]);
+    }
 }

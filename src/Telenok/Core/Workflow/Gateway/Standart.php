@@ -3,7 +3,7 @@
 namespace Telenok\Core\Workflow\Gateway;
 
 class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
- 
+
     protected $key = 'gateway-standart';
 
     protected $stencilCardinalityRules = [
@@ -25,6 +25,17 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
                 ]
             ]
     ];
+
+    public function getPropertyValue($data = [])
+    {
+        $stencilData = $this->getStencilData($data);
+
+		$commonProperty = parent::getPropertyValue($data); 
+
+        $commonProperty->put('type', $stencilData->get('type', 'parallel'));
+
+        return $commonProperty;
+	}
 
     protected function setNext()
     {

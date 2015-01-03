@@ -21,4 +21,3 @@ interface IPresentation extends \Telenok\Core\Interfaces\Module\IModule {
     public function getContent();
 }
 
-?>

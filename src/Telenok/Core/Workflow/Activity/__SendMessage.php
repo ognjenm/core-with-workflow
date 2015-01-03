@@ -22,4 +22,3 @@ class SendMessage extends \Telenok\Core\Interfaces\Workflow\Activity {
     }
 }
 
-?>

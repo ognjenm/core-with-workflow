@@ -9,4 +9,3 @@ class Widget extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 }
 
-?>

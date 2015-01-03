@@ -23,4 +23,3 @@ class Group extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	}
 
 }
-?>

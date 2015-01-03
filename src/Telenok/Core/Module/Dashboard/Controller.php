@@ -10,4 +10,3 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\Simple\Controller
     protected $icon = 'fa fa-tachometer';
 }
 
-?>

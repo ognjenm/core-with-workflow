@@ -139,4 +139,3 @@ class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
 }
 
-?>

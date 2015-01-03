@@ -63,4 +63,3 @@ class Guard extends \Illuminate\Auth\Guard {
     }
 }
 
-?>

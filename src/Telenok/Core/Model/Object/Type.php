@@ -53,4 +53,3 @@ class Type extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 }
 
-?>

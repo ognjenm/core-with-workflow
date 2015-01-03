@@ -12,4 +12,3 @@ class FileCategory extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
         return $this->belongsToMany('\App\Model\Telenok\File\File', 'pivot_relation_m2m_category_file', 'category', 'category_file')->withTimestamps();
     } 
 }
-?>

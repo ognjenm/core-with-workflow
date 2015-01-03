@@ -90,10 +90,10 @@ class SeedWorkflowThreadTable extends Migration {
 
         (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
                 [
-                    'title' => ['ru' => 'Активные элементы', 'en' => 'Active elements'],
-                    'title_list' => ['ru' => 'Активные элементы', 'en' => 'Active elements'],
+                    'title' => ['ru' => 'Актуальные токены', 'en' => 'Actual tokens'],
+                    'title_list' => ['ru' => 'Актуальные токены', 'en' => 'Actual tokens'],
                     'key' => 'complex-array',
-                    'code' => 'processing_stencil',
+                    'code' => 'processing_token',
                     'active' => 1,
                     'field_object_type' => $modelTypeId,
                     'field_object_tab' => $tabMainId,
@@ -106,10 +106,10 @@ class SeedWorkflowThreadTable extends Migration {
 
         (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
                 [
-                    'title' => ['ru' => 'Состояние элементов', 'en' => 'State of elements'],
-                    'title_list' => ['ru' => 'Состояние элементов', 'en' => 'State of elements'],
+                    'title' => ['ru' => 'Активные токены', 'en' => 'Active tokens'],
+                    'title_list' => ['ru' => 'Активные токены', 'en' => 'Active tokens'],
                     'key' => 'complex-array',
-                    'code' => 'processing_stencil_state',
+                    'code' => 'processing_token_active',
                     'active' => 1,
                     'field_object_type' => $modelTypeId,
                     'field_object_tab' => $tabMainId,

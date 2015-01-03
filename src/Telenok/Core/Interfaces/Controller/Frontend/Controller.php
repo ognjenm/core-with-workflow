@@ -198,4 +198,3 @@ abstract class Controller extends \Illuminate\Routing\Controller {
 	}
 }
 
-?>

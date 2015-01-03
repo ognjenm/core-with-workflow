@@ -39,4 +39,3 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\Simple\Controller
     
 }
 
-?>

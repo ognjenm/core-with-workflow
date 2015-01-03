@@ -104,4 +104,3 @@ class ValidateField extends \Telenok\Core\Interfaces\Workflow\Activity {
     }
 }
 
-?>

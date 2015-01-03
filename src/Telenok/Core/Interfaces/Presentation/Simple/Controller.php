@@ -78,4 +78,3 @@ abstract class Controller extends Module implements IPresentation {
     }
 }
 
-?>

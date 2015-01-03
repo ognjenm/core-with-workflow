@@ -7,4 +7,3 @@ class ObjectTypeNotFound extends \Exception {
 }
 
 
-?>

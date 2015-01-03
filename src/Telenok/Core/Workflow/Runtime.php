@@ -17,4 +17,3 @@ class Runtime extends \Telenok\Core\Interfaces\Workflow\Runtime {
     
 }
 
-?>

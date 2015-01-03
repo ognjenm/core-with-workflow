@@ -22,4 +22,3 @@ class ChangeStatus extends \Telenok\Core\Interfaces\Workflow\Activity {
     }
 }
 
-?>

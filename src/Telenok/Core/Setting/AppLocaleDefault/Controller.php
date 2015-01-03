@@ -9,4 +9,3 @@ class Controller extends \Telenok\Core\Interfaces\Setting\Controller {
 
 }
 
-?>

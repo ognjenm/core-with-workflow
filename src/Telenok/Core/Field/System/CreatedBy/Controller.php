@@ -103,4 +103,3 @@ class Controller extends \Telenok\Core\Field\RelationOneToMany\Controller {
 
 }
 
-?>

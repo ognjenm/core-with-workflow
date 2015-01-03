@@ -57,4 +57,3 @@ class Sequence extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
     
     
 }
-?>

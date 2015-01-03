@@ -17,4 +17,3 @@ class FileMimeType extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
         return $this->hasMany('\App\Model\Telenok\User\User', 'avatar_user_file_mime_type');
     }
 }
-?>

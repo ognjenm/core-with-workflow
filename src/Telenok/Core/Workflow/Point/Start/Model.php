@@ -127,5 +127,3 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
         return $this->stencilConfig;
     }
 }
-
-?>

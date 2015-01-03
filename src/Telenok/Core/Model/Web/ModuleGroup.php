@@ -9,4 +9,3 @@ class ModuleGroup extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 
 }
 
-?>

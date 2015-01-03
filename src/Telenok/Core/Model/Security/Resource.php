@@ -13,4 +13,3 @@ class Resource extends \Telenok\Core\Interfaces\Eloquent\Object\Model {
 	} 
 }
 
-?>

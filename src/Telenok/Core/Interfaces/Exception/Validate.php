@@ -21,4 +21,3 @@ class Validate extends \Exception {
 }
 
 
-?>

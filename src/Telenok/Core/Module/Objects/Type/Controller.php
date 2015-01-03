@@ -523,4 +523,3 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
 }
 
-?>
