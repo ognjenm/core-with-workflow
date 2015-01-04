@@ -52,10 +52,10 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[event_list]">{{$controller->LL('property.type')}} <span class="red">*</span></label>
                                 <div class="col-sm-3">
-                                    <select class="chosen-select" data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[event_list][]">
-                                        <option value="or" @if (in_array('parallel', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.1')}}</option>
-                                        <option value="and" @if (in_array('inclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.2')}}</option>
-                                        <option value="and" @if (in_array('exclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.3')}}</option>
+                                    <select class="chosen-select" data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[type][]">
+                                        <option value="parallel" @if (in_array('parallel', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.1')}}</option>
+                                        <option value="inclusive" @if (in_array('inclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.2')}}</option>
+                                        <option value="exclusive" @if (in_array('exclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.3')}}</option>
                                     </select> 
                                 </div>
                             </div>

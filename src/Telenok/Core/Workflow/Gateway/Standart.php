@@ -39,16 +39,28 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
 
     protected function setNext()
     {
-        foreach($this->getLinkOut() as $out)
-        {
-            // through flows aka connectors to activities --->
-            foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $f)
-            {
-                $this->getThread()->addProcessingStencil($f);
-            } 
-        }
+        $paramProcess = $this->getInput();
+        $type = $paramProcess->get('type');
 
-        $this->getThread()->removeProcessingStencil($this->getId());
+        $token = $this->getToken();
+
+        $log = $this->getThread()->getLogResourceId($this->getId());
+
+        $tokenId = $token->get('');
+        //$parentTokenId = ;
+        
+        if ($type == 'exclusive')
+        {
+            
+        }        
+        elseif ($type == 'inclusive')
+        {
+            
+        }
+        else // type is parallel or not defined
+        {
+            return parent::setNext();
+        }
     }
 
     public function getStencilConfig()

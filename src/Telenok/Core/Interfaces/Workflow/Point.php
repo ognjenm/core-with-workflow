@@ -16,7 +16,7 @@ class Point extends \Telenok\Core\Interfaces\Workflow\Element {
     
     public function fire()
     {
-        return $this->getThread()->generateToken($this->getId(), $this->getId());
+        return $this->getThread()->createToken($this->getId(), $this->getId());
     }
 
 }

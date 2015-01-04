@@ -28,13 +28,6 @@ class Manual extends \Telenok\Core\Interfaces\Workflow\Point {
                     'maximum' => 0
                 ]
             ],
-            'outgoingEdges' => 
-            [
-                [
-                    'role' => 'controlflow',
-                    'maximum' => 1
-                ]
-            ]
         ]
     ];
 	

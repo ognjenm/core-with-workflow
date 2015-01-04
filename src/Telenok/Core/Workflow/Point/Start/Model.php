@@ -45,7 +45,7 @@ class Model extends \Telenok\Core\Interfaces\Workflow\Point {
             ]
         ]
     ];
-	
+
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))

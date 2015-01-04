@@ -227,13 +227,50 @@ class Thread {
         return $this;
     }
 
+    public function getLogResourceId($resourceId = '')
+    {
+        $log = $this->getModelThread()->processing_stencil_log;
+
+        if (strlen($resourceId))
+        {
+            return \Illuminate\Support\Collection::make($log->get($resourceId));
+        }
+        else
+        {
+            throw new Exception('Error! Wrong "resourceId" parameter');
+        }
+    }
+
+    public function getLog()
+    {
+        return $this->getModelThread()->processing_stencil_log;
+    }
+
+    public function getLogResourceId($resourceId = '')
+    {
+        $log = $this->getModelThread()->processing_stencil_log;
+
+        if (strlen($resourceId))
+        {
+            return \Illuminate\Support\Collection::make($log->get($resourceId));
+        }
+        else
+        {
+            return $log;
+        }
+    }
+    
+	/**
+	 * Get token linked to element
+	 *
+	 * @return \Telenok\Core\Interfaces\Workflow\Token
+	 *
+	 */
     public function addProcessingToken($token)
     {
         $list = $this->getModelThread()->processing_token;
 
-        $token = \Illuminate\Support\Collection::make($token);
-        
-        $list->put($token->get('tokenId'), $token->toArray());
+        $list->put($token->getto, $token->toArray());
 
         $this->getModelThread()->processing_token = $list;
 
@@ -287,7 +324,7 @@ class Thread {
     public function removeActiveToken($tokenId = '')
     {
         $list = $this->getModelThread()->processing_token_active;
-        
+
         $list = $list->reject(function($item) use ($tokenId) { return $item == $tokenId; });
 
         $this->getModelThread()->processing_token_active = $list;
@@ -305,11 +342,11 @@ class Thread {
 
         return $this;
     }
-    
+
     public function setModelThread(\Telenok\Core\Model\Workflow\Thread $param)
     {
         $this->modelThread = $param;
-        
+
         return $this;
     }
 
@@ -360,15 +397,13 @@ class Thread {
 		return new static;
 	}
 
-    public function generateToken($sourceElementId, $currentElementId, $parentTokenId = '', $tokenOrder = 1, $totalToken = 1, $tokenId = null)
+    public function createToken($sourceElementId, $currentElementId, $parentTokenId = '', $tokenOrder = 1, $totalToken = 1, $tokenId = null)
     {
-        return \Illuminate\Support\Collection::make([
-            'sourceElementId' => $sourceElementId,
-            'tokenId' => ($tokenId ?: str_random(32)),
-            'tokenOrder' => $tokenOrder,
-            'totalToken' => $totalToken,
-            'parentTokenId' => $parentTokenId,
-            'currentElementId' => $currentElementId,
-        ]);
+        return \Telenok\Core\Interfaces\Workflow\Token::make()->createToken($sourceElementId, $currentElementId, $parentTokenId, $tokenOrder, $totalToken, $tokenId);
+    }
+
+    public function createTokenFromArray($param)
+    {
+        return \Telenok\Core\Interfaces\Workflow\Token::make()->createTokenFromArray($param);
     }
 }

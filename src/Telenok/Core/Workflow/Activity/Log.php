@@ -10,7 +10,7 @@ class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
     {
         //\Log::info('Business Process: Event: ' . $this->getProcess()->getEvent()->getEventCode() . '. Process action with code "activity-log"');
 
-        //var_dump($this->getKey());
+        //var_dump($this->getId());
 
         //\Telenok\Core\Interfaces\Workflow\Thread::make();
         

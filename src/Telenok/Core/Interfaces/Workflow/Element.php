@@ -209,7 +209,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     }
     
 	/**
-	 * Get thread instance.
+	 * Get thread instance
 	 *
 	 * @return \Telenok\Core\Workflow\Thread
 	 *
@@ -233,6 +233,8 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function process($log = [])
     {
+        var_dump($this->getKey());
+        
         $this->log($log);
         $this->setNext();
 
@@ -245,28 +247,23 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
         if ($this->getLinkOut()->count() == 1)
         {
-            $link = $this->getThread()->getActionByResourceId($this->getLinkOut()->first())->getLinkOut()->first(); 
-
-            $newToken = $this->getThread()->generateToken($currentToken['sourceElementId'], $link);
+            $link = $this->getLinkOut()->first();
+            
+            $newToken = $this->getThread()->createToken($currentToken['sourceElementId'], $link);
 
             $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
         }
         else
         {
-            foreach($this->getLinkOut() as $order => $out)
+            foreach($this->getLinkOut() as $order => $link)
             {
-                foreach($this->getThread()->getActionByResourceId($out)->getLinkOut() as $link)
-                {
-                    $newToken = $this->getThread()->generateToken($this->getId(), $link, $currentToken['tokenId'], $order, $this->getLinkOut()->count());
+                $newToken = $this->getThread()->createToken($this->getId(), $link, $currentToken['tokenId'], $order, $this->getLinkOut()->count());
 
-                    $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
-                }
+                $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
             }
         }
 
-        $this->getThread()
-                ->removeProcessingToken($currentToken['tokenId'])
-                ->removeActiveToken($currentToken['tokenId']);
+        $this->getThread()->removeActiveToken($currentToken['tokenId']);
     }
 
     public function log($data = [])
@@ -274,6 +271,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         $data['data'] = array_get($data, 'data', []); 
         $data['result'] = array_get($data, 'result', 'done'); 
         $data['log'] = array_get($data, 'log', 'success'); 
+        $data['token'] = $this->getToken()->toArray(); 
         
         $this->getThread()->addLog($this, $data);
 
@@ -378,6 +376,12 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         return $this;
     }
 
+	/**
+	 * Get token linked to element
+	 *
+	 * @return \Illuminate\Support\Collection
+	 *
+	 */
     public function getToken()
     {
         return $this->token;

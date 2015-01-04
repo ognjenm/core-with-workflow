@@ -26,7 +26,7 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
 
         $this->getThread()->setProcessingStageFinished();
         $this->getThread()
-                ->removeProcessingToken($currentToken['tokenId'])
+                //->removeProcessingToken($currentToken['tokenId'])
                 ->removeActiveToken($currentToken['tokenId']);
 
         return $this;
