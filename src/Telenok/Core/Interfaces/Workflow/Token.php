@@ -2,23 +2,21 @@
 
 namespace Telenok\Core\Interfaces\Workflow;
 
-class Token implements \Illuminate\Contracts\Support\Arrayable {
+class Token implements \Illuminate\Contracts\Support\Arrayable, \Illuminate\Contracts\Support\Jsonable, \JsonSerializable {
 
     protected $sourceElementId;
     protected $currentElementId;
-    protected $tokenId;
-    protected $parentTokenId;
+    protected $currentTokenId;
+    protected $sourceTokenId;
     protected $tokenOrder;
     protected $totalToken;
 
-    public function createToken($sourceElementId, $currentElementId, $parentTokenId = '', $tokenOrder = 1, $totalToken = 1, $tokenId = null)
+    public function createToken($sourceElementId, $currentElementId, $sourceTokenId = '', $currentTokenId = null)
     {
         $this->setSourceElementId($sourceElementId)
+                ->setSourceTokenId($sourceTokenId)
                 ->setCurrentElementId($currentElementId)
-                ->setParentTokenId($parentTokenId)
-                ->setTokenOrder($tokenOrder)
-                ->setTotalToken($totalToken)
-                ->setTokenId($tokenId ?: str_random(32));
+                ->setCurrentTokenId($currentTokenId ?: str_random(32));
 
         return $this;
     }
@@ -26,28 +24,14 @@ class Token implements \Illuminate\Contracts\Support\Arrayable {
     public function createTokenFromArray($param)
     {
         $sourceElementId = array_get($param, 'sourceElementId');
+        $sourceTokenId = array_get($param, 'sourceTokenId');
         $currentElementId = array_get($param, 'currentElementId');
-        $parentTokenId = array_get($param, 'parentTokenId');
-        $tokenOrder = array_get($param, 'tokenOrder', 1);
-        $totalToken = array_get($param, 'totalToken', 1);
-        $tokenId = array_get($param, 'tokenId', str_random(32));
-
-        if (!$sourceElementId)
-        {
-            throw new \Exception('Please, define "sourceElementId" value');
-        }
-
-        if (!$currentElementId)
-        {
-            throw new \Exception('Please, define "currentElementId" value');
-        }
+        $currentTokenId = array_get($param, 'currentTokenId', str_random(32));
 
         $this->setSourceElementId($sourceElementId)
+                ->setSourceTokenId($sourceTokenId)
                 ->setCurrentElementId($currentElementId)
-                ->setParentTokenId($parentTokenId)
-                ->setTokenOrder($tokenOrder)
-                ->setTotalToken($totalToken)
-                ->setTokenId($tokenId);
+                ->setCurrentTokenId($currentTokenId ?: str_random(32));
 
         return $this;
     }
@@ -56,14 +40,43 @@ class Token implements \Illuminate\Contracts\Support\Arrayable {
     {
         return [
             'sourceElementId' => $this->getSourceElementId(),
+            'sourceTokenId' => $this->getSourceTokenId(),
             'currentElementId' => $this->getCurrentElementId(),
-            'tokenId' => $this->getTokenId(),
-            'parentTokenId' => $this->getParentTokenId(),
-            'tokenOrder' => $this->getTokenOrder(),
-            'totalToken' => $this->getTotalToken(),
+            'currentTokenId' => $this->getCurrentTokenId(),
         ];
     }
-    
+
+	/**
+	 * Get the collection of items as JSON.
+	 *
+	 * @param  int  $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->toArray(), $options);
+	}
+
+	/**
+	 * Convert the collection to its string representation.
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->toJson();
+	}
+
+	/**
+	 * Convert the object into something JSON serializable.
+	 *
+	 * @return array
+	 */
+	public function jsonSerialize()
+	{
+		return $this->toArray();
+	}
+
     public function getSourceElementId()
     {
         return $this->sourceElementId;
@@ -88,50 +101,26 @@ class Token implements \Illuminate\Contracts\Support\Arrayable {
         return $this;
     }
 
-    public function getTokenId()
+    public function getCurrentTokenId()
     {
-        return $this->tokenId;
+        return $this->currentTokenId;
     }
 
-    public function setTokenId($param)
+    public function setCurrentTokenId($param)
     {
-        $this->tokenId = $param;
+        $this->currentTokenId = $param;
         
         return $this;
     }
 
-    public function getParentTokenId()
+    public function getSourceTokenId()
     {
-        return $this->parentTokenId;
+        return $this->sourceTokenId;
     }
 
-    public function setParentTokenId($param)
+    public function setSourceTokenId($param)
     {
-        $this->parentTokenId = $param;
-        
-        return $this;
-    }
-
-    public function getTokenOrder()
-    {
-        return $this->tokenOrder;
-    }
-
-    public function setTokenOrder($param)
-    {
-        $this->tokenOrder = $param;
-        
-        return $this;
-    }
-    
-    public function getTotalToken()
-    {
-        return $this->totalToken;
-    }
-    
-    public function setTotalToken($param)
-    {
-        $this->totalToken = $param;
+        $this->sourceTokenId = $param;
         
         return $this;
     }

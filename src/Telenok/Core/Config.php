@@ -12,7 +12,7 @@ class Config {
 		{
 			try
 			{
-				$collection = \Illuminate\Support\Collection::make([]);
+				$collection = \Illuminate\Support\Collection::make();
 
 				\Event::fire('telenok.acl.filter.resource.add', $collection);
 
@@ -102,7 +102,7 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				\Event::fire('telenok.workflow.event.add', $list);
 			}
@@ -213,7 +213,7 @@ class Config {
 		{
 			try
 			{
-				$collection = \Illuminate\Support\Collection::make([]);
+				$collection = \Illuminate\Support\Collection::make();
 
 				\Event::fire('telenok.objects-field.view.model.add', $collection);
 
@@ -245,7 +245,7 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				\App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
 				{
@@ -271,7 +271,7 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				\App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
 				{
@@ -297,7 +297,7 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				\App\Model\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
 				{
@@ -323,7 +323,7 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make([]);
+				$list = \Illuminate\Support\Collection::make();
 
 				\App\Model\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
 				{

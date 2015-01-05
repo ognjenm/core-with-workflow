@@ -291,7 +291,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         $stencilData = $processCollection->get('stencil', []);
         $diagramData = array_get($processCollection->all(), 'diagram.childShapes', []);
 
-        $actions = \Illuminate\Support\Collection::make([]);
+        $actions = \Illuminate\Support\Collection::make();
 
         foreach($diagramData as $action)
         {

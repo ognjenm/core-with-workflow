@@ -13,103 +13,6 @@ class Thread {
     protected $result = [];
     protected $event;
 
-    public function initActions()
-    {
-        if ($this->getModelThread())
-        {
-            $elements = app('telenok.config')->getWorkflowElement();
-            $this->actions = \Illuminate\Support\Collection::make([]);
-
-            foreach(array_get($this->getModelThread()->original_process->all(), 'diagram.childShapes', []) as $action)
-            {
-                $this->actions->put($action['resourceId'], $elements->get($action['stencil']['id'])
-                                                            ->make()
-                                                            ->setThread($this)
-                                                            ->setInput(array_get($this->getModelThread()->original_process->all(), 'stencil.' . $action['permanentId'], []))
-                                                            ->setStencil($action));
-            }
-        }
-        else
-        {
-            throw new \Exception('Cant init actions');
-        }
-    }
-    
-    public function getParameterByCode($code = '')
-    {
-        $parameterModel = $this->getModelProcess()->parameter()->get()->keyBy($code)->get($code);
-        
-        if ($parameterModel)
-        {
-            $parameterValue = $this->getModelThread()->parameter->get($code);
-        }
-        
-        if ($parameterModel)
-        {
-            $controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key);
-            
-            if ($controller)
-            {
-                $controller->getValue($this, $parameterModel, $parameterValue);
-            }
-        }
-    }
-
-    public function getActionByResourceId($resourceId = '')
-    {
-        return $this->getActions()->get($resourceId);
-    }
-    
-    public function getActions()
-    {
-        return $this->actions;
-    }
-    
-    public function getProcessedActiveTokens()
-    {
-         $activeTokens = \Illuminate\Support\Collection::make([]); 
-
-        foreach($this->getActions() as $action)
-        {
-			if ($this->getModelThread()->processing_stage == 'started')
-			{
-                if ($action instanceof \Telenok\Core\Interfaces\Workflow\Point && $action->isEventForMe($this->getEvent()))
-                {
-                    $token = \Illuminate\Support\Collection::make($action->fire());
-
-                    $this->addActiveToken($token->get('tokenId'));
-
-                    $activeTokens->put($token->get('tokenId'), $token->toArray());
-                }
-			}
-			else if ($this->getModelThread()->processing_stage == 'processing')
-			{
-                $aTokens = $this->getModelThread()->processing_token_active;
-                $tokens = $this->getModelThread()->processing_token;
-
-                foreach ($aTokens->all() as $tokenId)
-                {
-                    $activeTokens->put($tokenId, $tokens->get($tokenId));
-                }
-			} 
-			else if ($this->getModelThread()->processing_stage == 'finished')
-			{
-			} 
-        }
-
-        return $activeTokens;
-    }
-
-    public function setProcessingStageFinished()
-    {
-        $this->setProcessingStage('finished');
-    }
-
-    public function isProcessingStageFinished()
-    {
-        return $this->getModelThread()->processing_stage == 'finished';
-    }
-
     public function run(\Telenok\Core\Interfaces\Workflow\Runtime $runtime)
     {
         if (!$this->getModelThread() && !$this->getModelProcess())
@@ -151,16 +54,14 @@ class Thread {
         { 
             foreach($activeTokens->all() as $token)
             {
-                $token = \Illuminate\Support\Collection::make($token);
-
-                $el = $this->getActionByResourceId($token->get('currentElementId'));
+                $el = $this->getActionByResourceId($token->getCurrentElementId());
 
                 $el->setToken($token);
                 $el->process();
 
                 if ($el->isProcessSleeping())
                 {
-                    $sleep[] = $token->get('currentElementId');
+                    $sleep[] = $token->getCurrentElementId();
                 }
                 
                 if ($this->isProcessingStageFinished())
@@ -170,12 +71,111 @@ class Thread {
             }
 
             // all actions sleeping
-            $isSleepAll = $activeTokens->reject(function($i) use ($sleep) { return in_array($i['currentElementId'], $sleep); })->isEmpty();
+            $isSleepAll = $activeTokens->reject(function($i) use ($sleep) { return in_array($i->getCurrentElementId(), $sleep); })->isEmpty();
 
             $activeTokens = $this->getProcessedActiveTokens();
         }
 
         return $this;
+    }
+
+    public function initActions()
+    {
+        if ($modelThread = $this->getModelThread())
+        {
+            $elements = app('telenok.config')->getWorkflowElement();
+            $this->actions = \Illuminate\Support\Collection::make();
+            $shapes = array_get($modelThread->original_process->all(), 'diagram.childShapes', []);
+            
+            foreach($shapes as $action)
+            {
+                $this->actions->put($action['resourceId'], $elements->get($action['stencil']['id'])
+                                                            ->make()
+                                                            ->setThread($this)
+                                                            ->setInput(array_get($modelThread->original_process->all(), 'stencil.' . $action['permanentId'], []))
+                                                            ->setStencil($action, $shapes));
+            }
+        }
+        else
+        {
+            throw new \Exception('Cant init actions');
+        }
+    }
+    
+    public function getParameterByCode($code = '')
+    {
+        $parameterModel = $this->getModelProcess()->parameter()->get()->keyBy($code)->get($code);
+        
+        if ($parameterModel)
+        {
+            $parameterValue = $this->getModelThread()->parameter->get($code);
+        }
+        
+        if ($parameterModel)
+        {
+            $controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key);
+            
+            if ($controller)
+            {
+                $controller->getValue($this, $parameterModel, $parameterValue);
+            }
+        }
+    }
+
+    public function getActionByResourceId($resourceId = '')
+    {
+        return $this->getActions()->get($resourceId);
+    }
+
+    public function getActions()
+    {
+        return $this->actions;
+    }
+
+    public function getProcessedActiveTokens()
+    {
+        $activeTokens = \Illuminate\Support\Collection::make(); 
+        $modelThread = $this->getModelThread();
+
+        foreach($this->getActions() as $action)
+        {
+			if ($modelThread->processing_stage == 'started')
+			{
+                if ($action instanceof \Telenok\Core\Interfaces\Workflow\Point && $action->isEventForMe($this->getEvent()))
+                {
+                    $token = $this->createToken($action->getId(), $action->getId());
+
+                    $this->addActiveToken($token);
+
+                    $activeTokens->put($token->getCurrentTokenId(), $token);
+                }
+			}
+			else if ($modelThread->processing_stage == 'processing')
+			{
+                $aTokens = $modelThread->processing_token_active;
+                $tokens = $modelThread->processing_token;
+
+                foreach ($aTokens->all() as $tokenId)
+                {
+                    $activeTokens->put($tokenId, $this->createTokenFromArray($tokens->get($tokenId)));
+                }
+			} 
+			else if ($modelThread->processing_stage == 'finished')
+			{
+			} 
+        }
+
+        return $activeTokens;
+    }
+
+    public function setProcessingStageFinished()
+    {
+        $this->setProcessingStage('finished');
+    }
+
+    public function isProcessingStageFinished()
+    {
+        return $this->getModelThread()->processing_stage == 'finished';
     }
 
     public function getEventResource()
@@ -195,9 +195,11 @@ class Thread {
         }
     }
 
-    public function addLog($action, $data = [])
+    public function setLog($action, $data = [])
     {
-        $log = $this->getModelThread()->processing_stencil_log;
+        $modelThread = $this->getModelThread();
+        
+        $log = $modelThread->processing_stencil_log;
 
         $logStencil = $log->get($action->getId(), []);
 
@@ -220,9 +222,9 @@ class Thread {
 
         $log->put($action->getId(), $logStencil);
 
-        $this->getModelThread()->processing_stencil_log = $log;
+        $modelThread->processing_stencil_log = $log;
 
-        $this->getModelThread()->save();
+        $modelThread->save();
 
         return $this;
     }
@@ -245,43 +247,39 @@ class Thread {
     {
         return $this->getModelThread()->processing_stencil_log;
     }
-
-    public function getLogResourceId($resourceId = '')
-    {
-        $log = $this->getModelThread()->processing_stencil_log;
-
-        if (strlen($resourceId))
-        {
-            return \Illuminate\Support\Collection::make($log->get($resourceId));
-        }
-        else
-        {
-            return $log;
-        }
-    }
     
 	/**
 	 * Get token linked to element
 	 *
-	 * @return \Telenok\Core\Interfaces\Workflow\Token
+	 * @param \Telenok\Core\Interfaces\Workflow\Token $token
 	 *
 	 */
     public function addProcessingToken($token)
     {
-        $list = $this->getModelThread()->processing_token;
+        $modelThread = $this->getModelThread();
+        
+        $list = $modelThread->processing_token;
 
-        $list->put($token->getto, $token->toArray());
+        $list->put($token->getCurrentTokenId(), $token->toArray());
 
-        $this->getModelThread()->processing_token = $list;
+        $modelThread->processing_token = $list;
 
-        $this->getModelThread()->save();
+        $modelThread->save();
 
         return $this;
-    }    
+    }
 
-    public function removeProcessingToken($tokenId = '')
+	/**
+	 * Get token linked to element
+	 *
+	 * @param \Telenok\Core\Interfaces\Workflow\Token $token
+	 *
+	 */
+    public function removeProcessingToken11111111111111111111111111111111111111111111111($token)
     {
-        $list = $this->getModelThread()->processing_token;
+        $modelThread = $this->getModelThread();
+        
+        $list = $modelThread->processing_token;
         
         /*
          * Recursive remove token and all its child in depth
@@ -299,46 +297,64 @@ class Thread {
             }
         };
 
-        $function($list, $tokenId);
+        $function($list, $token->getCurrentTokenId());
 
-        $this->getModelThread()->processing_token = $list;
+        $modelThread->processing_token = $list;
 
-        $this->getModelThread()->save();
+        $modelThread->save();
 
         return $this;
     }
 
-    public function addActiveToken($tokenId)
+	/**
+	 * Get token linked to element
+	 *
+	 * @param \Telenok\Core\Interfaces\Workflow\Token $token
+	 *
+	 */
+    public function addActiveToken($token)
     {
-        $list = $this->getModelThread()->processing_token_active;
+        $modelThread = $this->getModelThread();
 
-        $list->push($tokenId);
+        $list = $modelThread->processing_token_active;
 
-        $this->getModelThread()->processing_token_active = $list;
+        $list->push($token->getCurrentTokenId());
 
-        $this->getModelThread()->save();
+        $modelThread->processing_token_active = $list;
+
+        $modelThread->save();
 
         return $this;
-    }    
+    }
 
-    public function removeActiveToken($tokenId = '')
+	/**
+	 * Get token linked to element
+	 *
+	 * @param \Telenok\Core\Interfaces\Workflow\Token $token
+	 *
+	 */
+    public function removeActiveToken($token)
     {
-        $list = $this->getModelThread()->processing_token_active;
+        $modelThread = $this->getModelThread();
 
-        $list = $list->reject(function($item) use ($tokenId) { return $item == $tokenId; });
+        $list = $modelThread->processing_token_active;
 
-        $this->getModelThread()->processing_token_active = $list;
+        $list = $list->reject(function($item) use ($token) { return $item == $token->getCurrentTokenId(); });
 
-        $this->getModelThread()->save();
+        $modelThread->processing_token_active = $list;
+
+        $modelThread->save();
 
         return $this;
     }
 
     public function setProcessingStage($param)
     {
-        $this->getModelThread()->processing_stage = $param;
+        $modelThread = $this->getModelThread();
 
-        $this->getModelThread()->save();
+        $modelThread->processing_stage = $param;
+
+        $modelThread->save();
 
         return $this;
     }
@@ -352,7 +368,24 @@ class Thread {
 
     public function getModelThread()
     {
+        if (!$this->modelThread)
+        {
+            return null;
+        }
+        else
+        {
+            $this->modelThread = \App\Model\Telenok\Workflow\Thread::findOrFail($this->modelThread->getKey());
+        }
+        
         return $this->modelThread;
+    }
+
+    /*
+     * @return \Illuminate\Support\Collection
+     */
+    public function getTokens()
+    {
+        return $this->getModelThread()->processing_token;
     }
 	
     public function setModelProcess(\App\Model\Telenok\Workflow\Process $param)
@@ -397,11 +430,23 @@ class Thread {
 		return new static;
 	}
 
-    public function createToken($sourceElementId, $currentElementId, $parentTokenId = '', $tokenOrder = 1, $totalToken = 1, $tokenId = null)
+	/**
+	 * Get token linked to element
+	 *
+	 * @return \Telenok\Core\Interfaces\Workflow\Token
+	 *
+	 */
+    public function createToken($sourceElementId, $currentElementId, $sourceTokenId = '', $currentTokenId = null)
     {
-        return \Telenok\Core\Interfaces\Workflow\Token::make()->createToken($sourceElementId, $currentElementId, $parentTokenId, $tokenOrder, $totalToken, $tokenId);
+        return \Telenok\Core\Interfaces\Workflow\Token::make()->createToken($sourceElementId, $currentElementId, $sourceTokenId, $currentTokenId);
     }
 
+	/**
+	 * Get token linked to element
+	 *
+	 * @return \Telenok\Core\Interfaces\Workflow\Token
+	 *
+	 */
     public function createTokenFromArray($param)
     {
         return \Telenok\Core\Interfaces\Workflow\Token::make()->createTokenFromArray($param);

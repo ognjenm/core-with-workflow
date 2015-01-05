@@ -31,7 +31,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function __construct()
     {
-        $this->input = \Illuminate\Support\Collection::make([]);
+        $this->input = \Illuminate\Support\Collection::make();
     }
 
     public function make()
@@ -90,7 +90,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function getResourceFromLog($logData = [])
     {
-        return \Illuminate\Support\Collection::make([]);
+        return \Illuminate\Support\Collection::make();
     }
 
     public function getStencilData($data = [])
@@ -133,7 +133,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 		]);
 	}
 
-    public function propertyContent()
+    public function getPropertyContent()
     {
 		if (!($sessionDiagramId = $this->getRequest()->input('sessionDiagramId')) || !($stencilId = $this->getRequest()->input('stencilId')))
 		{
@@ -141,7 +141,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 		}
 
         $element = app('telenok.config')->getWorkflowElement()->get($this->getRequest()->input('key'));
-        
+
 		return ['tabContent' => view($element->getPropertyView(), [
 				'controller' => $element,
 				'uniqueId' => str_random(),
@@ -192,12 +192,19 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 		return $stencilData;
 	} 
 
-    public function setStencil($param = [])
+    public function setStencil($param = [], $shapes = [])
     {
         $this->action = $param;  
 
         $this->setId($param['resourceId'])->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
 
+        $in = \Illuminate\Support\Collection::make($shapes)
+                ->filter(function($i) { return $this->getId() == array_get($i, 'target.resourceId'); })
+                ->transform(function($i) { return array_get($i, 'target.resourceId'); })
+                ->values();
+              
+        $this->setLinkIn($in);
+        
         return $this;
     }
 
@@ -233,9 +240,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function process($log = [])
     {
-        var_dump($this->getKey());
-        
-        $this->log($log);
+        $this->setLog($log);
         $this->setNext();
 
         return $this;
@@ -247,33 +252,35 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
         if ($this->getLinkOut()->count() == 1)
         {
-            $link = $this->getLinkOut()->first();
-            
-            $newToken = $this->getThread()->createToken($currentToken['sourceElementId'], $link);
+            $nextId = $this->getLinkOut()->first();
 
-            $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
+            $newToken = $this->getThread()->createToken($currentToken->getSourceElementId(), $nextId, $currentToken->getCurrentTokenId());
+
+            $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken); 
         }
         else
         {
-            foreach($this->getLinkOut() as $order => $link)
+            foreach($this->getLinkOut() as $order => $nextId)
             {
-                $newToken = $this->getThread()->createToken($this->getId(), $link, $currentToken['tokenId'], $order, $this->getLinkOut()->count());
+                $newToken = $this->getThread()->createToken($this->getId(), $nextId, $currentToken->getCurrentTokenId());
 
-                $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken['tokenId']);
+                $this->getThread()->addProcessingToken($newToken)->addActiveToken($newToken);
             }
         }
 
-        $this->getThread()->removeActiveToken($currentToken['tokenId']);
+        $this->getThread()->removeActiveToken($currentToken);
     }
 
-    public function log($data = [])
+    public function setLog($data = [])
     {
+        var_dump($this->getKey());
+        
         $data['data'] = array_get($data, 'data', []); 
         $data['result'] = array_get($data, 'result', 'done'); 
         $data['log'] = array_get($data, 'log', 'success'); 
         $data['token'] = $this->getToken()->toArray(); 
         
-        $this->getThread()->addLog($this, $data);
+        $this->getThread()->setLog($this, $data);
 
         return $this;
     }
@@ -281,11 +288,6 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     public function isProcessSleeping()
     {
         return false;
-    }
-    
-    public function isProcessFinished()
-    {
-        return true;
     }
 
     public function getId()
@@ -312,6 +314,9 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         return $this;
     }
 
+    /*
+     * @return \Illuminate\Support\Collection
+     */
     public function getLinkOut()
     {
         return $this->linkOut;
@@ -324,6 +329,9 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         return $this;
     }
 
+    /*
+     * @return \Illuminate\Support\Collection
+     */
     public function getLinkIn()
     {
         return $this->linkIn;
@@ -364,14 +372,23 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         return $this;
     }
 
+    /*
+     * @return \Illuminate\Http\Request
+     */
     public function getRequest()
     {
         return $this->request;
-    } 
-    
-    public function setToken($param = [])
+    }
+
+	/**
+	 * Get token linked to element
+	 *
+	 * @param \Telenok\Core\Interfaces\Workflow\Token $token
+	 *
+	 */
+    public function setToken($token)
     {
-        $this->token = \Illuminate\Support\Collection::make($param);
+        $this->token = $token;
         
         return $this;
     }
@@ -379,7 +396,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 	/**
 	 * Get token linked to element
 	 *
-	 * @return \Illuminate\Support\Collection
+	 * @return \Telenok\Core\Interfaces\Workflow\Token
 	 *
 	 */
     public function getToken()

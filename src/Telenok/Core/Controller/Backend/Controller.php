@@ -78,7 +78,7 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 	public function getContent()
 	{
-		$listModuleMenuLeft = \Illuminate\Support\Collection::make([]);
+		$listModuleMenuLeft = \Illuminate\Support\Collection::make();
 		\Event::fire('telenok.module.menu.left', $listModuleMenuLeft);
 
 		$config = app('telenok.config');
@@ -134,9 +134,9 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 		$setArray['listModuleGroup'] = $listModuleGroup;
 
 
-		$listModuleMenuTop = \Illuminate\Support\Collection::make([]);
+		$listModuleMenuTop = \Illuminate\Support\Collection::make();
 
-		$listModuleMenuTopCollection = \Illuminate\Support\Collection::make([]);
+		$listModuleMenuTopCollection = \Illuminate\Support\Collection::make();
 		
 		\Event::fire('telenok.module.menu.top', $listModuleMenuTopCollection);
 

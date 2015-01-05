@@ -5,16 +5,25 @@ namespace Telenok\Core\Workflow\Activity;
 class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
 
     protected $key = 'activity-log';
+    protected $iter = 0;
 
     public function process($log = [])
     {
         //\Log::info('Business Process: Event: ' . $this->getProcess()->getEvent()->getEventCode() . '. Process action with code "activity-log"');
 
-        //var_dump($this->getId());
+        var_dump($this->iter);
 
         //\Telenok\Core\Interfaces\Workflow\Thread::make();
-        
-        return parent::process($log);
+        if ($this->iter++ < 5)
+        {
+            $this->setLog($log);
+            
+            return $this;
+        }
+        else
+        {
+            return parent::process($log);
+        }
     }
 	
     public function getStencilConfig()

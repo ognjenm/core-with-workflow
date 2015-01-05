@@ -181,7 +181,7 @@ class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
             foreach ($items->slice(0, $this->displayLength, true) as $k => $item)
             {
-                $put = \Illuminate\Support\Collection::make([]); 
+                $put = \Illuminate\Support\Collection::make(); 
 
                 foreach ($model->getFieldList() as $field)
                 { 

@@ -60,7 +60,7 @@ class Controller extends \App\Http\Controllers\Module\Objects\Lists\Controller {
 
 	public function getListPage()
 	{
-		$return = \Illuminate\Support\Collection::make([]);
+		$return = \Illuminate\Support\Collection::make();
 
 		$query = \App\Model\Telenok\Web\Page::query();
 

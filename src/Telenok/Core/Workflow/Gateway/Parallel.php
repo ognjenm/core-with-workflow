@@ -2,9 +2,9 @@
 
 namespace Telenok\Core\Workflow\Gateway;
 
-class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
+class Parallel extends \Telenok\Core\Interfaces\Workflow\Activity {
 
-    protected $key = 'gateway-standart';
+    protected $key = 'gateway-parallel';
 
     protected $stencilCardinalityRules = [
             [
@@ -37,30 +37,47 @@ class Standart extends \Telenok\Core\Interfaces\Workflow\Activity {
         return $commonProperty;
 	}
 
-    protected function setNext()
+    public function process($log = [])
     {
-        $paramProcess = $this->getInput();
-        $type = $paramProcess->get('type');
-
-        $token = $this->getToken();
-
-        $log = $this->getThread()->getLogResourceId($this->getId());
-
-        $tokenId = $token->get('');
-        //$parentTokenId = ;
-        
-        if ($type == 'exclusive')
+        if ($this->getLinkIn()->count() == 1)
         {
-            
-        }        
-        elseif ($type == 'inclusive')
-        {
-            
+            return parent::process($log);
         }
-        else // type is parallel or not defined
+        else if ($this->getLinkIn()->count() > 1)
         {
-            return parent::setNext();
+            $token = $this->getToken();
+
+            $logLast = $this->getThread()->getLogResourceId($this->getId())->last();
+
+            // first time here or after erasing
+            if (!$logLast || array_get($logLast, 'data.erased'))
+            {
+                $log['data']['processedIds'] = [$token->getSourceElementId()];
+                $log['data']['erased'] = 0;
+            }
+            else
+            {
+                $processedIds = $log['data']['processedIds'];
+
+                if (!in_array($token->getSourceElementId(), $processedIds))
+                {
+                    $log['data']['processedIds'][] = $token->getSourceElementId();
+                }
+
+                if (count($log['data']['processedIds']) == $this->getLinkIn()->count())
+                {
+                    $log['data']['erased'] = 1;
+
+                    return parent::process($log);
+                }
+                else
+                {
+                    $this->setLog($log);
+                }
+            }
         }
+
+        return $this;
     }
 
     public function getStencilConfig()

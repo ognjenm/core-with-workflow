@@ -12,7 +12,7 @@ class Event {
     public function __construct(\Telenok\Core\Interfaces\Workflow\Runtime $runtime = null)
     {
         $this->runtime = $runtime;
-        $this->input = \Illuminate\Support\Collection::make([]);
+        $this->input = \Illuminate\Support\Collection::make();
     }
 
     public function setRuntime($param = null)

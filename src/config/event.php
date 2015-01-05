@@ -87,7 +87,10 @@
 	$list->push('Telenok\Core\Workflow\Activity\FormFieldHide');
 	$list->push('Telenok\Core\Workflow\Activity\ModelFieldUpdate');
 	$list->push('Telenok\Core\Workflow\Activity\Log');
-	$list->push('Telenok\Core\Workflow\Gateway\Standart');
+	$list->push('Telenok\Core\Workflow\Gateway\Parallel');
+	$list->push('Telenok\Core\Workflow\Gateway\Exclusive');
+	$list->push('Telenok\Core\Workflow\Gateway\Inclusive');
+	$list->push('Telenok\Core\Workflow\Gateway\Complex');
     //$list->push('Telenok\Core\Workflow\Activity\ValidateField');
 	//$list->push('Telenok\Core\Workflow\Activity\SendMessage');
     //$list->push('Telenok\Core\Workflow\Activity\Log');

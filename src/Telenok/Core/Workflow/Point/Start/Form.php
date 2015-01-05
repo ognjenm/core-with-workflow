@@ -17,7 +17,7 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
                 && (empty($modelIds) || (!empty($modelIds) && in_array($event->getResource()->get('model')->getKey(), $modelIds, true)));
     }
 
-    public function log($data = [])
+    public function setLog($data = [])
     {
         $eventResource = $this->getThread()->getEvent()->getResource();
         
@@ -36,7 +36,7 @@ class Form extends \Telenok\Core\Interfaces\Workflow\Point {
             $data['data']['fields'] = $eventResource->get('fields')->modelKeys();
         }
 
-        return parent::log($data);
+        return parent::setLog($data);
     }
 
     public function getResourceFromLog($log = [])
