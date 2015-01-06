@@ -260,7 +260,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         }
         else
         {
-            foreach($this->getLinkOut() as $order => $nextId)
+            foreach($this->getLinkOut() as $nextId)
             {
                 $newToken = $this->getThread()->createToken($this->getId(), $nextId, $currentToken->getCurrentTokenId());
 
@@ -351,7 +351,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
             throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" havnt any connections.');
         }
         
-        if (!$this instanceof \Telenok\Core\Interfaces\Workflow\Edge)
+        if (!$this instanceof \Telenok\Core\Interfaces\Workflow\Flow)
         {
             foreach($this->getLinkOut()->all() as $out)
             {

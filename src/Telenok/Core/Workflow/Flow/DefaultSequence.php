@@ -2,9 +2,19 @@
 
 namespace Telenok\Core\Workflow\Flow;
 
-class ConditionDefault extends \Telenok\Core\Interfaces\Workflow\Edge {
+class DefaultSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 
-	protected $key = 'flow-condition-default';
+	protected $key = 'sequence-default';
+
+    public function process($log = [])
+    {
+        if ($this->canGoNext())
+        {
+            return parent::process($log);
+        }
+
+        return $this;
+    }
 
     public function getStencilConnectionRules()
 	{

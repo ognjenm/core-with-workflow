@@ -2,9 +2,9 @@
 
 namespace Telenok\Core\Workflow\Flow;
 
-class Standart extends \Telenok\Core\Interfaces\Workflow\Edge {
+class UncontrolledSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 
-	protected $key = 'flow-standart';
+	protected $key = 'sequence-uncontrolled';
 
     public function getStencilConnectionRules()
 	{

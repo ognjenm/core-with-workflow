@@ -37,31 +37,11 @@ class Inclusive extends \Telenok\Core\Interfaces\Workflow\Activity {
         return $commonProperty;
 	}
 
-    public function process11111111111111111111111111111111111111111111111111111111111111($log = [])
+    public function process($log = [])
     {
-        $token = $this->getToken();
-        
-        if ($this->getLinkOut()->count() == 1)
+        if ($this->canGoNext())
         {
-            $this->setLog($log);
-            $this->setNext();
-        }
-        else if ($this->getLinkOut()->count() > 1)
-        {
-            $log = $this->getThread()->getLogResourceId($this->getId());
-
-            $tokenId = $token->getCurrentTokenId();
-            $parentTokenId = $token->getParentTokenId();
-            $totalToken = $token->getTotalToken();
-
-            $dataParentToken = \Illuminate\Support\Collection::make();
-
-            foreach($log->filter() as $l)
-            {
-
-            }
-
-            $data = $log->get('data', []);
+            return parent::process($log);
         }
 
         return $this;
