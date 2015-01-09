@@ -25,7 +25,6 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
                 ]
             ]
     ];
-
     
     public function getPropertyValue($data = [])
     {
@@ -41,9 +40,9 @@ class FormFieldHide extends \Telenok\Core\Interfaces\Workflow\Activity {
     
     public function process($log = [])
     {
-        $paramProcess = $this->getInput();
-        $typeId = $paramProcess->get('model_type');
-        $fields = $paramProcess->get('field_list', []);
+        $paramElement = $this->getInput();
+        $typeId = $paramElement->get('model_type');
+        $fields = $paramElement->get('field_list', []);
 
         $eventResource = $this->getThread()->getEventResource();
         

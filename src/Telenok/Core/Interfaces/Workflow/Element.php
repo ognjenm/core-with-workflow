@@ -95,20 +95,20 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function getStencilData($data = [])
     {
-		$sessionDiagramId = array_get($data, 'sessionDiagramId');
+		$sessionProcessId = array_get($data, 'sessionProcessId');
 		$stencilId = array_get($data, 'stencilId');
-		$diagramId = array_get($data, 'diagramId');
+		$processId = array_get($data, 'processId');
 
-		$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, []);
+		$stencilData = \Session::get('diagram.' . $sessionProcessId . '.stenciltemporary.' . $stencilId, []);
 
 		if (empty($stencilData))
 		{
-			$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stencil.' . $stencilId, []);
+			$stencilData = \Session::get('diagram.' . $sessionProcessId . '.stencil.' . $stencilId, []);
 		}
 
 		if (empty($stencilData))
 		{
-            $model = \App\Model\Telenok\Workflow\Process::find($diagramId);
+            $model = \App\Model\Telenok\Workflow\Process::find($processId);
 
             if ($model)
             {
@@ -135,18 +135,22 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function getPropertyContent()
     {
-		if (!($sessionDiagramId = $this->getRequest()->input('sessionDiagramId')) || !($stencilId = $this->getRequest()->input('stencilId')))
+		if (!($sessionProcessId = $this->getRequest()->input('sessionProcessId')) || !($stencilId = $this->getRequest()->input('stencilId')))
 		{
-			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
+			throw new \Exception('Please, define "sessionProcessId" and "stencilId" _GET parameters');
 		}
 
         $element = app('telenok.config')->getWorkflowElement()->get($this->getRequest()->input('key'));
 
+        $processId = $this->getRequest()->input('processId');
+        
 		return ['tabContent' => view($element->getPropertyView(), [
 				'controller' => $element,
 				'uniqueId' => str_random(),
-				'sessionDiagramId' => $sessionDiagramId,
+				'sessionProcessId' => $sessionProcessId,
 				'stencilId' => $stencilId,
+				'processId' => $processId,
+                'model' => \App\Model\Telenok\Workflow\Process::find($processId),
 				'property' => $element->getPropertyValue($this->getRequest()->all()),
 			])->render()];
 	}
@@ -180,14 +184,14 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function storeProperty()
     {
-		if (!($sessionDiagramId = trim($this->getRequest()->input('sessionDiagramId'))) || !($stencilId = trim($this->getRequest()->input('stencilId'))))
+		if (!($sessionProcessId = trim($this->getRequest()->input('sessionProcessId'))) || !($stencilId = trim($this->getRequest()->input('stencilId'))))
 		{
-			throw new \Exception('Please, define "sessionDiagramId" and "stencilId" _GET parameters');
+			throw new \Exception('Please, define "sessionProcessId" and "stencilId" _GET parameters');
 		}
 
 		$stencilData = $this->getRequest()->input('stencil', []);
 
-		\Session::put('diagram.' . $sessionDiagramId . '.stenciltemporary.' . $stencilId, $stencilData);
+		\Session::put('diagram.' . $sessionProcessId . '.stenciltemporary.' . $stencilId, $stencilData);
 
 		return $stencilData;
 	} 

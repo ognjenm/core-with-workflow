@@ -220,10 +220,13 @@ div.widget-header.widget-header-green { background: linear-gradient(to bottom, #
 
 
 
-.modal-dialog {
+body.telenok-backend .modal-dialog {
     width: 1000px; 
 }
 
+body.telenok-backend .modal-backdrop {
+  position: fixed !important;
+}
 
 body.telenok-backend .chosen-container-multi .chosen-choices li.search-field input[type="text"] {
     height: 28px;
@@ -293,3 +296,4 @@ div.DTTT_collection_background {
     background: none !important;
     z-index: 2001;
 }
+

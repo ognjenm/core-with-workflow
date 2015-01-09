@@ -57,11 +57,11 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 		$clear = $this->getRequest()->input('clear', false);
 		$clearOnly = $this->getRequest()->input('clearOnly', false);
 		$diagramData = json_decode($this->getRequest()->input('diagram', ''), true);
-		$sessionDiagramId = $this->getRequest()->input('sessionDiagramId');
+		$sessionProcessId = $this->getRequest()->input('sessionProcessId');
 
 		if ($clear || $clearOnly)
 		{
-			\Session::forget('diagram.' . $sessionDiagramId . '.stenciltemporary');
+			\Session::forget('diagram.' . $sessionProcessId . '.stenciltemporary');
 			
 			if ($clearOnly)
 			{
@@ -71,9 +71,9 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
 		if (!$clearOnly)
 		{
-			$stencilTemporaryData = \Session::get('diagram.' . $sessionDiagramId . '.stenciltemporary', []);
+			$stencilTemporaryData = \Session::get('diagram.' . $sessionProcessId . '.stenciltemporary', []);
              
-			$stencilData = \Session::get('diagram.' . $sessionDiagramId . '.stencil', []);
+			$stencilData = \Session::get('diagram.' . $sessionProcessId . '.stencil', []);
             
 			if (!empty($stencilTemporaryData))
 			{
@@ -99,8 +99,8 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                 }
             }
 
-			\Session::put('diagram.' . $sessionDiagramId . '.stencil', $stencilData);
-			\Session::put('diagram.' . $sessionDiagramId . '.diagram', $diagramData);
+			\Session::put('diagram.' . $sessionProcessId . '.stencil', $stencilData);
+			\Session::put('diagram.' . $sessionProcessId . '.diagram', $diagramData);
 		}
 
 		return ['stencil' => $stencilData, 'diagram' => $diagramData];
@@ -110,14 +110,14 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
     {
 		$p = parent::getAdditionalViewParam();
 
-		$p['sessionDiagramId'] = str_random();
+		$p['sessionProcessId'] = str_random();
 
         return $p;
     }    
 
     public function diagramShow()
     { 
-        $id = $this->getRequest()->input('diagramId');
+        $id = $this->getRequest()->input('processId');
         
 		$model = \App\Model\Telenok\Workflow\Process::find($id);
 		
@@ -126,7 +126,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                 'model' => $model,
                 'stencilData' => ($model ? $model->process->get('diagram', []) : false),
                 'uniqueId' => str_random(), 
-				'sessionDiagramId' => $this->getRequest()->input('sessionDiagramId'),
+				'sessionProcessId' => $this->getRequest()->input('sessionProcessId'),
             ])->render();
     }
 
@@ -344,7 +344,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         return $isValid; 
     }
 
-    public function getMarkerModalContent($attr = [], $uniqueId = '')
+    public function getMarkerModalContent1111111111111111111111111111111111111111111111111($attr = [], $uniqueId = '')
     {
         $attr = \Illuminate\Support\Collection::make($attr);
 
@@ -352,42 +352,10 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
             'controller' => $this,
             'fieldId' => $attr->get('fieldId'),
             'buttonId' => $attr->get('buttonId'),
+            'processId' => $attr->get('processId', 0),
+            'exclude' => $attr->get('exclude', []),
             'uniqueId' => $uniqueId,
         ])->render();
-    }
-
-    public function processMarkerString($string = '')
-    {
-        $collection = app('telenok.config')->getWorkflowTemplateMarker()->all();
-        
-        foreach($collection as $c)
-        {
-            $string = $c->processMarkerString($string);
-        }
-        
-        $filename = str_random();
-        
-        try
-        {
-            \File::makeDirectory(storage_path('tmp'), 0777, true, true);
-            
-            \File::put(storage_path('tmp/') . $filename, '<?php return ' . $string . ';');
-
-            $string = include(storage_path('tmp/') . $filename);
-        } 
-        catch (\Exception $ex) 
-        {
-            throw $ex;
-        }
-        finally
-        {
-            if (\File::exists(storage_path('tmp/') . $filename))
-            {
-                \File::delete(storage_path('tmp/') . $filename);
-            }
-        }
-
-        return $string;
     }
 
     public function getRouterProcessManualStart($param = [])
@@ -486,18 +454,18 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
             
             if ($param->required && !strlen($v))
             {
-                $processedParameter->put($key, $collectionParameters->get($param->key)->processInitDefault($this, $param));
+                $processedParameter->put($key, $collectionParameters->get($param->key)->getValue($param));
             }
             else
             {
-                $processedParameter->put($key, $collectionParameters->get($param->key)->processInitValue($this, $param, $v));
+                $processedParameter->put($key, $collectionParameters->get($param->key)->getValue($param, $v));
             }
         }
         
         try
         {
             $runtime->threadCreateAndRun($model, $event, $processedParameter);
-            
+
             return [
                 'tabKey' => $this->getTabKey() . '-start-' . $id,
                 'tabLabel' => $this->LL('label.title.start'),
@@ -517,7 +485,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 			throw $ex;
         }
     }
-    
+
     public function getRouterManualStarting($param = [])
     {
         return \URL::route('cmf.module.workflow-process.manual.starting', $param);

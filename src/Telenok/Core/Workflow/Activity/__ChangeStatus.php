@@ -16,7 +16,7 @@ class ChangeStatus extends \Telenok\Core\Interfaces\Workflow\Activity {
     {
         \Log::info('Business Process: Event:'.$this->getProcess()->getEvent()->getEventCode().'. Process action with code "'.$this->key.'"');
         
-        //$paramProcess = $process->getParam();
+        //$paramElement = $process->getParam();
         
         return $this;
     }

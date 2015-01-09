@@ -46,11 +46,13 @@
 
     @if ($field->code == 'default_value')
 
-    {!! (new \Telenok\Core\Module\Workflow\Process\Controller())->getMarkerModalContent([
+    {!! \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->getMarkerModalContent(
+			$uniqueId,
+			[
                 'fieldId' => $field->code . '-' . $uniqueId,
                 'buttonId' => $field->code . '-button-' . $uniqueId,
             ],
-            $uniqueId) !!}
+			['parameter', 'variable']) !!}
 
     <button id="{{ $field->code . '-button-' . $uniqueId }}" type="button" class="btn btn-sm" data-toggle="modal"><i class="fa fa-align-justify"></i></button>
     

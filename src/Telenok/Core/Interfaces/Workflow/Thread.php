@@ -86,7 +86,7 @@ class Thread {
             $elements = app('telenok.config')->getWorkflowElement();
             $this->actions = \Illuminate\Support\Collection::make();
             $shapes = array_get($modelThread->original_process->all(), 'diagram.childShapes', []);
-            
+
             foreach($shapes as $action)
             {
                 $this->actions->put($action['resourceId'], $elements->get($action['stencil']['id'])
@@ -101,25 +101,19 @@ class Thread {
             throw new \Exception('Cant init actions');
         }
     }
-    
+
     public function getParameterByCode($code = '')
     {
-        $parameterModel = $this->getModelProcess()->parameter()->get()->keyBy($code)->get($code);
-        
-        if ($parameterModel)
+        if (($parameterModel = $this->getModelThread()->original_parameter->get($code))
+				&& ($controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key)))
         {
-            $parameterValue = $this->getModelThread()->parameter->get($code);
+			return $controller->getValue($this, $parameterModel, $this->getModelThread()->parameter->get($code));
+
         }
-        
-        if ($parameterModel)
-        {
-            $controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key);
-            
-            if ($controller)
-            {
-                $controller->getValue($this, $parameterModel, $parameterValue);
-            }
-        }
+		else
+		{
+			throw new \Exception('Process hasn\'t parameter with code "' . $code .'"');
+		}
     }
 
     public function getActionByResourceId($resourceId = '')

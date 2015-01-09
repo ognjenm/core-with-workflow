@@ -14,7 +14,7 @@
                     <div class="col-xs-12">
                         <form action="#" onsubmit="return false;" class="form-horizontal">
 
-                            {!! Form::hidden('sessionDiagramId', $sessionDiagramId) !!}
+                            {!! Form::hidden('sessionProcessId', $sessionProcessId) !!}
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>

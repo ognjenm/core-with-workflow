@@ -188,3 +188,4 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/workflow/apply/diagram', array('as' => 'cmf.workflow.apply-diagram', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@applyDiagram"));
 \Route::any('telenok/module/workflow/modal-template-marker/content', array('as' => 'cmf.workflow.modal-template-marker.content', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@getModalTemplateMarkerContent"));
 
+\Route::any('telenok/module/workflow/sequence-conditional/conditional-template/content', array('as' => 'cmf.workflow.sequence-conditional.conditional-template.content', 'uses' => "Telenok\Core\Workflow\Flow\ConditionalSequence@getConditionalTemplateContent"));

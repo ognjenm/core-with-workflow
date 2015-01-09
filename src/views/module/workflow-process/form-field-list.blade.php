@@ -47,7 +47,7 @@
 							'diagram': window.frames['frame-process-{{$uniqueId}}'].oryxEditor.getSerializedJSON(),
 							'clear': clear ? 1 : 0,
 							'clearOnly': clearOnly ? 1 : 0,
-							'sessionDiagramId': "{{ $sessionDiagramId }}",
+							'sessionProcessId': "{{ $sessionProcessId }}",
 							'_token': "{{ csrf_token() }}",
 							'id': '{{$model->getKey()}}'
 						}
@@ -84,8 +84,7 @@
 					jQuery('div.modal-body', modal)
 						.html(  '<iframe name="frame-process-{{$uniqueId}}" id="frame-process-{{$uniqueId}}" ' +
 								' style="width: 100%; border: none;"' + 
-								' src="{!! URL::route("cmf.module.workflow-process.diagram.show", ['diagramId' => intval($model->getKey()), 'sessionDiagramId' => $sessionDiagramId]) !!}" />')
-				
+								' src="{!! URL::route("cmf.module.workflow-process.diagram.show", ['processId' => intval($model->getKey()), 'sessionProcessId' => $sessionProcessId]) !!}" />')
                 }
 
 				var frame = jQuery('#frame-process-{{$uniqueId}}');

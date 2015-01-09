@@ -8,11 +8,11 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
 
     protected $key = '';
     protected $languageDirectory = 'workflow-template-marker';
-    protected $view = 'core::module.workflow-process.select-template-marker';
+    protected $view = 'core::module/workflow-template-marker.select-marker';
+    protected $process;
+    protected $thread;
     protected $package = '';
     protected $request; 
-
-    
     
     public function setKey($param = '')
     {
@@ -24,6 +24,30 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
     public function getKey()
     {
         return $this->key;
+    }
+    
+    public function setProcess($param = '')
+    {
+        $this->process = $param;
+        
+        return $this;
+    }
+
+    public function getProcess()
+    {
+        return $this->process;
+    }
+    
+    public function setThread($param = '')
+    {
+        $this->thread = $param;
+        
+        return $this;
+    }
+
+    public function getThread()
+    {
+        return $this->thread;
     }
 
     public function setRequest(\Illuminate\Http\Request $param = null)
@@ -58,12 +82,13 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
         ])->render();
     }
     
-    public function getBlockItem()
+
+    public function getBlockItem($thread = null)
     {
         return [];
     }
     
-    public function processMarkerString($string = '')
+    public function processMarkerString($string = '', $thread = null)
     {
         return $string;
     }

@@ -59,8 +59,8 @@ ORYX.Plugins.PropertyWindow = {
             method: 'get',
             dataType: 'json',
             data: {
-                    'sessionDiagramId': ORYX.Utils.getParamFromUrl('sessionDiagramId'),
-                    'diagramId': ORYX.Utils.getParamFromUrl('diagramId'),
+                    'sessionProcessId': ORYX.Utils.getParamFromUrl('sessionProcessId'),
+                    'processId': ORYX.Utils.getParamFromUrl('processId'),
                     'stencilId': shape.getPermanentId()
             }
         }).done(function(data) 
@@ -75,9 +75,7 @@ ORYX.Plugins.PropertyWindow = {
             var $modal = parent.jQuery('#modal-' + $uniqueId);
 
             $modal.data('model-data', function($form)
-            {
-                $modal.modal('hide');
-                
+            { 
                 jQuery.ajax({
                     url: shape.getStencil().urlStoreProperty(),
                     method: 'get',

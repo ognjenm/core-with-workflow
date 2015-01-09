@@ -1,18 +1,18 @@
 <div class="modal-dialog">
-	<div class="modal-content">
+    <div class="modal-content">
 
-		<div class="modal-header table-header">
-			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>Model event</h4>
-		</div>
-			
+        <div class="modal-header table-header">
+            <button data-dismiss="modal" class="close" type="button">×</button>
+            <h4>Model event</h4>
+        </div>
+
         <div class="modal-body" style="max-height: none; padding: 15px;">
             <div class="widget-main">
                 <div class="row">
                     <div class="col-xs-12">
                         <form action="#" onsubmit="return false;" class="form-horizontal">
 
-                            {!! Form::hidden('sessionDiagramId', $sessionDiagramId) !!}
+                            {!! Form::hidden('sessionProcessId', $sessionProcessId) !!}
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>
@@ -81,5 +81,5 @@
 
         </div>
 
-	</div>
+    </div>
 </div>

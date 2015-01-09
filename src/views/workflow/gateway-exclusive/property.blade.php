@@ -12,7 +12,7 @@
                     <div class="col-xs-12">
                         <form action="#" onsubmit="return false;" class="form-horizontal">
 
-                            {!! Form::hidden('sessionDiagramId', $sessionDiagramId) !!}
+                            {!! Form::hidden('sessionProcessId', $sessionProcessId) !!}
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>
@@ -48,22 +48,7 @@
                                     <textarea style="width: 300px;" name="stencil[description]">{{$property->get('description')}}</textarea>
                                 </div>
                             </div>
-                            
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[event_list]">{{$controller->LL('property.type')}} <span class="red">*</span></label>
-                                <div class="col-sm-3">
-                                    <select class="chosen-select" data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[type][]">
-                                        <option value="parallel" @if (in_array('parallel', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.1')}}</option>
-                                        <option value="inclusive" @if (in_array('inclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.2')}}</option>
-                                        <option value="exclusive" @if (in_array('exclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.3')}}</option>
-                                    </select> 
-                                </div>
-                            </div>
 
-                            <script type="text/javascript">
-                                jQuery("#input-event-list{{$uniqueId}}").chosen({width: "300px"});
-                            </script>
-                            
                         </form>
                     </div>
                 </div>

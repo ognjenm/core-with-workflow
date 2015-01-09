@@ -12,7 +12,7 @@
 			<h4>Please, choose type of new object</h4>
 		</div>
 
-		<div class="modal-body" style="height: 80vh; overflow-y: auto; padding: 15px; position: relative;">
+		<div class="modal-body" style="padding: 15px; position: relative;">
 			<div class="widget-main">
 
 				<select class="chosen-type{{$jsChooseUnique}}" data-placeholder="{{$controller->LL('notice.choose')}}" id="input{{$jsChooseUnique}}" name="id">

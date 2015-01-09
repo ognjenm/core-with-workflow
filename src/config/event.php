@@ -81,9 +81,9 @@
     $list->push('Telenok\Core\Workflow\Point\Start\Form');
     $list->push('Telenok\Core\Workflow\Point\Start\Manual');
 	$list->push('Telenok\Core\Workflow\Point\End\End');
-    $list->push('Telenok\Core\Workflow\Flow\Standart');
-    $list->push('Telenok\Core\Workflow\Flow\Condition');
-    $list->push('Telenok\Core\Workflow\Flow\ConditionDefault');
+    $list->push('Telenok\Core\Workflow\Flow\UncontrolledSequence');
+    $list->push('Telenok\Core\Workflow\Flow\ConditionalSequence');
+    $list->push('Telenok\Core\Workflow\Flow\DefaultSequence');
 	$list->push('Telenok\Core\Workflow\Activity\FormFieldHide');
 	$list->push('Telenok\Core\Workflow\Activity\ModelFieldUpdate');
 	$list->push('Telenok\Core\Workflow\Activity\Log');
@@ -99,6 +99,7 @@
 \Event::listen('telenok.workflow.template-marker.add', function($list) 
 {
     $list->push('Telenok\Core\Workflow\TemplateMarker\System');
+    $list->push('Telenok\Core\Workflow\TemplateMarker\Parameter');
 });
 
 \Event::listen('telenok.workflow.parameter.add', function($list) 

@@ -36,18 +36,18 @@
 
             <div class="modal-header table-header">
                 <button data-dismiss="modal" class="close" type="button">×</button>
-                <h4>{{$controller->LL('modal-template-marker.title')}}</h4>
+                <h4>{{$controller->LL('title')}}</h4>
             </div>
 
             <div class="modal-body">
                 <div class="widget-main">
                     <div id="accordion" class="accordion-style1 panel-group">
 
-                        @foreach(app('telenok.config')->getWorkflowTemplateMarker()->all() as $c)
+						@foreach(app('telenok.config')->getWorkflowTemplateMarker()->reject(function($i) use ($exclude) { return in_array($i->getKey(), $exclude); })->all() as $c)
 
-                            {!! $c->getBlockContent() !!}
+							{!! $c->setProcess($process)->getBlockContent() !!}
 
-                        @endforeach
+						@endforeach
 
                     </div>
                 </div>
@@ -63,5 +63,4 @@
 
         </div>
     </div>
-    
 </template>

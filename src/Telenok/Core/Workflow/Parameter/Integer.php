@@ -5,14 +5,9 @@ namespace Telenok\Core\Workflow\Parameter;
 class Integer extends \Telenok\Core\Interfaces\Workflow\Parameter {
     
     protected $key = 'integer';
-
-    public function processInitDefault($controller = null, $model = null)
+	
+    public function getValue($model = null, $value = null)
     {
-        return intval($controller->processMarkerString($model->default_value));
-    }
-    
-    public function processInitValue($controller = null, $model = null, $value = null)
-    {
-        return $value;
+        return intval(parent::getValue($model, $value));
     }
 }

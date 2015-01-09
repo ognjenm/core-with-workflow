@@ -16,7 +16,7 @@ class SendMessage extends \Telenok\Core\Interfaces\Workflow\Activity {
     {
         \Log::info('Business Process: Event:'.$this->getProcess()->getEvent()->getEventCode().'. Business Process: Process action with code "send-message"');
         
-        //$paramProcess = $process->getParam();
+        //$paramElement = $process->getParam();
         
         return $this;
     }

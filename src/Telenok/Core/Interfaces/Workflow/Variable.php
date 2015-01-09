@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Interfaces\Workflow;
 
-class Parameter {
+class Variable {
 
     use \Telenok\Core\Support\PackageLoad;
 
@@ -68,20 +68,32 @@ class Parameter {
     }
 
 	/*
+	 * @param \App\Http\Controllers\Module\Workflow\Process\Controller
+	 * @param \App\Model\Telenok\Workflow\Parameter
+	 */
+    public function processInitDefault($process = null, $model = null)
+    {
+    }
+    
+	/*
+	 * @param \App\Http\Controllers\Module\Workflow\Process\Controller
+	 * @param \App\Model\Telenok\Workflow\Parameter
+	 * @param mixed
+	 */
+    public function processInitValue($process = null, $model = null, $value = null)
+    {
+        return $value;
+    }
+    
+	/*
 	 * Return initial value of parameter from already started process's thread
 	 * 
+	 * @param \App\Http\Controllers\Module\Workflow\Thread\Controller
 	 * @param \App\Model\Telenok\Workflow\Parameter
 	 * @param mixed Some data of parameter which launched with the process
 	 */
-    public function getValue($model = null, $value = null)
+    public function getValue($thread = null, $model = null, $value = null)
     {
-		if ($value === null)
-		{
-	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($model->default_value);
-		}
-		else
-		{
-	        return $value;
-		}
+        return $value;
     }
 }
