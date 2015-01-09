@@ -81,7 +81,12 @@ class Parameter {
 		}
 		else
 		{
-	        return $value;
+	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($value);
 		}
     }
+
+	public function toString($value)
+	{
+		return (string)$value;
+	}
 }

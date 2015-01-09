@@ -125,6 +125,14 @@ class Thread {
     }
 
 	/*
+	 * @return \Telenok\Core\Interfaces\Workflow\Element
+	 */
+    public function getActionByPermanentId($permanentId = '')
+    {
+		return $this->getActions()->filter(function($i) use ($permanentId) { return $i->getPermanentId() == $permanentId; })->first();
+    }
+
+	/*
 	 * @return \Illuminate\Support\Collection
 	 */
     public function getActions()

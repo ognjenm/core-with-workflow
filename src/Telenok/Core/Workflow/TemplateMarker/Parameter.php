@@ -4,7 +4,7 @@ class Parameter extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
 
     protected $key = 'parameter';
 
-    public function getBlockItem($thread = null)
+    public function getBlockItem()
     {
 		$return = [];
 		
@@ -18,33 +18,26 @@ class Parameter extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
 
         return $return;
     }
-
+    
+	/*
+	 * @param string
+	 * @param \Telenok\Core\Workflow\Thread
+	 */
     public function processMarkerString($string = '', $thread = null)
     {
-        $datetime = \Carbon\Carbon::now();
+		if (!$thread)
+		{
+			return;
+		}
 
-        foreach(array_keys($this->getBlockItem($thread)) as $key)
-        {
-            switch($key)
-            {
-                case 'DATETIME':
+		$parameters = $thread->original_parameter->keyBy('code');
+		$collectionParameters = app('telenok.config')->getWorkflowParameter();
 
-                    $string = str_replace('{=' . strtoupper($this->getKey() . ':' . $key) . '}', '"' . $datetime->toDateTimeString() . '"', $string);
+		foreach ($thread->getParameter() as $code => $value) 
+		{
+			$param = $parameters->get($code, false);
 
-                    break;
-
-                case 'DATE':
-
-                    $string = str_replace('{=' . strtoupper($this->getKey() . ':' . $key) . '}', '"' . $datetime->toDateString() . '"', $string);
-
-                    break;
-
-                case 'TIME':
-
-                    $string = str_replace('{=' . strtoupper($this->getKey() . ':' . $key) . '}', '"' . $datetime->toTimeString() . '"', $string);
-
-                    break;
-            }
+			$string = str_replace('{=' . strtoupper($this->getKey() . ':' . $code) . '}', '"' . $collectionParameters->get($param['key'])->toString($value) . '"', $string);
         } 
 
         return $string;

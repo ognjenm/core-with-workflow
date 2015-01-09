@@ -83,11 +83,15 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
     }
     
 
-    public function getBlockItem($thread = null)
+    public function getBlockItem()
     {
         return [];
     }
     
+	/*
+	 * @param string
+	 * @param \Telenok\Core\Workflow\Thread
+	 */
     public function processMarkerString($string = '', $thread = null)
     {
         return $string;

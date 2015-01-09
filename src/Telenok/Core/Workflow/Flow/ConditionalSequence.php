@@ -217,6 +217,7 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 		return ['tabContent' => view($this->getConditionalTemplateView(), [
 				'controller' => $this,
 				'uniqueId' => str_random(),
+				'processId' => $processId,
                 'model' => $model,
 				'p' => \Illuminate\Support\Collection::make(),
 			])->render()];

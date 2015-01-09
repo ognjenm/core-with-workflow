@@ -441,24 +441,24 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         
         $processedParameter = \Illuminate\Support\Collection::make();
         
-        foreach($parameter as $key => $v)
+        foreach($parameter as $code => $v)
         {
-            $param = $modelParameterKeyByCode->get($key, false);
+            $param = $modelParameterKeyByCode->get($code, false);
             
             if ($param === false)
             {
-                throw new \Exception('Cant to run process. Not defined parameter with code "' . $key . '"');
+                throw new \Exception('Cant to run process. Not defined parameter with code "' . $code . '"');
             }
             
             $v = trim($v);
             
             if ($param->required && !strlen($v))
             {
-                $processedParameter->put($key, $collectionParameters->get($param->key)->getValue($param));
+                $processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param));
             }
             else
             {
-                $processedParameter->put($key, $collectionParameters->get($param->key)->getValue($param, $v));
+                $processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param, $v));
             }
         }
         

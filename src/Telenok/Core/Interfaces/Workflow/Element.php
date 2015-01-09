@@ -10,6 +10,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     protected $linkIn = [];
 
     protected $id = '';
+    protected $permanentId = '';
     protected $key = '';
     protected $token;
     protected $package = '';
@@ -201,7 +202,9 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     {
         $this->action = $param;  
 
-        $this->setId($param['resourceId'])->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
+        $this->setId($param['resourceId'])
+				->setPermanentId($param['permanentId'])
+				->setLinkOut(\Illuminate\Support\Collection::make(array_get($param, 'outgoing'))->flatten());
 
         $in = \Illuminate\Support\Collection::make($shapes)
                 ->filter(function($i) { return $this->getId() == array_get($i, 'target.resourceId'); })
@@ -338,9 +341,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     }
 
     public function setLog($data = [])
-    {
-        var_dump($this->getKey());
-        
+    {  
         $data['data'] = array_get($data, 'data', []); 
         $data['result'] = array_get($data, 'result', 'done'); 
         $data['log'] = array_get($data, 'log', 'success'); 
@@ -364,6 +365,18 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getPermanentId()
+    {
+        return $this->permanentId;
+    }
+    
+    public function setPermanentId($param)
+    {
+        $this->permanentId = $param;
 
         return $this;
     }

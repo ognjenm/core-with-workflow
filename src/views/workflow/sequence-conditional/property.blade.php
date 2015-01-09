@@ -62,13 +62,6 @@
                                     <input type="text" name="stencil[order]" value="{{$property->get('order', 1)}}" />
                                 </div>
                             </div>
-
-							
-							<?php
-							
-								//dd( $property );
-							
-							?>
 							
 							@foreach($property->get('condition', []) as $a)
 							
