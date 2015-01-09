@@ -14,6 +14,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     protected $token;
     protected $package = '';
     protected $languageDirectory = 'workflow-element';
+    protected $order = 2000000000;
 
     protected $thread;
     protected $action;
@@ -250,13 +251,74 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         return $this;
     }
 
+	/*
+	 * @return \Illuminate\Support\Collection
+	 */
+    public function getProcessedLinkOut()
+    {
+		$linkOut = $this->getLinkOut();
+
+		$conditionalOut = $linkOut
+							->reject(function($i)
+							{ 
+								$action = $this->getThread()->getActionByResourceId($i);
+
+								if (!$action->canGoNext())
+								{
+									return true;
+								}
+							})
+							->sort(function($a, $b)
+							{
+								$one = $this->getThread()->getActionByResourceId($a);
+								$two = $this->getThread()->getActionByResourceId($b);
+
+								return $one->getOrder() > $two->getOrder() ? 1 : -1;
+							});
+
+		$conditionalOut->reject(function($i) use ($conditionalOut) 
+							{
+								$action = $this->getThread()->getActionByResourceId($i);
+
+								if ($action->getKey() == 'sequence-default' && $conditionalOut->filter(function($i)
+									{ 
+										$action = $this->getThread()->getActionByResourceId($i);
+										return $action->getKey() == 'sequence-conditional';
+									})->count())
+								{
+									return true;
+								}
+							});
+							
+		return $conditionalOut;
+    }
+    
+    public function canGoNext()
+    {
+        return true;
+    }
+    
+    public function setOrder($param = 0)
+    {
+		$this->order = $param;
+		
+        return $this;
+    }
+    
+    public function getOrder()
+    {
+		return $this->order;
+    }
+
     protected function setNext()
     {
         $currentToken = $this->getToken();
 
-        if ($this->getLinkOut()->count() == 1)
+		$processedLinkOut = $this->getProcessedLinkOut();
+		
+        if ($processedLinkOut->count() == 1)
         {
-            $nextId = $this->getLinkOut()->first();
+            $nextId = $processedLinkOut->first();
 
             $newToken = $this->getThread()->createToken($currentToken->getSourceElementId(), $nextId, $currentToken->getCurrentTokenId());
 
@@ -264,7 +326,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         }
         else
         {
-            foreach($this->getLinkOut() as $nextId)
+            foreach($processedLinkOut as $nextId)
             {
                 $newToken = $this->getThread()->createToken($this->getId(), $nextId, $currentToken->getCurrentTokenId());
 
@@ -352,7 +414,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     {
         if ($this->getLinkIn()->isEmpty() && $this->getLinkOut()->isEmpty())
         {
-            throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" havnt any connections.');
+            throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" haven\'t any connections.');
         }
         
         if (!$this instanceof \Telenok\Core\Interfaces\Workflow\Flow)

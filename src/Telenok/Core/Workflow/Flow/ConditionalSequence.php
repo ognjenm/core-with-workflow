@@ -4,13 +4,13 @@ namespace Telenok\Core\Workflow\Flow;
 
 class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 
-	protected $key = 'sequence-conditional'; 
-
+	protected $key = 'sequence-conditional';
+	
     public function canGoNext()
     {
         $paramElement = $this->getInput();
         $conditions = $paramElement->get('condition', []);
-        list($class, $method) = explode('@', $paramElement->get('class_mathod'), 2);
+        list($class, $method) = explode('@', $paramElement->get('class_method'), 2);
 
 		if ($class && $method && !(new $class)->$method($this))
 		{
@@ -194,7 +194,7 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
     {
         return 'core::workflow.' . $this->getKey() . '.condition-template';
     }
-    
+
     public function getPropertyValue($data = [])
     {
         $stencilData = $this->getStencilData($data);
@@ -221,4 +221,9 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 				'p' => \Illuminate\Support\Collection::make(),
 			])->render()];
     }
+
+	public function getOrder() 
+	{       
+		return intval($this->getInput()->get('order'));
+	}
 }

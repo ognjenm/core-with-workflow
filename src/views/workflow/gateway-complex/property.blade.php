@@ -1,75 +1,67 @@
 <div class="modal-dialog">
-	<div class="modal-content">
+    <div class="modal-content">
 
-		<div class="modal-header table-header">
+        <div class="modal-header table-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>Model event</h4>
-		</div>
-			
-        <div class="modal-body" style="max-height: none; padding: 15px;">
+			<h4>{{$controller->LL('title')}}</h4>
+        </div>
+
+        <div class="modal-body" style="padding: 15px;">
             <div class="widget-main">
                 <div class="row">
                     <div class="col-xs-12">
-                        <form action="#" onsubmit="return false;" class="form-horizontal">
+                        <form action="#" onsubmit="return false;" class="form-horizontal" id="model-ajax-{{$uniqueId}}">
 
                             {!! Form::hidden('sessionProcessId', $sessionProcessId) !!}
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>
-                                <div class="col-sm-3">
+                                <label class="col-sm-3 control-label no-padding-right" for="stencil[title]">{{$controller->LL('property.title')}}</label>
+                                <div class="col-sm-9">
                                     <input type="text" name="stencil[title]" value="{{$property->get('title')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencilIdNew">{{$controller->LL('property.stencil.id')}}</label>
-                                <div class="col-sm-8">
+                                <label class="col-sm-3 control-label no-padding-right" for="stencilIdNew">{{$controller->LL('property.stencil.id')}}</label>
+                                <div class="col-sm-9">
                                     {!! Form::text('stencilId', $stencilId, ['class' => 'col-sm-8', 'readonly' => 'readonly']) !!}
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[bgcolor]">{{$controller->LL('property.bgcolor')}}</label>
-                                <div class="col-sm-3">
+                                <label class="col-sm-3 control-label no-padding-right" for="stencil[bgcolor]">{{$controller->LL('property.bgcolor')}}</label>
+                                <div class="col-sm-9">
                                     <input type="text" name="stencil[bgcolor]" value="{{$property->get('bgcolor')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[bordercolor]">{{$controller->LL('property.bordercolor')}}</label>
-                                <div class="col-sm-3">
+                                <label class="col-sm-3 control-label no-padding-right" for="stencil[bordercolor]">{{$controller->LL('property.bordercolor')}}</label>
+                                <div class="col-sm-9">
                                     <input type="text" name="stencil[bordercolor]" value="{{$property->get('bordercolor')}}" />
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[description]">{{$controller->LL('property.description')}}</label>
-                                <div class="col-sm-3">
+                                <label class="col-sm-3 control-label no-padding-right" for="stencil[description]">{{$controller->LL('property.description')}}</label>
+                                <div class="col-sm-9">
                                     <textarea style="width: 300px;" name="stencil[description]">{{$property->get('description')}}</textarea>
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[event_list]">{{$controller->LL('property.type')}} <span class="red">*</span></label>
-                                <div class="col-sm-3">
-                                    <select class="chosen-select" data-placeholder="{{$controller->LL('notice.choose')}}" id="input-event-list{{$uniqueId}}" name="stencil[type][]">
-                                        <option value="parallel" @if (in_array('parallel', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.1')}}</option>
-                                        <option value="inclusive" @if (in_array('inclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.2')}}</option>
-                                        <option value="exclusive" @if (in_array('exclusive', $property->get('type', []), true)) selected @endif>{{$controller->LL('property.type.list.3')}}</option>
-                                    </select> 
+                                <label class="col-sm-3 control-label no-padding-right" for="stencil[class_method]">{{$controller->LL('property.class_method')}}</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="col-sm-9" name="stencil[class_method]" value="{{$property->get('class_method')}}" />
                                 </div>
                             </div>
 
-                            <script type="text/javascript">
-                                jQuery("#input-event-list{{$uniqueId}}").chosen({width: "300px"});
-                            </script>
-                            
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
+  
         <div class="modal-footer">
 
             <div class="center no-margin">

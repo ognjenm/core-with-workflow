@@ -116,11 +116,17 @@ class Thread {
 		}
     }
 
+	/*
+	 * @return \Telenok\Core\Interfaces\Workflow\Element
+	 */
     public function getActionByResourceId($resourceId = '')
     {
         return $this->getActions()->get($resourceId);
     }
 
+	/*
+	 * @return \Illuminate\Support\Collection
+	 */
     public function getActions()
     {
         return $this->actions;

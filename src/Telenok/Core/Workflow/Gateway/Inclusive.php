@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Workflow\Gateway;
 
-class Inclusive extends \Telenok\Core\Interfaces\Workflow\Activity {
+class Inclusive extends \Telenok\Core\Interfaces\Workflow\Gateway {
 
     protected $key = 'gateway-inclusive';
 

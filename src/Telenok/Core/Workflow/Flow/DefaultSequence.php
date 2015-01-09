@@ -6,16 +6,6 @@ class DefaultSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 
 	protected $key = 'sequence-default';
 
-    public function process($log = [])
-    {
-        if ($this->canGoNext())
-        {
-            return parent::process($log);
-        }
-
-        return $this;
-    }
-
     public function getStencilConnectionRules()
 	{
 		if (empty($this->stencilConnectionRules))

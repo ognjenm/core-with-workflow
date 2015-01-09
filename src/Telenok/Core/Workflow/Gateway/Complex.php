@@ -1,8 +1,6 @@
-<?php
+<?php namespace Telenok\Core\Workflow\Gateway;
 
-namespace Telenok\Core\Workflow\Gateway;
-
-class Complex extends \Telenok\Core\Interfaces\Workflow\Activity {
+class Complex extends \Telenok\Core\Interfaces\Workflow\Gateway {
 
     protected $key = 'gateway-complex';
 
@@ -37,67 +35,22 @@ class Complex extends \Telenok\Core\Interfaces\Workflow\Activity {
         return $commonProperty;
 	}
 
-    public function process11111111111111111111111111111111111111111111111111111111111111($log = [])
-    {
-        $token = $this->getToken();
-        
-        if ($this->getLinkOut()->count() == 1)
-        {
-            $this->setLog($log);
-            $this->setNext();
-        }
-        else if ($this->getLinkOut()->count() > 1)
-        {
-            $log = $this->getThread()->getLogResourceId($this->getId());
+	/*
+	 * Allow go out special flows returned by user's function
+	 */
+    public function getProcessedLinkOut()
+    { 
+        list($class, $method) = explode('@', $this->getInput()->get('class_method'), 2);
 
-            $tokenId = $token->getCurrentTokenId();
-            $parentTokenId = $token->getParentTokenId();
-            $totalToken = $token->getTotalToken();
-
-            $dataParentToken = \Illuminate\Support\Collection::make();
-
-            foreach($log->filter() as $l)
-            {
-
-            }
-
-            $data = $log->get('data', []);
-        }
-
-        return $this;
-    }
-
-    protected function setNext()
-    {
-        $type = $this->getInput()->get('type');
-
-        $token = $this->getToken();
-
-        $sourceToken = $this->getThread()->getTokens()->get($token->getSourceTokenId());
-        
-        $log = $this->getThread()->getLogResourceId($this->getId());
-        
-        if ($this->getLinkIn()->count() > 1)
-        {
-            //$lastData = $log->filter(function($i){ return array_get($i, 'token.sourceElementId')});
-        }
-        
-        
-        if ($type == 'exclusive')
-        {
-            
-        }        
-        elseif ($type == 'inclusive')
-        {
-            
-        }
-        else // type is parallel or not defined
-        {
-            return parent::setNext();
-        }
-
-        $this->getThread()->removeActiveToken($token);
-    }
+		if ($class && $method)
+		{
+			return (new $class)->$method($this);
+		}
+		else
+		{
+			return $this->getLinkOut();
+		}
+	}
 
     public function getStencilConfig()
     {

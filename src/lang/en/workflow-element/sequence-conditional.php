@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Condition',
+    'title' => 'Conditional',
     'title.groups' => 'Connecting Objects',
     'description' => '',
 

@@ -2,7 +2,7 @@
 
 namespace Telenok\Core\Workflow\Gateway;
 
-class Exclusive extends \Telenok\Core\Interfaces\Workflow\Activity {
+class Exclusive extends \Telenok\Core\Interfaces\Workflow\Gateway {
 
     protected $key = 'gateway-exclusive';
 
@@ -37,67 +37,15 @@ class Exclusive extends \Telenok\Core\Interfaces\Workflow\Activity {
         return $commonProperty;
 	}
 
-    public function process11111111111111111111111111111111111111111111111111111111111111($log = [])
+	/*
+	 * Allow go out only one flow
+	 */
+    public function getProcessedLinkOut()
     {
-        $token = $this->getToken();
-        
-        if ($this->getLinkOut()->count() == 1)
-        {
-            $this->setLog($log);
-            $this->setNext();
-        }
-        else if ($this->getLinkOut()->count() > 1)
-        {
-            $log = $this->getThread()->getLogResourceId($this->getId());
-
-            $tokenId = $token->getCurrentTokenId();
-            $parentTokenId = $token->getParentTokenId();
-            $totalToken = $token->getTotalToken();
-
-            $dataParentToken = \Illuminate\Support\Collection::make();
-
-            foreach($log->filter() as $l)
-            {
-
-            }
-
-            $data = $log->get('data', []);
-        }
-
-        return $this;
-    }
-
-    protected function setNext()
-    {
-        $type = $this->getInput()->get('type');
-
-        $token = $this->getToken();
-
-        $sourceToken = $this->getThread()->getTokens()->get($token->getSourceTokenId());
-        
-        $log = $this->getThread()->getLogResourceId($this->getId());
-        
-        if ($this->getLinkIn()->count() > 1)
-        {
-            //$lastData = $log->filter(function($i){ return array_get($i, 'token.sourceElementId')});
-        }
-        
-        
-        if ($type == 'exclusive')
-        {
-            
-        }        
-        elseif ($type == 'inclusive')
-        {
-            
-        }
-        else // type is parallel or not defined
-        {
-            return parent::setNext();
-        }
-
-        $this->getThread()->removeActiveToken($token);
-    }
+		$linkOut = parent::getProcessedLinkOut();
+		
+		return $linkOut->slice(0, 1);
+	}
 
     public function getStencilConfig()
     {
