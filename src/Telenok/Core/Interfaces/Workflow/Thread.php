@@ -25,7 +25,7 @@ class Thread {
             $this->setModelThread((new \App\Model\Telenok\Workflow\Thread())->storeOrUpdate([
 				'title' => $this->getModelProcess()->title,
 				'original_process' => $this->getModelProcess()->process,
-				'original_parameter' => $this->getModelProcess()->parameter()->get()->lists('code', 'key'),
+				'original_parameter' => $this->getModelProcess()->parameter()->get()->keyBy('code'),
 				'parameter' => $this->getParameter(),
 				'active' => 1,
 				'thread_workflow_process' => $this->getModelProcess()->getKey(),
@@ -104,8 +104,10 @@ class Thread {
 
     public function getParameterByCode($code = '')
     {
-        if (($parameterModel = $this->getModelThread()->original_parameter->get($code))
-				&& ($controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key)))
+		$parameterModel = \Illuminate\Support\Collection::make($this->getModelThread()->original_parameter->get($code));
+		
+        if ($parameterModel->count()
+				&& ($controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->get('key'))))
         {
 			return $controller->getValue($this, $parameterModel, $this->getModelThread()->parameter->get($code));
 

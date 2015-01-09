@@ -36,8 +36,24 @@ class SeedWorkflowThreadTable extends Migration {
 
         (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
                 [
-                    'title' => ['ru' => 'Параметры', 'en' => 'Parameter'],
-                    'title_list' => ['ru' => 'Параметры', 'en' => 'Parameter'],
+                    'title' => ['ru' => 'Оригинальные параметры', 'en' => 'Original parameter'],
+                    'title_list' => ['ru' => 'Оригинальные параметры', 'en' => 'Original parameter'],
+                    'key' => 'complex-array',
+                    'code' => 'original_parameter',
+                    'active' => 1,
+                    'field_object_type' => $modelTypeId,
+                    'field_object_tab' => $tabMainId,
+                    'show_in_form' => 1,
+                    'show_in_list' => 0,
+                    'allow_search' => 0,
+                    'field_order' => 6,
+                ]
+        );
+
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+                [
+                    'title' => ['ru' => 'Значения параметров', 'en' => 'Parameter\'s value'],
+                    'title_list' => ['ru' => 'Значения параметров', 'en' => 'Parameter\'s value'],
                     'key' => 'complex-array',
                     'code' => 'parameter',
                     'active' => 1,
@@ -136,5 +152,4 @@ class SeedWorkflowThreadTable extends Migration {
                 ]
         );
     }
-
 } 

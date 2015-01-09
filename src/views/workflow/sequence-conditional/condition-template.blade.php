@@ -151,7 +151,7 @@
 
     jQuery("#input-model-field-{{$uniqueId}}").chosen({width: "300px"});
 
-    if ( !{{ $p->get('model_type', 0) }})
+    if ( !{{ intval($p ? $p->get('model_type', 0) : 0) }})
     {
         jQuery("#input-model-field-{{$uniqueId}} option").hide();
     }

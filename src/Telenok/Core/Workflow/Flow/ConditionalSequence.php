@@ -9,13 +9,18 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
     public function canGoNext()
     {
         $paramElement = $this->getInput();
-        $conditions = $paramElement->get('condition', []);
-        list($class, $method) = explode('@', $paramElement->get('class_method'), 2);
 
-		if ($class && $method && !(new $class)->$method($this))
+		if ( ($classMethod = explode('@', $paramElement->get('class_method'), 2)) && count($classMethod) == 2 )
 		{
-			return false;
+			list($class, $method) = $classMethod;
+			
+			if (!(new $class)->$method($this))
+			{
+				return false;
+			}
 		}
+
+        $conditions = $paramElement->get('condition', []);
 		
 		foreach($conditions as $condition)
 		{

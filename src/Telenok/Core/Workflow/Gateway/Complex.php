@@ -39,11 +39,11 @@ class Complex extends \Telenok\Core\Interfaces\Workflow\Gateway {
 	 * Allow go out special flows returned by user's function
 	 */
     public function getProcessedLinkOut()
-    { 
-        list($class, $method) = explode('@', $this->getInput()->get('class_method'), 2);
-
-		if ($class && $method)
+    {
+		if ( ($classMethod = explode('@', $this->getInput()->get('class_method'), 2)) && count($classMethod) == 2 )
 		{
+			list($class, $method) = $classMethod;
+			
 			return (new $class)->$method($this);
 		}
 		else

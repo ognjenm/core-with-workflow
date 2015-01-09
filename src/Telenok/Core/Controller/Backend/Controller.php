@@ -142,11 +142,9 @@ class Controller extends \Telenok\Core\Interfaces\Controller\Backend\Controller 
 
 		$listModuleMenuTopCollection->each(function($item) use ($listModuleMenuTop, $config)
 		{
-			$moduleMethod = explode('@', $item);
+			list($code, $method) = explode('@', $item, 2);
 
-			$method = $moduleMethod[1];
-
-			$listModuleMenuTop->push($config->getModule()->get($moduleMethod[0])->$method());
+			$listModuleMenuTop->push($config->getModule()->get($code)->$method());
 		});
 
 		$listModuleMenuTop->sortBy(function($item)

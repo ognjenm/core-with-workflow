@@ -248,6 +248,8 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function process($log = [])
     {
+		var_dump($this->getKey() . ' ' . $this->getId());
+
         $this->setLog($log);
         $this->setNext();
 
@@ -292,22 +294,22 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 									return true;
 								}
 							});
-							
+
 		return $conditionalOut;
     }
-    
+
     public function canGoNext()
     {
         return true;
     }
-    
+
     public function setOrder($param = 0)
     {
 		$this->order = $param;
-		
+
         return $this;
     }
-    
+
     public function getOrder()
     {
 		return $this->order;
@@ -318,7 +320,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         $currentToken = $this->getToken();
 
 		$processedLinkOut = $this->getProcessedLinkOut();
-		
+
         if ($processedLinkOut->count() == 1)
         {
             $nextId = $processedLinkOut->first();
@@ -346,7 +348,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
         $data['result'] = array_get($data, 'result', 'done'); 
         $data['log'] = array_get($data, 'log', 'success'); 
         $data['token'] = $this->getToken()->toArray(); 
-        
+
         $this->getThread()->setLog($this, $data);
 
         return $this;
@@ -361,7 +363,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     {
         return $this->id;
     }
-    
+
     public function setId($id)
     {
         $this->id = $id;

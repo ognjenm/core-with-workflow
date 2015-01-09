@@ -44,6 +44,11 @@ class Exclusive extends \Telenok\Core\Interfaces\Workflow\Gateway {
     {
 		$linkOut = parent::getProcessedLinkOut();
 		
+		if (!$linkOut->count())
+		{
+			throw new \Exception('Element with key "' . $this->getKey . '" and ID "' . $this->getId() . '" hasn\'t any link out (all conditional flows are false ?)');
+		}
+
 		return $linkOut->slice(0, 1);
 	}
 

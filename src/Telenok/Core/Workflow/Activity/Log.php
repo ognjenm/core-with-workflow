@@ -1,6 +1,4 @@
-<?php
-
-namespace Telenok\Core\Workflow\Activity;
+<?php namespace Telenok\Core\Workflow\Activity;
 
 class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
 
@@ -11,21 +9,12 @@ class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
     {
         //\Log::info('Business Process: Event: ' . $this->getProcess()->getEvent()->getEventCode() . '. Process action with code "activity-log"');
 
-        var_dump($this->iter);
+        //var_dump($this->getId());
 
         //\Telenok\Core\Interfaces\Workflow\Thread::make();
-        if ($this->iter++ < 5)
-        {
-            $this->setLog($log);
-            
-            return $this;
-        }
-        else
-        {
-            return parent::process($log);
-        }
+		return parent::process($log);
     }
-	
+
     public function getStencilConfig()
     {
         if (empty($this->stencilConfig))

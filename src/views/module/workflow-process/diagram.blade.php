@@ -218,7 +218,7 @@
 			{
 				ORYX_LOGLEVEL = 0;
 				ORYX.PATH = "{!! \Config::get('app.url') !!}/packages/telenok/core/js/oryx/";
-                //ORYX.CONFIG.CANVAS_WIDTH = "1600";
+
                 Ext.BLANK_IMAGE_URL = "{!! \Config::get('app.url') !!}/packages/telenok/core/js/ext-2.0.2/resources/images/default/s.gif";
 
 				var editor_parameters = {
@@ -230,7 +230,7 @@
 
 				window.oryxEditor = new ORYX.Editor(editor_parameters);
 
-				if (typeof importJSONFromTop !== 'undefined' && jQuery.isFunction(importJSONFromTop))
+				if (typeof importJSONFromTop !== 'undefined' && jQuery.isFunction(importJSONFromTop) && importJSONFromTop())
 				{
 					setTimeout(function() 
                     {   
@@ -238,7 +238,7 @@
                     }, 1000);
 				}
 			}
-            
+
             jQuery(function()
             { 
                 jQuery('#processdata').height(jQuery(window).height());
