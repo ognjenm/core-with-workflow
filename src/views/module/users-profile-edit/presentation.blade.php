@@ -36,9 +36,9 @@
 			{
 				if (!param.tabKey) return this;
 
-				var id = this.presentationDomId + '-tab-' + param.tabKey;
-                 
+				var id = this.presentationDomId + '-tab-' + param.tabKey; 
 				var tabs = jQuery('div.telenok-presentation-tabs', '#' + this.presentationDomId);
+				var this_ = this;
 
 				if (jQuery('div#' + id, tabs).length)
 				{
@@ -58,18 +58,24 @@
 					{
 						event.stopPropagation();
 						event.preventDefault();
+						this_.removePageAttribute();
 						jQuery('i.fa.fa-times', this).click();
 					}
 				});
 
 				jQuery('div.tab-content#tab-content-{{$presentation}}', tabs).append("<div class='tab-pane' id='" + id + "'>" + param.tabContent + "</div>");
-				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show');
+				jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).on('shown.bs.tab', function (e) 
+					{
+						this_.setBreadcrumbs(this_.getPresentationParam()); 
+						this_.setPageHeader();
+					}).tab('show');
 
 				jQuery('a i.fa.fa-times', $li).click(function()
 				{
 					var tabId = jQuery('a', $li).attr('href');
 					jQuery(tabId).remove();
 					$li.remove();
+					this_.removePageAttribute();
 					jQuery('ul.nav-tabs#nav-tabs-{{$presentation}} a:last', tabs).tab('show');
 				});
 

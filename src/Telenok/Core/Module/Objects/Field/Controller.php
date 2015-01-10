@@ -20,22 +20,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         return $types;
     }
-/*
-    public function getListItem111($model)
-    {
-        $query = $model::select($model->getTable() . '.*')->withPermission();->where(function($query) use ($model)
-        {
-            if (!$this->getRequest()->input('multifield_search', false) && ($treeId = $this->getRequest()->input('treeId', 0)))
-            { 
-                $query->where($model->getTable().'.field_object_type', $treeId);
-            }
-        });
 
-        $this->getFilterQuery($model, $query); 
-
-        return $query->groupBy($model->getTable() . '.id')->orderBy($model->getTable() . '.updated_at', 'desc')->skip($this->getRequest()->input('iDisplayStart', 0))->take($this->displayLength + 1);
-    }
-*/
     public function validate($model = null, $input = [], $message = [])
     {
         $key = $model->exists && $model->key ? $model->key : $input->get('key');

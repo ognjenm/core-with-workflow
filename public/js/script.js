@@ -100,6 +100,11 @@ var telenokJS = Clazzzz.extend(
             $parent.append('<li class="active">' + v + '</li>');
         });
     },
+    removeBreadcrumbs: function() 
+    {
+        var $parent = jQuery('div.breadcrumbs ul.breadcrumb');
+        jQuery('li:gt(0), .divider', $parent).remove();
+    },
     getModule: function(moduleKey) { return this.module[moduleKey]; },
     setModuleParam: function(moduleKey, param) { this.module[moduleKey] = param; },
     getPresentation: function(presentationModuleKey) { return this.presentation[presentationModuleKey]; },
