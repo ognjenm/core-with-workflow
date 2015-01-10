@@ -47,7 +47,7 @@ class CoreServiceProvider extends ServiceProvider {
         $this->commands('command.telenok.migration');
 
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
 
         include __DIR__ . '/../../config/event.php';
