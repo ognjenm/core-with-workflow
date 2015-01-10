@@ -20,23 +20,6 @@ class CoreServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        // The path to the user config file
-        $userConfigPath = app()->configPath() . '/packages/telenok/core/config.php';
-
-        // Path to the default config
-        $defaultConfigPath = __DIR__ . '/../../config/config.php';
-
-        // Load the default config
-        $config = $this->app['files']->getRequire($defaultConfigPath);
-
-        if (file_exists($userConfigPath)) 
-        {       
-            // User has their own config, let's merge them properly
-            $userConfig = $this->app['files']->getRequire($userConfigPath);
-            $config = array_replace_recursive($config, $userConfig);
-        }
-
-        $this->app['config']->set('core::config', $config);
         $this->app['view']->addNamespace('core', __DIR__ . '/../../views');
         $this->app['translator']->addNamespace('core', __DIR__ . '/../../lang'); 
 
@@ -81,6 +64,24 @@ class CoreServiceProvider extends ServiceProvider {
      */
     public function register()
     {
+        // The path to the user config file
+        $userConfigPath = app()->configPath() . '/packages/telenok/core/config.php';
+
+        // Path to the default config
+        $defaultConfigPath = __DIR__ . '/../../config/config.php';
+
+        // Load the default config
+        $config = $this->app['files']->getRequire($defaultConfigPath);
+
+        if (file_exists($userConfigPath)) 
+        {       
+            // User has their own config, let's merge them properly
+            $userConfig = $this->app['files']->getRequire($userConfigPath);
+            $config = array_replace_recursive($config, $userConfig);
+        }
+
+        $this->app['config']->set('core::config', $config);
+		
         $this->app['command.telenok.install'] = $this->app->share(function($app)
         {
             return new \Telenok\Core\Command\Install\Controller();
@@ -91,7 +92,7 @@ class CoreServiceProvider extends ServiceProvider {
         });
 
         //DONOTDELETETHISCOMMENT
-        //return;
+        return;
         //~DONOTDELETETHISCOMMENT
 
         $this->app->singleton('telenok.config', '\Telenok\Core\Config');
