@@ -6,4 +6,5 @@ return array(
     'header.title' => 'Web pages',
     'header.description' => 'creating and editing',
 
+	'title.tree' => "Web pages", 
 );

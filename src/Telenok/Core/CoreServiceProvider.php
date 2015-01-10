@@ -20,7 +20,25 @@ class CoreServiceProvider extends ServiceProvider {
      */
     public function boot()
     {
-        $this->package('telenok/core');
+        // The path to the user config file
+        $userConfigPath = app()->configPath() . '/packages/telenok/core/config.php';
+
+        // Path to the default config
+        $defaultConfigPath = __DIR__ . '/../../config/config.php';
+
+        // Load the default config
+        $config = $this->app['files']->getRequire($defaultConfigPath);
+
+        if (file_exists($userConfigPath)) 
+        {       
+            // User has their own config, let's merge them properly
+            $userConfig = $this->app['files']->getRequire($userConfigPath);
+            $config = array_replace_recursive($config, $userConfig);
+        }
+
+        $this->app['config']->set('core::config', $config);
+        $this->app['view']->addNamespace('core', __DIR__ . '/../../views');
+        $this->app['translator']->addNamespace('core', __DIR__ . '/../../lang'); 
 
         include __DIR__ . '/../../config/route.php';
         include __DIR__ . '/../../config/IoC.php';
@@ -36,7 +54,6 @@ class CoreServiceProvider extends ServiceProvider {
 
         \Event::fire('telenok.compile.setting');
 
-
         if (!\Request::is('telenok', 'telenok/*'))
         {
             $routersPath = storage_path() . '/route/route.php';
@@ -48,7 +65,6 @@ class CoreServiceProvider extends ServiceProvider {
 
             include $routersPath;
         }
-
 
         \Auth::extend('custom', function()
         {
