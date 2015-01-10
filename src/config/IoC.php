@@ -1,6 +1,6 @@
 <?php
 
-app()->resolvingCallback(function($object, $app)
+app()->resolving(function($object, $app)
 {
     if ($object instanceof \Telenok\Core\Interfaces\IRequest)
     {
