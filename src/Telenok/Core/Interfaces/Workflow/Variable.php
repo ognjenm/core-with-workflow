@@ -68,31 +68,14 @@ class Variable {
     }
 
 	/*
-	 * @param \App\Http\Controllers\Module\Workflow\Process\Controller
-	 * @param \App\Model\Telenok\Workflow\Parameter
-	 */
-    public function processInitDefault($process = null, $model = null)
-    {
-    }
-    
-	/*
-	 * @param \App\Http\Controllers\Module\Workflow\Process\Controller
-	 * @param \App\Model\Telenok\Workflow\Parameter
-	 * @param mixed
-	 */
-    public function processInitValue($process = null, $model = null, $value = null)
-    {
-        return $value;
-    }
-    
-	/*
 	 * Return initial value of parameter from already started process's thread
 	 * 
-	 * @param \App\Http\Controllers\Module\Workflow\Thread\Controller
 	 * @param \App\Model\Telenok\Workflow\Parameter
+	 * @param mixed
+	 * @param \App\Http\Controllers\Module\Workflow\Thread\Controller
 	 * @param mixed Some data of parameter which launched with the process
 	 */
-    public function getValue($thread = null, $model = null, $value = null)
+    public function getValue($model = null, $value = null, $thread = null)
     {
         return $value;
     }

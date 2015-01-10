@@ -73,15 +73,15 @@ class Parameter {
 	 * @param \App\Model\Telenok\Workflow\Parameter
 	 * @param mixed Some data of parameter which launched with the process
 	 */
-    public function getValue($model = null, $value = null)
+    public function getValue($model = null, $value = null, $thread = null)
     {
 		if ($value === null)
 		{
-	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($model->default_value);
+	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($model->default_value, $thread);
 		}
 		else
 		{
-	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($value);
+	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($value, $thread);
 		}
     }
 

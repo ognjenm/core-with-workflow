@@ -31,9 +31,9 @@ class TemplateMarkerModal extends \Illuminate\Routing\Controller implements \Tel
         $collection = app('telenok.config')->getWorkflowTemplateMarker()->all();
 
 		$result = null;
-
+		
         foreach($collection as $c)
-        {
+        { 
             $string = $c->processMarkerString($string, $thread);
         }
 
@@ -43,16 +43,16 @@ class TemplateMarkerModal extends \Illuminate\Routing\Controller implements \Tel
         {
             \File::makeDirectory(storage_path('tmp'), 0777, true, true);
 
-            \File::put(storage_path('tmp/') . $filename, '<?php return ' . $string . ';');
+            \File::put(storage_path('tmp/') . $filename, '<?php return ' . $string . ';'); 
 
-            $result = include(storage_path('tmp/') . $filename);
+			$result = include(storage_path('tmp/') . $filename);
         } 
         catch (\Exception $ex) 
         {
             throw $ex;
         }
         finally
-        {
+        { 
             if (\File::exists(storage_path('tmp/') . $filename))
             {
                 \File::delete(storage_path('tmp/') . $filename);

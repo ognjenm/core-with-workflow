@@ -248,8 +248,6 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
 
     public function process($log = [])
     {
-		var_dump($this->getKey() . ' ' . $this->getId());
-
         $this->setLog($log);
         $this->setNext();
 
@@ -343,7 +341,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     }
 
     public function setLog($data = [])
-    {  
+    {
         $data['data'] = array_get($data, 'data', []); 
         $data['result'] = array_get($data, 'result', 'done'); 
         $data['log'] = array_get($data, 'log', 'success'); 
@@ -429,7 +427,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
     {
         if ($this->getLinkIn()->isEmpty() && $this->getLinkOut()->isEmpty())
         {
-            throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" haven\'t any connections.');
+            throw new \Exception('Element with key "' . $this->getKey() . '" and resource ID "' . $this->getId() . '" haven\'t any connections.');
         }
         
         if (!$this instanceof \Telenok\Core\Interfaces\Workflow\Flow)
@@ -438,7 +436,7 @@ class Element extends \Illuminate\Routing\Controller implements \Telenok\Core\In
             {
                 if ($actions->get($out)->getLinkOut()->contains($this->getId()))
                 {
-                    throw new \Exception('Element with key "' . $this->getKey() . '" and id "' . $this->getId() . '" fixated on himself.');
+                    throw new \Exception('Element with key "' . $this->getKey() . '" and resource ID "' . $this->getId() . '" fixated on himself.');
                 }
             }
         }

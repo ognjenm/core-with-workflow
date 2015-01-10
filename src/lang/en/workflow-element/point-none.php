@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Standart',
+    'title' => 'None',
     'title.groups' => 'End point',
     'description' => 'End point',
 ];

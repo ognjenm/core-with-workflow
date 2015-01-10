@@ -14,10 +14,10 @@
                     <div class="col-xs-12">
                         <form action="#" onsubmit="return false;" class="form-horizontal">
 
-                            {!! Form::hidden('sessionProcessId', $sessionProcessId) !!}
+                            {!! Form::hidden('sessionProcessId', $sessionProcessId) !!} 
 
                             <div class="form-group">
-                                <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('property.title')}}</label>
+                                <label class="col-sm-3 control-label" for="stencil[title]">{{$controller->LL('title')}}</label>
                                 <div class="col-sm-3">
                                     <input type="text" name="stencil[title]" value="{{$property->get('title')}}" />
                                 </div>
@@ -47,15 +47,19 @@
                             <div class="form-group">
                                 <label class="col-sm-3 control-label" for="stencil[description]">{{$controller->LL('property.description')}}</label>
                                 <div class="col-sm-3">
-                                    <textarea style="width: 300px;" name="stencil[description]">{{$property->get('description')}}</textarea>
+                                    <input type="text" name="stencil[description]" value="{{$property->get('description')}}" />
                                 </div>
                             </div>
-                            
+
                         </form>
                     </div>
                 </div>
             </div>
-        </div> 
+        </div>
+
+        <script type="text/javascript">
+            jQuery("#input{{$uniqueId}}").chosen({width: "300px"});
+        </script>
 
         <div class="modal-footer">
 

@@ -27,10 +27,10 @@ class Parameter extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
     {
 		if (!$thread)
 		{
-			return;
+			return $string;
 		}
 
-		$parameters = $thread->original_parameter->keyBy('code');
+		$parameters = $thread->getModelThread()->original_parameter->keyBy('code');
 		$collectionParameters = app('telenok.config')->getWorkflowParameter();
 
 		foreach ($thread->getParameter() as $code => $value) 

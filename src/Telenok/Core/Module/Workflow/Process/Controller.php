@@ -438,20 +438,20 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
         $modelParameterKeyByCode = $modelParameter->keyBy('code');
         $collectionParameters = app('telenok.config')->getWorkflowParameter();
         $parameter = $input->get('parameter', []);
-        
+
         $processedParameter = \Illuminate\Support\Collection::make();
-        
+
         foreach($parameter as $code => $v)
         {
             $param = $modelParameterKeyByCode->get($code, false);
-            
+
             if ($param === false)
             {
                 throw new \Exception('Cant to run process. Not defined parameter with code "' . $code . '"');
             }
-            
+
             $v = trim($v);
-            
+
             if ($param->required && !strlen($v))
             {
                 $processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param));
@@ -461,7 +461,7 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
                 $processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param, $v));
             }
         }
-        
+
         try
         {
             $runtime->threadCreateAndRun($model, $event, $processedParameter);

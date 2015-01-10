@@ -1,6 +1,4 @@
-<?php
-
-namespace Telenok\Core\Workflow\Gateway;
+<?php namespace Telenok\Core\Workflow\Gateway;
 
 class Exclusive extends \Telenok\Core\Interfaces\Workflow\Gateway {
 
@@ -43,14 +41,25 @@ class Exclusive extends \Telenok\Core\Interfaces\Workflow\Gateway {
     public function getProcessedLinkOut()
     {
 		$linkOut = parent::getProcessedLinkOut();
-		
+
 		if (!$linkOut->count())
 		{
-			throw new \Exception('Element with key "' . $this->getKey . '" and ID "' . $this->getId() . '" hasn\'t any link out (all conditional flows are false ?)');
+			throw new \Exception('Element with key "' . $this->getKey() . '" and resource ID "' . $this->getId() . '" hasn\'t any link out (all conditional flows are false ?)');
 		}
 
 		return $linkOut->slice(0, 1);
 	}
+
+	/*
+	 * Allow go out for each link-in sequence flow
+	 */
+    public function process($log = [])
+    {
+		$this->setLog($log);
+        $this->setNext();
+
+        return $this;
+    }
 
     public function getStencilConfig()
     {

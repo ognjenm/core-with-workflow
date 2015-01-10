@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'title' => 'Uncontroller',
+    'title' => 'Uncontrolled',
     'title.groups' => 'Connecting Objects',
     'description' => '',
 ];

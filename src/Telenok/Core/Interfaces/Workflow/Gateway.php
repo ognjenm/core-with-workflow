@@ -1,6 +1,4 @@
-<?php
-
-namespace Telenok\Core\Interfaces\Workflow;
+<?php namespace Telenok\Core\Interfaces\Workflow;
 
 class Gateway extends \Telenok\Core\Interfaces\Workflow\Element {
 
@@ -49,5 +47,4 @@ class Gateway extends \Telenok\Core\Interfaces\Workflow\Element {
 
         return $this;
     }
-
 }

@@ -2,9 +2,9 @@
 
 namespace Telenok\Core\Workflow\Point\End;
 
-class End extends \Telenok\Core\Interfaces\Workflow\Point {
+class None extends \Telenok\Core\Interfaces\Workflow\Point {
  
-    protected $key = 'point-end';
+    protected $key = 'point-none';
 
     protected $stencilCardinalityRules = [
             [
@@ -24,11 +24,13 @@ class End extends \Telenok\Core\Interfaces\Workflow\Point {
     {
         $currentToken = $this->getToken();
 
-        $this->getThread()->setProcessingStageFinished();
-        $this->getThread()
-                //->removeProcessingToken($currentToken['tokenId'])
-                ->removeActiveToken($currentToken);
+        $this->getThread()->removeActiveToken($currentToken);
 
+		if (!$this->getThread()->getModelThread()->processing_token_active->count())
+		{
+	        $this->getThread()->setProcessingStageFinished();
+		}
+		
         return $this;
     }
 

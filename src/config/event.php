@@ -80,7 +80,8 @@
     $list->push('Telenok\Core\Workflow\Point\Start\Model');
     $list->push('Telenok\Core\Workflow\Point\Start\Form');
     $list->push('Telenok\Core\Workflow\Point\Start\Manual');
-	$list->push('Telenok\Core\Workflow\Point\End\End');
+	$list->push('Telenok\Core\Workflow\Point\End\None');
+	$list->push('Telenok\Core\Workflow\Point\End\Terminate');
     $list->push('Telenok\Core\Workflow\Flow\UncontrolledSequence');
     $list->push('Telenok\Core\Workflow\Flow\ConditionalSequence');
     $list->push('Telenok\Core\Workflow\Flow\DefaultSequence');

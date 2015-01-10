@@ -3,7 +3,7 @@
 
 		<div class="modal-header table-header">
 			<button data-dismiss="modal" class="close" type="button">×</button>
-			<h4>Model event</h4>
+			<h4>{{$controller->LL('title')}}</h4>
 		</div>
 			
         <div class="modal-body" style="max-height: none; padding: 15px;">

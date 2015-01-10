@@ -104,13 +104,11 @@ class Thread {
 
     public function getParameterByCode($code = '')
     {
-		$parameterModel = \Illuminate\Support\Collection::make($this->getModelThread()->original_parameter->get($code));
+		$parameterModel = app('\App\Model\Telenok\Workflow\Parameter')->fill($this->getModelThread()->original_parameter->get($code));
 		
-        if ($parameterModel->count()
-				&& ($controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->get('key'))))
+        if ($controller = app('telenok.config')->getWorkflowParameter()->get($parameterModel->key))
         {
-			return $controller->getValue($this, $parameterModel, $this->getModelThread()->parameter->get($code));
-
+			return $controller->getValue($parameterModel, $this->getModelThread()->parameter->get($code), $this);
         }
 		else
 		{
@@ -181,6 +179,9 @@ class Thread {
     public function setProcessingStageFinished()
     {
         $this->setProcessingStage('finished');
+		$this->removeAllActiveToken();
+		
+		return $this;
     }
 
     public function isProcessingStageFinished()
@@ -331,6 +332,21 @@ class Thread {
         $list->push($token->getCurrentTokenId());
 
         $modelThread->processing_token_active = $list;
+
+        $modelThread->save();
+
+        return $this;
+    }
+
+	/**
+	 * Remove all token linked to element
+	 *
+	 */
+    public function removeAllActiveToken()
+    {
+        $modelThread = $this->getModelThread();
+
+        $modelThread->processing_token_active = [];
 
         $modelThread->save();
 

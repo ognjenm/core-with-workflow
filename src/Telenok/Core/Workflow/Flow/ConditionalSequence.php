@@ -21,7 +21,7 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 		}
 
         $conditions = $paramElement->get('condition', []);
-		
+				
 		foreach($conditions as $condition)
 		{
 			$conditionCollection = \Illuminate\Support\Collection::make($condition);
@@ -92,9 +92,9 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 		$parameterName = $condition->get('parameter');
 		$parameterValue = $condition->get('value');
 		$parameterCase = $condition->get('case');
-		
+
 		$one = $this->getThread()->getParameterByCode($parameterName);
-		$two = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($parameterValue);
+		$two = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($parameterValue, $this->getThread());
 
 		return $this->compareValue($one, $two, $parameterCase);
 	}
@@ -123,7 +123,7 @@ class ConditionalSequence extends \Telenok\Core\Interfaces\Workflow\Flow {
 		}
 		
 		$one = $model->$parameterFieldCode;
-		$two = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($parameterValue);
+		$two = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($parameterValue, $this->getThread());
 		
 		return $this->compareValue($one, $two, $parameterCase);
 	}

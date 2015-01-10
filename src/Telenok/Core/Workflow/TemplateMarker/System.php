@@ -20,7 +20,7 @@ class System extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
     public function processMarkerString($string = '', $thread = null)
     {
         $datetime = \Carbon\Carbon::now();
-        
+
         foreach(array_keys($this->getBlockItem($thread)) as $key)
         {
             switch($key)
