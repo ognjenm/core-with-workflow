@@ -253,7 +253,7 @@ class Controller {
 			$stub = str_replace('{{'.$k.'}}', $v, $stub);
 		}
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'app.php', $stub);
+		\File::put(app()->configPath() . DIRECTORY_SEPARATOR . 'app.php', $stub);
     } 
 
 	public function processConfigDatabaseFile()
