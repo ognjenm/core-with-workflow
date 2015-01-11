@@ -29,7 +29,7 @@ class CoreServiceProvider extends ServiceProvider {
         $this->commands('command.telenok.install');
         $this->commands('command.telenok.migrate');
 
-        if (!storage_path() . '/installedTelenokCore')
+        if (!file_exists(storage_path() . '/installedTelenokCore'))
 		{
 	        return;
 		}
@@ -87,6 +87,11 @@ class CoreServiceProvider extends ServiceProvider {
         {
             return new \Telenok\Core\Command\Install();
         });
+		
+        $this->app['command.telenok.seed'] = $this->app->share(function($app)
+        {
+            return new \Telenok\Core\Command\Seed();
+        });
 
         $this->app['command.telenok.migrate'] = $this->app->share(function($app)
         {
@@ -95,7 +100,7 @@ class CoreServiceProvider extends ServiceProvider {
 			return new \Telenok\Core\Command\Migrate($app['migrator'], $packagePath);
         });
 
-        if (!storage_path() . '/installedTelenokCore')
+        if (!file_exists(storage_path() . '/installedTelenokCore'))
 		{
 	        return;
 		}

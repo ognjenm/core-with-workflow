@@ -3,7 +3,7 @@
 namespace Telenok\Core\Command;
 use Illuminate\Console\Command;
 
-class Install extends Command {
+class Seed extends Command {
  
 	protected $name = 'telenok:seed'; 
 	protected $description = 'Seeding Telenok CMS';
@@ -21,14 +21,9 @@ class Install extends Command {
 
 	public function fire()
 	{
-		/***********************************************************
-		 * 
-		 * Migrate tables and seeding
-		 * 
-		 ***********************************************************/
 		$this->setProcessingController(new \Telenok\Core\Support\Install\Controller());
 
-		$this->info('Migrate tables'); 
+		$this->info('Seed tables'); 
 
 		if ($this->confirm('Do you want to create and seed tables in database [yes/no]: ', false))
 		{
