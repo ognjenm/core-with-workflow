@@ -27,7 +27,7 @@ class CoreServiceProvider extends ServiceProvider {
         include __DIR__ . '/../../config/IoC.php';
 
         $this->commands('command.telenok.install');
-        $this->commands('command.telenok.migration');
+        $this->commands('command.telenok.migrate');
 
         if (!storage_path() . '/installedTelenokCore')
 		{
@@ -85,12 +85,12 @@ class CoreServiceProvider extends ServiceProvider {
 		
         $this->app['command.telenok.install'] = $this->app->share(function($app)
         {
-            return new \Telenok\Core\Command\Install\Controller();
+            return new \Telenok\Core\Command\Install();
         });
 
-        $this->app['command.telenok.migration'] = $this->app->share(function($app)
+        $this->app['command.telenok.migrate'] = $this->app->share(function($app)
         {
-            return new \Telenok\Core\Command\Migration\Controller();
+            return new \Telenok\Core\Command\Migrate();
         });
 
         if (!storage_path() . '/installedTelenokCore')

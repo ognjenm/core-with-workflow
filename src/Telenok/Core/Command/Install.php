@@ -6,10 +6,10 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Controller extends Command {
+class Install extends Command {
  
 	protected $name = 'telenok:install'; 
-	protected $description = 'Install Telenok CMS with console';
+	protected $description = 'Installing Telenok CMS';
 	protected $processingController;
 	
 	public function setProcessingController($param = null)
@@ -93,11 +93,37 @@ class Controller extends Command {
 				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
 				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
 			});
+		} 
+
+		/***********************************************************
+		 * 
+		 * Migrate tables and seeding
+		 * 
+		 ***********************************************************/
+		$this->setProcessingController(new \Telenok\Core\Support\Install\Controller());
+
+		$this->info('Migrate tables'); 
+
+		if ($this->confirm('Do you want to create and seed tables in database [yes/no]: ', false))
+		{
+			$this->inputSuperuserLogin();
+			$this->inputSuperuserEmail();
+			$this->inputSuperuserPassword(); 
+
+			$this->info('Start creating tables and seed database. Please, wait. It cat take some minuts.'); 
+
+			$this->call('telenok:migrate', array('--package' => 'telenok/core'));
+
+			$user = \App\Model\Telenok\User\User::where('username', 'admin')->first();
+
+			$user->storeOrUpdate([
+				'username' => $this->processingController->getSuperuserLogin(),
+				'email' => $this->processingController->getSuperuserEmail(),
+				'password' => $this->processingController->getSuperuserPassword(),
+			]);
 		}
-
+		
 		$this->processingController->postInstallProcess();
-
-		$this->info('Please, run command "php artisan telenok:migrate" to finish installation. Thank you.');
 	}
 
 	public function inputDomain()
@@ -123,24 +149,6 @@ class Controller extends Command {
 	public function inputDomainSecure()
 	{
 		$this->processingController->setDomainSecure($this->confirm('Is domain secure (aka site uses https) [yes/no]: '));
-	}
-
-	public function inputSuperuserLogin()
-	{
-		while(true)
-		{
-			$name = $this->ask('What is login for superuser in backend: ');
-
-			try
-			{
-				$this->processingController->setSuperuserLogin($name);
-				break;
-			}
-			catch (\Exception $e)
-			{
-				$this->error($e->getMessage() . ' Please, retry.');
-			}
-		}
 	}
 
 	public function inputSuperuserPassword()
@@ -291,6 +299,42 @@ class Controller extends Command {
 			try
 			{
 				$this->processingController->setDbPrefix($name);
+				break;
+			}
+			catch (\Exception $e)
+			{
+				$this->error($e->getMessage() . ' Please, retry.');
+			}
+		}
+	}
+
+	public function inputSuperuserLogin()
+	{
+		while(true)
+		{
+			$name = $this->ask('What is login for superuser in backend: ');
+
+			try
+			{
+				$this->processingController->setSuperuserLogin($name);
+				break;
+			}
+			catch (\Exception $e)
+			{
+				$this->error($e->getMessage() . ' Please, retry.');
+			}
+		}
+	}
+
+	public function inputSuperuserEmail()
+	{
+		while(true)
+		{
+			$name = $this->ask('What is superuser\'s email: ');
+
+			try
+			{
+				$this->processingController->setSuperuserEmail($name);
 				break;
 			}
 			catch (\Exception $e)
