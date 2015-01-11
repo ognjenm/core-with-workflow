@@ -31,7 +31,7 @@ class Seed extends Command {
 			$this->inputSuperuserEmail();
 			$this->inputSuperuserPassword(); 
 
-			$this->info('Start creating tables and seed database. Please, wait. It cat take some minuts.'); 
+			$this->info('Start creating tables and seed database. Please, wait. It can take some minuts.'); 
 
 			$this->call('telenok:migrate', array('--package' => 'telenok/core'));
 
