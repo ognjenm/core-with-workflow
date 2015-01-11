@@ -117,7 +117,7 @@ class CoreServiceProvider extends ServiceProvider {
 			// The asset "publisher" is responsible for moving package's assets into the
 			// web accessible public directory of an application so they can actually
 			// be served to the browser. Otherwise, they would be locked in vendor.
-			$publisher = new \Telenok\Core\Support\AssetPublisher($app['files'], $publicPath);
+			$publisher = new \Telenok\Core\Support\Publishing\AssetPublisher($app['files'], $publicPath);
 
 			$publisher->setPackagePath($app['path.base'].'/vendor');
 
