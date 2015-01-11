@@ -315,17 +315,7 @@ class Controller {
 	
 	public function postInstallProcess()
 	{
-		$reflector = new \ReflectionClass('\Telenok\Core\CoreServiceProvider');
-		$file = $reflector->getFileName();
-
-		$content = \File::get($file);
-
-		$pattern = '/(DONOTDELETETHISCOMMENT\s*)(return;)/i';
-		$replacement = '${1}//return;';
-
-		$res = preg_replace($pattern, $replacement, $content);
-
-		\File::put($file, $res);
+		touch(storage_path() . '/installedTelenokCore');
 	}
 	
 }

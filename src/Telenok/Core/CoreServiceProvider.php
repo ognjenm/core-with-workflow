@@ -29,9 +29,10 @@ class CoreServiceProvider extends ServiceProvider {
         $this->commands('command.telenok.install');
         $this->commands('command.telenok.migration');
 
-        //DONOTDELETETHISCOMMENT
-        return;
-        //~DONOTDELETETHISCOMMENT
+        if (!storage_path() . '/installedTelenokCore')
+		{
+	        return;
+		}
 
         include __DIR__ . '/../../config/event.php';
 
@@ -92,9 +93,10 @@ class CoreServiceProvider extends ServiceProvider {
             return new \Telenok\Core\Command\Migration\Controller();
         });
 
-        //DONOTDELETETHISCOMMENT
-        return;
-        //~DONOTDELETETHISCOMMENT
+        if (!storage_path() . '/installedTelenokCore')
+		{
+	        return;
+		}
 
         $this->app->singleton('telenok.config', '\Telenok\Core\Config');
 
