@@ -1,6 +1,5 @@
-<?php
+<?php namespace Telenok\Core\Command;
 
-namespace Telenok\Core\Command;
 use Illuminate\Console\Command;
 
 class Seed extends Command {

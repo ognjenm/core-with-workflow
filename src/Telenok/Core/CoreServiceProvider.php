@@ -29,6 +29,7 @@ class CoreServiceProvider extends ServiceProvider {
         $this->commands('command.telenok.install');
         $this->commands('command.telenok.migrate');
         $this->commands('command.telenok.seed');
+        $this->commands('command.telenok.assets');
 
         if (!file_exists(storage_path() . '/installedTelenokCore'))
 		{
@@ -93,13 +94,35 @@ class CoreServiceProvider extends ServiceProvider {
         {
             return new \Telenok\Core\Command\Seed();
         });
-
+		
+		/* depend on Taylor workbench release CLI */
         $this->app['command.telenok.migrate'] = $this->app->share(function($app)
         {
 			$packagePath = $app['path.base'].'/vendor';
 
 			return new \Telenok\Core\Command\Migrate($app['migrator'], $packagePath);
         });
+		
+		/* depend on Taylor workbench release CLI */
+		$this->app->singleton('command.telenok.assets', function($app)
+		{
+			return new \Telenok\Core\Command\AssetPublishCommand($app['asset.publisher']);
+		});
+
+		/* depend on Taylor workbench release CLI */
+		$this->app->singleton('asset.publisher', function($app)
+		{
+			$publicPath = $app['path.public'];
+
+			// The asset "publisher" is responsible for moving package's assets into the
+			// web accessible public directory of an application so they can actually
+			// be served to the browser. Otherwise, they would be locked in vendor.
+			$publisher = new \Telenok\Core\Support\AssetPublisher($app['files'], $publicPath);
+
+			$publisher->setPackagePath($app['path.base'].'/vendor');
+
+			return $publisher;
+		});
 
         if (!file_exists(storage_path() . '/installedTelenokCore'))
 		{
