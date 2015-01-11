@@ -4,7 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use Telenok\Core\Support\AssetPublisher;
+use Telenok\Core\Support\Publishing\AssetPublisher;
 
 class AssetPublishCommand extends Command {
 
