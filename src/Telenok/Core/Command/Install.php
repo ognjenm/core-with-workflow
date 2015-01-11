@@ -93,34 +93,6 @@ class Install extends Command {
 		} 
 
 		$this->processingController->touchInstallFlag();
-		
-		/***********************************************************
-		 * 
-		 * Migrate tables and seeding
-		 * 
-		 ***********************************************************/
-		$this->setProcessingController(new \Telenok\Core\Support\Install\Controller());
-
-		$this->info('Migrate tables'); 
-
-		if ($this->confirm('Do you want to create and seed tables in database [yes/no]: ', false))
-		{
-			$this->inputSuperuserLogin();
-			$this->inputSuperuserEmail();
-			$this->inputSuperuserPassword(); 
-
-			$this->info('Start creating tables and seed database. Please, wait. It cat take some minuts.'); 
-
-			$this->call('telenok:migrate', array('--package' => 'telenok/core'));
-
-			$user = \App\Model\Telenok\User\User::where('username', 'admin')->first();
-
-			$user->storeOrUpdate([
-				'username' => $this->processingController->getSuperuserLogin(),
-				'email' => $this->processingController->getSuperuserEmail(),
-				'password' => $this->processingController->getSuperuserPassword(),
-			]);
-		} 
 	}
 
 	public function inputDomain()
@@ -146,35 +118,6 @@ class Install extends Command {
 	public function inputDomainSecure()
 	{
 		$this->processingController->setDomainSecure($this->confirm('Is domain secure (aka site uses https) [yes/no]: '));
-	}
-
-	public function inputSuperuserPassword()
-	{
-		while(true)
-		{ 
-			$name = $this->secret('What is password for superuser in backend: ');
-			
-			try
-			{
-				$this->processingController->setSuperuserPassword($name); 
-			}
-			catch (\Exception $e)
-			{
-				$this->error($e->getMessage() . ' Please, retry.');
-				continue;
-			}
-			
-			$confirmPassword = $this->secret('Please, type password again to confirm it: ');
-			
-			if ($name === $confirmPassword)
-			{
-				break;
-			}
-			else
-			{
-				$this->error('Wrong confirmed password. Try again, please.');
-			}
-		}
 	}
  
 	public function inputLocale()
@@ -296,42 +239,6 @@ class Install extends Command {
 			try
 			{
 				$this->processingController->setDbPrefix($name);
-				break;
-			}
-			catch (\Exception $e)
-			{
-				$this->error($e->getMessage() . ' Please, retry.');
-			}
-		}
-	}
-
-	public function inputSuperuserLogin()
-	{
-		while(true)
-		{
-			$name = $this->ask('What is login for superuser in backend: ');
-
-			try
-			{
-				$this->processingController->setSuperuserLogin($name);
-				break;
-			}
-			catch (\Exception $e)
-			{
-				$this->error($e->getMessage() . ' Please, retry.');
-			}
-		}
-	}
-
-	public function inputSuperuserEmail()
-	{
-		while(true)
-		{
-			$name = $this->ask('What is superuser\'s email: ');
-
-			try
-			{
-				$this->processingController->setSuperuserEmail($name);
 				break;
 			}
 			catch (\Exception $e)
