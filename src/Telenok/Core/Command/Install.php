@@ -92,6 +92,8 @@ class Install extends Command {
 			});
 		} 
 
+		$this->processingController->touchInstallFlag();
+		
 		/***********************************************************
 		 * 
 		 * Migrate tables and seeding
@@ -118,9 +120,7 @@ class Install extends Command {
 				'email' => $this->processingController->getSuperuserEmail(),
 				'password' => $this->processingController->getSuperuserPassword(),
 			]);
-		}
-		
-		$this->processingController->postInstallProcess();
+		} 
 	}
 
 	public function inputDomain()

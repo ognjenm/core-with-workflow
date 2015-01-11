@@ -313,7 +313,7 @@ class Controller {
 		\File::put(app()->configPath() . DIRECTORY_SEPARATOR . 'database.php', $stub);  
     }
 	
-	public function postInstallProcess()
+	public function touchInstallFlag()
 	{
 		touch(storage_path() . '/installedTelenokCore');
 	}
