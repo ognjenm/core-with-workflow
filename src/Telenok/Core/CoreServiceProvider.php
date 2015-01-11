@@ -86,6 +86,7 @@ class CoreServiceProvider extends ServiceProvider {
         {
             return new \Telenok\Core\Command\Install\Controller();
         });
+
         $this->app['command.telenok.migration'] = $this->app->share(function($app)
         {
             return new \Telenok\Core\Command\Migration\Controller();

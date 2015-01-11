@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
 	/*
 	|--------------------------------------------------------------------------
@@ -44,46 +44,46 @@ return array(
 	|
 	*/
 
-	'connections' => array(
-
-		'sqlite' => array(
+	'connections' => [
+		
+		'sqlite' => [
 			'driver'   => 'sqlite',
-			'database' => __DIR__.'/../database/production.sqlite',
-			'prefix'   => '',
-		),
+			'database' => storage_path().'/database.sqlite',
+			'prefix'   => '{{dbPrefix}}',
+		],
 
-		'mysql' => array(
+		'mysql' => [
 			'driver'    => 'mysql',
-			'host'      => '{{dbHost}}',
-			'database'  => '{{dbDatabase}}',
-			'username'  => '{{dbUsername}}',
-			'password'  => '{{dbPassword}}',
+			'host'      => env('DB_HOST', '{{dbHost}}'),
+			'database'  => env('DB_DATABASE', '{{dbDatabase}}'),
+			'username'  => env('DB_USERNAME', '{{dbUsername}}'),
+			'password'  => env('DB_PASSWORD', '{{dbPassword}}'),
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '{{dbPrefix}}',
-		),
+			'strict'    => false,
+		],
 
-		'pgsql' => array(
-			'driver'    => 'pgsql',
-			'host'      => '{{dbHost}}',
-			'database'  => '{{dbDatabase}}',
-			'username'  => '{{dbUsername}}',
-			'password'  => '{{dbPassword}}',
-			'charset'   => 'utf8',
-			'prefix'    => '{{dbPrefix}}',
-			'schema'    => 'public',
-		),
+		'pgsql' => [
+			'driver'   => 'pgsql',
+			'host'     => env('DB_HOST', '{{dbHost}}'),
+			'database' => env('DB_DATABASE', '{{dbDatabase}}'),
+			'username' => env('DB_USERNAME', '{{dbUsername}}'),
+			'password' => env('DB_PASSWORD', '{{dbPassword}}'),
+			'charset'  => 'utf8',
+			'prefix'   => '{{dbPrefix}}',
+			'schema'   => 'public',
+		],
 
-		'sqlsrv' => array(
-			'driver'    => 'sqlsrv',
-			'host'      => '{{dbHost}}',
-			'database'  => '{{dbDatabase}}',
-			'username'  => '{{dbUsername}}',
-			'password'  => '{{dbPassword}}',
-			'prefix'    => '{{dbPrefix}}',
-		),
-
-	),
+		'sqlsrv' => [
+			'driver'   => 'sqlsrv',
+			'host'     => env('DB_HOST', '{{dbHost}}'),
+			'database' => env('DB_DATABASE', '{{dbDatabase}}'),
+			'username' => env('DB_USERNAME', '{{dbUsername}}'),
+			'password' => env('DB_PASSWORD', '{{dbPassword}}'),
+			'prefix'   => '{{dbPrefix}}',
+		],
+	],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -92,7 +92,7 @@ return array(
 	|
 	| This table keeps track of all the migrations that have already run for
 	| your application. Using this information, we can determine which of
-	| the migrations on disk have not actually be run in the databases.
+	| the migrations on disk haven't actually been run in the database.
 	|
 	*/
 
@@ -109,16 +109,14 @@ return array(
 	|
 	*/
 
-	'redis' => array(
+	'redis' => [
 
-		'cluster' => true,
+		'cluster' => false,
 
-		'default' => array(
+		'default' => [
 			'host'     => '127.0.0.1',
 			'port'     => 6379,
 			'database' => 0,
-		),
-
-	),
-
-);
+		],
+	],
+];

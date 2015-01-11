@@ -253,7 +253,7 @@ class Controller {
 			$stub = str_replace('{{'.$k.'}}', $v, $stub);
 		}
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php', $stub);
+		\File::put(app_path() . DIRECTORY_SEPARATOR . 'app.php', $stub);
     } 
 
 	public function processConfigDatabaseFile()
@@ -274,7 +274,7 @@ class Controller {
 			$stub = str_replace('{{'.$k.'}}', $v, $stub);
 		}
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);
+		\File::put(app()->configPath() . DIRECTORY_SEPARATOR . 'database.php', $stub);
 		
 		// validate database connection
 		$conn = array(
@@ -310,7 +310,7 @@ class Controller {
 			throw new \Exception('Cant create table in database. Please, validate setting in app/config/database.php or set its again with current console command.');
 		}
 
-		\File::put(app_path() . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'database.php', $stub);  
+		\File::put(app()->configPath() . DIRECTORY_SEPARATOR . 'database.php', $stub);  
     }
 	
 	public function postInstallProcess()
