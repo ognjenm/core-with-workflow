@@ -90,7 +90,9 @@ class CoreServiceProvider extends ServiceProvider {
 
         $this->app['command.telenok.migrate'] = $this->app->share(function($app)
         {
-            return new \Telenok\Core\Command\Migrate();
+			$packagePath = $app['path.base'].'/vendor';
+
+			return new \Telenok\Core\Command\Migrate($app['migrator'], $packagePath);
         });
 
         if (!storage_path() . '/installedTelenokCore')
