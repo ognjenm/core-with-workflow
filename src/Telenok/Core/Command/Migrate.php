@@ -63,8 +63,6 @@ class Migrate extends Command {
 	 */
 	public function fire()
 	{
-		if ( ! $this->confirmToProceed()) return;
-
 		$this->prepareDatabase();
 
 		// The pretend option can be used for "simulating" the migration and grabbing
