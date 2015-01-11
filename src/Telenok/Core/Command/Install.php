@@ -91,8 +91,19 @@ class Install extends Command {
 				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
 			});
 		}
-		
-		$this->call('migrate:install');
+		else
+		{
+			$this->info('Seems, table "setting" already exists');
+		}
+
+		try
+		{
+			$this->call('migrate:install');
+		}
+		catch (\Exception $ex)
+		{
+			$this->info('Seems, table "migrations" already exists');
+		}
 
 		$this->processingController->touchInstallFlag();
 	}
