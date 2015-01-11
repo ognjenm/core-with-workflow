@@ -90,7 +90,9 @@ class Install extends Command {
 				$table->integer('updated_by_user')->unsigned()->nullable()->default(null);
 				$table->integer('deleted_by_user')->unsigned()->nullable()->default(null);
 			});
-		} 
+		}
+		
+		$this->call('migrate:install');
 
 		$this->processingController->touchInstallFlag();
 	}

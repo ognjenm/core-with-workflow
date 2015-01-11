@@ -23,7 +23,7 @@ class Seed extends Command {
 	{
 		$this->setProcessingController(new \Telenok\Core\Support\Install\Controller());
 
-		$this->info('Seed tables'); 
+		$this->info('Create and seed tables'); 
 
 		if ($this->confirm('Do you want to create and seed tables in database [yes/no]: ', false))
 		{

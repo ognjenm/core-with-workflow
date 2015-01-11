@@ -28,6 +28,7 @@ class CoreServiceProvider extends ServiceProvider {
 
         $this->commands('command.telenok.install');
         $this->commands('command.telenok.migrate');
+        $this->commands('command.telenok.seed');
 
         if (!file_exists(storage_path() . '/installedTelenokCore'))
 		{
