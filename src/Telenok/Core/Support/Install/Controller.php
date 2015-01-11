@@ -77,13 +77,13 @@ class Controller {
 	
 	public function setSuperuserPassword($param = '')
 	{
-		if (mb_strlen($param) > 7)
+		if (mb_strlen($param) > 6)
 		{
 			$this->superuserPassword = $param;
 		}
 		else
 		{
-			throw new \Exception('Wrong superuser password, it should be at least 8 symbols.');	
+			throw new \Exception('Wrong superuser password, it should be at least 7 symbols.');	
 		}		
 		
 		return $this;

@@ -49,7 +49,7 @@ class Seed extends Command {
 	{
 		while(true)
 		{ 
-			$name = $this->secret('What is password for superuser in backend: ');
+			$name = $this->ask('What is password for superuser in backend: ');
 			
 			try
 			{
