@@ -1,12 +1,12 @@
 <?php
 
-namespace Telenok\Core\Command\Migration;
+namespace Telenok\Core\Command;
 
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
-class Controller extends Command {
+class Migrate extends Command {
 
 	protected $name = 'telenok:migrate'; 
 	protected $description = 'Migrate and seed package';

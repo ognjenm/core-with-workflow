@@ -1,10 +1,7 @@
 <?php
 
-namespace Telenok\Core\Command\Install;
-
+namespace Telenok\Core\Command;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 
 class Install extends Command {
  
