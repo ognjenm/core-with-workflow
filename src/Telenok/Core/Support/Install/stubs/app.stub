@@ -132,7 +132,9 @@ return array(
          * Telenok core
          */
         'Telenok\Core\CoreServiceProvider',
-        
+
+        'Illuminate\Html\HtmlServiceProvider',
+
         ###providers###
 
 		/*
@@ -143,7 +145,7 @@ return array(
 		'App\Providers\ConfigServiceProvider',
 		'App\Providers\EventServiceProvider',
 		'App\Providers\RouteServiceProvider',
-    ),
+    ],
 
 	/*
 	|--------------------------------------------------------------------------
@@ -185,6 +187,7 @@ return array(
 		'Route'     => 'Illuminate\Support\Facades\Route',
 		'Schema'    => 'Illuminate\Support\Facades\Schema',
 		'Session'   => 'Illuminate\Support\Facades\Session',
+		'Str'		=> 'Illuminate\Support\Str',
 		'URL'       => 'Illuminate\Support\Facades\URL',
 		'Validator' => 'Illuminate\Support\Facades\Validator',
 		'View'      => 'Illuminate\Support\Facades\View',
