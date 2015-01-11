@@ -1,4 +1,4 @@
-<?php namespace Telenok\Core\Support;
+<?php namespace Telenok\Core\Support\Publishing;
 
 use Illuminate\Filesystem\Filesystem;
 

@@ -1,4 +1,4 @@
-<?php namespace Telenok\Core\Support;
+<?php namespace Telenok\Core\Support\Publishing;
 
 class AssetPublisher extends Publisher {
 
