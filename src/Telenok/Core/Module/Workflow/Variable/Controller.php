@@ -10,5 +10,5 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
     protected $presentation = 'tree-tab-object';
 
-    //protected $presentationFormFieldListView = 'core::module.workflow-process.form-field-list';
+    protected $presentationFormFieldListView = 'core::module.workflow-process-variable.form-field-list'; 
 }

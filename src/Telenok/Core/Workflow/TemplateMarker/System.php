@@ -4,7 +4,7 @@ class System extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
 
     protected $key = 'system';
 
-    public function getBlockItem($thread = null)
+    public function getBlockItem()
     {
         return [
             'DATETIME' => 'Date and time', 
@@ -21,7 +21,7 @@ class System extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
     {
         $datetime = \Carbon\Carbon::now();
 
-        foreach(array_keys($this->getBlockItem($thread)) as $key)
+        foreach(array_keys($this->getBlockItem()) as $key)
         {
             switch($key)
             {

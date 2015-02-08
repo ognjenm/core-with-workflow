@@ -7,13 +7,13 @@
 
             var $modal = jQuery('#modal-template-marker-{{$uniqueId}}');
 
-            $modal.html(jQuery('#select-template-marker-{{$uniqueId}}').html());
+            $modal.html(jQuery('#select-template-marker-{{$uniqueId}}').html()); 
 
-            jQuery('option.chooseMeOnClick', $modal).dblclick(function()
-            {
-                jQuery('#{{$fieldId}}').val( jQuery('#{{$fieldId}}').val() + this.value );
-            });
-            
+			jQuery('option.chooseMeOnClick', $modal).dblclick(function()
+			{
+				{!! $fieldId !!}.val( {!! $fieldId !!}.val() + this.value );
+			});
+
             $modal.on('hidden', function() 
             { 
                 $modal.remove();
@@ -23,8 +23,10 @@
         })();
     }
 
-    jQuery('#{{$buttonId}}').click(function()
+    {!! $buttonId !!}.click(function()
     {
+		var this_ = this;
+		
         jQuery('#modal-template-marker-{{$uniqueId}}').modal('show');
     });
 
@@ -43,7 +45,7 @@
                 <div class="widget-main">
                     <div id="accordion" class="accordion-style1 panel-group">
 
-						@foreach(app('telenok.config')->getWorkflowTemplateMarker()->reject(function($i) use ($exclude) { return in_array($i->getKey(), $exclude); })->all() as $c)
+						@foreach(app('telenok.config')->getWorkflowTemplateMarker(true)->reject(function($i) use ($excludeByKey, $onlyAviableAtStart) { if ( ($onlyAviableAtStart && !$i->getAvailableAtStart()) || in_array($i->getKey(), $excludeByKey)) return true; })->all() as $c)
 
 							{!! $c->setProcess($process)->getBlockContent() !!}
 

@@ -13,7 +13,20 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
     protected $thread;
     protected $package = '';
     protected $request; 
+    protected $availableAtStart = true; 
     
+    public function getAvailableAtStart()
+    {
+        return $this->availableAtStart;
+    }
+    
+    public function setAvailableAtStart($param = '')
+    {
+        $this->availableAtStart = $param;
+        
+        return $this;
+    }
+	
     public function setKey($param = '')
     {
         $this->key = $param;
@@ -82,12 +95,11 @@ class TemplateMarker extends \Illuminate\Routing\Controller implements \Telenok\
         ])->render();
     }
     
-
     public function getBlockItem()
     {
         return [];
     }
-    
+
 	/*
 	 * @param string
 	 * @param \Telenok\Core\Workflow\Thread

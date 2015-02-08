@@ -297,7 +297,7 @@ abstract class Model extends \Illuminate\Database\Eloquent\Model {
 				if ($type->classController())
 				{
 					$classControllerObject->validate($model, $input);
-				} 
+				}
 
 				$model->fill($input->all())->push();
 

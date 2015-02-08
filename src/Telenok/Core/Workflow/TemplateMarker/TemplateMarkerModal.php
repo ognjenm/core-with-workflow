@@ -8,7 +8,7 @@ class TemplateMarkerModal extends \Illuminate\Routing\Controller implements \Tel
     protected $languageDirectory = 'workflow-template-marker';
     protected $key = 'modal';
 
-    public function getMarkerModalContent($uniqueId = '', $attr = [], $exclude = [], $processId = 0)
+    public function getMarkerModalContent($uniqueId = '', $attr = [], $onlyAviableAtStart = false, $excludeByKey = [], $processId = 0)
     {
         $attr = \Illuminate\Support\Collection::make($attr);
 		
@@ -17,7 +17,8 @@ class TemplateMarkerModal extends \Illuminate\Routing\Controller implements \Tel
             'fieldId' => $attr->get('fieldId'),
             'buttonId' => $attr->get('buttonId'),
             'process' => \App\Model\Telenok\Workflow\Process::find($processId),
-            'exclude' => $exclude,
+            'onlyAviableAtStart' => $onlyAviableAtStart,
+            'excludeByKey' => $excludeByKey,
             'uniqueId' => $uniqueId,
         ])->render();
     }
@@ -28,10 +29,10 @@ class TemplateMarkerModal extends \Illuminate\Routing\Controller implements \Tel
 	 */
     public function processMarkersString($string = '', $thread = null)
     {
-        $collection = app('telenok.config')->getWorkflowTemplateMarker()->all();
+        $collection = app('telenok.config')->getWorkflowTemplateMarker(true)->all();
 
 		$result = null;
-		
+
         foreach($collection as $c)
         { 
             $string = $c->processMarkerString($string, $thread);

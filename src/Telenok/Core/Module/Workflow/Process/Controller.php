@@ -434,37 +434,47 @@ class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTabObject\Con
 
         $event = (new \Telenok\Core\Workflow\Event())->setEventCode('workflow.manual.start')->setRuntime($runtime);
 
+
         $modelParameter = $model->parameter()->active()->get(); 
         $modelParameterKeyByCode = $modelParameter->keyBy('code');
         $collectionParameters = app('telenok.config')->getWorkflowParameter();
-        $parameter = $input->get('parameter', []);
+        $parameter = \Illuminate\Support\Collection::make($input->get('parameter', []));
 
         $processedParameter = \Illuminate\Support\Collection::make();
 
-        foreach($parameter as $code => $v)
+        foreach($modelParameterKeyByCode as $code => $param)
         {
-            $param = $modelParameterKeyByCode->get($code, false);
+			$v = $parameter->get($code, null);
 
-            if ($param === false)
-            {
-                throw new \Exception('Cant to run process. Not defined parameter with code "' . $code . '"');
-            }
+			if ($v === null && $param->required)
+			{
+				$value = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($param->default_value);
+			}
+			else
+			{
+				$value = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString(trim($v));
+			}
 
-            $v = trim($v);
+			$processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param, $value));
+        }
 
-            if ($param->required && !strlen($v))
-            {
-                $processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param));
-            }
-            else
-            {
-                $processedParameter->put($code, $collectionParameters->get($param->key)->getValue($param, $v));
-            }
+
+        $modelVariable = $model->variable()->active()->get(); 
+        $modelVariableKeyByCode = $modelVariable->keyBy('code');
+        $collectionVariables = app('telenok.config')->getWorkflowVariable();
+
+        $processedVariable = \Illuminate\Support\Collection::make();
+
+        foreach($modelVariableKeyByCode as $code => $param)
+        {
+			$value = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($param->default_value);
+
+			$processedVariable->put($code, $collectionVariables->get($param->key)->getValue($param, $value));
         }
 
         try
         {
-            $runtime->threadCreateAndRun($model, $event, $processedParameter);
+            $runtime->threadCreateAndRun($model, $event, $processedParameter, $processedVariable);
 
             return [
                 'tabKey' => $this->getTabKey() . '-start-' . $id,

@@ -1,6 +1,4 @@
-<?php
-
-namespace Telenok\Core\Interfaces\Workflow;
+<?php namespace Telenok\Core\Interfaces\Workflow;
 
 class Parameter {
 
@@ -71,21 +69,16 @@ class Parameter {
 	 * Return initial value of parameter from already started process's thread
 	 * 
 	 * @param \App\Model\Telenok\Workflow\Parameter
+	 * @param mixed
+	 * @param \Telenok\Core\Workflow\Thread
 	 * @param mixed Some data of parameter which launched with the process
 	 */
     public function getValue($model = null, $value = null, $thread = null)
     {
-		if ($value === null)
-		{
-	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($model->default_value, $thread);
-		}
-		else
-		{
-	        return \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($value, $thread);
-		}
+		return $value;
     }
 
-	public function toString($value)
+	public function toString($model = null, $value, $thread = null)
 	{
 		return (string)$value;
 	}

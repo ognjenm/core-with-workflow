@@ -106,19 +106,20 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right">{{$controller->LL('property.value')}}</label>
                 <div class="col-sm-9">
-                    <input type="text" value="{{$p->get('value')}}" name="stencil[condition][{{$uniqueId}}][value]" placeholder="Value" id="value-{{$jsUniqueId}}" class="col-xs-5 col-sm-5">
+                    <input type="text" id="input-template-{{$uniqueId}}" value="{{$p->get('value')}}" name="stencil[condition][{{$uniqueId}}][value]" placeholder="Value" class="col-xs-5 col-sm-5">
+					<button id="button-template-{{$uniqueId}}" type="button" class="btn btn-sm" data-toggle="modal"><i class="fa fa-align-justify"></i></button>
                 </div>
 
 					{!! \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->getMarkerModalContent(
 						$jsUniqueId,
 						[
-                            'fieldId' => 'value-' . $jsUniqueId,
-                            'buttonId' => 'button-' . $jsUniqueId,
+							'fieldId' => 'jQuery("#input-template-' . $uniqueId . '")',
+							'buttonId' => 'jQuery("#button-template-' . $uniqueId . '")',
                         ],
+						null,
 						[],
 						$processId) !!}
 
-                <button id="{{ 'button-' . $jsUniqueId }}" type="button" class="btn btn-sm" data-toggle="modal"><i class="fa fa-align-justify"></i></button>
             </div>
         </div>
     </div>
@@ -148,8 +149,6 @@
 
         jQuery("#input-model-field-{{$uniqueId}}").trigger("chosen:updated");
     });
-
-    jQuery("#input-model-field-{{$uniqueId}}").chosen({width: "300px"});
 
     if ( !{{ intval($p ? $p->get('model_type', 0) : 0) }})
     {

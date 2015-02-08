@@ -1,8 +1,8 @@
 <?php namespace Telenok\Core\Workflow\TemplateMarker;
 
-class Parameter extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
+class Variable extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
 
-    protected $key = 'parameter';
+    protected $key = 'variable';
     protected $availableAtStart = false;
 
     public function getBlockItem()
@@ -11,7 +11,7 @@ class Parameter extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
 
 		if ($this->getProcess())
 		{
-			foreach($this->getProcess()->parameter()->active()->get() as $p)
+			foreach($this->getProcess()->variable()->active()->get() as $p)
 			{
 				$return[strtoupper($p->code)] = $p->translate('title');
 			}
@@ -31,14 +31,14 @@ class Parameter extends \Telenok\Core\Interfaces\Workflow\TemplateMarker {
 			return $string;
 		}
 
-		$parameters = $thread->getModelThread()->original_parameter->keyBy('code');
-		$collectionParameters = app('telenok.config')->getWorkflowParameter();
+		$parameters = $thread->getModelThread()->original_variable->keyBy('code');
+		$collectionVariables = app('telenok.config')->getWorkflowVariable();
 
-		foreach ($thread->getParameters() as $code => $value) 
+		foreach ($thread->getVariable() as $code => $value) 
 		{
 			$param = $parameters->get($code, false);
 
-			$string = str_replace('{=' . strtoupper($this->getKey() . ':' . $code) . '}', '("' . $collectionParameters->get($param['key'])->toString($param, $value) . '")', $string);
+			$string = str_replace('{=' . strtoupper($this->getKey() . ':' . $code) . '}', '"' . $collectionVariables->get($param['key'])->toString($param, $value) . '"', $string);
         } 
 
         return $string;

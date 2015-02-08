@@ -68,15 +68,46 @@ class Variable {
     }
 
 	/*
-	 * Return initial value of parameter from already started process's thread
+	 * Return value of variable from already started process's thread
 	 * 
-	 * @param \App\Model\Telenok\Workflow\Parameter
+	 * @param \App\Model\Telenok\Workflow\Variable
 	 * @param mixed
 	 * @param \App\Http\Controllers\Module\Workflow\Thread\Controller
 	 * @param mixed Some data of parameter which launched with the process
 	 */
     public function getValue($model = null, $value = null, $thread = null)
     {
-        return $value;
+		return $value;
     }
+
+	/*
+	 * Store value of variable
+	 * 
+	 * @param \App\Model\Telenok\Workflow\Variable
+	 * @param mixed
+	 * @param \App\Http\Controllers\Module\Workflow\Thread\Controller
+	 * @param mixed Some data of parameter which launched with the process
+	 */
+    public function setValue($model = null, $value = null, $thread = null)
+    {
+		if (!$thread)
+		{
+			return;
+		}
+
+		$modelThread = $thread->getModelThread();
+
+		$variables = $modelThread->variable;
+
+		$variables->put($model->code, $value);
+
+		$modelThread->variable = $variables;
+
+		$modelThread->storeOrUpdate([], false, false);
+    }
+
+	public function toString($model = null, $value, $thread = null)
+	{
+		return (string)$value;
+	}
 }

@@ -22,7 +22,7 @@ class SeedWorkflowProcessVariableTable extends Migration {
                 [
                     'title' => ['ru' => 'Описание', 'en' => 'Description'],
                     'title_list' => ['ru' => 'Описание', 'en' => 'Description'],
-                    'key' => 'text',
+                    'key' => 'string',
                     'code' => 'description',
                     'active' => 1,
                     'field_object_type' => $modelTypeId,
@@ -49,7 +49,7 @@ class SeedWorkflowProcessVariableTable extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
-                    'require' => 1,
+                    'required' => 1,
                     'field_order' => 6,
                 ]
         ); 
@@ -66,7 +66,7 @@ class SeedWorkflowProcessVariableTable extends Migration {
                     'show_in_form' => 1,
                     'show_in_list' => 0,
                     'allow_search' => 1,
-                    'require' => 1,
+                    'required' => 1,
                     'field_order' => 7,
                 ]
         ); 
@@ -85,6 +85,25 @@ class SeedWorkflowProcessVariableTable extends Migration {
                     'allow_search' => 0,
                     'field_order' => 8,
                 ]
+        );
+
+        (new \Telenok\Core\Model\Object\Field())->storeOrUpdate(
+                [
+                    'title' => ['ru' => 'Значение по умолчанию', 'en' => 'Default value'],
+                    'title_list' => ['ru' => 'Значение по умолчанию', 'en' => 'Default value'],
+                    'key' => 'string',
+                    'code' => 'default_value',
+                    'active' => 1,
+                    'field_object_type' => $modelTypeId,
+                    'field_object_tab' => $tabMainId,
+                    'show_in_form' => 1,
+                    'show_in_list' => 0,
+                    'allow_search' => 0,
+                    'allow_create' => 1,
+                    'allow_update' => 1,
+                    'field_order' => 9,
+                ]
         ); 
+
     } 
 }

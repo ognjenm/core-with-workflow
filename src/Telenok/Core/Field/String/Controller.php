@@ -116,7 +116,7 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
     }
     
     public function setModelSpecialAttribute($model, $key, $value)
-    {  
+    {
 		if (in_array($key, ['string_default'], true) && $model->multilanguage)
 		{
 			$default = [];
@@ -138,6 +138,22 @@ class Controller extends \Telenok\Core\Interfaces\Field\Controller {
 			} 
 
 			$model->setAttribute($key, json_encode($value, JSON_UNESCAPED_UNICODE));
+		}
+		else if ($key === 'string_min' && !$value)
+		{
+			$model->setAttribute($key, 0); 
+		}
+		else if ($key === 'string_max' && !$value)
+		{
+			$model->setAttribute($key, 255); 
+		}
+		else if ($key === 'string_password' && !$value)
+		{
+			$model->setAttribute($key, 0); 
+		}
+		else if ($key === 'string_list_size' && !$value)
+		{
+			$model->setAttribute($key, 50); 
 		}
 		else
 		{

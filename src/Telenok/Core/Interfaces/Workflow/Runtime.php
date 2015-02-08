@@ -19,7 +19,7 @@ class Runtime {
                     
                     if ($this->isEventForProcess($p, $event, $elements))
                     {
-                        $this->threadCreateAndRun($p, $event);
+                        //$this->threadContinueWork($p, $event);
                         
                         break;
                     }
@@ -57,11 +57,15 @@ class Runtime {
         return (bool)\Config::get('app.workflow.enabled');
     }
 
-    public function threadCreateAndRun(\App\Model\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null, $parameter = [])
+    public function threadCreateAndRun(\App\Model\Telenok\Workflow\Process $process, \Telenok\Core\Interfaces\Workflow\Event $event = null, $parameter = [], $variable = [])
     { 
         if ($this->canProcessing())
         {
-            \Telenok\Core\Workflow\Thread::make()->setEvent($event)->setModelProcess($process)->setParameter($parameter)->run($this); 
+            \Telenok\Core\Workflow\Thread::make()->setEvent($event)
+					->setModelProcess($process)
+					->setParameters($parameter)
+					->setInitVariables($variable)
+					->run($this); 
         }
 
         return $this;
@@ -72,4 +76,3 @@ class Runtime {
 		return new static;
 	}
 }
-

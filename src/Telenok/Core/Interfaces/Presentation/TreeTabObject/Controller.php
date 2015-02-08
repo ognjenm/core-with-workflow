@@ -389,7 +389,7 @@ abstract class Controller extends \Telenok\Core\Interfaces\Presentation\TreeTab\
 	
     public function save($input = [], $type = null)
     {   
-        $input = $input instanceof  \Illuminate\Support\Collection ? $input : \Illuminate\Support\Collection::make((array)$input);
+        $input = \Illuminate\Support\Collection::make($input);
         $model = $this->getModelList();
         
         if (!($type instanceof \Telenok\Core\Model\Object\Type))

@@ -12,7 +12,7 @@
 
             $selectFields = [];
 
-            app('telenok.config')->getWorkflowParameter()
+            app('telenok.config')->getWorkflowVariable()
                     ->each(function($field) use (&$selectFields) 
             {  
                 $selectFields[$field->getKey()] = $field->getName(); 
@@ -30,13 +30,13 @@
 
             var $key = jQuery('select[name="key"]', $form);
             
-            jQuery("#div-parameter-{{$uniqueId}}").remove();
+            jQuery("#div-variable-{{$uniqueId}}").remove();
         }  
     </script>
 
-    @if ($model->exists && ($parameter = app('telenok.config')->getWorkflowParameter()->get($model->key))) 
-    <div id="div-parameter-{{$uniqueId}}">
-    {!! $parameter->getFormFieldContent($controller, $model, $uniqueId) !!}
+    @if ($model->exists && ($variable = app('telenok.config')->getWorkflowVariable()->get($model->key))) 
+    <div id="div-variable-{{$uniqueId}}">
+    {!! $variable->getFormFieldContent($controller, $model, $uniqueId) !!}
     </div>
     @endif
 

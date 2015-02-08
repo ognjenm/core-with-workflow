@@ -10,6 +10,7 @@ class Thread {
     protected $modelProcess;
     protected $modelThread;
     protected $parameter = [];
+    protected $initVariable = [];
     protected $result = [];
     protected $event;
 
@@ -25,8 +26,10 @@ class Thread {
             $this->setModelThread((new \App\Model\Telenok\Workflow\Thread())->storeOrUpdate([
 				'title' => $this->getModelProcess()->title,
 				'original_process' => $this->getModelProcess()->process,
-				'original_parameter' => $this->getModelProcess()->parameter()->get()->keyBy('code'),
-				'parameter' => $this->getParameter(),
+				'original_parameter' => $this->getModelProcess()->parameter()->active()->get()->keyBy('code'),
+				'original_variable' => $this->getModelProcess()->variable()->active()->get()->keyBy('code'),
+				'parameter' => $this->getParameters(),
+				'variable' => $this->getInitVariables(),
 				'active' => 1,
 				'thread_workflow_process' => $this->getModelProcess()->getKey(),
 				'processing_stage' => 'started',
@@ -100,7 +103,7 @@ class Thread {
         {
             throw new \Exception('Cant init actions');
         }
-    }
+    } 
 
     public function getParameterByCode($code = '')
     {
@@ -114,6 +117,59 @@ class Thread {
 		{
 			throw new \Exception('Process hasn\'t parameter with code "' . $code .'"');
 		}
+    }
+
+    public function getVariableByCode($code = '')
+    {
+		$variableModel = app('\App\Model\Telenok\Workflow\Variable')->fill($this->getModelThread()->original_variable->get($code));
+
+        if ($controller = app('telenok.config')->getWorkflowVariable()->get($variableModel->key))
+        {
+			return $controller->getValue($variableModel, $this->getModelThread()->variable->get($code), $this);
+        }
+		else
+		{
+			throw new \Exception('Process hasn\'t variable with code "' . $code .'"');
+		}
+    }
+
+    public function setVariableByCode($code = '', $value = null)
+    {
+		$variableModel = app('\App\Model\Telenok\Workflow\Variable')->fill($this->getModelThread()->original_variable->get($code));
+
+        if ($controller = app('telenok.config')->getWorkflowVariable()->get($variableModel->key))
+        {
+			return $controller->setValue($variableModel, $value, $this);
+        }
+		else
+		{
+			throw new \Exception('Process hasn\'t variable with code "' . $code .'"');
+		}
+    }
+
+    public function getVariables()
+    {
+		$collection = \Illuminate\Support\Collection::make();
+		
+		$collectionControllers = app('telenok.config')->getWorkflowVariable(true);
+		
+		foreach($this->getModelThread()->original_variable->all() as $variable)
+		{
+			$variableModel = app('\App\Model\Telenok\Workflow\Variable')->fill($variable);
+
+			if ($controller = $collectionControllers->get($variableModel->key))
+			{
+				$value = $controller->getValue($variableModel, $this->getModelThread()->variable->get($variableModel->code), $this);
+			}
+			else
+			{
+				throw new \Exception('Process hasn\'t variable with code "' . $variableModel->code .'"');
+			}
+
+			$collection->put($variableModel->code, $value);
+		}
+
+		return $collection;
     }
 
 	/*
@@ -425,18 +481,29 @@ class Thread {
     {
         return $this->modelProcess;
     }
-    
-	
-    public function setParameter($param = [])
+
+    public function setParameters($param = [])
     {
         $this->parameter = $param;
         
         return $this;
     }
 
-    public function getParameter()
+    public function getParameters()
     {
         return $this->parameter;
+    } 
+
+    public function setInitVariables($param = [])
+    {
+        $this->initVariable = $param;
+        
+        return $this;
+    }
+
+    public function getInitVariables()
+    {
+        return $this->initVariable;
     } 
 	
     public function setEvent(\Telenok\Core\Workflow\Event $param)

@@ -1,38 +1,89 @@
-<?php namespace Telenok\Core\Workflow\Activity;
+<?php
 
-class Log extends \Telenok\Core\Interfaces\Workflow\Activity {
+namespace Telenok\Core\Workflow\Activity;
 
-    protected $key = 'activity-log';
-    protected $iter = 0;
-	
-	public function getStencilConnectionRules()
-	{
-		if (empty($this->stencilConnectionRules))
-		{
-			$this->stencilConnectionRules = [
-						[
-							'role' => 'sequence_start',
-							'connects' => [
-								[
-									'from' => 'activity',
-									'to' => ['sequence_start']
-								]
-							]
-						]
-			];
-		}
+class VariableUpdate extends \Telenok\Core\Interfaces\Workflow\Activity {
+ 
+    protected $key = 'activity-variable-update';
 
-		return $this->stencilConnectionRules;
-	}
-	
-	public function process($log = [])
+    protected $stencilCardinalityRules = [
+            [
+                'role' => 'activity',
+                'minimumOccurrence' => 0,
+                'maximumOccurrence' => 10000,
+                'outgoingEdges' => [
+                    [
+                        'role' => 'controlflow',
+                        'maximum' => 10000
+                    ]
+                ],
+                'incomingEdges' => [
+                    [
+                        'role' => 'controlflow',
+                        'maximum' => 10000
+                    ]
+                ]
+            ]
+    ];
+
+    public function getVariableTemplateContent($model = null)
     {
-        //\Log::info('Business Process: Event: ' . $this->getProcess()->getEvent()->getEventCode() . '. Process action with code "activity-log"');
+        if (!$model)
+        {
+            $processId = $this->getRequest()->get('processId', 0);
+            $model = \App\Model\Telenok\Workflow\Process::find($processId);
+        }
 
-        //var_dump($this->getId());
+		return ['tabContent' => view($this->getConditionalTemplateView(), [
+				'controller' => $this,
+				'uniqueId' => str_random(),
+				'processId' => $processId,
+                'model' => $model,
+				'p' => \Illuminate\Support\Collection::make(),
+			])->render()];
+    }
 
-        //\Telenok\Core\Interfaces\Workflow\Thread::make();
-		return parent::process($log);
+    public function getConditionalTemplateView()
+    {
+        return 'core::workflow.' . $this->getKey() . '.variable-template';
+    }
+
+    public function getPropertyValue($data = [])
+    {
+        $stencilData = $this->getStencilData($data);
+        
+		$commonProperty = parent::getPropertyValue($data); 
+        
+        $commonProperty->put('variable', $stencilData->get('variable', []));
+        
+        return $commonProperty;
+	}
+    
+    public function process($log = [])
+    {
+        $paramElement = $this->getInput();
+
+        $variable = (array)$paramElement->get('variable', []);
+
+        $collectionVariable = app('telenok.config')->getWorkflowVariable();
+
+		$originalVariable = $this->getThread()->getModelThread()->original_variable;
+		
+		foreach($variable as $v)
+		{
+			$code = array_get($v, 'code');
+			$value = array_get($v, 'value');
+			
+			$model = app('\App\Model\Telenok\Workflow\Variable')->fill($originalVariable->get($code));
+			
+			$value = \Telenok\Core\Workflow\TemplateMarker\TemplateMarkerModal::make()->processMarkersString($value);
+
+			$value = $collectionVariable->get($model->key)->getValue($model, $value);
+
+			$this->getThread()->setVariableByCode($code, $value);
+		}
+		
+        return parent::process($log);
     }
 
     public function getStencilConfig()

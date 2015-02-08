@@ -43,8 +43,6 @@ class CreateObjectFieldTable extends Migration {
 				$table->string('css_class')->nullable();
 				$table->string('icon_class')->nullable();
 				$table->text('description')->nullable();
-				$table->timestamp('active_at_range_default_start')->nullable();
-				$table->timestamp('active_at_range_default_end')->nullable();
 
 				$table->index('field_object_type');
 			});

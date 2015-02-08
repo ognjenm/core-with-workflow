@@ -33,7 +33,7 @@
 <div class="form-group">
 	{!! Form::label("string_password", $controller->LL('property.string_password'), array('class'=>'col-sm-3 control-label no-padding-right')) !!}
 	<div class="col-sm-9">
-        <div data-toggle="buttons" class="btn-group">
+        <div data-toggle="buttons" class="btn-group btn-overlap">
             <label class="btn btn-white btn-sm btn-primary @if (!$model->string_password) active @endif">
                 <input type="radio" value="0" name="string_password" @if (!$model->string_password) checked="checked" @endif> {{$controller->LL('btn.no')}}
             </label>

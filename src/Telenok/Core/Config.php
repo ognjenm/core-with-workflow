@@ -16,13 +16,22 @@ class Config {
 
 				\Event::fire('telenok.acl.filter.resource.add', $collection);
 
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
 					$object = app($class);
 
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
+				}
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
 				}
 			}
 			catch (\Exception $e)
@@ -46,13 +55,22 @@ class Config {
 
 				\Event::fire('telenok.workflow.template-marker.add', $collection);
 
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
 					$object = app($class);
 
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
+				} 
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
 				}
 			}
 			catch (\Exception $e)
@@ -76,18 +94,66 @@ class Config {
 
 				\Event::fire('telenok.workflow.parameter.add', $collection);
 
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
 					$object = app($class);
 
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
+				}
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
 				}
 			}
 			catch (\Exception $e)
 			{
 				throw new \RuntimeException('Failed to get workflow parameter. Error: ' . $e->getMessage());
+			}
+		}
+
+		return $list;
+	}
+
+	public function getWorkflowVariable($flush = false)
+	{
+		static $list = null;
+
+		if ($list === null || $flush)
+		{
+			try
+			{
+				$collection = \Illuminate\Support\Collection::make();
+
+				\Event::fire('telenok.workflow.variable.add', $collection);
+
+				$list_ = \Illuminate\Support\Collection::make();
+
+				foreach ($collection as $class)
+				{
+					$object = app($class);
+
+					$list_->put($object->getKey(), $object);
+				} 
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
+				}
+			}
+			catch (\Exception $e)
+			{
+				throw new \RuntimeException('Failed to get workflow variable. Error: ' . $e->getMessage());
 			}
 		}
 
@@ -102,9 +168,18 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
-				\Event::fire('telenok.workflow.event.add', $list);
+				\Event::fire('telenok.workflow.event.add', $list_);
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
+				}
 			}
 			catch (\Exception $e)
 			{
@@ -127,13 +202,22 @@ class Config {
 
 				\Event::fire('telenok.workflow.action.add', $collection);
 
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
 					$object = app($class);
 
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
+				}
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
 				}
 			}
 			catch (\Exception $e)
@@ -157,13 +241,22 @@ class Config {
 
 				\Event::fire('telenok.setting.add', $collection);
 
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
 					$object = app($class);
 
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
+				}
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
 				}
 			}
 			catch (\Exception $e)
@@ -187,13 +280,22 @@ class Config {
 
 				\Event::fire('telenok.objects-field.add', $collection);
 
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
 				foreach ($collection as $class)
 				{
 					$object = app($class);
 
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
+				}
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
 				}
 			}
 			catch (\Exception $e)
@@ -226,7 +328,14 @@ class Config {
                     $l[$fieldKey][] = $viewModel;
 				}
                 
-                $list = \Illuminate\Support\Collection::make($l);
+				if ($flush)
+				{
+					return \Illuminate\Support\Collection::make($l);
+				}
+				else
+				{
+					$list = \Illuminate\Support\Collection::make($l);
+				}
 			}
 			catch (\Exception $e)
 			{
@@ -245,14 +354,23 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
-				\App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\ModuleGroup::active()->get()->each(function($item) use ($list_)
 				{
 					$object = app($item->controller_class);
 					$object->setModelModuleGroup($item);
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
 				});
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
+				}
 			}
 			catch (\Exception $e)
 			{
@@ -271,14 +389,23 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
-				\App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\Module::active()->get()->each(function($item) use ($list_)
 				{
 					$object = app($item->controller_class);
 					$object->setModelModule($item);
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
 				});
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
+				}
 			}
 			catch (\Exception $e)
 			{
@@ -297,14 +424,23 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
-				\App\Model\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\WidgetGroup::active()->get()->each(function($item) use ($list_)
 				{
 					$object = app($item->controller_class);
 					$object->setWidgetGroupModel($item);
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
 				});
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
+				}
 			}
 			catch (\Exception $e)
 			{
@@ -323,13 +459,22 @@ class Config {
 		{
 			try
 			{
-				$list = \Illuminate\Support\Collection::make();
+				$list_ = \Illuminate\Support\Collection::make();
 
-				\App\Model\Telenok\Web\Widget::active()->get()->each(function($item) use ($list)
+				\App\Model\Telenok\Web\Widget::active()->get()->each(function($item) use ($list_)
 				{
 					$object = app($item->controller_class);
-					$list->put($object->getKey(), $object);
+					$list_->put($object->getKey(), $object);
 				});
+
+				if ($flush)
+				{
+					return $list_;
+				}
+				else
+				{
+					$list = $list_;
+				}
 			}
 			catch (\Exception $e)
 			{

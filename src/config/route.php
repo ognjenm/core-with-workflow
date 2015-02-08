@@ -189,3 +189,4 @@ if (!\Request::is('telenok', 'telenok/*'))
 \Route::any('telenok/module/workflow/modal-template-marker/content', array('as' => 'cmf.workflow.modal-template-marker.content', 'uses' => "App\Http\Controllers\Module\Workflow\Process\Controller@getModalTemplateMarkerContent"));
 
 \Route::any('telenok/module/workflow/sequence-conditional/conditional-template/content', array('as' => 'cmf.workflow.sequence-conditional.conditional-template.content', 'uses' => "Telenok\Core\Workflow\Flow\ConditionalSequence@getConditionalTemplateContent"));
+\Route::any('telenok/module/workflow/activity-variable-update/variable-template/content', array('as' => 'cmf.workflow.activity-variable-update.variable-template.content', 'uses' => "Telenok\Core\Workflow\Activity\VariableUpdate@getVariableTemplateContent"));

@@ -86,6 +86,7 @@
     $list->push('Telenok\Core\Workflow\Flow\ConditionalSequence');
     $list->push('Telenok\Core\Workflow\Flow\DefaultSequence');
 	$list->push('Telenok\Core\Workflow\Activity\FormFieldHide');
+	$list->push('Telenok\Core\Workflow\Activity\VariableUpdate');
 	$list->push('Telenok\Core\Workflow\Activity\ModelFieldUpdate');
 	$list->push('Telenok\Core\Workflow\Activity\Log');
 	$list->push('Telenok\Core\Workflow\Gateway\Parallel');
@@ -100,12 +101,23 @@
 \Event::listen('telenok.workflow.template-marker.add', function($list) 
 {
     $list->push('Telenok\Core\Workflow\TemplateMarker\System');
+    //$list->push('Telenok\Core\Workflow\TemplateMarker\Thread');
+    //$list->push('Telenok\Core\Workflow\TemplateMarker\Model');
     $list->push('Telenok\Core\Workflow\TemplateMarker\Parameter');
+    $list->push('Telenok\Core\Workflow\TemplateMarker\Variable');
+   // $list->push('Telenok\Core\Workflow\TemplateMarker\Action');
 });
 
 \Event::listen('telenok.workflow.parameter.add', function($list) 
 {
     $list->push('Telenok\Core\Workflow\Parameter\Integer');
+    $list->push('Telenok\Core\Workflow\Parameter\Float');
+    $list->push('Telenok\Core\Workflow\Parameter\Text');
+});
+
+\Event::listen('telenok.workflow.variable.add', function($list) 
+{
+    $list->push('Telenok\Core\Workflow\Variable\Integer');
 });
 
 \Event::listen('telenok.objects-field.add', function($list) 
