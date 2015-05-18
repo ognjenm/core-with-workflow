@@ -17,9 +17,8 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "laravel/framework": "~4.2",
-        "illuminate/html": "4.*"   
-    },
+        "laravel/framework": "~4.2"
+        },
     "autoload": {
         "classmap": [
             "src/migrations"
